@@ -11,34 +11,40 @@ export async function POST(request) {
     await connectDB()
     const { email, password } = await request.json()
 
-    console.log(email, password)
+    console.log('Login attempt:', { email })
 
     if (!email || !password) {
+      console.log('Email or password missing')
       return NextResponse.json({ success: false, message: 'Missing email or password' }, { status: 400 })
     }
 
     const user = await User.findOne({ email }).select('+password')
     if (!user) {
+      console.log('No user found with email:', email)
       return NextResponse.json({ success: false, message: 'Invalid credentials' }, { status: 401 })
     }
 
-    // Only allow admin users to login here
+    console.log('User found:', { email: user.email, role: user.role, passwordHash: user.password ? 'exists' : 'none' })
+
     if (user.role !== 'admin') {
+      console.log('User is not admin, role:', user.role)
       return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 })
     }
 
     const passwordValid = await bcrypt.compare(password, user.password)
+    console.log('Password valid:', passwordValid)
     if (!passwordValid) {
       return NextResponse.json({ success: false, message: 'Invalid credentials' }, { status: 401 })
     }
 
-    // Generate JWT token with limited expiry
-    const token = jwt.sign(
-      { id: user._id.toString(), email: user.email, role: user.role },
-      JWT_SECRET,
-      { expiresIn: '1h' }
-    )
+    if (!JWT_SECRET) {
+      console.log('JWT_SECRET is not set in environment')
+      return NextResponse.json({ success: false, message: 'Server configuration error' }, { status: 500 })
+    }
 
+    const token = jwt.sign({ id: user._id.toString(), email: user.email, role: user.role }, JWT_SECRET, { expiresIn: '1h' })
+
+    console.log('Login successful, token issued')
     return NextResponse.json({
       success: true,
       token,
@@ -51,6 +57,7 @@ export async function POST(request) {
       },
     })
   } catch (error) {
+    console.error('Login error:', error)
     return NextResponse.json({ success: false, message: 'Server error', error: error.message }, { status: 500 })
   }
 }
