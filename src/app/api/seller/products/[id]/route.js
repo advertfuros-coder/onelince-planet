@@ -1,126 +1,89 @@
-// app/api/seller/orders/[id]/route.js
+// app/api/seller/products/[id]/route.js
 import { NextResponse } from 'next/server'
 import connectDB from '@/lib/db/mongodb'
-import Order from '@/lib/db/models/Order'
+import Product from '@/lib/db/models/Product'
 import { verifyToken } from '@/lib/utils/auth'
 
 export async function GET(request, { params }) {
   try {
     await connectDB()
-    
     const token = request.headers.get('authorization')?.replace('Bearer ', '')
     const decoded = verifyToken(token)
-    
-    if (!decoded || decoded.role !== 'seller') {
-      return NextResponse.json(
-        { success: false, message: 'Unauthorized' },
-        { status: 401 }
-      )
+
+    if (!decoded) {
+      return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 })
     }
 
-    const order = await Order.findById(params.id)
-      .populate('customer', 'name email phone')
-      .populate('items.product', 'name images')
-      .lean()
+    const { id } = await params
+    const product = await Product.findOne({ _id: id, sellerId: decoded.userId })
 
-    if (!order) {
-      return NextResponse.json(
-        { success: false, message: 'Order not found' },
-        { status: 404 }
-      )
+    if (!product) {
+      return NextResponse.json({ success: false, message: 'Product not found' }, { status: 404 })
     }
 
-    // Check if seller has items in this order
-    const sellerItems = order.items.filter(item => 
-      item.seller && item.seller.toString() === decoded.id
-    )
-
-    if (sellerItems.length === 0) {
-      return NextResponse.json(
-        { success: false, message: 'No items found for this seller' },
-        { status: 403 }
-      )
-    }
-
-    // Return order with only seller's items
-    const sellerTotal = sellerItems.reduce((sum, item) => 
-      sum + (item.price * item.quantity), 0
-    )
-
-    return NextResponse.json({
-      success: true,
-      order: {
-        ...order,
-        items: sellerItems,
-        sellerTotal
-      }
-    })
-
+    return NextResponse.json({ success: true, product })
   } catch (error) {
-    console.error('Get order detail error:', error)
-    return NextResponse.json(
-      { success: false, message: 'Server error', error: error.message },
-      { status: 500 }
-    )
+    console.error('Product GET error:', error)
+    return NextResponse.json({ success: false, message: 'Server error', error: error.message }, { status: 500 })
   }
 }
 
-// Update order status
-export async function PATCH(request, { params }) {
+export async function PUT(request, { params }) {
   try {
     await connectDB()
-    
     const token = request.headers.get('authorization')?.replace('Bearer ', '')
     const decoded = verifyToken(token)
-    
-    if (!decoded || decoded.role !== 'seller') {
-      return NextResponse.json(
-        { success: false, message: 'Unauthorized' },
-        { status: 401 }
-      )
+
+    if (!decoded) {
+      return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 })
     }
 
-    const { status, trackingId } = await request.json()
+    const { id } = await params
+    const body = await request.json()
 
-    const order = await Order.findById(params.id)
-
-    if (!order) {
-      return NextResponse.json(
-        { success: false, message: 'Order not found' },
-        { status: 404 }
-      )
+    // Calculate discount percentage
+    if (body.pricing?.salePrice && body.pricing?.basePrice) {
+      body.pricing.discountPercentage = 
+        ((body.pricing.basePrice - body.pricing.salePrice) / body.pricing.basePrice) * 100
     }
 
-    // Update order status
-    if (status) {
-      order.status = status
-      
-      // Add to timeline
-      order.timeline.push({
-        status,
-        description: `Order ${status}`,
-        location: 'Seller Dashboard',
-        timestamp: new Date()
-      })
-    }
-
-    if (trackingId) {
-      order.trackingId = trackingId
-    }
-
-    await order.save()
-
-    return NextResponse.json({
-      success: true,
-      message: 'Order updated successfully',
-      order
-    })
-
-  } catch (error) {
-    console.error('Update order error:', error)
-    return NextResponse.json(
-      { success: false, message: 'Server error', error: error.message },
-      { status: 500 }
+    const product = await Product.findOneAndUpdate(
+      { _id: id, sellerId: decoded.userId },
+      body,
+      { new: true }
     )
+
+    if (!product) {
+      return NextResponse.json({ success: false, message: 'Product not found' }, { status: 404 })
+    }
+
+    return NextResponse.json({ success: true, message: 'Product updated successfully', product })
+  } catch (error) {
+    console.error('Product PUT error:', error)
+    return NextResponse.json({ success: false, message: 'Server error', error: error.message }, { status: 500 })
+  }
+}
+
+export async function DELETE(request, { params }) {
+  try {
+    await connectDB()
+    const token = request.headers.get('authorization')?.replace('Bearer ', '')
+    const decoded = verifyToken(token)
+
+    if (!decoded) {
+      return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 })
+    }
+
+    const { id } = await params
+    const product = await Product.findOneAndDelete({ _id: id, sellerId: decoded.userId })
+
+    if (!product) {
+      return NextResponse.json({ success: false, message: 'Product not found' }, { status: 404 })
+    }
+
+    return NextResponse.json({ success: true, message: 'Product deleted successfully' })
+  } catch (error) {
+    console.error('Product DELETE error:', error)
+    return NextResponse.json({ success: false, message: 'Server error', error: error.message }, { status: 500 })
   }
 }

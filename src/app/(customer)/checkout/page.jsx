@@ -1,4 +1,4 @@
-// (customer)/checkout/page.jsx
+// app/(customer)/checkout/page.jsx
 'use client'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
@@ -11,7 +11,9 @@ import {
   FiMail,
   FiLock,
   FiCheck,
-  FiAlertCircle
+  FiAlertCircle,
+  FiTag,
+  FiX
 } from 'react-icons/fi'
 import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
@@ -20,15 +22,16 @@ import { useAuth } from '@/lib/context/AuthContext'
 import { formatPrice } from '@/lib/utils'
 import { toast } from 'react-hot-toast'
 import axios from 'axios'
+
 export default function CheckoutPage() {
   const router = useRouter()
   const { items, subtotal, tax, shipping, total, clearCart } = useCart()
-const { user, token, isAuthenticated } = useAuth()
+  const { user, token, isAuthenticated } = useAuth()
   const [loading, setLoading] = useState(false)
   const [step, setStep] = useState(1)
 
   const [shippingInfo, setShippingInfo] = useState({
-    fullName: user?.name || '',
+    name: user?.name || '',
     email: user?.email || '',
     phone: '',
     addressLine1: '',
@@ -47,6 +50,12 @@ const { user, token, isAuthenticated } = useAuth()
     cvv: ''
   })
 
+  // Coupon state
+  const [couponCode, setCouponCode] = useState('')
+  const [appliedCoupon, setAppliedCoupon] = useState(null)
+  const [couponLoading, setCouponLoading] = useState(false)
+  const [discount, setDiscount] = useState(0)
+
   useEffect(() => {
     if (items.length === 0) {
       router.push('/cart')
@@ -54,7 +63,7 @@ const { user, token, isAuthenticated } = useAuth()
   }, [items])
 
   const validateShipping = () => {
-    const required = ['fullName', 'phone', 'addressLine1', 'city', 'state', 'pincode']
+    const required = ['name', 'phone', 'addressLine1', 'city', 'state', 'pincode']
     for (const field of required) {
       if (!shippingInfo[field].trim()) {
         toast.error(`Please fill in ${field.replace(/([A-Z])/g, ' $1').toLowerCase()}`)
@@ -70,32 +79,79 @@ const { user, token, isAuthenticated } = useAuth()
     }
   }
 
- 
+  // Apply Coupon
+  const handleApplyCoupon = async () => {
+    if (!couponCode.trim()) {
+      toast.error('Please enter a coupon code')
+      return
+    }
+
+    setCouponLoading(true)
+    try {
+      const response = await axios.post('/api/coupons/validate', {
+        code: couponCode,
+        subtotal,
+        items: items.map(item => ({ productId: item.productId, quantity: item.quantity }))
+      }, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+
+      if (response.data.success) {
+        setAppliedCoupon(response.data.coupon)
+        setDiscount(response.data.discount)
+        toast.success(`Coupon applied! You saved ₹${response.data.discount}`)
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Invalid coupon code')
+    } finally {
+      setCouponLoading(false)
+    }
+  }
+
+  // Remove Coupon
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null)
+    setCouponCode('')
+    setDiscount(0)
+    toast.success('Coupon removed')
+  }
+
+  // Calculate final total with discount
+  const finalTotal = total - discount
+
+ // app/(customer)/checkout/page.jsx - Update the handlePlaceOrder function
+
 const handlePlaceOrder = async () => {
   setLoading(true)
 
   try {
-    // Create order payload
+    // Create order payload - only send productId and quantity
+    // Backend will fetch current prices from database
     const orderData = {
       items: items.map(item => ({
-        productId: item.productId,
-        quantity: item.quantity,
-        price: item.price,
-        variant: item.variant
+        productId: item.productId || item._id, // Handle both cases
+        quantity: item.quantity
       })),
-      shippingAddress: shippingInfo,
+      shippingAddress: {
+        name: shippingInfo.name,
+        phone: shippingInfo.phone,
+        email: shippingInfo.email || user?.email,
+        addressLine1: shippingInfo.addressLine1,
+        addressLine2: shippingInfo.addressLine2 || '',
+        city: shippingInfo.city,
+        state: shippingInfo.state,
+        pincode: shippingInfo.pincode,
+        country: shippingInfo.country || 'India'
+      },
       paymentMethod,
-      pricing: {
-        subtotal,
-        shipping,
-        tax,
-        total
-      }
+      couponCode: appliedCoupon?.code || null
     }
 
-    const response = await axios.post('/api/orders', orderData, {
+    console.log('Sending order ', orderData) // Debug log
+
+    const response = await axios.post('/api/customer/orders', orderData, {
       headers: {
-        'Authorization': `Bearer ${token}`, // Get token from useAuth
+        'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
       }
     })
@@ -103,7 +159,7 @@ const handlePlaceOrder = async () => {
     if (response.data.success) {
       clearCart()
       toast.success('Order placed successfully!')
-      router.push(`/orders/${response.data.orderId}`)
+      router.push(`/orders/${response.data.orderNumber}`)
     }
   } catch (error) {
     console.error('Order error:', error)
@@ -174,8 +230,8 @@ const handlePlaceOrder = async () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <Input
                     label="Full Name *"
-                    value={shippingInfo.fullName}
-                    onChange={(e) => setShippingInfo({ ...shippingInfo, fullName: e.target.value })}
+                    value={shippingInfo.name}
+                    onChange={(e) => setShippingInfo({ ...shippingInfo, name: e.target.value })}
                     placeholder="John Doe"
                   />
                   <Input
@@ -354,26 +410,6 @@ const handlePlaceOrder = async () => {
                       </div>
                     </div>
                   )}
-
-                  {/* Net Banking */}
-                  <label className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-colors ${
-                    paymentMethod === 'netbanking' ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'
-                  }`}>
-                    <input
-                      type="radio"
-                      name="paymentMethod"
-                      value="netbanking"
-                      checked={paymentMethod === 'netbanking'}
-                      onChange={(e) => setPaymentMethod(e.target.value)}
-                      className="w-4 h-4 text-blue-600"
-                    />
-                    <div className="ml-3 flex-1">
-                      <div className="flex items-center justify-between">
-                        <span className="font-medium text-gray-900">Net Banking</span>
-                        <span className="text-sm text-gray-500">All major banks</span>
-                      </div>
-                    </div>
-                  </label>
                 </div>
 
                 <div className="flex space-x-4 mt-6">
@@ -413,7 +449,7 @@ const handlePlaceOrder = async () => {
                   </Button>
                 </div>
                 <div className="text-sm text-gray-600">
-                  <p className="font-medium text-gray-900">{shippingInfo.fullName}</p>
+                  <p className="font-medium text-gray-900">{shippingInfo.name}</p>
                   <p>{shippingInfo.addressLine1}</p>
                   {shippingInfo.addressLine2 && <p>{shippingInfo.addressLine2}</p>}
                   <p>{shippingInfo.city}, {shippingInfo.state} {shippingInfo.pincode}</p>
@@ -482,7 +518,7 @@ const handlePlaceOrder = async () => {
 
         {/* Order Summary Sidebar */}
         <div>
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 sticky top-24">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 sticky top-24 space-y-4">
             <h3 className="font-semibold text-gray-900 mb-4">Order Summary</h3>
             
             <div className="space-y-3 mb-4">
@@ -506,13 +542,60 @@ const handlePlaceOrder = async () => {
                 <span className="text-gray-600">Tax (18% GST)</span>
                 <span className="text-gray-900">{formatPrice(tax)}</span>
               </div>
+
+              {discount > 0 && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-green-600">Discount</span>
+                  <span className="text-green-600 font-semibold">-{formatPrice(discount)}</span>
+                </div>
+              )}
             </div>
 
-            <div className="border-t pt-4">
+            {/* Coupon Code Section */}
+            <div className="border-t border-b py-4">
+              <div className="flex items-center space-x-2 mb-3">
+                <FiTag className="w-4 h-4 text-gray-600" />
+                <h4 className="font-medium text-gray-900">Apply Coupon</h4>
+              </div>
+
+              {!appliedCoupon ? (
+                <div className="flex space-x-2">
+                  <input
+                    type="text"
+                    value={couponCode}
+                    onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                    placeholder="Enter coupon code"
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500"
+                  />
+                  <button
+                    onClick={handleApplyCoupon}
+                    disabled={couponLoading}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 disabled:opacity-50"
+                  >
+                    {couponLoading ? 'Applying...' : 'Apply'}
+                  </button>
+                </div>
+              ) : (
+                <div className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg">
+                  <div className="flex items-center space-x-2">
+                    <FiCheck className="w-4 h-4 text-green-600" />
+                    <span className="text-sm font-medium text-green-900">{appliedCoupon.code}</span>
+                  </div>
+                  <button
+                    onClick={handleRemoveCoupon}
+                    className="text-red-600 hover:text-red-800"
+                  >
+                    <FiX className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
+            </div>
+
+            <div className="pt-4">
               <div className="flex justify-between mb-6">
                 <span className="font-semibold text-gray-900">Total</span>
                 <span className="font-bold text-xl text-gray-900">
-                  {formatPrice(total)}
+                  {formatPrice(finalTotal)}
                 </span>
               </div>
             </div>

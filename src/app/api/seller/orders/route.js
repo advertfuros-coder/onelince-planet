@@ -7,97 +7,105 @@ import { verifyToken } from '@/lib/utils/auth'
 export async function GET(request) {
   try {
     await connectDB()
-    
     const token = request.headers.get('authorization')?.replace('Bearer ', '')
     const decoded = verifyToken(token)
-    
-    if (!decoded || decoded.role !== 'seller') {
-      return NextResponse.json(
-        { success: false, message: 'Unauthorized' },
-        { status: 401 }
-      )
+
+    if (!decoded) {
+      return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 })
     }
 
     const { searchParams } = new URL(request.url)
+    const page = parseInt(searchParams.get('page') || '1')
+    const limit = parseInt(searchParams.get('limit') || '20')
     const status = searchParams.get('status')
     const search = searchParams.get('search')
-    const dateRange = searchParams.get('dateRange')
 
-    // Build query
-    let query = { 'items.seller': decoded.id }
+    // Query for orders containing items from this seller
+    let query = { 'items.seller': decoded.userId }
 
-    // Filter by status
-    if (status && status !== 'all') {
-      query.status = status
+    if (status) {
+      query['items.status'] = status
     }
 
-    // Search by order number or customer name
     if (search) {
       query.$or = [
         { orderNumber: { $regex: search, $options: 'i' } },
-        { 'customer.name': { $regex: search, $options: 'i' } }
+        { 'shippingAddress.name': { $regex: search, $options: 'i' } },
+        { 'shippingAddress.phone': { $regex: search, $options: 'i' } },
       ]
     }
 
-    // Filter by date range
-    if (dateRange && dateRange !== 'all') {
-      const now = new Date()
-      let startDate
-
-      switch (dateRange) {
-        case 'today':
-          startDate = new Date(now.setHours(0, 0, 0, 0))
-          break
-        case 'week':
-          startDate = new Date(now.setDate(now.getDate() - 7))
-          break
-        case 'month':
-          startDate = new Date(now.setMonth(now.getMonth() - 1))
-          break
-      }
-
-      if (startDate) {
-        query.createdAt = { $gte: startDate }
-      }
-    }
-
-    // Get orders
     const orders = await Order.find(query)
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(limit)
       .populate('customer', 'name email phone')
       .populate('items.product', 'name images')
-      .sort({ createdAt: -1 })
       .lean()
 
     // Filter items to only show seller's products
-    const filteredOrders = orders.map(order => ({
+    const filteredOrders = orders.map((order) => ({
       ...order,
-      items: order.items.filter(item => 
-        item.seller && item.seller.toString() === decoded.id
-      )
-    })).filter(order => order.items.length > 0)
+      items: order.items.filter((item) => item.seller.toString() === decoded.userId),
+    }))
 
-    // Calculate seller's total for each order
-    const ordersWithSellerTotal = filteredOrders.map(order => {
-      const sellerTotal = order.items.reduce((sum, item) => 
-        sum + (item.price * item.quantity), 0
-      )
-      return {
-        ...order,
-        sellerTotal
-      }
-    })
+    const total = await Order.countDocuments(query)
+
+    // Get stats
+    const stats = await getSellerOrderStats(decoded.userId)
 
     return NextResponse.json({
       success: true,
-      orders: ordersWithSellerTotal,
-      count: ordersWithSellerTotal.length
+      orders: filteredOrders,
+      stats,
+      pagination: {
+        page,
+        limit,
+        total,
+        pages: Math.ceil(total / limit),
+      },
     })
-
   } catch (error) {
-    console.error('Get seller orders error:', error)
-    return NextResponse.json(
-      { success: false, message: 'Server error', error: error.message },
-      { status: 500 }
-    )
+    console.error('Seller orders GET error:', error)
+    return NextResponse.json({ success: false, message: 'Server error', error: error.message }, { status: 500 })
+  }
+}
+
+async function getSellerOrderStats(sellerId) {
+  const [
+    totalOrders,
+    pendingOrders,
+    processingOrders,
+    shippedOrders,
+    deliveredOrders,
+    cancelledOrders,
+    totalRevenue,
+  ] = await Promise.all([
+    Order.countDocuments({ 'items.seller': sellerId }),
+    Order.countDocuments({ 'items.seller': sellerId, 'items.status': 'pending' }),
+    Order.countDocuments({ 'items.seller': sellerId, 'items.status': 'processing' }),
+    Order.countDocuments({ 'items.seller': sellerId, 'items.status': 'shipped' }),
+    Order.countDocuments({ 'items.seller': sellerId, 'items.status': 'delivered' }),
+    Order.countDocuments({ 'items.seller': sellerId, 'items.status': 'cancelled' }),
+    Order.aggregate([
+      { $unwind: '$items' },
+      { $match: { 'items.seller': sellerId, 'items.status': { $nin: ['cancelled', 'returned'] } } },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: { $multiply: ['$items.price', '$items.quantity'] } },
+        },
+      },
+    ]).then((res) => res[0]?.total || 0),
+  ])
+
+  return {
+    totalOrders,
+    pendingOrders,
+    processingOrders,
+    shippedOrders,
+    deliveredOrders,
+    cancelledOrders,
+    totalRevenue,
   }
 }

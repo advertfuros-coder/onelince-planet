@@ -46,8 +46,8 @@ const sidebarItems = [
     icon: FiUsers
   },
   {
-    name: 'Revenue',
-    href: '/seller/revenue',
+    name: 'Payouts',
+    href: '/seller/payouts',
     icon: FiDollarSign
   },
   {

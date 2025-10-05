@@ -1,53 +1,55 @@
 // lib/db/models/Review.js
-import mongoose from "mongoose";
+import mongoose from 'mongoose'
 
 const ReviewSchema = new mongoose.Schema(
   {
-    product: {
+    productId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Product",
+      ref: 'Product',
       required: true,
     },
-    order: {
+    userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Order",
+      ref: 'User',
       required: true,
     },
-    customer: {
+    orderId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
+      ref: 'Order',
     },
-    rating: { type: Number, min: 1, max: 5, required: true },
-    title: { type: String, maxlength: 100 },
-    comment: { type: String, maxlength: 1000, required: true },
-    images: [{ url: String, publicId: String }],
-    verified: { type: Boolean, default: false },
-    status: {
+    rating: {
+      type: Number,
+      required: true,
+      min: 1,
+      max: 5,
+    },
+    title: {
       type: String,
-      enum: ["published", "pending", "hidden"],
-      default: "published",
+      required: true,
     },
-    reply: {
-      text: String,
-      date: Date,
-      author: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    comment: {
+      type: String,
+      required: true,
+    },
+    images: [String],
+    isApproved: {
+      type: Boolean,
+      default: false,
+    },
+    isVerifiedPurchase: {
+      type: Boolean,
+      default: false,
+    },
+    helpful: {
+      type: Number,
+      default: 0,
+    },
+    unhelpful: {
+      type: Number,
+      default: 0,
     },
   },
   { timestamps: true }
-);
+)
 
-ReviewSchema.post("save", async function () {
-  const Product = mongoose.model("Product");
-  const reviews = await mongoose
-    .model("Review")
-    .find({ product: this.product, status: "published" });
-  const avgRating =
-    reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length;
-  await Product.findByIdAndUpdate(this.product, {
-    "ratings.average": avgRating,
-    "ratings.count": reviews.length,
-  });
-});
-
-export default mongoose.models.Review || mongoose.model("Review", ReviewSchema);
+export default mongoose.models.Review || mongoose.model('Review', ReviewSchema)
