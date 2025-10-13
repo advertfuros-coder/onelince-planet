@@ -36,7 +36,7 @@ const OrderSchema = new mongoose.Schema({
     country: { type: String, default: 'India' }
   },
 
-  status: { type: String, enum: ['pending','processing','confirmed','shipped','delivered','cancelled','returned','refunded'], default: 'pending' },
+  status: { type: String, enum: ['pending' ,'processing','confirmed','shipped','delivered','cancelled','returned','refunded'], default: 'confirmed' },
 
   payment: {
     method: { type: String, enum: ['cod','online','card','upi','wallet'], required: true },

@@ -5,7 +5,7 @@ import connectDB from '@/lib/db/mongodb'
 import Order from '@/lib/db/models/Order'
 import { verifyToken } from '@/lib/utils/auth'
 
-export async function GET(request, { params }) {
+export async function GET(request, context) {
   try {
     await connectDB()
     
@@ -18,6 +18,7 @@ export async function GET(request, { params }) {
         { status: 401 }
       )
     }
+  const params = await context.params; // ✅ await params
 
     // Validate ObjectId format
     if (!params?.id || !mongoose.Types.ObjectId.isValid(params.id)) {
@@ -118,8 +119,11 @@ export async function GET(request, { params }) {
 }
 
 // Update order (Accept/Update Status) - PATCH
-export async function PATCH(request, { params }) {
+export async function PATCH(request, context) {
   try {
+
+      const params = await context.params; // ✅ await params
+
     await connectDB()
     
     const token = request.headers.get('authorization')?.replace('Bearer ', '')
@@ -174,24 +178,30 @@ export async function PATCH(request, { params }) {
 
     // Handle different actions
     if (action === 'accept') {
-      // Accept Order (pending -> confirmed -> processing)
-      if (order.status !== 'pending') {
+      // Accept Order (pending -> processing)
+      // Updated logic: allow acceptance if order.status is 'pending' OR seller's individual items are 'pending'
+      const sellerPendingItems = sellerItemIndices.filter(index => order.items[index].status === 'pending')
+      if (order.status !== 'pending' && sellerPendingItems.length === 0) {
         return NextResponse.json(
-          { success: false, message: 'Order can only be accepted when status is pending' },
+          { success: false, message: 'Order can only be accepted when status is pending or seller has pending items' },
           { status: 400 }
         )
       }
 
-      order.status = 'confirmed'
-      
-      // Update seller's items to confirmed
-      sellerItemIndices.forEach(index => {
-        order.items[index].status = 'confirmed'
+      // Update seller's items to processing
+      sellerPendingItems.forEach(index => {
+        order.items[index].status = 'processing'
       })
 
+      // If all items in the order are processing after this action, then set main order status to processing
+      const allItemsProcessing = order.items.every(item => item.status === 'processing')
+      if (allItemsProcessing) {
+        order.status = 'processing'
+      }
+
       order.timeline.push({
-        status: 'confirmed',
-        description: 'Order confirmed by seller',
+        status: 'processing',
+        description: 'Order is being processed by seller',
         timestamp: new Date()
       })
 

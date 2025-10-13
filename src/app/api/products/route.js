@@ -18,7 +18,7 @@ export async function GET(request) {
     const order = searchParams.get('order') || 'desc'
 
     // Build query
-    const query = { isActive: true, isApproved: true }
+    const query = { isActive: true  }
 
     if (category) {
       query.category = category

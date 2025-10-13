@@ -368,8 +368,7 @@ export default function AdminProductsPage() {
                             className="w-12 h-12 object-cover rounded-lg"
                           />
 
-{                          console.log(product.images?.[0].url || '/images/placeholder-product.jpg')
-}
+ 
                           
                           <div>
                             <p className="font-semibold text-gray-900">{product.name}</p>

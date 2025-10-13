@@ -103,7 +103,7 @@ export async function POST(request) {
     const product = await Product.create({
       ...body,
       sellerId: decoded.userId,
-      isApproved: false, // Requires admin approval
+      isApproved: true, // Requires admin approval
     })
 
     return NextResponse.json({ 
