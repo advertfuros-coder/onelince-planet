@@ -39,7 +39,7 @@ export async function GET(request) {
       .sort({ createdAt: -1 })
       .skip((page - 1) * limit)
       .limit(limit)
-      .populate('customer', 'name email phone')
+      .populate('customer', 'fullName email phone')
       .populate('items.product', 'name images')
       .lean()
 
@@ -54,6 +54,7 @@ export async function GET(request) {
     // Get stats
     const stats = await getSellerOrderStats(decoded.userId)
 
+ 
     return NextResponse.json({
       success: true,
       orders: filteredOrders,

@@ -782,7 +782,7 @@ function RecentOrdersTable({ orders }) {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <Link 
-                      href={`/seller/orders/${order?.orderId || ''}`}
+                      href={`/seller/orders/${order?.id || ''}`}
                       className="text-blue-600 hover:text-blue-800 font-semibold text-sm flex items-center space-x-1"
                     >
                       <FiEye className="w-4 h-4" />
