@@ -174,7 +174,7 @@ export default function AdminPayoutsPage() {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
           <StatCard
             label="Total Payouts"
             value={stats.totalPayouts || 0}

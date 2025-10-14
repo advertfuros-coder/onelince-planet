@@ -1,0 +1,574 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { 
+  FiHeart, FiShoppingCart, FiTruck, FiShield, FiRefreshCw,
+  FiStar, FiMinus, FiPlus, FiCheck, FiX, FiChevronLeft,
+  FiChevronRight, FiZoomIn, FiShare2, FiMapPin
+} from 'react-icons/fi';
+import { useCart } from '@/lib/context/CartContext';
+import { toast } from 'react-hot-toast';
+import Image from 'next/image';
+
+export default function ProductDetailPage({ productId }) {
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [selectedImage, setSelectedImage] = useState(0);
+  const [quantity, setQuantity] = useState(1);
+  const [selectedVariant, setSelectedVariant] = useState(null);
+  const [activeTab, setActiveTab] = useState('description');
+  const [isWishlisted, setIsWishlisted] = useState(false);
+  const [showZoom, setShowZoom] = useState(false);
+
+  const { addToCart } = useCart();
+
+  useEffect(() => {
+    fetchProduct();
+  }, [productId]);
+
+  const fetchProduct = async () => {
+    try {
+      const response = await fetch(`/api/products/${productId}`);
+      const data = await response.json();
+      if (data.success) {
+        setProduct(data.product);
+      }
+    } catch (error) {
+      console.error('Error fetching product:', error);
+      toast.error('Failed to load product');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAddToCart = () => {
+    if (product.inventory.stock < 1) {
+      toast.error('Out of stock');
+      return;
+    }
+
+    addToCart(product, quantity, selectedVariant);
+  };
+
+  const handleWishlist = () => {
+    setIsWishlisted(!isWishlisted);
+    toast.success(isWishlisted ? 'Removed from wishlist' : 'Added to wishlist');
+  };
+
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: product.name,
+        text: product.shortDescription,
+        url: window.location.href,
+      });
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+      toast.success('Link copied to clipboard');
+    }
+  };
+
+  const incrementQuantity = () => {
+    if (quantity < product.inventory.stock) {
+      setQuantity(quantity + 1);
+    }
+  };
+
+  const decrementQuantity = () => {
+    if (quantity > 1) {
+      setQuantity(quantity - 1);
+    }
+  };
+
+  const calculateDiscount = () => {
+    if (product.pricing.salePrice && product.pricing.basePrice) {
+      return Math.round(((product.pricing.basePrice - product.pricing.salePrice) / product.pricing.basePrice) * 100);
+    }
+    return 0;
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-600 border-t-transparent"></div>
+      </div>
+    );
+  }
+
+  if (!product) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-2xl text-gray-600">Product not found</p>
+        </div>
+      </div>
+    );
+  }
+
+  const currentPrice = product.pricing.salePrice || product.pricing.basePrice;
+  const discount = calculateDiscount();
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Breadcrumb */}
+      <div className="bg-white border-b">
+        <div className="max-w-7xl mx-auto px-4 py-3">
+          <div className="flex items-center gap-2 text-sm text-gray-600">
+            <span>Home</span>
+            <FiChevronRight className="text-xs" />
+            <span>{product.category}</span>
+            <FiChevronRight className="text-xs" />
+            <span className="text-gray-900 font-medium">{product.name}</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+          {/* Left: Image Gallery */}
+          <div className="space-y-4">
+            {/* Main Image */}
+            <div className="relative bg-white rounded-2xl overflow-hidden shadow-lg aspect-square">
+              {discount > 0 && (
+                <div className="absolute top-4 left-4 z-10 bg-red-600 text-white px-3 py-1 rounded-full text-sm font-bold">
+                  {discount}% OFF
+                </div>
+              )}
+              <button
+                onClick={() => setShowZoom(!showZoom)}
+                className="absolute top-4 right-4 z-10 bg-white p-2 rounded-full shadow-lg hover:bg-gray-100 transition"
+              >
+                <FiZoomIn className="text-xl text-gray-700" />
+              </button>
+              <div className="relative w-full h-full">
+                <img
+                  src={product.images[selectedImage]?.url || '/placeholder.png'}
+                  alt={product.name}
+                  fill
+                  className="object-contain p-8"
+                  priority
+                />
+              </div>
+            </div>
+
+            {/* Thumbnail Images */}
+            <div className="flex gap-3 overflow-x-auto pb-2">
+              {product.images.map((image, index) => (
+                <button
+                  key={index}
+                  onClick={() => setSelectedImage(index)}
+                  className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition ${
+                    selectedImage === index
+                      ? 'border-blue-600 shadow-lg'
+                      : 'border-gray-200 hover:border-gray-400'
+                  }`}
+                >
+                  <img
+                    src={image.url}
+                    alt={`${product.name} ${index + 1}`}
+                    width={80}
+                    height={80}
+                    className="object-cover w-full h-full"
+                  />
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Right: Product Info */}
+          <div className="space-y-6">
+            {/* Product Title & Rating */}
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-3">{product.name}</h1>
+              {product.brand && (
+                <p className="text-gray-600 mb-2">
+                  Brand: <span className="font-semibold">{product.brand}</span>
+                </p>
+              )}
+              <div className="flex items-center gap-4 mb-4">
+                <div className="flex items-center gap-2 bg-green-600 text-white px-3 py-1 rounded-lg">
+                  <span className="font-bold">{product.ratings.average.toFixed(1)}</span>
+                  <FiStar className="fill-current" />
+                </div>
+                <span className="text-gray-600">
+                  {product.ratings.count} ratings & {product.reviews?.length || 0} reviews
+                </span>
+              </div>
+            </div>
+
+            {/* Price */}
+            <div className="bg-gray-50 p-6 rounded-xl">
+              <div className="flex items-baseline gap-3 mb-2">
+                <span className="text-4xl font-bold text-gray-900">₹{currentPrice.toLocaleString()}</span>
+                {product.pricing.salePrice && (
+                  <span className="text-2xl text-gray-500 line-through">
+                    ₹{product.pricing.basePrice.toLocaleString()}
+                  </span>
+                )}
+              </div>
+              <p className="text-green-600 font-medium">Inclusive of all taxes</p>
+            </div>
+
+            {/* Specifications Highlights */}
+            {product.specifications && product.specifications.length > 0 && (
+              <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                <h3 className="font-bold text-gray-900 mb-3">Key Features</h3>
+                <div className="grid grid-cols-2 gap-3">
+                  {product.specifications.slice(0, 4).map((spec, index) => (
+                    <div key={index} className="flex items-start gap-2">
+                      <FiCheck className="text-blue-600 flex-shrink-0 mt-1" />
+                      <div>
+                        <p className="text-sm font-medium text-gray-700">{spec.key}</p>
+                        <p className="text-sm text-gray-600">{spec.value}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Stock Status */}
+            <div className="flex items-center gap-2">
+              {product.inventory.stock > 0 ? (
+                <>
+                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                  <span className="text-green-600 font-medium">
+                    In Stock ({product.inventory.stock} available)
+                  </span>
+                </>
+              ) : (
+                <>
+                  <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                  <span className="text-red-600 font-medium">Out of Stock</span>
+                </>
+              )}
+            </div>
+
+            {/* Quantity Selector */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">Quantity</label>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={decrementQuantity}
+                  disabled={quantity <= 1}
+                  className="w-10 h-10 flex items-center justify-center bg-gray-200 rounded-lg hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                >
+                  <FiMinus />
+                </button>
+                <input
+                  type="number"
+                  value={quantity}
+                  onChange={(e) => setQuantity(Math.max(1, Math.min(product.inventory.stock, parseInt(e.target.value) || 1)))}
+                  className="w-16 h-10 text-center border-2 border-gray-300 rounded-lg font-semibold"
+                />
+                <button
+                  onClick={incrementQuantity}
+                  disabled={quantity >= product.inventory.stock}
+                  className="w-10 h-10 flex items-center justify-center bg-gray-200 rounded-lg hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                >
+                  <FiPlus />
+                </button>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex gap-3">
+              <button
+                onClick={handleAddToCart}
+                disabled={product.inventory.stock < 1}
+                className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-4 rounded-xl font-bold text-lg hover:from-blue-700 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-105 active:scale-95 shadow-lg"
+              >
+                <FiShoppingCart className="text-xl" />
+                Add to Cart
+              </button>
+              <button
+                onClick={handleWishlist}
+                className={`w-14 h-14 flex items-center justify-center rounded-xl border-2 transition ${
+                  isWishlisted
+                    ? 'bg-red-50 border-red-600 text-red-600'
+                    : 'bg-white border-gray-300 text-gray-600 hover:border-red-600 hover:text-red-600'
+                }`}
+              >
+                <FiHeart className={`text-xl ${isWishlisted ? 'fill-current' : ''}`} />
+              </button>
+              <button
+                onClick={handleShare}
+                className="w-14 h-14 flex items-center justify-center bg-white border-2 border-gray-300 rounded-xl text-gray-600 hover:border-blue-600 hover:text-blue-600 transition"
+              >
+                <FiShare2 className="text-xl" />
+              </button>
+            </div>
+
+            {/* Delivery & Services */}
+            <div className="border-t pt-6 space-y-4">
+              <div className="flex items-start gap-3">
+                <FiTruck className="text-2xl text-blue-600 flex-shrink-0 mt-1" />
+                <div>
+                  <p className="font-semibold text-gray-900">
+                    {product.shipping?.freeShipping ? 'Free Delivery' : `Delivery ₹${product.shipping?.shippingFee || 50}`}
+                  </p>
+                  <p className="text-sm text-gray-600">Delivered in 3-5 business days</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <FiRefreshCw className="text-2xl text-green-600 flex-shrink-0 mt-1" />
+                <div>
+                  <p className="font-semibold text-gray-900">7 Days Return Policy</p>
+                  <p className="text-sm text-gray-600">Easy returns & exchanges</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <FiShield className="text-2xl text-purple-600 flex-shrink-0 mt-1" />
+                <div>
+                  <p className="font-semibold text-gray-900">Warranty & Authenticity</p>
+                  <p className="text-sm text-gray-600">100% genuine products</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Seller Info */}
+            {product.sellerId && (
+              <div className="bg-gradient-to-r from-gray-50 to-gray-100 p-6 rounded-xl border">
+                <h3 className="font-bold text-gray-900 mb-3">Sold By</h3>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-semibold text-lg text-gray-900">
+                      {product.sellerId.storeInfo?.storeName || product.sellerId.businessName}
+                    </p>
+                    {product.sellerId.ratings && (
+                      <div className="flex items-center gap-2 mt-1">
+                        <div className="flex items-center gap-1 bg-green-600 text-white px-2 py-0.5 rounded text-sm">
+                          <span className="font-bold">{product.sellerId.ratings.average.toFixed(1)}</span>
+                          <FiStar className="text-xs fill-current" />
+                        </div>
+                        <span className="text-sm text-gray-600">
+                          ({product.sellerId.ratings.totalReviews} reviews)
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium">
+                    View Store
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Tabs Section */}
+        <div className="bg-white rounded-2xl shadow-lg overflow-hidden mb-12">
+          {/* Tab Headers */}
+          <div className="flex border-b">
+            {['description', 'specifications', 'reviews'].map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`flex-1 py-4 px-6 font-semibold capitalize transition ${
+                  activeTab === tab
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
+                }`}
+              >
+                {tab}
+                {tab === 'reviews' && ` (${product.reviews?.length || 0})`}
+              </button>
+            ))}
+          </div>
+
+          {/* Tab Content */}
+          <div className="p-8">
+            {/* Description Tab */}
+            {activeTab === 'description' && (
+              <div className="prose max-w-none">
+                <h3 className="text-2xl font-bold mb-4">Product Description</h3>
+                <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+                  {product.description || product.shortDescription}
+                </p>
+              </div>
+            )}
+
+            {/* Specifications Tab */}
+            {activeTab === 'specifications' && (
+              <div>
+                <h3 className="text-2xl font-bold mb-6">Specifications</h3>
+                {product.specifications && product.specifications.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {product.specifications.map((spec, index) => (
+                      <div
+                        key={index}
+                        className="flex justify-between items-center p-4 bg-gray-50 rounded-lg"
+                      >
+                        <span className="font-semibold text-gray-700">{spec.key}</span>
+                        <span className="text-gray-900">{spec.value}</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-gray-600">No specifications available</p>
+                )}
+              </div>
+            )}
+
+            {/* Reviews Tab */}
+            {activeTab === 'reviews' && (
+              <div>
+                <div className="flex items-start justify-between mb-8">
+                  <div>
+                    <h3 className="text-2xl font-bold mb-2">Customer Reviews</h3>
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-2">
+                        <span className="text-4xl font-bold">{product.ratings.average.toFixed(1)}</span>
+                        <FiStar className="text-3xl text-yellow-500 fill-current" />
+                      </div>
+                      <div>
+                        <p className="text-gray-600">Based on {product.ratings.count} ratings</p>
+                        <p className="text-sm text-gray-500">{product.reviews?.length || 0} reviews</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Rating Distribution */}
+                  <div className="space-y-2">
+                    {[5, 4, 3, 2, 1].map((star) => {
+                      const count = product.ratingDistribution?.[star] || 0;
+                      const percentage = product.ratings.count > 0 ? (count / product.ratings.count) * 100 : 0;
+                      return (
+                        <div key={star} className="flex items-center gap-3">
+                          <span className="text-sm font-medium text-gray-700 w-12">{star} ⭐</span>
+                          <div className="w-40 h-2 bg-gray-200 rounded-full overflow-hidden">
+                            <div
+                              className="h-full bg-yellow-500"
+                              style={{ width: `${percentage}%` }}
+                            ></div>
+                          </div>
+                          <span className="text-sm text-gray-600 w-8">{count}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Reviews List */}
+                <div className="space-y-6">
+                  {product.reviews && product.reviews.length > 0 ? (
+                    product.reviews.map((review) => (
+                      <div key={review._id} className="border-b pb-6 last:border-b-0">
+                        <div className="flex items-start justify-between mb-3">
+                          <div>
+                            <div className="flex items-center gap-3 mb-2">
+                              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold">
+                                {review.userId?.name?.charAt(0).toUpperCase() || 'U'}
+                              </div>
+                              <div>
+                                <p className="font-semibold text-gray-900">{review.userId?.name || 'Anonymous'}</p>
+                                <div className="flex items-center gap-2">
+                                  <div className="flex">
+                                    {[...Array(5)].map((_, i) => (
+                                      <FiStar
+                                        key={i}
+                                        className={`text-sm ${
+                                          i < review.rating
+                                            ? 'text-yellow-500 fill-current'
+                                            : 'text-gray-300'
+                                        }`}
+                                      />
+                                    ))}
+                                  </div>
+                                  {review.isVerifiedPurchase && (
+                                    <span className="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded-full font-medium">
+                                      Verified Purchase
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <span className="text-sm text-gray-500">
+                            {new Date(review.createdAt).toLocaleDateString()}
+                          </span>
+                        </div>
+                        <h4 className="font-semibold text-gray-900 mb-2">{review.title}</h4>
+                        <p className="text-gray-700 mb-3">{review.comment}</p>
+                        {review.images && review.images.length > 0 && (
+                          <div className="flex gap-2 mb-3">
+                            {review.images.map((img, index) => (
+                              <img
+                                key={index}
+                                src={img}
+                                alt={`Review ${index + 1}`}
+                                width={80}
+                                height={80}
+                                className="rounded-lg object-cover"
+                              />
+                            ))}
+                          </div>
+                        )}
+                        <div className="flex items-center gap-4 text-sm">
+                          <button className="flex items-center gap-1 text-gray-600 hover:text-green-600 transition">
+                            <FiCheck className="text-lg" />
+                            Helpful ({review.helpful || 0})
+                          </button>
+                          <button className="flex items-center gap-1 text-gray-600 hover:text-red-600 transition">
+                            <FiX className="text-lg" />
+                            Not Helpful ({review.unhelpful || 0})
+                          </button>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-center py-12">
+                      <FiStar className="text-6xl text-gray-300 mx-auto mb-4" />
+                      <p className="text-gray-600 text-lg">No reviews yet</p>
+                      <p className="text-sm text-gray-500">Be the first to review this product</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Related Products */}
+        {product.relatedProducts && product.relatedProducts.length > 0 && (
+          <div>
+            <h2 className="text-3xl font-bold mb-6">You May Also Like</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              {product.relatedProducts.map((relatedProduct) => (
+                <a
+                  key={relatedProduct._id}
+                  href={`/products/${relatedProduct._id}`}
+                  className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all transform hover:scale-105"
+                >
+                  <div className="relative aspect-square">
+                    <img
+                      src={relatedProduct.images?.[0]?.url || '/placeholder.png'}
+                      alt={relatedProduct.name}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="p-4">
+                    <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2">
+                      {relatedProduct.name}
+                    </h3>
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="flex items-center gap-1 bg-green-600 text-white px-2 py-0.5 rounded text-xs">
+                        <span className="font-bold">{relatedProduct.ratings.average.toFixed(1)}</span>
+                        <FiStar className="text-xs fill-current" />
+                      </div>
+                      <span className="text-xs text-gray-600">({relatedProduct.ratings.count})</span>
+                    </div>
+                    <p className="text-xl font-bold text-gray-900">
+                      ₹{(relatedProduct.pricing.salePrice || relatedProduct.pricing.basePrice).toLocaleString()}
+                    </p>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

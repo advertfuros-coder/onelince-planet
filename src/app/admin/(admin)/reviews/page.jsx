@@ -19,6 +19,7 @@ import {
   FiAlertCircle,
 } from 'react-icons/fi'
 import { toast } from 'react-hot-toast'
+import Link from 'next/link'
 
 export default function AdminReviewsPage() {
   const { token } = useAuth()
@@ -139,10 +140,9 @@ export default function AdminReviewsPage() {
             <h1 className="text-3xl font-bold text-gray-900">Review Management</h1>
             <p className="text-gray-600 mt-1">Manage customer reviews and ratings</p>
           </div>
-          <button className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-            <FiDownload />
-            <span>Export Reviews</span>
-          </button>
+          <Link href="/admin/reviews/bulk" className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+             <span>Add Bulk Reviews</span>
+          </Link>
         </div>
 
         {/* Stats Cards */}

@@ -15,6 +15,7 @@ import {
   FiPackage,
   FiUserPlus,
   FiTrendingUp,
+  FiGift,
 } from 'react-icons/fi'
 
 export default function AdminSidebar() {
@@ -28,10 +29,10 @@ export default function AdminSidebar() {
     { label: 'Orders', href: '/admin/orders', icon: FiShoppingCart },
     { label: 'Payout Requests', href: '/admin/payouts', icon: FiDollarSign },
     { label: 'Reviews', href: '/admin/reviews', icon: FiStar },
-    { label: 'Categories', href: '/admin/categories', icon: FiPackage },
+    // { label: 'Categories', href: '/admin/categories', icon: FiPackage },
     { label: 'Analytics', href: '/admin/analytics', icon: FiBarChart2 },
-    { label: 'Marketing', href: '/admin/marketing', icon: FiTrendingUp },
-    { label: 'Settings', href: '/admin/settings', icon: FiSettings },
+    // { label: 'Marketing', href: '/admin/marketing', icon: FiTrendingUp },
+    { label: 'Coupones', href: '/admin/coupons', icon: FiGift },
   ]
 
   return (

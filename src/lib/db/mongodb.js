@@ -3,6 +3,8 @@ import '@/lib/db/models/User'
 import '@/lib/db/models/Order'
 import '@/lib/db/models/Review'
 import '@/lib/db/models/Product'
+import '@/lib/db/models/Seller'
+import '@/lib/db/models/Coupon'
 
 const MONGODB_URI = process.env.MONGODB_URI
 
