@@ -65,13 +65,20 @@ const OrderSchema = new mongoose.Schema({
     cancelledAt: Date
   },
 
-  returnRequest: {
-    reason: String,
-    status: { type: String, enum: ['requested','approved','rejected','refunded'], default: null },
-    requestedAt: Date,
-    resolvedAt: Date,
-    refundAmount: Number
-  }
+ returnRequest: {
+  reason: String,
+  title: String,               // ✅ New
+  description: String,         // ✅ New
+  images: [String],            // ✅ New (for uploaded image URLs)
+  status: {
+    type: String,
+    enum: ['requested', 'approved', 'rejected', 'refunded'],
+    default: 'requested'
+  },
+  requestedAt: Date,
+  resolvedAt: Date,
+  refundAmount: Number
+}
 
 }, { timestamps: true })
 

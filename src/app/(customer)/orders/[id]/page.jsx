@@ -266,7 +266,11 @@ export default function OrderDetailPage({ params }) {
                   </Button>
                 )}
                 {canReturn && (
-                  <Button variant="outline" className="flex items-center space-x-2">
+                  <Button
+                    variant="outline"
+                    onClick={() => router.push(`/orders/${order._id}/return`)}
+                    className="flex items-center space-x-2"
+                  >
                     <FiRotateCcw className="w-4 h-4" />
                     <span>Return Order</span>
                   </Button>

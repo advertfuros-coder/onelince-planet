@@ -175,6 +175,14 @@ export default function AdminOrdersPage() {
           bgColor="bg-green-50"
         />
         <StatCard
+  label="Return Requests"
+  value={stats.returnedOrders || 0}
+  icon={<FiAlertCircle />}
+  color="text-red-600"
+  bgColor="bg-red-50"
+  small
+/>
+        <StatCard
           label="Total Revenue"
           value={`₹${(stats.totalRevenue || 0).toLocaleString('en-IN')}`}
           icon={<FiDollarSign />}
@@ -358,7 +366,12 @@ export default function AdminOrdersPage() {
                 </thead>
                 <tbody className="divide-y divide-gray-200">
                   {orders.map((order) => (
-                    <tr key={order._id} className="hover:bg-gray-50">
+                    <tr
+  key={order._id}
+  className={`hover:bg-gray-50 transition-colors ${
+    order.returnRequest?.status ? 'bg-red-400 hover:bg-white' : ''
+  }`}
+>
                       <td className="px-6 py-4">
                         <input
                           type="checkbox"
@@ -393,17 +406,24 @@ export default function AdminOrdersPage() {
                         <p className="text-xs text-gray-600">{order.items?.length || 0} items</p>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="space-y-1">
-                          <span
-                            className={`inline-block px-2 py-1 rounded-full text-xs font-semibold capitalize ${getPaymentStatusColor(
-                              order.payment?.status
-                            )}`}
-                          >
-                            {order.payment?.status}
-                          </span>
-                          <p className="text-xs text-gray-600 capitalize">{order.payment?.method}</p>
-                        </div>
-                      </td>
+  {order.returnRequest?.status ? (
+    <span
+      className={`inline-block px-3 py-1 rounded-full text-xs font-semibold border capitalize ${getStatusColor(
+        'returned'
+      )}`}
+    >
+      Returned ({order.returnRequest.status})
+    </span>
+  ) : (
+    <span
+      className={`inline-block px-3 py-1 rounded-full text-xs font-semibold border capitalize ${getStatusColor(
+        order.status
+      )}`}
+    >
+      {order.status}
+    </span>
+  )}
+</td>
                       <td className="px-6 py-4">
                         <span
                           className={`inline-block px-3 py-1 rounded-full text-xs font-semibold border capitalize ${getStatusColor(

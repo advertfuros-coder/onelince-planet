@@ -1,10 +1,10 @@
 // app/seller/(seller)/orders/page.jsx
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import { useAuth } from '@/lib/context/AuthContext'
-import axios from 'axios'
-import Link from 'next/link'
+import { useState, useEffect } from "react";
+import { useAuth } from "@/lib/context/AuthContext";
+import axios from "axios";
+import Link from "next/link";
 import {
   FiSearch,
   FiFilter,
@@ -17,120 +17,93 @@ import {
   FiDownload,
   FiRefreshCw,
   FiAlertCircle,
-} from 'react-icons/fi'
-import { toast } from 'react-hot-toast'
+} from "react-icons/fi";
+import { toast } from "react-hot-toast";
 
 export default function SellerOrdersPage() {
-  const { token } = useAuth()
-  const [orders, setOrders] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-  const [search, setSearch] = useState('')
-  const [selectedStatus, setSelectedStatus] = useState('')
-  const [page, setPage] = useState(1)
+  const { token } = useAuth();
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [search, setSearch] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState("");
+  const [page, setPage] = useState(1);
+  const [stats, setStats] = useState({});
 
   useEffect(() => {
-    if (token) fetchOrders()
-  }, [token, selectedStatus, page])
+    if (token) fetchOrders();
+  }, [token, selectedStatus, page]);
 
   // Debounce search
   useEffect(() => {
     if (token) {
       const timer = setTimeout(() => {
-        fetchOrders()
-      }, 500)
-      return () => clearTimeout(timer)
+        fetchOrders();
+      }, 500);
+      return () => clearTimeout(timer);
     }
-  }, [search])
+  }, [search]);
 
   async function fetchOrders() {
     try {
-      setLoading(true)
-      setError(null)
-      
+      setLoading(true);
+      setError(null);
+
       const params = new URLSearchParams({
         page: page.toString(),
         ...(search && { search }),
         ...(selectedStatus && { status: selectedStatus }),
-      })
+      });
 
       const res = await axios.get(`/api/seller/orders?${params}`, {
         headers: { Authorization: `Bearer ${token}` },
-      })
+      });
 
       if (res.data.success) {
-        setOrders(res.data.orders || [])
+        setOrders(res.data.orders || []);
+        setStats(res.data.stats || {});
       } else {
-        setError(res.data.message || 'Failed to load orders')
+        setError(res.data.message || "Failed to load orders");
       }
     } catch (error) {
-      console.error('Error fetching orders:', error)
-      setError(error.response?.data?.message || 'Failed to load orders')
+      console.error("Error fetching orders:", error);
+      setError(error.response?.data?.message || "Failed to load orders");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
-  // Calculate stats from orders array
-  const calculateStats = () => {
-    const stats = {
-      totalOrders: orders.length,
-      pendingOrders: 0,
-      processingOrders: 0,
-      shippedOrders: 0,
-      deliveredOrders: 0,
-      cancelledOrders: 0,
-      totalRevenue: 0,
-    }
 
-    orders.forEach(order => {
-      const status = order?.status || 'pending'
-      const pricing = order?.pricing || {}
-      
-      if (status === 'pending') stats.pendingOrders++
-      if (status === 'processing') stats.processingOrders++
-      if (status === 'shipped') stats.shippedOrders++
-      if (status === 'delivered') stats.deliveredOrders++
-      if (status === 'cancelled') stats.cancelledOrders++
-      
-      if (status === 'delivered') {
-        stats.totalRevenue += pricing.total || 0
-      }
-    })
+  const formatCurrency = (value) => `₹${(value || 0).toLocaleString("en-IN")}`;
 
-    return stats
-  }
-
-  const stats = calculateStats()
-
-  const formatCurrency = (value) => `₹${(value || 0).toLocaleString('en-IN')}`
-  
   const formatDate = (date) => {
-    if (!date) return 'N/A'
+    if (!date) return "N/A";
     try {
-      return new Date(date).toLocaleDateString('en-IN', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-      })
+      return new Date(date).toLocaleDateString("en-IN", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
     } catch (error) {
-      return 'N/A'
+      return "N/A";
     }
-  }
+  };
 
   // Filter orders by search term
-  const filteredOrders = orders.filter(order => {
-    if (!search) return true
-    
-    const searchLower = search.toLowerCase()
-    const orderNumber = (order?.orderNumber || '').toLowerCase()
-    const customerId = (order?._id || '').toString().toLowerCase()
-    const customerName = (order?.shippingAddress?.fullName || '').toLowerCase()
-    
-    return orderNumber.includes(searchLower) || 
-           customerId.includes(searchLower) || 
-           customerName.includes(searchLower)
-  })
+  const filteredOrders = orders.filter((order) => {
+    if (!search) return true;
+
+    const searchLower = search.toLowerCase();
+    const orderNumber = (order?.orderNumber || "").toLowerCase();
+    const customerId = (order?._id || "").toString().toLowerCase();
+    const customerName = (order?.shippingAddress?.fullName || "").toLowerCase();
+
+    return (
+      orderNumber.includes(searchLower) ||
+      customerId.includes(searchLower) ||
+      customerName.includes(searchLower)
+    );
+  });
 
   if (error) {
     return (
@@ -140,9 +113,11 @@ export default function SellerOrdersPage() {
         </div>
         <div className="bg-red-50 border-2 border-red-200 rounded-xl p-8 text-center">
           <FiAlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-red-800 mb-2">Error Loading Orders</h2>
+          <h2 className="text-2xl font-bold text-red-800 mb-2">
+            Error Loading Orders
+          </h2>
           <p className="text-red-600 mb-6">{error}</p>
-          <button 
+          <button
             onClick={fetchOrders}
             className="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-semibold"
           >
@@ -150,7 +125,7 @@ export default function SellerOrdersPage() {
           </button>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -167,7 +142,7 @@ export default function SellerOrdersPage() {
             disabled={loading}
             className="flex items-center space-x-2 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-lg hover:bg-white/30 transition-colors disabled:opacity-50"
           >
-            <FiRefreshCw className={loading ? 'animate-spin' : ''} />
+            <FiRefreshCw className={loading ? "animate-spin" : ""} />
             <span>Refresh</span>
           </button>
         </div>
@@ -204,6 +179,14 @@ export default function SellerOrdersPage() {
           bgColor="bg-purple-50"
         />
         <StatCard
+          label="Return Requests"
+          value={stats.returnedOrders || 0}
+          icon={<FiAlertCircle />}
+          color="text-red-600"
+          bgColor="bg-red-50"
+          small
+        />
+        <StatCard
           label="Delivered"
           value={stats.deliveredOrders}
           icon={<FiCheckCircle />}
@@ -219,7 +202,9 @@ export default function SellerOrdersPage() {
         />
         <div className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg shadow-sm p-4 text-white">
           <p className="text-xs mb-1">Total Revenue</p>
-          <p className="text-lg font-bold">{formatCurrency(stats.totalRevenue)}</p>
+          <p className="text-lg font-bold">
+            {formatCurrency(stats.totalRevenue)}
+          </p>
         </div>
       </div>
 
@@ -260,7 +245,8 @@ export default function SellerOrdersPage() {
         {/* Search Results Count */}
         {search && (
           <div className="mt-3 text-sm text-gray-600">
-            Found {filteredOrders.length} order{filteredOrders.length !== 1 ? 's' : ''} matching "{search}"
+            Found {filteredOrders.length} order
+            {filteredOrders.length !== 1 ? "s" : ""} matching "{search}"
           </div>
         )}
       </div>
@@ -276,10 +262,12 @@ export default function SellerOrdersPage() {
           <div className="text-center py-20">
             <FiPackage className="w-16 h-16 text-gray-300 mx-auto mb-4" />
             <p className="text-gray-600 font-medium text-lg mb-2">
-              {search ? 'No orders found' : 'No orders yet'}
+              {search ? "No orders found" : "No orders yet"}
             </p>
             <p className="text-gray-500 text-sm">
-              {search ? 'Try adjusting your search' : 'Orders will appear here once customers place orders'}
+              {search
+                ? "Try adjusting your search"
+                : "Orders will appear here once customers place orders"}
             </p>
           </div>
         ) : (
@@ -315,7 +303,12 @@ export default function SellerOrdersPage() {
               </thead>
               <tbody className="divide-y divide-gray-200">
                 {filteredOrders.map((order) => (
-                  <OrderRow key={order?._id || Math.random()} order={order} formatCurrency={formatCurrency} formatDate={formatDate} />
+                  <OrderRow
+                    key={order?._id || Math.random()}
+                    order={order}
+                    formatCurrency={formatCurrency}
+                    formatDate={formatDate}
+                  />
                 ))}
               </tbody>
             </table>
@@ -323,42 +316,39 @@ export default function SellerOrdersPage() {
         )}
       </div>
     </div>
-  )
+  );
 }
 
 // Order Row Component (Error-Proof)
 function OrderRow({ order, formatCurrency, formatDate }) {
-  if (!order) return null
+  if (!order) return null;
 
   try {
-    const orderId = order._id?.toString() || 'N/A'
-    const orderNumber = order.orderNumber || orderId.slice(-8)
-    const items = Array.isArray(order.items) ? order.items : []
-    const firstItem = items[0] || {}
-    const pricing = order.pricing || {}
-    const payment = order.payment || {}
-    const shippingAddress = order.shippingAddress || {}
-    const status = order.status || 'pending'
-    const itemStatus = firstItem.status || status
+    const orderId = order._id?.toString() || "N/A";
+    const orderNumber = order.orderNumber || orderId.slice(-8);
+    const items = Array.isArray(order.items) ? order.items : [];
+    const firstItem = items[0] || {};
+    const pricing = order.pricing || {};
+    const payment = order.payment || {};
+    const shippingAddress = order.shippingAddress || {};
+    const status = order.status || "pending";
+    const itemStatus = firstItem.status || status;
 
     // Get first item details
-    const itemName = firstItem.name || 'Product'
-    const itemImage = Array.isArray(firstItem.images) && firstItem.images[0] 
-      ? firstItem.images[0] 
-      : null
-    const itemCount = items.length
+    const itemName = firstItem.name || "Product";
+    const itemImage =
+      Array.isArray(firstItem.images) && firstItem.images[0]
+        ? firstItem.images[0]
+        : null;
+    const itemCount = items.length;
 
     return (
-      <tr className="hover:bg-gray-50 transition-colors">
+      <tr className={`hover:bg-gray-50 transition-colors ${order.returnRequest?.status ? 'bg-red-50' : ''}`}>
         {/* Order Number */}
         <td className="px-6 py-4">
           <div>
-            <p className="font-semibold text-gray-900">
-              #{orderNumber}
-            </p>
-            <p className="text-xs text-gray-500">
-              {orderId.slice(-8)}
-            </p>
+            <p className="font-semibold text-gray-900">#{orderNumber}</p>
+            <p className="text-xs text-gray-500">{orderId.slice(-8)}</p>
           </div>
         </td>
 
@@ -366,10 +356,10 @@ function OrderRow({ order, formatCurrency, formatDate }) {
         <td className="px-6 py-4">
           <div>
             <p className="font-medium text-gray-900">
-              {shippingAddress.fullName || 'Guest Customer'}
+              {shippingAddress.fullName || "Guest Customer"}
             </p>
             <p className="text-sm text-gray-600">
-              {shippingAddress.phone || 'No phone'}
+              {shippingAddress.phone || "No phone"}
             </p>
           </div>
         </td>
@@ -383,7 +373,7 @@ function OrderRow({ order, formatCurrency, formatDate }) {
                 alt={itemName}
                 className="w-10 h-10 object-cover rounded"
                 onError={(e) => {
-                  e.target.style.display = 'none'
+                  e.target.style.display = "none";
                 }}
               />
             ) : (
@@ -392,11 +382,9 @@ function OrderRow({ order, formatCurrency, formatDate }) {
               </div>
             )}
             <div>
-              <p className="text-sm font-medium text-gray-900">
-                {itemName}
-              </p>
+              <p className="text-sm font-medium text-gray-900">{itemName}</p>
               <p className="text-xs text-gray-600">
-                {itemCount} item{itemCount > 1 ? 's' : ''}
+                {itemCount} item{itemCount > 1 ? "s" : ""}
               </p>
             </div>
           </div>
@@ -418,7 +406,7 @@ function OrderRow({ order, formatCurrency, formatDate }) {
         <td className="px-6 py-4 text-center">
           <div>
             <p className="text-xs font-semibold text-gray-700 uppercase mb-1">
-              {payment.method || 'COD'}
+              {payment.method || "COD"}
             </p>
             <PaymentBadge status={payment.status} />
           </div>
@@ -426,7 +414,16 @@ function OrderRow({ order, formatCurrency, formatDate }) {
 
         {/* Status */}
         <td className="px-6 py-4 text-center">
-          <StatusBadge status={itemStatus} />
+          {order.returnRequest?.status ? (
+            <div className="flex flex-col items-center space-y-1">
+              <StatusBadge status="returned" />
+              <span className="text-xs text-red-600 font-medium capitalize">
+                {order.returnRequest.status}
+              </span>
+            </div>
+          ) : (
+            <StatusBadge status={itemStatus} />
+          )}
         </td>
 
         {/* Date */}
@@ -445,10 +442,10 @@ function OrderRow({ order, formatCurrency, formatDate }) {
           </Link>
         </td>
       </tr>
-    )
+    );
   } catch (error) {
-    console.error('OrderRow render error:', error)
-    return null
+    console.error("OrderRow render error:", error);
+    return null;
   }
 }
 
@@ -458,23 +455,23 @@ function StatCard({ label, value, icon, color, bgColor }) {
     return (
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
         <div className="flex items-center space-x-2">
-          <div className={`p-2 rounded-lg ${bgColor || 'bg-gray-100'}`}>
-            <div className={`${color || 'text-gray-600'}`}>{icon}</div>
+          <div className={`p-2 rounded-lg ${bgColor || "bg-gray-100"}`}>
+            <div className={`${color || "text-gray-600"}`}>{icon}</div>
           </div>
           <div>
-            <p className="text-xs text-gray-600">{label || 'N/A'}</p>
-            <p className="text-lg font-bold text-gray-900">{value || 0}</p>
+            <p className="text-xs text-gray-600">{label || "N/A"}</p>
+            <p className="text-lg font-bold text-gray-900">{value ?? 0}</p>
           </div>
         </div>
       </div>
-    )
+    );
   } catch (error) {
-    console.error('StatCard error:', error)
+    console.error("StatCard error:", error);
     return (
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
         <p className="text-xs text-gray-500">Loading...</p>
       </div>
-    )
+    );
   }
 }
 
@@ -482,28 +479,50 @@ function StatCard({ label, value, icon, color, bgColor }) {
 function StatusBadge({ status }) {
   try {
     const statusConfig = {
-      pending: { bg: 'bg-yellow-100', text: 'text-yellow-700', label: 'Pending' },
-      processing: { bg: 'bg-blue-100', text: 'text-blue-700', label: 'Processing' },
-      shipped: { bg: 'bg-purple-100', text: 'text-purple-700', label: 'Shipped' },
-      delivered: { bg: 'bg-green-100', text: 'text-green-700', label: 'Delivered' },
-      cancelled: { bg: 'bg-red-100', text: 'text-red-700', label: 'Cancelled' },
-      returned: { bg: 'bg-orange-100', text: 'text-orange-700', label: 'Returned' },
-    }
+      pending: {
+        bg: "bg-yellow-100",
+        text: "text-yellow-700",
+        label: "Pending",
+      },
+      processing: {
+        bg: "bg-blue-100",
+        text: "text-blue-700",
+        label: "Processing",
+      },
+      shipped: {
+        bg: "bg-purple-100",
+        text: "text-purple-700",
+        label: "Shipped",
+      },
+      delivered: {
+        bg: "bg-green-100",
+        text: "text-green-700",
+        label: "Delivered",
+      },
+      cancelled: { bg: "bg-red-100", text: "text-red-700", label: "Cancelled" },
+      returned: {
+        bg: "bg-orange-100",
+        text: "text-orange-700",
+        label: "Returned",
+      },
+    };
 
-    const config = statusConfig[status?.toLowerCase()] || statusConfig.pending
+    const config = statusConfig[status?.toLowerCase()] || statusConfig.pending;
 
     return (
-      <span className={`px-3 py-1 ${config.bg} ${config.text} rounded-full text-xs font-semibold uppercase`}>
+      <span
+        className={`px-3 py-1 ${config.bg} ${config.text} rounded-full text-xs font-semibold uppercase`}
+      >
         {config.label}
       </span>
-    )
+    );
   } catch (error) {
-    console.error('StatusBadge error:', error)
+    console.error("StatusBadge error:", error);
     return (
       <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-semibold">
         N/A
       </span>
-    )
+    );
   }
 }
 
@@ -511,26 +530,36 @@ function StatusBadge({ status }) {
 function PaymentBadge({ status }) {
   try {
     const statusConfig = {
-      pending: { bg: 'bg-yellow-100', text: 'text-yellow-700', label: 'Pending' },
-      paid: { bg: 'bg-green-100', text: 'text-green-700', label: 'Paid' },
-      completed: { bg: 'bg-green-100', text: 'text-green-700', label: 'Completed' },
-      failed: { bg: 'bg-red-100', text: 'text-red-700', label: 'Failed' },
-      refunded: { bg: 'bg-gray-100', text: 'text-gray-700', label: 'Refunded' },
-    }
+      pending: {
+        bg: "bg-yellow-100",
+        text: "text-yellow-700",
+        label: "Pending",
+      },
+      paid: { bg: "bg-green-100", text: "text-green-700", label: "Paid" },
+      completed: {
+        bg: "bg-green-100",
+        text: "text-green-700",
+        label: "Completed",
+      },
+      failed: { bg: "bg-red-100", text: "text-red-700", label: "Failed" },
+      refunded: { bg: "bg-gray-100", text: "text-gray-700", label: "Refunded" },
+    };
 
-    const config = statusConfig[status?.toLowerCase()] || statusConfig.pending
+    const config = statusConfig[status?.toLowerCase()] || statusConfig.pending;
 
     return (
-      <span className={`px-2 py-1 ${config.bg} ${config.text} rounded text-xs font-semibold uppercase`}>
+      <span
+        className={`px-2 py-1 ${config.bg} ${config.text} rounded text-xs font-semibold uppercase`}
+      >
         {config.label}
       </span>
-    )
+    );
   } catch (error) {
-    console.error('PaymentBadge error:', error)
+    console.error("PaymentBadge error:", error);
     return (
       <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs font-semibold">
         N/A
       </span>
-    )
+    );
   }
 }

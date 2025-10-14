@@ -23,7 +23,9 @@ export async function GET(request) {
     // Query for orders containing items from this seller
     let query = { 'items.seller': decoded.userId }
 
-    if (status) {
+    if (status === 'returned') {
+      query['returnRequest.status'] = { $exists: true }
+    } else if (status) {
       query['items.status'] = status
     }
 
@@ -47,6 +49,8 @@ export async function GET(request) {
     const filteredOrders = orders.map((order) => ({
       ...order,
       items: order.items.filter((item) => item.seller.toString() === decoded.userId),
+      hasReturnRequest: !!order.returnRequest,
+      returnRequest: order.returnRequest || null,
     }))
 
     const total = await Order.countDocuments(query)
@@ -54,7 +58,6 @@ export async function GET(request) {
     // Get stats
     const stats = await getSellerOrderStats(decoded.userId)
 
- 
     return NextResponse.json({
       success: true,
       orders: filteredOrders,
@@ -64,6 +67,12 @@ export async function GET(request) {
         limit,
         total,
         pages: Math.ceil(total / limit),
+      },
+      requestData: {
+        page,
+        limit,
+        status,
+        search,
       },
     })
   } catch (error) {
@@ -80,6 +89,8 @@ async function getSellerOrderStats(sellerId) {
     shippedOrders,
     deliveredOrders,
     cancelledOrders,
+    returnedOrders,
+    refundedOrders,
     totalRevenue,
   ] = await Promise.all([
     Order.countDocuments({ 'items.seller': sellerId }),
@@ -88,6 +99,8 @@ async function getSellerOrderStats(sellerId) {
     Order.countDocuments({ 'items.seller': sellerId, 'items.status': 'shipped' }),
     Order.countDocuments({ 'items.seller': sellerId, 'items.status': 'delivered' }),
     Order.countDocuments({ 'items.seller': sellerId, 'items.status': 'cancelled' }),
+    Order.countDocuments({ 'items.seller': sellerId, 'returnRequest.status': { $exists: true } }),
+    Order.countDocuments({ 'items.seller': sellerId, status: 'refunded' }),
     Order.aggregate([
       { $unwind: '$items' },
       { $match: { 'items.seller': sellerId, 'items.status': { $nin: ['cancelled', 'returned'] } } },
@@ -97,7 +110,7 @@ async function getSellerOrderStats(sellerId) {
           total: { $sum: { $multiply: ['$items.price', '$items.quantity'] } },
         },
       },
-    ]).then((res) => res[0]?.total || 0),
+    ]).then(res => res[0]?.total || 0),
   ])
 
   return {
@@ -107,6 +120,8 @@ async function getSellerOrderStats(sellerId) {
     shippedOrders,
     deliveredOrders,
     cancelledOrders,
+    returnedOrders,
+    refundedOrders,
     totalRevenue,
   }
 }

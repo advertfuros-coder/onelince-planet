@@ -479,6 +479,14 @@ export default function SellerDetailPage({ params }) {
                 color="text-blue-600"
               />
               <StatCard
+  label="Return Requests"
+  value={stats.returnedOrders || 0}
+  icon={<FiAlertCircle />}
+  color="text-red-600"
+  bgColor="bg-red-50"
+  small
+/>
+              <StatCard
                 label="Customer Satisfaction"
                 value={`${seller.performance?.customerSatisfactionScore || 0}/5`}
                 icon={<FiStar />}

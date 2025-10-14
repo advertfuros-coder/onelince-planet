@@ -16,6 +16,7 @@ import {
   FiX,
   FiPercent,
   FiLayers,
+  FiAlertCircle,
 } from 'react-icons/fi'
 import { toast } from 'react-hot-toast'
 
@@ -161,7 +162,7 @@ export default function AdminCategoriesPage() {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
           <StatCard
             label="Total Categories"
             value={stats.totalCategories || 0}
@@ -169,6 +170,14 @@ export default function AdminCategoriesPage() {
             color="text-blue-600"
             bgColor="bg-blue-50"
           />
+          <StatCard
+  label="Return Requests"
+  value={stats.returnedOrders || 0}
+  icon={<FiAlertCircle />}
+  color="text-red-600"
+  bgColor="bg-red-50"
+  small
+/>
           <StatCard
             label="Active"
             value={stats.activeCategories || 0}

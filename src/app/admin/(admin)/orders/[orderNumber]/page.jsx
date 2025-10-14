@@ -17,6 +17,7 @@ import {
   FiCheckCircle,
   FiClock,
   FiEdit2,
+  FiAlertCircle,
 } from 'react-icons/fi'
 import { toast } from 'react-hot-toast'
 
@@ -63,6 +64,26 @@ export default function AdminOrderDetailPage({ params }) {
       setLoading(false)
     }
   }
+
+  async function handleReturnAction(action) {
+  try {
+    const res = await axios.patch(
+      `/api/admin/orders/${order._id}`,
+      { action },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    if (res.data.success) {
+      toast.success(`Return ${action}ed successfully`);
+      setOrder(res.data.order);
+    } else {
+      toast.error(res.data.message || 'Action failed');
+    }
+  } catch (error) {
+    console.error('Return action error:', error);
+    toast.error(error.response?.data?.message || 'Failed to update return request');
+  }
+}
 
   async function handleStatusUpdate() {
     if (!newStatus) {
@@ -155,6 +176,80 @@ export default function AdminOrderDetailPage({ params }) {
             <span>Update Status</span>
           </button>
         </div>
+
+
+        {/* Return Request Details */}
+{order.returnRequest?.status && (
+  <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+    <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
+      <FiAlertCircle className="w-5 h-5 mr-2 text-red-500" />
+      Return Request
+    </h2>
+
+    <div className="space-y-3">
+      <div className="flex justify-between">
+        <p className="text-gray-600">Status:</p>
+        <span
+          className={`px-3 py-1 rounded-full text-xs font-semibold ${
+            order.returnRequest.status === 'requested'
+              ? 'bg-yellow-100 text-yellow-700'
+              : order.returnRequest.status === 'approved'
+              ? 'bg-green-100 text-green-700'
+              : order.returnRequest.status === 'rejected'
+              ? 'bg-red-100 text-red-700'
+              : 'bg-gray-100 text-gray-700'
+          }`}
+        >
+          {order.returnRequest.status}
+        </span>
+      </div>
+
+      {order.returnRequest.title && (
+        <p><span className="font-semibold">Title:</span> {order.returnRequest.title}</p>
+      )}
+      {order.returnRequest.reason && (
+        <p><span className="font-semibold">Reason:</span> {order.returnRequest.reason}</p>
+      )}
+      {order.returnRequest.description && (
+        <p><span className="font-semibold">Description:</span> {order.returnRequest.description}</p>
+      )}
+
+      {order.returnRequest.images?.length > 0 && (
+        <div className="mt-3">
+          <p className="font-semibold text-gray-700 mb-2">Photos:</p>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            {order.returnRequest.images.map((img, index) => (
+              <img
+                key={index}
+                src={img}
+                alt={`Return proof ${index + 1}`}
+                className="w-full h-40 object-cover rounded-lg border border-gray-200"
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Admin Actions */}
+      {order.returnRequest.status === 'requested' && (
+        <div className="flex space-x-3 mt-4">
+          <button
+            onClick={() => handleReturnAction('approve')}
+            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+          >
+            Approve Return
+          </button>
+          <button
+            onClick={() => handleReturnAction('reject')}
+            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+          >
+            Reject Return
+          </button>
+        </div>
+      )}
+    </div>
+  </div>
+)}
 
         {/* Status Banner */}
         <div className={`rounded-lg p-4 border-2 ${getStatusColor(order.status)}`}>

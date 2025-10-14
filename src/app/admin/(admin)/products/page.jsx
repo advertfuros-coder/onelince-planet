@@ -188,6 +188,14 @@ export default function AdminProductsPage() {
           bgColor="bg-red-50"
         />
         <StatCard
+  label="Return Requests"
+  value={stats.returnedOrders || 0}
+  icon={<FiAlertCircle />}
+  color="text-red-600"
+  bgColor="bg-red-50"
+  small
+/>
+        <StatCard
           label="Out of Stock"
           value={stats.outOfStock || 0}
           icon={<FiAlertCircle />}

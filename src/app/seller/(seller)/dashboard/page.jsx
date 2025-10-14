@@ -248,6 +248,7 @@ export default function SellerDashboard() {
           iconColor="from-purple-500 to-purple-600"
           badge={`${safeData.activeProducts} active`}
         />
+     
         <StatCard
           title="Total Customers"
           value={safeData.totalCustomers.toLocaleString()}
