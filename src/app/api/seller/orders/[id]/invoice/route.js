@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import connectDB from '@/lib/db/mongodb';
 import Order from '@/lib/db/models/Order';
+import Seller from '@/lib/db/models/Seller';
 import mongoose from 'mongoose';
 
 export async function GET(request, { params }) {
@@ -17,8 +18,8 @@ export async function GET(request, { params }) {
 
     const order = await Order.findById(id)
       .populate('customer', 'name email phone')
-      .populate('items.product', 'name images sku')
-      .populate('items.seller', 'storeInfo businessName')
+      .populate('items.product', 'name sku')
+      .populate('items.seller', 'businessName storeInfo pickupAddress')
       .lean();
 
     if (!order) {
@@ -30,11 +31,20 @@ export async function GET(request, { params }) {
 
     return NextResponse.json({
       success: true,
-      order: order
+      invoice: {
+        orderNumber: order.orderNumber,
+        orderDate: order.createdAt,
+        customer: order.customer,
+        seller: order.items[0].seller,
+        items: order.items,
+        pricing: order.pricing,
+        shippingAddress: order.shippingAddress,
+        payment: order.payment
+      }
     });
 
   } catch (error) {
-    console.error('Get order error:', error);
+    console.error('Get invoice error:', error);
     return NextResponse.json(
       { success: false, message: error.message },
       { status: 500 }
