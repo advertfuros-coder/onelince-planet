@@ -1,143 +1,16 @@
-// // app/api/seller/orders/route.js
-// import { NextResponse } from 'next/server'
-// import connectDB from '@/lib/db/mongodb'
-// import Order from '@/lib/db/models/Order'
-// import { verifyToken } from '@/lib/utils/auth'
-
-// export async function GET(request) {
-//   try {
-//     await connectDB()
-//     const token = request.headers.get('authorization')?.replace('Bearer ', '')
-//     const decoded = verifyToken(token)
-
-//     if (!decoded) {
-//       return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 })
-//     }
-
-//     const { searchParams } = new URL(request.url)
-//     const page = parseInt(searchParams.get('page') || '1')
-//     const limit = parseInt(searchParams.get('limit') || '20')
-//     const status = searchParams.get('status')
-//     const search = searchParams.get('search')
-
-//     // Query for orders containing items from this seller
-//     let query = { 'items.seller': decoded.userId }
-
-//     if (status === 'returned') {
-//       query['returnRequest.status'] = { $exists: true }
-//     } else if (status) {
-//       query['items.status'] = status
-//     }
-
-//     if (search) {
-//       query.$or = [
-//         { orderNumber: { $regex: search, $options: 'i' } },
-//         { 'shippingAddress.name': { $regex: search, $options: 'i' } },
-//         { 'shippingAddress.phone': { $regex: search, $options: 'i' } },
-//       ]
-//     }
-
-//     const orders = await Order.find(query)
-//       .sort({ createdAt: -1 })
-//       .skip((page - 1) * limit)
-//       .limit(limit)
-//       .populate('customer', 'fullName email phone')
-//       .populate('items.product', 'name images')
-//       .lean()
-
-//     // Filter items to only show seller's products
-//     const filteredOrders = orders.map((order) => ({
-//       ...order,
-//       items: order.items.filter((item) => item.seller.toString() === decoded.userId),
-//       hasReturnRequest: !!order.returnRequest,
-//       returnRequest: order.returnRequest || null,
-//     }))
-
-//     const total = await Order.countDocuments(query)
-
-//     // Get stats
-//     const stats = await getSellerOrderStats(decoded.userId)
-
-//     return NextResponse.json({
-//       success: true,
-//       orders: filteredOrders,
-//       stats,
-//       pagination: {
-//         page,
-//         limit,
-//         total,
-//         pages: Math.ceil(total / limit),
-//       },
-//       requestData: {
-//         page,
-//         limit,
-//         status,
-//         search,
-//       },
-//     })
-//   } catch (error) {
-//     console.error('Seller orders GET error:', error)
-//     return NextResponse.json({ success: false, message: 'Server error', error: error.message }, { status: 500 })
-//   }
-// }
-
-// async function getSellerOrderStats(sellerId) {
-//   const [
-//     totalOrders,
-//     pendingOrders,
-//     processingOrders,
-//     shippedOrders,
-//     deliveredOrders,
-//     cancelledOrders,
-//     returnedOrders,
-//     refundedOrders,
-//     totalRevenue,
-//   ] = await Promise.all([
-//     Order.countDocuments({ 'items.seller': sellerId }),
-//     Order.countDocuments({ 'items.seller': sellerId, 'items.status': 'pending' }),
-//     Order.countDocuments({ 'items.seller': sellerId, 'items.status': 'processing' }),
-//     Order.countDocuments({ 'items.seller': sellerId, 'items.status': 'shipped' }),
-//     Order.countDocuments({ 'items.seller': sellerId, 'items.status': 'delivered' }),
-//     Order.countDocuments({ 'items.seller': sellerId, 'items.status': 'cancelled' }),
-//     Order.countDocuments({ 'items.seller': sellerId, 'returnRequest.status': { $exists: true } }),
-//     Order.countDocuments({ 'items.seller': sellerId, status: 'refunded' }),
-//     Order.aggregate([
-//       { $unwind: '$items' },
-//       { $match: { 'items.seller': sellerId, 'items.status': { $nin: ['cancelled', 'returned'] } } },
-//       {
-//         $group: {
-//           _id: null,
-//           total: { $sum: { $multiply: ['$items.price', '$items.quantity'] } },
-//         },
-//       },
-//     ]).then(res => res[0]?.total || 0),
-//   ])
-
-//   return {
-//     totalOrders,
-//     pendingOrders,
-//     processingOrders,
-//     shippedOrders,
-//     deliveredOrders,
-//     cancelledOrders,
-//     returnedOrders,
-//     refundedOrders,
-//     totalRevenue,
-//   }
-// }
-
-
 import { NextResponse } from 'next/server';
 import connectDB from '@/lib/db/mongodb';
 import Order from '@/lib/db/models/Order';
-import { getSellerOrders, getOrderStats } from '@/lib/helpers/sellerOrders';
+import mongoose from 'mongoose';
+
+export const dynamic = 'force-dynamic';
 
 export async function GET(request) {
   try {
     await connectDB();
 
     const { searchParams } = new URL(request.url);
-    const sellerId = searchParams.get('sellerId'); // Get from auth/session
+    const sellerId = searchParams.get('sellerId');
     const status = searchParams.get('status');
     const search = searchParams.get('search');
     const page = parseInt(searchParams.get('page')) || 1;
@@ -145,19 +18,63 @@ export async function GET(request) {
 
     if (!sellerId) {
       return NextResponse.json(
-        { success: false, message: 'Seller ID required' },
+        { success: false, message: 'Seller ID is required' },
         { status: 400 }
       );
     }
 
-    const filters = {};
-    if (status && status !== 'all') filters.status = status;
-    if (search) filters.search = search;
+    if (!mongoose.Types.ObjectId.isValid(sellerId)) {
+      return NextResponse.json(
+        { success: false, message: 'Invalid Seller ID format' },
+        { status: 400 }
+      );
+    }
 
-    const allOrders = await getSellerOrders(sellerId, filters);
-    const stats = getOrderStats(allOrders);
+    const query = {
+      'items.seller': new mongoose.Types.ObjectId(sellerId)
+    };
 
-    // Pagination
+    if (status && status !== 'all') {
+      query.status = status;
+    }
+
+    if (search && search.trim()) {
+      query.$or = [
+        { orderNumber: { $regex: search.trim(), $options: 'i' } },
+        { 'shippingAddress.name': { $regex: search.trim(), $options: 'i' } },
+        { 'shippingAddress.phone': { $regex: search.trim(), $options: 'i' } }
+      ];
+    }
+
+    const allOrders = await Order.find(query)
+      .populate('customer', 'name email phone')
+      .populate('items.product', 'name images sku')
+      .populate('items.seller', 'businessName storeInfo')
+      .sort({ createdAt: -1 })
+      .lean();
+
+    const stats = {
+      total: allOrders.length,
+      confirmed: 0,
+      processing: 0,
+      ready_for_pickup: 0,
+      pickup: 0,
+      shipped: 0,
+      delivered: 0,
+      cancelled: 0,
+      returned: 0,
+      totalRevenue: 0
+    };
+
+    allOrders.forEach(order => {
+      if (stats.hasOwnProperty(order.status)) {
+        stats[order.status]++;
+      }
+      if (!['cancelled', 'returned'].includes(order.status)) {
+        stats.totalRevenue += order.pricing.total || 0;
+      }
+    });
+
     const startIndex = (page - 1) * limit;
     const endIndex = page * limit;
     const paginatedOrders = allOrders.slice(startIndex, endIndex);

@@ -1,19 +1,29 @@
-// app/api/customer/orders/route.js
 import { NextResponse } from 'next/server'
 import connectDB from '@/lib/db/mongodb'
 import Order from '@/lib/db/models/Order'
 import Product from '@/lib/db/models/Product'
 import Cart from '@/lib/db/models/Cart'
 import Coupon from '@/lib/db/models/Coupon'
-import { verifyToken } from '@/lib/utils/auth'
+import User from '@/lib/db/models/User'
+ import { verifyToken } from '@/lib/utils/auth'
+import emailService from '@/lib/emailService'
 
 export async function GET(request) {
   try {
     await connectDB()
 
-    const token = request.headers.get('authorization')?.replace('Bearer ', '')
-    const decoded = verifyToken(token)
-    if (!decoded) {
+    const authHeader = request.headers.get('authorization')
+    const token = authHeader?.replace('Bearer ', '')
+    
+    let userId = null
+    if (token) {
+      const decoded = verifyToken(token)
+      if (decoded && decoded.id) {
+        userId = decoded.id
+      }
+    }
+
+    if (!userId) {
       return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 })
     }
 
@@ -21,10 +31,9 @@ export async function GET(request) {
     const status = searchParams.get('status')
     const page = parseInt(searchParams.get('page')) || 1
     const limit = parseInt(searchParams.get('limit')) || 10
-
     const skip = (page - 1) * limit
 
-    let query = { customer: decoded.id }
+    let query = { customer: userId }
     if (status) {
       query.status = status
     }
@@ -63,17 +72,36 @@ export async function POST(request) {
   try {
     await connectDB()
 
-    const token = request.headers.get('authorization')?.replace('Bearer ', '')
-    const decoded = verifyToken(token)
-    
-    if (!decoded) {
-      return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 })
+    // Get user from token or request body
+    const authHeader = request.headers.get('authorization')
+    const token = authHeader?.replace('Bearer ', '')
+    let userId = null
+
+    if (token) {
+      const decoded = verifyToken(token)
+      if (decoded && decoded.id) {
+        userId = decoded.id
+        console.log('✅ User authenticated via token:', userId)
+      }
     }
 
     const body = await request.json()
-    const { items, shippingAddress, paymentMethod, couponCode } = body
+    const { items, shippingAddress, paymentMethod, couponCode, transactionId, customerId } = body
 
-    console.log('📦 Received order request for user:', decoded.id)
+    // Fallback to customerId from body
+    if (!userId && customerId) {
+      userId = customerId
+      console.log('✅ User from request body:', userId)
+    }
+
+    if (!userId) {
+      return NextResponse.json({ 
+        success: false, 
+        message: 'User authentication required. Please login.' 
+      }, { status: 401 })
+    }
+
+    console.log('📦 Creating order for user:', userId)
 
     // Validation
     if (!items || items.length === 0) {
@@ -102,6 +130,7 @@ export async function POST(request) {
 
     for (const item of items) {
       const product = await Product.findById(item.productId)
+        .populate('sellerId', '_id email businessName storeInfo')
       
       if (!product) {
         return NextResponse.json({ 
@@ -110,7 +139,7 @@ export async function POST(request) {
         }, { status: 404 })
       }
 
-      // ✅ CORRECT: Get price from pricing.salePrice (or fallback to basePrice)
+      // Get price
       let itemPrice = product.pricing?.salePrice || product.pricing?.basePrice || 0
 
       console.log('💰 Product pricing:', { 
@@ -129,7 +158,7 @@ export async function POST(request) {
         }, { status: 400 })
       }
 
-      // Check stock availability
+      // Check stock
       const availableStock = product.inventory?.stock || 0
       if (availableStock < item.quantity) {
         return NextResponse.json({
@@ -138,7 +167,7 @@ export async function POST(request) {
         }, { status: 400 })
       }
 
-      // Validate price is a valid number
+      // Validate price
       itemPrice = parseFloat(itemPrice)
       if (isNaN(itemPrice) || itemPrice <= 0) {
         console.error('❌ Invalid price:', { 
@@ -177,12 +206,13 @@ export async function POST(request) {
       // Add to order items
       orderItems.push({
         product: product._id,
-        seller: product.sellerId,
+        seller: product.sellerId._id,
         name: product.name,
         price: itemPrice,
         quantity: quantity,
-        images: product.images || [],
-        status: 'pending'
+        images: (product.images || []).map(img => img.url || img),
+        sku: product.sku || '',
+        status: 'confirmed'
       })
 
       // Reduce stock
@@ -256,7 +286,7 @@ export async function POST(request) {
       total
     })
 
-    // Validate all amounts are valid
+    // Validate amounts
     if (isNaN(subtotal) || isNaN(tax) || isNaN(total)) {
       console.error('Invalid calculation:', { subtotal, tax, shippingCharge, discount, total })
       return NextResponse.json({
@@ -265,13 +295,20 @@ export async function POST(request) {
       }, { status: 500 })
     }
 
-    // Generate unique order number
-    const orderNumber = `OP${Date.now()}${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`
+    // Generate order number
+    const orderCount = await Order.countDocuments()
+    const orderNumber = `OP${Date.now()}${(orderCount + 1).toString().padStart(3, '0')}`
 
-    // Create order
+    console.log('🔢 Generated order number:', orderNumber)
+
+    // Determine payment status
+    const paymentStatus = paymentMethod === 'cod' ? 'pending' : (transactionId ? 'paid' : 'pending')
+    const paidAt = paymentStatus === 'paid' ? new Date() : null
+
+    // Create order with CONFIRMED status
     const newOrder = await Order.create({
       orderNumber,
-      customer: decoded.id,
+      customer: userId,
       items: orderItems,
       pricing: {
         subtotal: subtotal,
@@ -283,7 +320,7 @@ export async function POST(request) {
       shippingAddress: {
         name: shippingAddress.name,
         phone: shippingAddress.phone,
-        email: shippingAddress.email || decoded.email || '',
+        email: shippingAddress.email || '',
         addressLine1: shippingAddress.addressLine1,
         addressLine2: shippingAddress.addressLine2 || '',
         city: shippingAddress.city,
@@ -291,37 +328,72 @@ export async function POST(request) {
         pincode: shippingAddress.pincode,
         country: shippingAddress.country || 'India'
       },
-      status: 'pending',
+      status: 'confirmed',
       payment: {
         method: paymentMethod,
-        status: paymentMethod === 'cod' ? 'pending' : 'pending',
+        status: paymentStatus,
+        transactionId: transactionId || null,
+        paidAt: paidAt,
         couponCode: appliedCoupon
       },
       timeline: [{
-        status: 'pending',
+        status: 'confirmed',
         description: 'Order placed successfully',
         timestamp: new Date()
       }]
     })
 
-    console.log('✅ Order created:', { orderId: newOrder._id, orderNumber: newOrder.orderNumber })
+    console.log('✅ Order created:', { 
+      orderId: newOrder._id, 
+      orderNumber: newOrder.orderNumber,
+      status: newOrder.status
+    })
 
     // Clear cart
-    await Cart.findOneAndUpdate(
-      { userId: decoded.id },
-      { $set: { items: [] } }
-    )
+    try {
+      await Cart.findOneAndUpdate(
+        { userId: userId },
+        { $set: { items: [] } }
+      )
+      console.log('🛒 Cart cleared')
+    } catch (cartError) {
+      console.error('Cart clear error (non-critical):', cartError)
+    }
 
-    // Populate order for response
+    // Populate order
     const populatedOrder = await Order.findById(newOrder._id)
+      .populate('customer', 'name email phone')
       .populate('items.product', 'name images category pricing')
-      .populate('items.seller', 'businessName name email phone')
+      .populate('items.seller', 'businessName name email phone storeInfo')
+      .lean()
+
+    // Send emails
+    try {
+      await emailService.sendOrderConfirmation(populatedOrder)
+      console.log('✅ Customer email sent')
+
+      const sellerIds = [...new Set(orderItems.map(item => item.seller.toString()))]
+      for (const sellerId of sellerIds) {
+        const seller = await User.findById(sellerId)
+        if (seller) {
+          await emailService.sendNewOrderNotificationToSeller(seller, populatedOrder)
+          console.log('✅ Seller email sent')
+        }
+      }
+
+      await emailService.notifyAdminNewOrder(populatedOrder)
+      console.log('✅ Admin email sent')
+      
+    } catch (emailError) {
+      console.error('⚠️ Email error (non-critical):', emailError)
+    }
 
     return NextResponse.json({
       success: true,
       message: 'Order placed successfully',
       order: populatedOrder,
       orderNumber: newOrder.orderNumber,
+      orderId: newOrder._id,
       paymentRequired: paymentMethod !== 'cod'
     }, { status: 201 })
 

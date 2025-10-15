@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import connectDB from '@/lib/db/mongodb';
 import Order from '@/lib/db/models/Order';
-import Seller from '@/lib/db/models/Seller';
+import User from '@/lib/db/models/User';
 import mongoose from 'mongoose';
 
 export async function POST(request, { params }) {
@@ -26,17 +26,15 @@ export async function POST(request, { params }) {
       );
     }
 
-    // Get seller details for pickup address
-    const seller = await Seller.findOne({ userId: sellerId });
+    const seller = await User.findById(sellerId);
 
     if (!seller) {
       return NextResponse.json(
-        { success: false, message: 'Seller details not found' },
+        { success: false, message: 'Seller not found' },
         { status: 404 }
       );
     }
 
-    // Update order
     order.pickup = {
       sellerMarked: true,
       sellerMarkedAt: new Date(),
@@ -45,7 +43,7 @@ export async function POST(request, { params }) {
       pickedUp: false,
       address: {
         name: seller.storeInfo?.storeName || seller.businessName,
-        phone: seller.pickupAddress?.phone || '',
+        phone: seller.phone,
         addressLine1: seller.pickupAddress?.addressLine1 || '',
         addressLine2: seller.pickupAddress?.addressLine2 || '',
         city: seller.pickupAddress?.city || '',

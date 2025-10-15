@@ -1,119 +1,87 @@
-// app/api/admin/orders/route.js
-import { NextResponse } from 'next/server'
-import connectDB from '@/lib/db/mongodb'
-import Order from '@/lib/db/models/Order'
-import { verifyToken, isAdmin } from '@/lib/utils/adminAuth'
+import { NextResponse } from 'next/server';
+import connectDB from '@/lib/db/mongodb';
+import Order from '@/lib/db/models/Order';
+import mongoose from 'mongoose';
+
+export const dynamic = 'force-dynamic';
 
 export async function GET(request) {
   try {
-    await connectDB()
-    const token = request.headers.get('authorization')?.replace('Bearer ', '')
-    const decoded = verifyToken(token)
+    await connectDB();
 
-    if (!decoded || !isAdmin(decoded)) {
-      return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 })
-    }
-
-    const { searchParams } = new URL(request.url)
-    const page = parseInt(searchParams.get('page')) || 1
-    const limit = parseInt(searchParams.get('limit')) || 20
-    const search = searchParams.get('search') || ''
-    const status = searchParams.get('status') || ''
-    const paymentStatus = searchParams.get('paymentStatus') || ''
-    const sortBy = searchParams.get('sortBy') || 'createdAt'
-    const order = searchParams.get('order') || 'desc'
-
-    const skip = (page - 1) * limit
+    const { searchParams } = new URL(request.url);
+    const status = searchParams.get('status');
+    const search = searchParams.get('search');
+    const page = parseInt(searchParams.get('page')) || 1;
+    const limit = parseInt(searchParams.get('limit')) || 20;
 
     // Build query
-    let query = {}
-    if (search) {
-      query.$or = [
-        { orderNumber: { $regex: search, $options: 'i' } },
-        { 'shippingAddress.name': { $regex: search, $options: 'i' } },
-        { 'shippingAddress.phone': { $regex: search, $options: 'i' } },
-      ]
+    const query = {};
+
+    if (status && status !== 'all') {
+      query.status = status;
     }
-    if (status) query.status = status
-    if (paymentStatus) query['payment.status'] = paymentStatus
 
-    // Build sort
-    const sort = {}
-    sort[sortBy] = order === 'asc' ? 1 : -1
+    if (search && search.trim()) {
+      query.$or = [
+        { orderNumber: { $regex: search.trim(), $options: 'i' } },
+        { 'shippingAddress.name': { $regex: search.trim(), $options: 'i' } },
+        { 'shippingAddress.phone': { $regex: search.trim(), $options: 'i' } }
+      ];
+    }
 
-    const [orders, total] = await Promise.all([
-      Order.find(query)
-        .populate('customer', 'name email phone')
-        .populate('items.seller', 'businessName')
-        .sort(sort)
-        .skip(skip)
-        .limit(limit)
-        .lean(),
-      Order.countDocuments(query),
-    ])
+    const allOrders = await Order.find(query)
+      .populate('customer', 'name email phone')
+      .populate('items.product', 'name images sku')
+      .populate('items.seller', 'businessName storeInfo email phone')
+      .sort({ createdAt: -1 })
+      .lean();
 
     // Calculate stats
     const stats = {
-      totalOrders: await Order.countDocuments(),
-      pendingOrders: await Order.countDocuments({ status: 'pending' }),
-      processingOrders: await Order.countDocuments({ status: 'processing' }),
-      shippedOrders: await Order.countDocuments({ status: 'shipped' }),
-      deliveredOrders: await Order.countDocuments({ status: 'delivered' }),
-      cancelledOrders: await Order.countDocuments({ status: 'cancelled' }),
-      totalRevenue: await Order.aggregate([
-        { $match: { status: { $nin: ['cancelled', 'refunded'] } } },
-        { $group: { _id: null, total: { $sum: '$pricing.total' } } },
-      ]).then((res) => res[0]?.total || 0),
-    }
+      total: allOrders.length,
+      confirmed: 0,
+      processing: 0,
+      ready_for_pickup: 0,
+      pickup: 0,
+      shipped: 0,
+      delivered: 0,
+      cancelled: 0,
+      returned: 0,
+      totalRevenue: 0
+    };
+
+    allOrders.forEach(order => {
+      if (stats.hasOwnProperty(order.status)) {
+        stats[order.status]++;
+      }
+      if (!['cancelled', 'returned'].includes(order.status)) {
+        stats.totalRevenue += order.pricing.total || 0;
+      }
+    });
+
+    // Pagination
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+    const paginatedOrders = allOrders.slice(startIndex, endIndex);
 
     return NextResponse.json({
       success: true,
-      orders,
-      stats,
+      orders: paginatedOrders,
+      stats: stats,
       pagination: {
-        total,
         page,
-        pages: Math.ceil(total / limit),
         limit,
-      },
-    })
+        total: allOrders.length,
+        pages: Math.ceil(allOrders.length / limit)
+      }
+    });
+
   } catch (error) {
-    return NextResponse.json({ success: false, message: 'Server error', error: error.message }, { status: 500 })
-  }
-}
-
-// Bulk update orders
-export async function PATCH(request) {
-  try {
-    await connectDB()
-    const token = request.headers.get('authorization')?.replace('Bearer ', '')
-    const decoded = verifyToken(token)
-
-    if (!decoded || !isAdmin(decoded)) {
-      return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 })
-    }
-
-    const { orderIds, action, status } = await request.json()
-
-    if (action === 'updateStatus' && status) {
-      await Order.updateMany(
-        { _id: { $in: orderIds } },
-        {
-          $set: { status },
-          $push: {
-            timeline: {
-              status,
-              description: `Order status updated to ${status} by admin`,
-              timestamp: new Date(),
-            },
-          },
-        }
-      )
-      return NextResponse.json({ success: true, message: 'Orders updated successfully' })
-    }
-
-    return NextResponse.json({ success: false, message: 'Invalid action' }, { status: 400 })
-  } catch (error) {
-    return NextResponse.json({ success: false, message: 'Server error', error: error.message }, { status: 500 })
+    console.error('Get admin orders error:', error);
+    return NextResponse.json(
+      { success: false, message: error.message },
+      { status: 500 }
+    );
   }
 }

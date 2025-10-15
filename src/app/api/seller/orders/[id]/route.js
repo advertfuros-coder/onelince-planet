@@ -18,7 +18,7 @@ export async function GET(request, { params }) {
     const order = await Order.findById(id)
       .populate('customer', 'name email phone')
       .populate('items.product', 'name images sku')
-      .populate('items.seller', 'storeInfo businessName')
+      .populate('items.seller', 'businessName storeInfo')
       .lean();
 
     if (!order) {

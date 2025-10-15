@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { 
-  FiPackage, FiSearch, FiFilter, FiEye, FiTruck, 
+  FiPackage, FiSearch, FiEye, FiTruck, 
   FiCheckCircle, FiClock, FiDollarSign, FiShoppingBag,
-  FiDownload, FiRefreshCw, FiAlertCircle
+  FiDownload, FiRefreshCw, FiAlertCircle, FiCheck, FiX
 } from 'react-icons/fi';
 import { toast } from 'react-hot-toast';
 import axios from 'axios';
@@ -20,23 +20,21 @@ export default function SellerOrdersPage() {
   const [loading, setLoading] = useState(true);
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const [processingAction, setProcessingAction] = useState(null);
 
   useEffect(() => {
-    // Check authentication
     if (!authLoading) {
       if (!isAuthenticated) {
         router.push('/login');
         return;
       }
       
-      // Check if user is a seller
       if (user && user.role !== 'seller') {
         toast.error('Access denied. Seller account required.');
         router.push('/');
         return;
       }
 
-      // Fetch orders if authenticated and is seller
       if (user && user._id) {
         fetchOrders();
       }
@@ -44,10 +42,7 @@ export default function SellerOrdersPage() {
   }, [authLoading, isAuthenticated, user, selectedStatus, searchTerm]);
 
   const fetchOrders = async () => {
-    if (!user?._id) {
-      console.error('No user ID available');
-      return;
-    }
+    if (!user?._id) return;
 
     setLoading(true);
     try {
@@ -58,9 +53,7 @@ export default function SellerOrdersPage() {
       });
 
       const response = await axios.get(`/api/seller/orders?${params}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+        headers: { 'Authorization': `Bearer ${token}` }
       });
       
       if (response.data.success) {
@@ -74,6 +67,59 @@ export default function SellerOrdersPage() {
       toast.error(error.response?.data?.message || 'Failed to fetch orders');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleUpdateStatus = async (orderId, status, reason = '') => {
+    if (processingAction) return;
+
+    setProcessingAction(orderId);
+    try {
+      const response = await axios.patch(
+        `/api/seller/orders/${orderId}/update-status`,
+        { status, sellerId: user._id, reason },
+        { 
+          headers: { 
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          } 
+        }
+      );
+
+      if (response.data.success) {
+        const actionText = status === 'processing' ? 'accepted' : 
+                          status === 'cancelled' ? 'declined' : 'updated';
+        toast.success(`Order ${actionText} successfully!`);
+        fetchOrders();
+      } else {
+        toast.error(response.data.message || 'Could not update order');
+      }
+    } catch (error) {
+      console.error('Update status error:', error);
+      toast.error(error.response?.data?.message || 'Error updating order');
+    } finally {
+      setProcessingAction(null);
+    }
+  };
+
+  const handleAcceptOrder = (orderId) => {
+    if (confirm('Accept this order and start processing?')) {
+      handleUpdateStatus(orderId, 'processing');
+    }
+  };
+
+  const handleDeclineOrder = (orderId) => {
+    const reason = prompt('Please enter reason for declining this order:');
+    if (reason && reason.trim()) {
+      handleUpdateStatus(orderId, 'cancelled', reason.trim());
+    } else if (reason !== null) {
+      toast.error('Reason is required to decline order');
+    }
+  };
+
+  const handleMarkReadyForPickup = (orderId) => {
+    if (confirm('Mark this order as ready for pickup?')) {
+      handleUpdateStatus(orderId, 'ready_for_pickup');
     }
   };
 
@@ -95,14 +141,13 @@ export default function SellerOrdersPage() {
 
   const statusFilters = [
     { value: 'all', label: 'All Orders', icon: FiShoppingBag },
-    { value: 'confirmed', label: 'Confirmed', icon: FiCheckCircle },
+    { value: 'confirmed', label: 'New Orders', icon: FiAlertCircle },
     { value: 'processing', label: 'Processing', icon: FiClock },
     { value: 'ready_for_pickup', label: 'Ready for Pickup', icon: FiPackage },
     { value: 'shipped', label: 'Shipped', icon: FiTruck },
     { value: 'delivered', label: 'Delivered', icon: FiCheckCircle }
   ];
 
-  // Show loading while checking auth
   if (authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -114,9 +159,8 @@ export default function SellerOrdersPage() {
     );
   }
 
-  // Show error if not authenticated or not a seller
   if (!isAuthenticated || !user || user.role !== 'seller') {
-    return null; // Router will redirect
+    return null;
   }
 
   return (
@@ -132,7 +176,6 @@ export default function SellerOrdersPage() {
               <p className="text-gray-600">
                 Welcome back, {user?.name || user?.businessName}
               </p>
-              <p className="text-xs text-gray-500 mt-1">Seller ID: {user?._id}</p>
             </div>
             <button
               onClick={fetchOrders}
@@ -153,9 +196,9 @@ export default function SellerOrdersPage() {
               <p className="text-sm opacity-90">Total Orders</p>
               <p className="text-3xl font-bold">{stats.total || 0}</p>
             </div>
-            <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl shadow-lg p-6 text-white">
-              <FiCheckCircle className="text-3xl mb-2 opacity-80" />
-              <p className="text-sm opacity-90">Confirmed</p>
+            <div className="bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-xl shadow-lg p-6 text-white">
+              <FiAlertCircle className="text-3xl mb-2 opacity-80" />
+              <p className="text-sm opacity-90">New Orders</p>
               <p className="text-3xl font-bold">{stats.confirmed || 0}</p>
             </div>
             <div className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl shadow-lg p-6 text-white">
@@ -174,7 +217,6 @@ export default function SellerOrdersPage() {
         {/* Filters */}
         <div className="bg-white rounded-2xl shadow-xl p-6 mb-8">
           <div className="flex flex-col lg:flex-row gap-4">
-            {/* Search */}
             <div className="flex-1">
               <div className="relative">
                 <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl" />
@@ -188,7 +230,6 @@ export default function SellerOrdersPage() {
               </div>
             </div>
 
-            {/* Status Filter Dropdown */}
             <select
               value={selectedStatus}
               onChange={(e) => setSelectedStatus(e.target.value)}
@@ -202,7 +243,6 @@ export default function SellerOrdersPage() {
             </select>
           </div>
 
-          {/* Status Filter Buttons */}
           <div className="flex flex-wrap gap-2 mt-4">
             {statusFilters.map(filter => {
               const Icon = filter.icon;
@@ -254,7 +294,6 @@ export default function SellerOrdersPage() {
             {orders.map((order) => (
               <div key={order._id} className="bg-white rounded-xl shadow-lg hover:shadow-xl transition overflow-hidden">
                 <div className="p-6">
-                  {/* Order Header */}
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
                     <div>
                       <h3 className="text-xl font-bold text-gray-900 mb-1">
@@ -269,7 +308,6 @@ export default function SellerOrdersPage() {
                     </span>
                   </div>
 
-                  {/* Customer Info */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4 p-4 bg-gray-50 rounded-lg">
                     <div>
                       <p className="text-xs text-gray-600 mb-1">Customer</p>
@@ -284,7 +322,6 @@ export default function SellerOrdersPage() {
                     </div>
                   </div>
 
-                  {/* Items */}
                   <div className="mb-4">
                     <p className="text-sm font-semibold text-gray-700 mb-2">Items ({order.items.length})</p>
                     <div className="space-y-2">
@@ -303,7 +340,6 @@ export default function SellerOrdersPage() {
                     </div>
                   </div>
 
-                  {/* Payment & Total */}
                   <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg mb-4">
                     <div>
                       <p className="text-xs text-gray-600">Payment Method</p>
@@ -315,8 +351,39 @@ export default function SellerOrdersPage() {
                     </div>
                   </div>
 
-                  {/* Action Buttons */}
                   <div className="flex flex-wrap gap-2">
+                    {order.status === 'confirmed' && (
+                      <>
+                        <button
+                          onClick={() => handleAcceptOrder(order._id)}
+                          disabled={processingAction === order._id}
+                          className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-medium disabled:opacity-50"
+                        >
+                          <FiCheck />
+                          {processingAction === order._id ? 'Accepting...' : 'Accept Order'}
+                        </button>
+                        <button
+                          onClick={() => handleDeclineOrder(order._id)}
+                          disabled={processingAction === order._id}
+                          className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition font-medium disabled:opacity-50"
+                        >
+                          <FiX />
+                          {processingAction === order._id ? 'Declining...' : 'Decline Order'}
+                        </button>
+                      </>
+                    )}
+
+                    {order.status === 'processing' && (
+                      <button
+                        onClick={() => handleMarkReadyForPickup(order._id)}
+                        disabled={processingAction === order._id}
+                        className="flex items-center gap-2 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition font-medium disabled:opacity-50"
+                      >
+                        <FiPackage />
+                        {processingAction === order._id ? 'Updating...' : 'Mark Ready for Pickup'}
+                      </button>
+                    )}
+
                     <Link
                       href={`/seller/orders/${order._id}`}
                       className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium"
@@ -324,23 +391,13 @@ export default function SellerOrdersPage() {
                       <FiEye />
                       View Details
                     </Link>
-                    
-                    {order.status === 'confirmed' && (
-                      <Link
-                        href={`/seller/orders/${order._id}/prepare`}
-                        className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-medium"
-                      >
-                        <FiPackage />
-                        Prepare Order
-                      </Link>
-                    )}
 
                     {order.shiprocket?.awbCode && (
                       <a
                         href={`https://shiprocket.co/tracking/${order.shiprocket.awbCode}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition font-medium"
+                        className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition font-medium"
                       >
                         <FiTruck />
                         Track Shipment

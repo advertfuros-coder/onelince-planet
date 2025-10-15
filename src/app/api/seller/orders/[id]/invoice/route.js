@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import connectDB from '@/lib/db/mongodb';
 import Order from '@/lib/db/models/Order';
-import Seller from '@/lib/db/models/Seller';
+import { generateInvoiceHTML } from '@/lib/services/invoiceGenerator';
 import mongoose from 'mongoose';
 
 export async function GET(request, { params }) {
@@ -17,9 +17,8 @@ export async function GET(request, { params }) {
     }
 
     const order = await Order.findById(id)
-      .populate('customer', 'name email phone')
+      .populate('customer', 'name email')
       .populate('items.product', 'name sku')
-      .populate('items.seller', 'businessName storeInfo pickupAddress')
       .lean();
 
     if (!order) {
@@ -29,22 +28,17 @@ export async function GET(request, { params }) {
       );
     }
 
-    return NextResponse.json({
-      success: true,
-      invoice: {
-        orderNumber: order.orderNumber,
-        orderDate: order.createdAt,
-        customer: order.customer,
-        seller: order.items[0].seller,
-        items: order.items,
-        pricing: order.pricing,
-        shippingAddress: order.shippingAddress,
-        payment: order.payment
+    const invoiceHTML = generateInvoiceHTML(order);
+
+    return new NextResponse(invoiceHTML, {
+      headers: {
+        'Content-Type': 'text/html',
+        'Content-Disposition': `inline; filename="invoice-${order.orderNumber}.html"`
       }
     });
 
   } catch (error) {
-    console.error('Get invoice error:', error);
+    console.error('Generate invoice error:', error);
     return NextResponse.json(
       { success: false, message: error.message },
       { status: 500 }
