@@ -26,6 +26,8 @@ import {
   FiEye
 } from 'react-icons/fi'
 import Link from 'next/link'
+import AIBusinessCoachWidget from '@/components/seller/AIBusinessCoachWidget'
+import AIQuickActions from '@/components/seller/AIQuickActions'
 
 export default function SellerDashboard() {
   const { token, user } = useAuth()
@@ -44,15 +46,15 @@ export default function SellerDashboard() {
     try {
       if (showRefresh) setRefreshing(true)
       else setLoading(true)
-      
+
       setError(null)
-      
+
       const response = await axios.get('/api/seller/dashboard', {
         headers: { Authorization: `Bearer ${token}` }
       })
 
       console.log('📊 Dashboard Data:', response.data.responseData)
-      
+
       if (response.data.success) {
         setDashboardData(response.data.responseData)
       } else {
@@ -137,7 +139,7 @@ export default function SellerDashboard() {
         <FiAlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
         <h2 className="text-2xl font-bold text-red-800 mb-2">Error Loading Dashboard</h2>
         <p className="text-red-600 mb-6">{error}</p>
-        <button 
+        <button
           onClick={() => loadDashboardData()}
           className="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-semibold"
         >
@@ -194,6 +196,12 @@ export default function SellerDashboard() {
         </div>
       )}
 
+      {/* AI-Powered Features Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <AIBusinessCoachWidget />
+        <AIQuickActions />
+      </div>
+
       {/* Revenue Cards - PRIMARY METRICS */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <RevenueCard
@@ -248,7 +256,7 @@ export default function SellerDashboard() {
           iconColor="from-purple-500 to-purple-600"
           badge={`${safeData.activeProducts} active`}
         />
-     
+
         <StatCard
           title="Total Customers"
           value={safeData.totalCustomers.toLocaleString()}
@@ -345,8 +353,8 @@ export default function SellerDashboard() {
               <FiAlertTriangle className="w-6 h-6 mr-2 text-orange-600" />
               Low Stock Alert ({safeData.lowStockProducts.length})
             </h2>
-            <Link 
-              href="/seller/products" 
+            <Link
+              href="/seller/products"
               className="text-orange-600 hover:text-orange-800 font-semibold text-sm"
             >
               Manage Inventory →
@@ -368,8 +376,8 @@ export default function SellerDashboard() {
               <FiClipboard className="w-6 h-6 mr-2 text-blue-600" />
               Recent Orders
             </h2>
-            <Link 
-              href="/seller/orders" 
+            <Link
+              href="/seller/orders"
               className="text-blue-600 hover:text-blue-800 font-semibold text-sm flex items-center space-x-1 transition-colors"
             >
               <span>View All Orders</span>
@@ -428,9 +436,8 @@ function RevenueCard({ title, subtitle, value, icon: Icon, iconColor, change, ch
             <Icon className="w-7 h-7 text-white" />
           </div>
           {change !== undefined && change !== null && (
-            <div className={`flex items-center space-x-1 ${
-              changeType === 'positive' ? 'text-green-600' : 'text-red-600'
-            }`}>
+            <div className={`flex items-center space-x-1 ${changeType === 'positive' ? 'text-green-600' : 'text-red-600'
+              }`}>
               {changeType === 'positive' ? (
                 <FiTrendingUp className="w-4 h-4" />
               ) : (
@@ -556,7 +563,7 @@ function SalesChart({ data }) {
                     style={{ height: `${height}%`, minHeight: sales > 0 ? '20px' : '0' }}
                   >
                     <div className="absolute inset-0 bg-gradient-to-t from-transparent to-white opacity-0 group-hover:opacity-20 transition-opacity"></div>
-                    
+
                     <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all bg-gray-900 text-white text-xs font-semibold px-3 py-2 rounded-lg whitespace-nowrap shadow-xl z-10">
                       ₹{sales.toLocaleString()}
                       <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-full">
@@ -641,7 +648,7 @@ function TopProducts({ products }) {
 function LowStockCard({ product }) {
   try {
     if (!product) return null
-    
+
     return (
       <div className="flex items-center space-x-3 p-3 bg-orange-50 border border-orange-200 rounded-lg hover:shadow-md transition-all">
         {product?.image ? (
@@ -775,14 +782,14 @@ function RecentOrdersTable({ orders }) {
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 font-medium">
-                    {order?.date ? new Date(order.date).toLocaleDateString('en-IN', { 
-                      day: 'numeric', 
-                      month: 'short', 
-                      year: 'numeric' 
+                    {order?.date ? new Date(order.date).toLocaleDateString('en-IN', {
+                      day: 'numeric',
+                      month: 'short',
+                      year: 'numeric'
                     }) : 'N/A'}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <Link 
+                    <Link
                       href={`/seller/orders/${order?.id || ''}`}
                       className="text-blue-600 hover:text-blue-800 font-semibold text-sm flex items-center space-x-1"
                     >

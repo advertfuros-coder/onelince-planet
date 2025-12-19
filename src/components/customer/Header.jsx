@@ -17,6 +17,7 @@ import {
 } from 'react-icons/fi'
 import { useAuth } from '../../lib/hooks/useAuth'
 import { useCart } from '../../lib/hooks/useCart'
+import { useWishlist } from '../../lib/hooks/useWishlist'
 
 const categories = [
   { name: 'Fashion', href: '/products?category=fashion' },
@@ -35,9 +36,10 @@ export default function Header() {
   const [isCategoriesOpen, setIsCategoriesOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [isSearchOpen, setIsSearchOpen] = useState(false)
-  
+
   const { user, logout } = useAuth()
   const { itemCount } = useCart()
+  const { wishlist } = useWishlist()
   const router = useRouter()
   const searchRef = useRef(null)
   const userMenuRef = useRef(null)
@@ -88,7 +90,7 @@ export default function Header() {
                 <span>Free shipping on orders above ₹500</span>
               </div>
             </div>
-            
+
             <div className="flex items-center space-x-4">
               <Link href="/seller-register" className="hover:text-blue-300 transition-colors">
                 Become a Seller
@@ -159,9 +161,11 @@ export default function Header() {
               {user && (
                 <Link href="/wishlist" className="relative p-2 text-gray-600 hover:text-blue-600 transition-colors">
                   <FiHeart className="w-6 h-6" />
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                    0
-                  </span>
+                  {wishlist.count > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                      {wishlist.count}
+                    </span>
+                  )}
                 </Link>
               )}
 
@@ -201,7 +205,7 @@ export default function Header() {
                       <p className="text-sm font-medium">{user.name}</p>
                       <p className="text-xs text-gray-500 capitalize">{user.role}</p>
                     </div>
-                     <FiChevronDown className="w-4 h-4" />
+                    <FiChevronDown className="w-4 h-4" />
                   </button>
 
                   {isUserMenuOpen && (
@@ -210,7 +214,7 @@ export default function Header() {
                         <p className="text-sm font-medium text-gray-900">{user.name}</p>
                         <p className="text-sm text-gray-500">{user.email}</p>
                       </div>
-                      
+
                       <Link
                         href="/profile"
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
@@ -239,7 +243,7 @@ export default function Header() {
                       >
                         Addresses
                       </Link>
-                      
+
                       {user.role === 'seller' && (
                         <Link
                           href="/seller/dashboard"
@@ -249,7 +253,7 @@ export default function Header() {
                           Seller Dashboard
                         </Link>
                       )}
-                      
+
                       {user.role === 'admin' && (
                         <Link
                           href="/admin/dashboard"
@@ -259,7 +263,7 @@ export default function Header() {
                           Admin Panel
                         </Link>
                       )}
-                      
+
                       <hr className="my-2" />
                       <button
                         onClick={handleLogout}

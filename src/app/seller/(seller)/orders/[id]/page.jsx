@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { 
+import {
   FiPackage, FiUser, FiMapPin, FiDollarSign, FiTruck,
   FiCalendar, FiClock, FiCheckCircle, FiArrowLeft,
   FiPrinter, FiDownload
@@ -152,24 +152,31 @@ export default function OrderDetailPage() {
                 Order Timeline
               </h2>
               <div className="space-y-4">
-                {order.timeline.map((event, index) => (
-                  <div key={index} className="flex gap-4">
-                    <div className="flex flex-col items-center">
-                      <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white">
-                        <FiCheckCircle />
+                {order.timeline && order.timeline.length > 0 ? (
+                  order.timeline.map((event, index) => (
+                    <div key={index} className="flex gap-4">
+                      <div className="flex flex-col items-center">
+                        <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white">
+                          <FiCheckCircle />
+                        </div>
+                        {index < order.timeline.length - 1 && (
+                          <div className="w-0.5 h-full bg-gray-300 mt-2"></div>
+                        )}
                       </div>
-                      {index < order.timeline.length - 1 && (
-                        <div className="w-0.5 h-full bg-gray-300 mt-2"></div>
-                      )}
+                      <div className="flex-1 pb-8">
+                        <p className="font-semibold text-gray-900">{event.description}</p>
+                        <p className="text-sm text-gray-600">
+                          {new Date(event.timestamp).toLocaleString()}
+                        </p>
+                      </div>
                     </div>
-                    <div className="flex-1 pb-8">
-                      <p className="font-semibold text-gray-900">{event.description}</p>
-                      <p className="text-sm text-gray-600">
-                        {new Date(event.timestamp).toLocaleString()}
-                      </p>
-                    </div>
+                  ))
+                ) : (
+                  <div className="text-center py-8 text-gray-500">
+                    <FiClock className="text-4xl mx-auto mb-2 opacity-50" />
+                    <p>No timeline information available</p>
                   </div>
-                ))}
+                )}
               </div>
             </div>
           </div>

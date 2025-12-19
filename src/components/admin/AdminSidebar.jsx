@@ -17,8 +17,9 @@ import {
   FiTrendingUp,
   FiGift,
 } from 'react-icons/fi'
+import clsx from 'clsx'
 
-export default function AdminSidebar() {
+export default function AdminSidebar({ onNavigate, isMobile = false }) {
   const pathname = usePathname()
 
   const navItems = [
@@ -29,17 +30,30 @@ export default function AdminSidebar() {
     { label: 'Orders', href: '/admin/orders', icon: FiShoppingCart },
     { label: 'Payout Requests', href: '/admin/payouts', icon: FiDollarSign },
     { label: 'Reviews', href: '/admin/reviews', icon: FiStar },
-    // { label: 'Categories', href: '/admin/categories', icon: FiPackage },
     { label: 'Analytics', href: '/admin/analytics', icon: FiBarChart2 },
-    // { label: 'Marketing', href: '/admin/marketing', icon: FiTrendingUp },
-    { label: 'Coupones', href: '/admin/coupons', icon: FiGift },
+    { label: 'Coupons', href: '/admin/coupons', icon: FiGift },
   ]
 
+  const handleClick = () => {
+    if (isMobile && onNavigate) {
+      onNavigate()
+    }
+  }
+
   return (
-    <aside className="w-64 bg-white border-r border-gray-200 shadow-sm flex flex-col h-screen sticky top-0">
+    <aside
+      className={clsx(
+        'w-64 bg-white flex flex-col h-screen',
+        isMobile ? 'shadow-xl' : 'border-r border-gray-200 shadow-sm sticky top-0 hidden lg:flex'
+      )}
+    >
       {/* Logo */}
       <div className="px-6 py-6 border-b border-gray-200">
-        <Link href="/admin/dashboard" className="flex items-center space-x-2">
+        <Link
+          href="/admin/dashboard"
+          className="flex items-center space-x-2"
+          onClick={handleClick}
+        >
           <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center">
             <span className="text-white font-bold text-xl">OP</span>
           </div>
@@ -58,13 +72,16 @@ export default function AdminSidebar() {
             <Link
               key={href}
               href={href}
-              className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+              onClick={handleClick}
+              className={clsx(
+                'flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200',
+                'min-h-[44px]', // Touch-friendly minimum height
                 isActive
                   ? 'bg-blue-50 text-blue-700 font-semibold shadow-sm'
-                  : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
-              }`}
+                  : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900 active:bg-gray-200'
+              )}
             >
-              <Icon className={`text-xl ${isActive ? 'text-blue-700' : 'text-gray-500'}`} />
+              <Icon className={clsx('text-xl', isActive ? 'text-blue-700' : 'text-gray-500')} />
               <span>{label}</span>
             </Link>
           )

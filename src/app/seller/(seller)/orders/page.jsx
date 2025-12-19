@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { 
-  FiPackage, FiSearch, FiEye, FiTruck, 
+import {
+  FiPackage, FiSearch, FiEye, FiTruck,
   FiCheckCircle, FiClock, FiDollarSign, FiShoppingBag,
   FiDownload, FiRefreshCw, FiAlertCircle, FiCheck, FiX
 } from 'react-icons/fi';
@@ -21,6 +21,30 @@ export default function SellerOrdersPage() {
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [processingAction, setProcessingAction] = useState(null);
+  const [sellerId, setSellerId] = useState(null);
+
+  // Fetch seller profile to get sellerId
+  useEffect(() => {
+    const fetchSellerProfile = async () => {
+      if (!user?._id || !token) return;
+
+      try {
+        const response = await axios.get('/api/seller/profile', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (response.data.success && response.data.seller) {
+          setSellerId(response.data.seller._id);
+        }
+      } catch (error) {
+        console.error('Failed to fetch seller profile:', error);
+      }
+    };
+
+    if (user && user.role === 'seller') {
+      fetchSellerProfile();
+    }
+  }, [user, token]);
 
   useEffect(() => {
     if (!authLoading) {
@@ -28,26 +52,26 @@ export default function SellerOrdersPage() {
         router.push('/login');
         return;
       }
-      
+
       if (user && user.role !== 'seller') {
         toast.error('Access denied. Seller account required.');
         router.push('/');
         return;
       }
 
-      if (user && user._id) {
+      if (sellerId) {
         fetchOrders();
       }
     }
-  }, [authLoading, isAuthenticated, user, selectedStatus, searchTerm]);
+  }, [authLoading, isAuthenticated, user, sellerId, selectedStatus, searchTerm]);
 
   const fetchOrders = async () => {
-    if (!user?._id) return;
+    if (!sellerId) return;
 
     setLoading(true);
     try {
       const params = new URLSearchParams({
-        sellerId: user._id,
+        sellerId: sellerId,
         status: selectedStatus,
         search: searchTerm
       });
@@ -55,7 +79,7 @@ export default function SellerOrdersPage() {
       const response = await axios.get(`/api/seller/orders?${params}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
-      
+
       if (response.data.success) {
         setOrders(response.data.orders);
         setStats(response.data.stats);
@@ -78,17 +102,17 @@ export default function SellerOrdersPage() {
       const response = await axios.patch(
         `/api/seller/orders/${orderId}/update-status`,
         { status, sellerId: user._id, reason },
-        { 
-          headers: { 
+        {
+          headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
-          } 
+          }
         }
       );
 
       if (response.data.success) {
-        const actionText = status === 'processing' ? 'accepted' : 
-                          status === 'cancelled' ? 'declined' : 'updated';
+        const actionText = status === 'processing' ? 'accepted' :
+          status === 'cancelled' ? 'declined' : 'updated';
         toast.success(`Order ${actionText} successfully!`);
         fetchOrders();
       } else {
@@ -164,7 +188,7 @@ export default function SellerOrdersPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 sm:p-8">
+    <div className="min-h-screen ">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 mb-8">
@@ -247,24 +271,22 @@ export default function SellerOrdersPage() {
             {statusFilters.map(filter => {
               const Icon = filter.icon;
               const count = filter.value === 'all' ? stats?.total : stats?.[filter.value] || 0;
-              
+
               return (
                 <button
                   key={filter.value}
                   onClick={() => setSelectedStatus(filter.value)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition ${
-                    selectedStatus === filter.value
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition ${selectedStatus === filter.value
                       ? 'bg-blue-600 text-white shadow-lg'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
+                    }`}
                 >
                   <Icon />
                   <span>{filter.label}</span>
-                  <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${
-                    selectedStatus === filter.value
+                  <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${selectedStatus === filter.value
                       ? 'bg-white text-blue-600'
                       : 'bg-white text-gray-700'
-                  }`}>
+                    }`}>
                     {count}
                   </span>
                 </button>
@@ -284,8 +306,8 @@ export default function SellerOrdersPage() {
             <FiPackage className="text-6xl text-gray-300 mx-auto mb-4" />
             <h2 className="text-2xl font-bold text-gray-900 mb-2">No Orders Found</h2>
             <p className="text-gray-600">
-              {searchTerm || selectedStatus !== 'all' 
-                ? 'Try adjusting your filters' 
+              {searchTerm || selectedStatus !== 'all'
+                ? 'Try adjusting your filters'
                 : 'You haven\'t received any orders yet'}
             </p>
           </div>

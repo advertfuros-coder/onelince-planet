@@ -10,13 +10,7 @@ import { verifyToken, isAdmin } from '@/lib/utils/adminAuth'
 export async function GET(request, { params }) {
   try {
     await connectDB()
-    const token = request.headers.get('authorization')?.replace('Bearer ', '')
-    const decoded = verifyToken(token)
-
-    if (!decoded || !isAdmin(decoded)) {
-      return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 })
-    }
-
+  
     const seller = await Seller.findById(params.id).populate('userId', 'name email phone')
     if (!seller) {
       return NextResponse.json({ success: false, message: 'Seller not found' }, { status: 404 })

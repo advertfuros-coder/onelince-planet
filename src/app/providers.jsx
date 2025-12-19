@@ -9,7 +9,7 @@ export function Providers({ children }) {
     <AuthProvider>
       <CartProvider>
         {children}
-        <Toaster 
+        <Toaster
           position="top-center"
           toastOptions={{
             duration: 3000,

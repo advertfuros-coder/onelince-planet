@@ -80,7 +80,7 @@ export default function EditProductPage({ params }) {
           category: product.category || '',
           brand: product.brand || '',
           sku: product.sku || '',
-          images: product.images || [],
+          images: Array.isArray(product.images) ? product.images : [],
           pricing: {
             basePrice: product.pricing?.basePrice || 0,
             salePrice: product.pricing?.salePrice || 0,
@@ -91,8 +91,8 @@ export default function EditProductPage({ params }) {
             lowStockThreshold: product.inventory?.lowStockThreshold || 10,
             warehouse: product.inventory?.warehouse || '',
           },
-          specifications: product.specifications || [],
-          tags: product.tags || [],
+          specifications: Array.isArray(product.specifications) ? product.specifications : [],
+          tags: Array.isArray(product.tags) ? product.tags : [],
           shipping: {
             weight: product.shipping?.weight || 0,
             dimensions: {
@@ -106,7 +106,7 @@ export default function EditProductPage({ params }) {
           seo: {
             metaTitle: product.seo?.metaTitle || '',
             metaDescription: product.seo?.metaDescription || '',
-            keywords: product.seo?.keywords || [],
+            keywords: Array.isArray(product.seo?.keywords) ? product.seo.keywords : [],
           },
           isActive: product.isActive,
         })
@@ -142,12 +142,12 @@ export default function EditProductPage({ params }) {
   function addSpecification() {
     setFormData({
       ...formData,
-      specifications: [...formData.specifications, { key: '', value: '' }],
+      specifications: [...(formData.specifications || []), { key: '', value: '' }],
     })
   }
 
   function updateSpecification(index, field, value) {
-    const newSpecs = [...formData.specifications]
+    const newSpecs = [...(formData.specifications || [])]
     newSpecs[index][field] = value
     setFormData({ ...formData, specifications: newSpecs })
   }
@@ -155,17 +155,17 @@ export default function EditProductPage({ params }) {
   function removeSpecification(index) {
     setFormData({
       ...formData,
-      specifications: formData.specifications.filter((_, i) => i !== index),
+      specifications: (formData.specifications || []).filter((_, i) => i !== index),
     })
   }
 
   function addTag(e) {
     if (e.key === 'Enter' && e.target.value.trim()) {
       e.preventDefault()
-      if (!formData.tags.includes(e.target.value.trim())) {
+      if (!(formData.tags || []).includes(e.target.value.trim())) {
         setFormData({
           ...formData,
-          tags: [...formData.tags, e.target.value.trim()],
+          tags: [...(formData.tags || []), e.target.value.trim()],
         })
       }
       e.target.value = ''
@@ -175,19 +175,19 @@ export default function EditProductPage({ params }) {
   function removeTag(tag) {
     setFormData({
       ...formData,
-      tags: formData.tags.filter((t) => t !== tag),
+      tags: (formData.tags || []).filter((t) => t !== tag),
     })
   }
 
   function addKeyword(e) {
     if (e.key === 'Enter' && e.target.value.trim()) {
       e.preventDefault()
-      if (!formData.seo.keywords.includes(e.target.value.trim())) {
+      if (!(formData.seo?.keywords || []).includes(e.target.value.trim())) {
         setFormData({
           ...formData,
           seo: {
             ...formData.seo,
-            keywords: [...formData.seo.keywords, e.target.value.trim()],
+            keywords: [...(formData.seo?.keywords || []), e.target.value.trim()],
           },
         })
       }
@@ -200,7 +200,7 @@ export default function EditProductPage({ params }) {
       ...formData,
       seo: {
         ...formData.seo,
-        keywords: formData.seo.keywords.filter((k) => k !== keyword),
+        keywords: (formData.seo?.keywords || []).filter((k) => k !== keyword),
       },
     })
   }
@@ -209,7 +209,7 @@ export default function EditProductPage({ params }) {
     if (url.trim()) {
       setFormData({
         ...formData,
-        images: [...formData.images, url.trim()],
+        images: [...(formData.images || []), url.trim()],
       })
     }
   }
@@ -217,7 +217,7 @@ export default function EditProductPage({ params }) {
   function removeImage(index) {
     setFormData({
       ...formData,
-      images: formData.images.filter((_, i) => i !== index),
+      images: (formData.images || []).filter((_, i) => i !== index),
     })
   }
 
@@ -386,7 +386,7 @@ export default function EditProductPage({ params }) {
 
           {/* Specifications */}
           <Section title="Specifications">
-            {formData.specifications.map((spec, index) => (
+            {Array.isArray(formData.specifications) && formData.specifications.map((spec, index) => (
               <div key={index} className="flex space-x-2">
                 <Input
                   placeholder="Key (e.g., Display)"
@@ -531,7 +531,7 @@ export default function EditProductPage({ params }) {
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
               />
               <div className="flex flex-wrap gap-2 mt-2">
-                {formData.seo.keywords.map((keyword, index) => (
+                {Array.isArray(formData.seo?.keywords) && formData.seo.keywords.map((keyword, index) => (
                   <span
                     key={index}
                     className="flex items-center space-x-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm"
@@ -565,7 +565,7 @@ export default function EditProductPage({ params }) {
           {/* Images */}
           <Section title="Product Images">
             <div className="space-y-3">
-              {formData.images.map((img, index) => (
+              {Array.isArray(formData.images) && formData.images.map((img, index) => (
                 <div key={index} className="relative group">
                   <img src={img} alt={`Product ${index + 1}`} className="w-full h-32 object-cover rounded-lg" />
                   <button
@@ -600,7 +600,7 @@ export default function EditProductPage({ params }) {
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
             />
             <div className="flex flex-wrap gap-2 mt-2">
-              {formData.tags.map((tag, index) => (
+              {Array.isArray(formData.tags) && formData.tags.map((tag, index) => (
                 <span
                   key={index}
                   className="flex items-center space-x-1 px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm"

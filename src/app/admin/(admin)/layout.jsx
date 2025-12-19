@@ -1,6 +1,7 @@
 // app/(admin)/layout.jsx
-import AdminSidebar from '@/components/admin/AdminSidebar.jsx'
-import AdminHeader from '@/components/admin/AdminHeader.jsx'
+import AdminSidebar from '@/components/admin/AdminSidebar'
+import AdminHeader from '@/components/admin/AdminHeader'
+import GlobalSearch from '@/components/admin/GlobalSearch'
 
 export default function AdminLayout({ children }) {
   return (
@@ -8,10 +9,12 @@ export default function AdminLayout({ children }) {
       <AdminSidebar />
       <div className="flex-1 flex flex-col overflow-hidden">
         <AdminHeader />
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6">
+        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-4 md:p-6">
           {children}
         </main>
       </div>
+      {/* Global Search (Cmd+K) */}
+      <GlobalSearch />
     </div>
   )
 }

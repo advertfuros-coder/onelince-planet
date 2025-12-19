@@ -1,7 +1,7 @@
 // seller/(seller)/customers/page.jsx
 'use client'
 import { useState, useEffect } from 'react'
-import { 
+import {
   FiSearch,
   FiMail,
   FiPhone,
@@ -11,50 +11,39 @@ import {
 } from 'react-icons/fi'
 import Button from '@/components/ui/Button'
 import { formatPrice } from '@/lib/utils'
- 
+import { useAuth } from '@/lib/context/AuthContext'
+import axios from 'axios'
+import { toast } from 'react-hot-toast'
+
 export default function SellerCustomers() {
+  const { token } = useAuth()
   const [customers, setCustomers] = useState([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
 
   useEffect(() => {
-    loadCustomers()
-  }, [])
+    if (token) {
+      loadCustomers()
+    }
+  }, [token])
 
   const loadCustomers = async () => {
+    if (!token) return
+
+    setLoading(true)
     try {
-      // Mock customer data
-      const mockCustomers = [
-        {
-          id: '1',
-          name: 'John Doe',
-          email: 'john@example.com',
-          phone: '+91-9876543210',
-          location: 'Mumbai, Maharashtra',
-          totalOrders: 12,
-          totalSpent: 28450,
-          averageOrderValue: 2371,
-          lastOrder: '2025-09-28',
-          customerSince: '2024-12-15',
-          status: 'active'
-        },
-        {
-          id: '2',
-          name: 'Jane Smith',
-          email: 'jane@example.com',
-          phone: '+91-9876543211',
-          location: 'Delhi, NCR',
-          totalOrders: 8,
-          totalSpent: 15620,
-          averageOrderValue: 1953,
-          lastOrder: '2025-09-25',
-          customerSince: '2025-01-20',
-          status: 'active'
-        }
-      ]
-      setCustomers(mockCustomers)
+      const response = await axios.get('/api/seller/customers', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+
+      if (response.data.success) {
+        setCustomers(response.data.customers)
+      } else {
+        toast.error('Failed to load customers')
+      }
     } catch (error) {
       console.error('Error loading customers:', error)
+      toast.error('Failed to load customer data')
     } finally {
       setLoading(false)
     }
@@ -106,9 +95,8 @@ export default function SellerCustomers() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900">{customer.name}</h3>
-                  <span className={`inline-block px-2 py-1 text-xs rounded-full ${
-                    customer.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-                  }`}>
+                  <span className={`inline-block px-2 py-1 text-xs rounded-full ${customer.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                    }`}>
                     {customer.status}
                   </span>
                 </div>

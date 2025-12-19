@@ -9,59 +9,64 @@ import {
   FiCalendar,
   FiDownload
 } from 'react-icons/fi'
- import Button from '@/components/ui/Button'
+import Button from '@/components/ui/Button'
 import { formatPrice } from '@/lib/utils'
 import DashboardCard from '@/components/seller/DashboardCard'
- 
+import AISellerPredictions from '@/components/seller/AISellerPredictions'
+import { useAuth } from '@/lib/context/AuthContext'
+import axios from 'axios'
+import { toast } from 'react-hot-toast'
+
 export default function SellerAnalytics() {
+  const { token } = useAuth()
   const [analyticsData, setAnalyticsData] = useState({
     overview: {
-      totalRevenue: 125680,
-      totalOrders: 1247,
-      avgOrderValue: 1876,
-      conversionRate: 3.2
+      totalRevenue: 0,
+      totalOrders: 0,
+      avgOrderValue: 0,
+      conversionRate: 0
+    },
+    growth: {
+      revenue: 0,
+      orders: 0,
+      avgOrderValue: 0,
+      conversionRate: 0
     },
     salesTrend: [],
     topCategories: [],
-    customerInsights: {}
+    customerInsights: {
+      newCustomers: 0,
+      returningCustomers: 0,
+      customerRetentionRate: 0,
+      totalCustomers: 0
+    }
   })
   const [loading, setLoading] = useState(true)
   const [dateRange, setDateRange] = useState('30days')
 
   useEffect(() => {
-    loadAnalytics()
-  }, [dateRange])
+    if (token) {
+      loadAnalytics()
+    }
+  }, [dateRange, token])
 
   const loadAnalytics = async () => {
+    if (!token) return
+
+    setLoading(true)
     try {
-      // Mock analytics data
-      setAnalyticsData({
-        overview: {
-          totalRevenue: 125680,
-          totalOrders: 1247,
-          avgOrderValue: 1876,
-          conversionRate: 3.2
-        },
-        salesTrend: [
-          { date: '2025-09-01', revenue: 4500, orders: 12 },
-          { date: '2025-09-02', revenue: 3200, orders: 8 },
-          { date: '2025-09-03', revenue: 5600, orders: 15 },
-          { date: '2025-09-04', revenue: 2800, orders: 6 }
-        ],
-        topCategories: [
-          { name: 'Electronics', revenue: 45000, percentage: 36 },
-          { name: 'Fashion', revenue: 32000, percentage: 25 },
-          { name: 'Home & Decor', revenue: 28000, percentage: 22 },
-          { name: 'Books', revenue: 20680, percentage: 17 }
-        ],
-        customerInsights: {
-          newCustomers: 156,
-          returningCustomers: 89,
-          customerRetentionRate: 67
-        }
+      const response = await axios.get(`/api/seller/analytics?range=${dateRange}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
       })
+
+      if (response.data.success) {
+        setAnalyticsData(response.data.data)
+      } else {
+        toast.error('Failed to load analytics')
+      }
     } catch (error) {
       console.error('Error loading analytics:', error)
+      toast.error('Failed to load analytics data')
     } finally {
       setLoading(false)
     }
@@ -72,32 +77,32 @@ export default function SellerAnalytics() {
       title: 'Total Revenue',
       value: `₹${analyticsData.overview.totalRevenue.toLocaleString()}`,
       icon: FiDollarSign,
-      change: '+15.3%',
-      changeType: 'increase',
+      change: `${analyticsData.growth.revenue > 0 ? '+' : ''}${analyticsData.growth.revenue}%`,
+      changeType: analyticsData.growth.revenue >= 0 ? 'increase' : 'decrease',
       color: 'green'
     },
     {
       title: 'Total Orders',
       value: analyticsData.overview.totalOrders.toLocaleString(),
       icon: FiShoppingCart,
-      change: '+8.2%',
-      changeType: 'increase',
+      change: `${analyticsData.growth.orders > 0 ? '+' : ''}${analyticsData.growth.orders}%`,
+      changeType: analyticsData.growth.orders >= 0 ? 'increase' : 'decrease',
       color: 'blue'
     },
     {
       title: 'Avg Order Value',
       value: `₹${analyticsData.overview.avgOrderValue.toLocaleString()}`,
       icon: FiTrendingUp,
-      change: '+12.1%',
-      changeType: 'increase',
+      change: `${analyticsData.growth.avgOrderValue > 0 ? '+' : ''}${analyticsData.growth.avgOrderValue}%`,
+      changeType: analyticsData.growth.avgOrderValue >= 0 ? 'increase' : 'decrease',
       color: 'purple'
     },
     {
       title: 'Conversion Rate',
       value: `${analyticsData.overview.conversionRate}%`,
       icon: FiUsers,
-      change: '+0.5%',
-      changeType: 'increase',
+      change: `${analyticsData.growth.conversionRate > 0 ? '+' : ''}${analyticsData.growth.conversionRate}%`,
+      changeType: analyticsData.growth.conversionRate >= 0 ? 'increase' : 'decrease',
       color: 'orange'
     }
   ]
@@ -138,6 +143,9 @@ export default function SellerAnalytics() {
           <DashboardCard key={index} {...card} />
         ))}
       </div>
+
+      {/* AI Predictions Section */}
+      <AISellerPredictions />
 
       {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

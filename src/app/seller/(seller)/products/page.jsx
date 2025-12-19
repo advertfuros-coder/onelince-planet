@@ -17,11 +17,15 @@ import {
   FiEye,
   FiFilter,
   FiDownload,
+  FiUpload,
+  FiBarChart2,
 } from 'react-icons/fi'
 import { toast } from 'react-hot-toast'
+import BulkUploadModal from '@/components/seller/BulkUploadModal'
+import { SellerBadges } from '@/components/seller/SellerBadge'
 
 export default function SellerProductsPage() {
-  const { token } = useAuth()
+  const { token, user } = useAuth()
   const [products, setProducts] = useState([])
   const [stats, setStats] = useState({})
   const [loading, setLoading] = useState(true)
@@ -30,10 +34,28 @@ export default function SellerProductsPage() {
   const [selectedStatus, setSelectedStatus] = useState('')
   const [page, setPage] = useState(1)
   const [pagination, setPagination] = useState({})
+  const [showBulkUpload, setShowBulkUpload] = useState(false)
+  const [sellerBadges, setSellerBadges] = useState([])
 
   useEffect(() => {
-    if (token) fetchProducts()
+    if (token) {
+      fetchProducts()
+      fetchSellerBadges()
+    }
   }, [token, search, selectedCategory, selectedStatus, page])
+
+  async function fetchSellerBadges() {
+    try {
+      const res = await axios.get('/api/seller/verification', {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      if (res.data.success) {
+        setSellerBadges(res.data.verification?.badges || [])
+      }
+    } catch (error) {
+      console.log('Could not fetch badges')
+    }
+  }
 
   async function fetchProducts() {
     try {
@@ -104,18 +126,41 @@ export default function SellerProductsPage() {
     <div className="space-y-6">
       {/* Header */}
       <div className="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-xl shadow-lg p-6 text-white">
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
-            <h1 className="text-3xl font-bold">📦 My Products</h1>
-            <p className="mt-2 text-purple-100">Manage your product inventory</p>
+            <div className="flex items-center space-x-3 mb-2">
+              <h1 className="text-3xl font-bold">📦 My Products</h1>
+              {sellerBadges.length > 0 && (
+                <div className="hidden md:block">
+                  <SellerBadges badges={sellerBadges} maxDisplay={2} size="sm" />
+                </div>
+              )}
+            </div>
+            <p className="text-purple-100">Manage your product inventory</p>
           </div>
-          <Link
-            href="/seller/products/new"
-            className="flex items-center space-x-2 px-6 py-3 bg-white text-purple-600 rounded-lg hover:bg-purple-50 font-semibold shadow-lg"
-          >
-            <FiPlus />
-            <span>Add Product</span>
-          </Link>
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={() => setShowBulkUpload(true)}
+              className="flex items-center space-x-2 px-4 py-2.5 bg-white/10 backdrop-blur-sm border border-white/30 text-white rounded-lg hover:bg-white/20 font-semibold transition-all"
+            >
+              <FiUpload />
+              <span>Bulk Upload</span>
+            </button>
+            <Link
+              href="/seller/insights"
+              className="flex items-center space-x-2 px-4 py-2.5 bg-white/10 backdrop-blur-sm border border-white/30 text-white rounded-lg hover:bg-white/20 font-semibold transition-all"
+            >
+              <FiBarChart2 />
+              <span className="hidden sm:inline">Performance</span>
+            </Link>
+            <Link
+              href="/seller/products/new"
+              className="flex items-center space-x-2 px-4 py-2.5 bg-white text-purple-600 rounded-lg hover:bg-purple-50 font-semibold shadow-lg transition-all"
+            >
+              <FiPlus />
+              <span>Add Product</span>
+            </Link>
+          </div>
         </div>
       </div>
 
@@ -240,11 +285,10 @@ export default function SellerProductsPage() {
                       </td>
                       <td className="px-6 py-4 text-right">
                         <span
-                          className={`font-semibold ${
-                            product.inventory.stock <= product.inventory.lowStockThreshold
+                          className={`font-semibold ${product.inventory.stock <= product.inventory.lowStockThreshold
                               ? 'text-red-600'
                               : 'text-gray-900'
-                          }`}
+                            }`}
                         >
                           {product.inventory.stock}
                         </span>
@@ -263,11 +307,10 @@ export default function SellerProductsPage() {
                         <div className="flex justify-end space-x-2">
                           <button
                             onClick={() => toggleProductStatus(product._id, product.isActive)}
-                            className={`p-2 rounded transition-colors ${
-                              product.isActive
+                            className={`p-2 rounded transition-colors ${product.isActive
                                 ? 'text-yellow-600 hover:bg-yellow-50'
                                 : 'text-green-600 hover:bg-green-50'
-                            }`}
+                              }`}
                             title={product.isActive ? 'Deactivate' : 'Activate'}
                           >
                             {product.isActive ? <FiXCircle /> : <FiCheckCircle />}
@@ -320,6 +363,17 @@ export default function SellerProductsPage() {
           </>
         )}
       </div>
+
+      {/* Modals */}
+      {showBulkUpload && (
+        <BulkUploadModal
+          onClose={() => setShowBulkUpload(false)}
+          onSuccess={() => {
+            setShowBulkUpload(false)
+            fetchProducts()
+          }}
+        />
+      )}
     </div>
   )
 }

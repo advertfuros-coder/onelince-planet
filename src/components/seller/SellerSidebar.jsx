@@ -15,7 +15,17 @@ import {
   FiMessageCircle,
   FiTruck,
   FiStar,
-  FiMenu
+  FiMenu,
+  FiMapPin,
+  FiZap,
+  FiTrendingUp,
+  FiAlertCircle,
+  FiAward,
+  FiLink,
+  FiBook,
+  FiUser,
+  FiCreditCard,
+  FiFileText,
 } from 'react-icons/fi'
 import { useAuth } from '../../lib/context/AuthContext'
 
@@ -34,6 +44,30 @@ const sidebarItems = [
     name: 'Orders',
     href: '/seller/orders',
     icon: FiClipboard
+  },
+  {
+    name: 'Insights',
+    href: '/seller/insights',
+    icon: FiTrendingUp,
+    badge: 'New'
+  },
+  {
+    name: 'Warehouses',
+    href: '/seller/warehouses',
+    icon: FiMapPin,
+    badge: 'New'
+  },
+  {
+    name: 'Inventory Alerts',
+    href: '/seller/inventory-alerts',
+    icon: FiAlertCircle,
+    badge: 'New'
+  },
+  {
+    name: 'Pricing Rules',
+    href: '/seller/pricing-rules',
+    icon: FiZap,
+    badge: 'New'
   },
   {
     name: 'Analytics',
@@ -69,6 +103,52 @@ const sidebarItems = [
     name: 'Notifications',
     href: '/seller/notifications',
     icon: FiBell
+  },
+  {
+    name: 'Suppliers',
+    href: '/seller/suppliers',
+    icon: FiUsers,
+    badge: 'New'
+  },
+  {
+    name: 'Advertising',
+    href: '/seller/advertising',
+    icon: FiTrendingUp,
+    badge: 'New'
+  },
+  {
+    name: 'Training',
+    href: '/seller/training',
+    icon: FiBook,
+    badge: 'New'
+  },
+  {
+    name: 'Integrations',
+    href: '/seller/integrations',
+    icon: FiLink,
+    badge: 'New'
+  },
+  {
+    name: 'Documents',
+    href: '/seller/documents',
+    icon: FiFileText,
+    badge: 'New'
+  },
+  {
+    name: 'Profile',
+    href: '/seller/profile',
+    icon: FiUser
+  },
+  {
+    name: 'Bank Details',
+    href: '/seller/bank-details',
+    icon: FiCreditCard
+  },
+  {
+    name: 'Subscription',
+    href: '/seller/subscription',
+    icon: FiAward,
+    badge: 'New'
   },
   {
     name: 'Settings',
@@ -125,19 +205,25 @@ export default function SellerSidebar() {
           {sidebarItems.map((item) => {
             const Icon = item.icon
             const isActive = pathname === item.href
-            
+
             return (
               <li key={item.name}>
                 <Link
                   href={item.href}
-                  className={`flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    isActive
-                      ? 'bg-blue-100 text-blue-600'
-                      : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
-                  }`}
+                  className={`flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors ${isActive
+                    ? 'bg-blue-100 text-blue-600'
+                    : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                    }`}
                 >
-                  <Icon className="w-5 h-5 mr-3" />
-                  {!collapsed && <span>{item.name}</span>}
+                  <div className="flex items-center">
+                    <Icon className="w-5 h-5 mr-3" />
+                    {!collapsed && <span>{item.name}</span>}
+                  </div>
+                  {!collapsed && item.badge && (
+                    <span className="px-2 py-0.5 bg-gradient-to-r from-purple-600 to-blue-600 text-white text-xs rounded-full font-semibold">
+                      {item.badge}
+                    </span>
+                  )}
                 </Link>
               </li>
             )

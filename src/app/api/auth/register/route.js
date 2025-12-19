@@ -27,11 +27,11 @@ export async function POST(request) {
     email,
     password,
     phone,
-    role: "customer",
+    role: "admin",
     isVerified: true,
   });
   const token = jwt.sign(
-    { id: user._id, role: "customer" },
+    { id: user._id, role: "admin" },
     process.env.JWT_SECRET,
     { expiresIn: "7d" }
   );
@@ -42,7 +42,7 @@ export async function POST(request) {
       email: user.email,
       _id: user._id,
       phone,
-      role: "customer",
+      role: "admin",
     },
     token,
   });

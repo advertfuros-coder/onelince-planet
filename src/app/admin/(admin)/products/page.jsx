@@ -165,13 +165,20 @@ export default function AdminProductsPage() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-4">
         <StatCard
-          label="Total Products"
+          label="Total"
           value={stats.totalProducts || 0}
           icon={<FiPackage />}
           color="text-blue-600"
           bgColor="bg-blue-50"
+        />
+        <StatCard
+          label="Pending"
+          value={stats.pendingApproval || 0}
+          icon={<FiAlertCircle />}
+          color="text-yellow-600"
+          bgColor="bg-yellow-50"
         />
         <StatCard
           label="Active"
@@ -187,14 +194,6 @@ export default function AdminProductsPage() {
           color="text-red-600"
           bgColor="bg-red-50"
         />
-        <StatCard
-  label="Return Requests"
-  value={stats.returnedOrders || 0}
-  icon={<FiAlertCircle />}
-  color="text-red-600"
-  bgColor="bg-red-50"
-  small
-/>
         <StatCard
           label="Out of Stock"
           value={stats.outOfStock || 0}
@@ -255,6 +254,7 @@ export default function AdminProductsPage() {
             className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
           >
             <option value="">All Status</option>
+            <option value="pending">Pending Approval</option>
             <option value="active">Active</option>
             <option value="inactive">Inactive</option>
           </select>
@@ -292,14 +292,26 @@ export default function AdminProductsPage() {
             </p>
             <div className="flex space-x-3">
               <button
-                onClick={() => handleBulkAction('activate')}
+                onClick={() => handleBulkAction('approve')}
                 className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm"
+              >
+                Approve
+              </button>
+              <button
+                onClick={() => handleBulkAction('reject')}
+                className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 text-sm"
+              >
+                Reject
+              </button>
+              <button
+                onClick={() => handleBulkAction('activate')}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"
               >
                 Activate
               </button>
               <button
                 onClick={() => handleBulkAction('deactivate')}
-                className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 text-sm"
+                className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 text-sm"
               >
                 Deactivate
               </button>
@@ -376,8 +388,8 @@ export default function AdminProductsPage() {
                             className="w-12 h-12 object-cover rounded-lg"
                           />
 
- 
-                          
+
+
                           <div>
                             <p className="font-semibold text-gray-900">{product.name}</p>
                             <p className="text-sm text-gray-500">SKU: {product.sku}</p>
@@ -399,35 +411,67 @@ export default function AdminProductsPage() {
                       </td>
                       <td className="px-6 py-4">
                         <span
-                          className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                            product.inventory?.stock === 0
+                          className={`px-2 py-1 rounded-full text-xs font-semibold ${product.inventory?.stock === 0
                               ? 'bg-red-100 text-red-700'
                               : product.inventory?.stock <= 10
-                              ? 'bg-yellow-100 text-yellow-700'
-                              : 'bg-green-100 text-green-700'
-                          }`}
+                                ? 'bg-yellow-100 text-yellow-700'
+                                : 'bg-green-100 text-green-700'
+                            }`}
                         >
                           {product.inventory?.stock || 0}
                         </span>
                       </td>
-                    <td className="px-6 py-4 text-sm text-gray-600">
-  {product.seller?.businessName || 'N/A'}
-</td>
+                      <td className="px-6 py-4 text-sm text-gray-600">
+                        {product.seller?.businessName || 'N/A'}
+                      </td>
                       <td className="px-6 py-4">
-                        {product.isActive ? (
-                          <span className="flex items-center space-x-1 text-green-600 text-sm font-semibold">
-                            <FiCheckCircle />
-                            <span>Active</span>
-                          </span>
-                        ) : (
-                          <span className="flex items-center space-x-1 text-red-600 text-sm font-semibold">
-                            <FiXCircle />
-                            <span>Inactive</span>
-                          </span>
-                        )}
+                        <div className="flex flex-col space-y-1">
+                          {product.isApproved ? (
+                            <span className="flex items-center space-x-1 text-green-600 text-xs font-semibold bg-green-50 px-2 py-0.5 rounded-full w-fit">
+                              <FiCheckCircle />
+                              <span>Approved</span>
+                            </span>
+                          ) : (
+                            <span className="flex items-center space-x-1 text-yellow-600 text-xs font-semibold bg-yellow-50 px-2 py-0.5 rounded-full w-fit">
+                              <FiAlertCircle />
+                              <span>Pending</span>
+                            </span>
+                          )}
+                          {product.isActive ? (
+                            <span className="flex items-center space-x-1 text-blue-600 text-xs font-semibold bg-blue-50 px-2 py-0.5 rounded-full w-fit">
+                              <FiCheckCircle />
+                              <span>Live</span>
+                            </span>
+                          ) : (
+                            <span className="flex items-center space-x-1 text-red-600 text-xs font-semibold bg-red-50 px-2 py-0.5 rounded-full w-fit">
+                              <FiXCircle />
+                              <span>Hidden</span>
+                            </span>
+                          )}
+                        </div>
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex justify-end space-x-2">
+                          {!product.isApproved && (
+                            <button
+                              onClick={async () => {
+                                try {
+                                  await axios.patch(
+                                    '/api/admin/products',
+                                    { productIds: [product._id], action: 'approve' },
+                                    { headers: { Authorization: `Bearer ${token}` } }
+                                  )
+                                  fetchProducts()
+                                } catch (error) {
+                                  alert('Failed to approve product')
+                                }
+                              }}
+                              className="p-2 text-green-600 hover:bg-green-50 rounded transition-colors"
+                              title="Approve"
+                            >
+                              <FiCheckCircle />
+                            </button>
+                          )}
                           <Link
                             href={`/admin/products/${product._id}`}
                             className="p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors"
