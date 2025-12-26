@@ -9,6 +9,9 @@ import {
 import { useCart } from '@/lib/context/CartContext';
 import { toast } from 'react-hot-toast';
 import Image from 'next/image';
+import ProductReviews from '@/components/product/ProductReviews';
+import WriteReviewForm from '@/components/product/WriteReviewForm';
+import ProductQA from '@/components/product/ProductQA';
 
 export default function ProductDetailPage({ productId }) {
   const [product, setProduct] = useState(null);
@@ -105,7 +108,7 @@ export default function ProductDetailPage({ productId }) {
     );
   }
 
-  const currentPrice = product.pricing.salePrice || product.pricing.basePrice;
+  const currentPrice = product.pricing?.salePrice || product.pricing?.basePrice || 0;
   const discount = calculateDiscount();
 
   return (
@@ -360,7 +363,7 @@ export default function ProductDetailPage({ productId }) {
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden mb-12">
           {/* Tab Headers */}
           <div className="flex border-b">
-            {['description', 'specifications', 'reviews'].map((tab) => (
+            {['description', 'specifications', 'reviews', 'qa'].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
@@ -370,8 +373,10 @@ export default function ProductDetailPage({ productId }) {
                     : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
                 }`}
               >
-                {tab}
-                {tab === 'reviews' && ` (${product.reviews?.length || 0})`}
+                {tab === 'description' ? 'Description' : 
+                 tab === 'specifications' ? 'Specifications' :
+                 tab === 'reviews' ? `Reviews (${product.reviews?.length || 0})` :
+                 'Q&A'}
               </button>
             ))}
           </div>
@@ -412,119 +417,23 @@ export default function ProductDetailPage({ productId }) {
 
             {/* Reviews Tab */}
             {activeTab === 'reviews' && (
-              <div>
-                <div className="flex items-start justify-between mb-8">
-                  <div>
-                    <h3 className="text-2xl font-bold mb-2">Customer Reviews</h3>
-                    <div className="flex items-center gap-4">
-                      <div className="flex items-center gap-2">
-                        <span className="text-4xl font-bold">{product.ratings.average.toFixed(1)}</span>
-                        <FiStar className="text-3xl text-yellow-500 fill-current" />
-                      </div>
-                      <div>
-                        <p className="text-gray-600">Based on {product.ratings.count} ratings</p>
-                        <p className="text-sm text-gray-500">{product.reviews?.length || 0} reviews</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Rating Distribution */}
-                  <div className="space-y-2">
-                    {[5, 4, 3, 2, 1].map((star) => {
-                      const count = product.ratingDistribution?.[star] || 0;
-                      const percentage = product.ratings.count > 0 ? (count / product.ratings.count) * 100 : 0;
-                      return (
-                        <div key={star} className="flex items-center gap-3">
-                          <span className="text-sm font-medium text-gray-700 w-12">{star} ⭐</span>
-                          <div className="w-40 h-2 bg-gray-200 rounded-full overflow-hidden">
-                            <div
-                              className="h-full bg-yellow-500"
-                              style={{ width: `${percentage}%` }}
-                            ></div>
-                          </div>
-                          <span className="text-sm text-gray-600 w-8">{count}</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Reviews List */}
-                <div className="space-y-6">
-                  {product.reviews && product.reviews.length > 0 ? (
-                    product.reviews.map((review) => (
-                      <div key={review._id} className="border-b pb-6 last:border-b-0">
-                        <div className="flex items-start justify-between mb-3">
-                          <div>
-                            <div className="flex items-center gap-3 mb-2">
-                              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold">
-                                {review.userId?.name?.charAt(0).toUpperCase() || 'U'}
-                              </div>
-                              <div>
-                                <p className="font-semibold text-gray-900">{review.userId?.name || 'Anonymous'}</p>
-                                <div className="flex items-center gap-2">
-                                  <div className="flex">
-                                    {[...Array(5)].map((_, i) => (
-                                      <FiStar
-                                        key={i}
-                                        className={`text-sm ${
-                                          i < review.rating
-                                            ? 'text-yellow-500 fill-current'
-                                            : 'text-gray-300'
-                                        }`}
-                                      />
-                                    ))}
-                                  </div>
-                                  {review.isVerifiedPurchase && (
-                                    <span className="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded-full font-medium">
-                                      Verified Purchase
-                                    </span>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <span className="text-sm text-gray-500">
-                            {new Date(review.createdAt).toLocaleDateString()}
-                          </span>
-                        </div>
-                        <h4 className="font-semibold text-gray-900 mb-2">{review.title}</h4>
-                        <p className="text-gray-700 mb-3">{review.comment}</p>
-                        {review.images && review.images.length > 0 && (
-                          <div className="flex gap-2 mb-3">
-                            {review.images.map((img, index) => (
-                              <img
-                                key={index}
-                                src={img}
-                                alt={`Review ${index + 1}`}
-                                width={80}
-                                height={80}
-                                className="rounded-lg object-cover"
-                              />
-                            ))}
-                          </div>
-                        )}
-                        <div className="flex items-center gap-4 text-sm">
-                          <button className="flex items-center gap-1 text-gray-600 hover:text-green-600 transition">
-                            <FiCheck className="text-lg" />
-                            Helpful ({review.helpful || 0})
-                          </button>
-                          <button className="flex items-center gap-1 text-gray-600 hover:text-red-600 transition">
-                            <FiX className="text-lg" />
-                            Not Helpful ({review.unhelpful || 0})
-                          </button>
-                        </div>
-                      </div>
-                    ))
-                  ) : (
-                    <div className="text-center py-12">
-                      <FiStar className="text-6xl text-gray-300 mx-auto mb-4" />
-                      <p className="text-gray-600 text-lg">No reviews yet</p>
-                      <p className="text-sm text-gray-500">Be the first to review this product</p>
-                    </div>
-                  )}
+              <div className="space-y-8">
+                <ProductReviews productId={productId} />
+                
+                <div className="border-t pt-8">
+                  <h3 className="text-2xl font-bold mb-6">Write a Review</h3>
+                  <WriteReviewForm 
+                    productId={productId} 
+                    onSuccess={() => toast.success('Review submitted!')} 
+                    onCancel={() => {}} 
+                  />
                 </div>
               </div>
+            )}
+
+            {/* Q&A Tab */}
+            {activeTab === 'qa' && (
+              <ProductQA productId={productId} />
             )}
           </div>
         </div>
@@ -560,7 +469,7 @@ export default function ProductDetailPage({ productId }) {
                       <span className="text-xs text-gray-600">({relatedProduct.ratings.count})</span>
                     </div>
                     <p className="text-xl font-bold text-gray-900">
-                      ₹{(relatedProduct.pricing.salePrice || relatedProduct.pricing.basePrice).toLocaleString()}
+                      ₹{(relatedProduct.pricing?.salePrice || relatedProduct.pricing?.basePrice || 0).toLocaleString()}
                     </p>
                   </div>
                 </a>

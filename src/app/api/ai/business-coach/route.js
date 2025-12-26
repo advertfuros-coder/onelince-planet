@@ -40,9 +40,13 @@ export async function POST(request) {
     // Calculate metrics
     const totalProducts = products.length;
     const totalOrders = orders.length;
+
+    // Calculate revenue from delivered orders only
     const totalRevenue = orders.reduce((sum, order) => {
       const sellerItems = order.items.filter(
-        (item) => item.seller.toString() === seller._id.toString()
+        (item) =>
+          item.seller?.toString() === seller._id.toString() &&
+          item.status === "delivered"
       );
       return (
         sum +
@@ -57,9 +61,9 @@ export async function POST(request) {
     const categoryMap = {};
     orders.forEach((order) => {
       order.items.forEach((item) => {
-        if (item.seller.toString() === seller._id.toString()) {
+        if (item.seller?.toString() === seller._id.toString()) {
           const product = products.find(
-            (p) => p._id.toString() === item.product.toString()
+            (p) => p._id?.toString() === item.product?.toString()
           );
           if (product) {
             if (!categoryMap[product.category]) {
@@ -79,18 +83,48 @@ export async function POST(request) {
       })
     );
 
+    // Calculate monthly trends
+    const now = new Date();
+    const thisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+
+    let thisMonthRevenue = 0;
+    let lastMonthRevenue = 0;
+
+    orders.forEach((order) => {
+      const sellerItems = order.items.filter(
+        (item) =>
+          item.seller?.toString() === seller._id.toString() &&
+          item.status === "delivered"
+      );
+      const orderRevenue = sellerItems.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
+      );
+      const d = new Date(order.createdAt);
+      if (d >= thisMonth) thisMonthRevenue += orderRevenue;
+      else if (d >= lastMonth && d < thisMonth)
+        lastMonthRevenue += orderRevenue;
+    });
+
+    const monthlyTrends = [
+      { label: "lastMonth", revenue: lastMonthRevenue },
+      { label: "thisMonth", revenue: thisMonthRevenue },
+    ];
+
     const sellerData = {
       sellerId: seller._id,
       businessName: seller.businessName,
       totalProducts,
       totalOrders,
       totalRevenue,
-      averageRating: seller.rating || 4.0,
+      averageRating: seller.ratings?.average || 4.0,
       responseTime: seller.responseTime || 12,
-      fulfillmentRate: seller.fulfillmentRate || 95,
-      returnRate: seller.returnRate || 5,
+      fulfillmentRate: seller.performance?.orderFulfillmentRate || 95,
+      returnRate: seller.performance?.returnRate || 5,
       categoryPerformance,
-      monthlyRevenue: totalRevenue / 6, // Simplified
+      monthlyTrends,
+      competitorData: {},
       avgOrderValue: totalOrders > 0 ? totalRevenue / totalOrders : 0,
       customers: orders.length,
     };
@@ -107,20 +141,7 @@ export async function POST(request) {
           categories: [...new Set(products.map((p) => p.category))],
           topProducts: products.slice(0, 5),
           customerDemographics: {},
-          seasonalTrends: [],
         });
-        break;
-
-      case "optimize_listings":
-        result = await aiBusinessCoach.optimizeListings(products);
-        break;
-
-      case "marketing_strategy":
-        result = await aiBusinessCoach.generateMarketingStrategy(
-          sellerData,
-          body.budget || 10000,
-          body.goals || ["Increase Sales", "Build Brand"]
-        );
         break;
 
       default:

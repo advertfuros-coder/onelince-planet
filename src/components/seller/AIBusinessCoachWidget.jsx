@@ -38,17 +38,22 @@ export default function AIBusinessCoachWidget() {
 
             if (response.data.success) {
                 setInsights(response.data.analysis)
+                
+                // Show warning if fallback was used
+                if (response.data.isFallback && response.data.warning) {
+                    toast(response.data.warning, { icon: '⚠️', duration: 5000 })
+                }
             } else if (response.data.needsSetup) {
-                // Show setup instructions
                 setInsights({ needsSetup: true, ...response.data })
             } else {
                 toast.error(response.data.message || 'Failed to load AI insights')
             }
         } catch (error) {
             console.error('AI Coach Error:', error)
-            // Check if it's a setup issue
             if (error.response?.data?.needsSetup) {
                 setInsights({ needsSetup: true, ...error.response.data })
+            } else {
+                toast.error('Failed to load AI insights')
             }
         } finally {
             setLoading(false)
@@ -121,12 +126,12 @@ export default function AIBusinessCoachWidget() {
                     <div className="mt-2 bg-gray-900 text-green-400 p-3 rounded font-mono text-xs">
                         GOOGLE_GEMINI_API_KEY=your_api_key_here
                     </div>
-                    <p className="text-xs text-gray-500 mt-2">
+                    <ol className="space-y-2 text-sm text-gray-700 mt-2">
                         <li className="flex items-start gap-2">
                             <span className="font-semibold text-purple-600">3.</span>
                             <span>Restart your dev server</span>
                         </li>
-                    </p>
+                    </ol>
                 </div>
 
                 <div className="flex items-center justify-between text-xs text-gray-600">
@@ -143,6 +148,7 @@ export default function AIBusinessCoachWidget() {
             </div>
         )
     }
+
     return (
         <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl p-6 border border-purple-100">
             {/* Header */}
@@ -168,7 +174,7 @@ export default function AIBusinessCoachWidget() {
                         className="p-2 hover:bg-white rounded-lg transition-colors"
                         disabled={loading}
                     >
-                        <FiZap className={`w-5 h-5 text-purple-600 ${loading ? 'animate-spin' : ''}`} />
+                        <FiRefreshCw className={`w-5 h-5 text-purple-600 ${loading ? 'animate-spin' : ''}`} />
                     </button>
                 </div>
             </div>
@@ -176,44 +182,48 @@ export default function AIBusinessCoachWidget() {
             {/* Quick Insights */}
             <div className="grid grid-cols-2 gap-3 mb-4">
                 {/* Strengths */}
-                <div className="bg-white rounded-lg p-4 border border-green-100">
-                    <div className="flex items-center gap-2 mb-2">
-                        <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                            <FiTrendingUp className="w-4 h-4 text-green-600" />
+                {insights.strengths?.length > 0 && (
+                    <div className="bg-white rounded-lg p-4 border border-green-100">
+                        <div className="flex items-center gap-2 mb-2">
+                            <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                                <FiTrendingUp className="w-4 h-4 text-green-600" />
+                            </div>
+                            <span className="text-sm font-semibold text-gray-700">Strengths</span>
                         </div>
-                        <span className="text-sm font-semibold text-gray-700">Strengths</span>
+                        <p className="text-xs text-gray-600 line-clamp-2">
+                            {insights.strengths[0]}
+                        </p>
+                        {insights.strengths.length > 1 && (
+                            <span className="text-xs text-green-600 font-medium">
+                                +{insights.strengths.length - 1} more
+                            </span>
+                        )}
                     </div>
-                    <p className="text-xs text-gray-600 line-clamp-2">
-                        {insights.strengths[0]}
-                    </p>
-                    {insights.strengths.length > 1 && (
-                        <span className="text-xs text-green-600 font-medium">
-                            +{insights.strengths.length - 1} more
-                        </span>
-                    )}
-                </div>
+                )}
 
                 {/* Opportunities */}
-                <div className="bg-white rounded-lg p-4 border border-blue-100">
-                    <div className="flex items-center gap-2 mb-2">
-                        <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                            <FiStar className="w-4 h-4 text-blue-600" />
+                {insights.opportunities?.length > 0 && (
+                    <div className="bg-white rounded-lg p-4 border border-blue-100">
+                        <div className="flex items-center gap-2 mb-2">
+                            <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                                <FiStar className="w-4 h-4 text-blue-600" />
+                            </div>
+                            <span className="text-sm font-semibold text-gray-700">Opportunities</span>
                         </div>
-                        <span className="text-sm font-semibold text-gray-700">Opportunities</span>
+                        <p className="text-xs text-gray-600 line-clamp-2">
+                            {insights.opportunities[0]}
+                        </p>
+                        {insights.opportunities.length > 1 && (
+                            <span className="text-xs text-blue-600 font-medium">
+                                +{insights.opportunities.length - 1} more
+                            </span>
+                        )}
                     </div>
-                    <p className="text-xs text-gray-600 line-clamp-2">
-                        {insights.opportunities[0]}
-                    </p>
-                    {insights.opportunities.length > 1 && (
-                        <span className="text-xs text-blue-600 font-medium">
-                            +{insights.opportunities.length - 1} more
-                        </span>
-                    )}
-                </div>
+                )}
             </div>
 
             {/* Priority Actions */}
-            {insights.priorityActions && insights.priorityActions.length > 0 && (
+            {insights.priorityActions?.length > 0 && (
                 <div className="bg-white rounded-lg p-4 mb-4">
                     <div className="flex items-center gap-2 mb-3">
                         <FiTarget className="w-5 h-5 text-purple-600" />
@@ -222,13 +232,14 @@ export default function AIBusinessCoachWidget() {
 
                     <div className="space-y-2">
                         <div className="flex items-start gap-3">
-                            <div className={`px-2 py-1 rounded text-xs font-semibold ${insights.priorityActions[0].impact === 'high'
-                                ? 'bg-red-100 text-red-700'
-                                : insights.priorityActions[0].impact === 'medium'
-                                    ? 'bg-yellow-100 text-yellow-700'
-                                    : 'bg-gray-100 text-gray-700'
-                                }`}>
-                                {insights.priorityActions[0].impact.toUpperCase()}
+                            <div className={`px-2 py-1 rounded text-xs font-semibold ${
+                                insights.priorityActions[0].impact === 'high'
+                                    ? 'bg-red-100 text-red-700'
+                                    : insights.priorityActions[0].impact === 'medium'
+                                        ? 'bg-yellow-100 text-yellow-700'
+                                        : 'bg-gray-100 text-gray-700'
+                            }`}>
+                                {insights.priorityActions[0].impact?.toUpperCase()}
                             </div>
                             <div className="flex-1">
                                 <p className="text-sm font-medium text-gray-900">
@@ -247,7 +258,7 @@ export default function AIBusinessCoachWidget() {
             )}
 
             {/* Growth Projection */}
-            {insights.growthProjection && (
+            {insights.growthProjection?.['30days'] && (
                 <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-4 mb-4 border border-green-100">
                     <div className="flex items-center gap-2 mb-2">
                         <FiTrendingUp className="w-5 h-5 text-green-600" />
@@ -270,52 +281,92 @@ export default function AIBusinessCoachWidget() {
             {expanded && (
                 <div className="mt-4 space-y-4 pt-4 border-t border-purple-100">
                     {/* All Strengths */}
-                    <div>
-                        <h4 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
-                            <FiTrendingUp className="w-4 h-4 text-green-600" />
-                            All Strengths
-                        </h4>
-                        <ul className="space-y-1">
-                            {insights.strengths.map((strength, index) => (
-                                <li key={index} className="text-sm text-gray-700 flex items-start gap-2">
-                                    <span className="text-green-600">✓</span>
-                                    <span>{strength}</span>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
+                    {insights.strengths?.length > 0 && (
+                        <div>
+                            <h4 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                                <FiTrendingUp className="w-4 h-4 text-green-600" />
+                                All Strengths
+                            </h4>
+                            <ul className="space-y-1">
+                                {insights.strengths.map((strength, index) => (
+                                    <li key={index} className="text-sm text-gray-700 flex items-start gap-2">
+                                        <span className="text-green-600">✓</span>
+                                        <span>{strength}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
 
                     {/* Weaknesses */}
-                    <div>
-                        <h4 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
-                            <FiAlertCircle className="w-4 h-4 text-orange-600" />
-                            Areas for Improvement
-                        </h4>
-                        <ul className="space-y-1">
-                            {insights.weaknesses.map((weakness, index) => (
-                                <li key={index} className="text-sm text-gray-700 flex items-start gap-2">
-                                    <span className="text-orange-600">!</span>
-                                    <span>{weakness}</span>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
+                    {insights.weaknesses?.length > 0 && (
+                        <div>
+                            <h4 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                                <FiAlertCircle className="w-4 h-4 text-orange-600" />
+                                Areas for Improvement
+                            </h4>
+                            <ul className="space-y-1">
+                                {insights.weaknesses.map((weakness, index) => (
+                                    <li key={index} className="text-sm text-gray-700 flex items-start gap-2">
+                                        <span className="text-orange-600">!</span>
+                                        <span>{weakness}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
 
                     {/* Key Recommendations */}
                     <div className="bg-purple-50 rounded-lg p-4">
                         <h4 className="font-semibold text-gray-900 mb-2">💡 AI Recommendations</h4>
                         <div className="space-y-3 text-sm text-gray-700">
-                            <div>
-                                <strong>Pricing:</strong> {insights.pricingRecommendation}
-                            </div>
-                            <div>
-                                <strong>Marketing:</strong> {insights.marketingAdvice}
-                            </div>
-                            <div>
-                                <strong>Inventory:</strong> {insights.inventoryAdvice}
-                            </div>
+                            {insights.pricingRecommendation && (
+                                <div>
+                                    <strong>Pricing:</strong> {insights.pricingRecommendation}
+                                </div>
+                            )}
+                            {insights.marketingAdvice && (
+                                <div>
+                                    <strong>Marketing:</strong> {insights.marketingAdvice}
+                                </div>
+                            )}
+                            {insights.inventoryAdvice && (
+                                <div>
+                                    <strong>Inventory:</strong> {insights.inventoryAdvice}
+                                </div>
+                            )}
                         </div>
                     </div>
+
+                    {/* All Priority Actions */}
+                    {insights.priorityActions?.length > 1 && (
+                        <div>
+                            <h4 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                                <FiTarget className="w-4 h-4 text-purple-600" />
+                                All Priority Actions
+                            </h4>
+                            <div className="space-y-3">
+                                {insights.priorityActions.slice(1).map((action, index) => (
+                                    <div key={index} className="bg-white rounded-lg p-3 border border-gray-200">
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <div className={`px-2 py-1 rounded text-xs font-semibold ${
+                                                action.impact === 'high'
+                                                    ? 'bg-red-100 text-red-700'
+                                                    : action.impact === 'medium'
+                                                        ? 'bg-yellow-100 text-yellow-700'
+                                                        : 'bg-gray-100 text-gray-700'
+                                            }`}>
+                                                {action.impact?.toUpperCase()}
+                                            </div>
+                                            <span className="text-xs text-gray-500">{action.timeline}</span>
+                                        </div>
+                                        <p className="text-sm font-medium text-gray-900">{action.action}</p>
+                                        <p className="text-xs text-gray-600 mt-1">{action.expectedOutcome}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </div>
             )}
         </div>

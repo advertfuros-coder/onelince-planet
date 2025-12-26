@@ -1,32 +1,53 @@
 // seller/(seller)/settings/page.jsx
 'use client'
+
 import { useState, useEffect } from 'react'
-import { 
-  FaUserCircle,
-  FaStore,
-  FaBell,
-  FaLock,
-  FaCreditCard,
-  FaSave
-} from 'react-icons/fa'
-import Button from '@/components/ui/Button'
-import Input from '@/components/ui/Input'
+import { useAuth } from '@/lib/context/AuthContext'
+import {
+  User,
+  Store,
+  Bell,
+  Lock,
+  CreditCard,
+  Save,
+  ChevronRight,
+  ShieldCheck,
+  Smartphone,
+  Mail,
+  MoreVertical,
+  Check,
+  RefreshCw,
+  Camera,
+  Info
+} from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { toast } from 'react-hot-toast'
 
 export default function SellerSettings() {
+  const { token } = useAuth()
   const [activeTab, setActiveTab] = useState('profile')
+  
+  const tabs = [
+    { id: 'profile', name: 'Identity', icon: User, description: 'Personal credentials and alias' },
+    { id: 'store', name: 'Storefront', icon: Store, description: 'Brand identity and logistics' },
+    { id: 'notifications', name: 'Alerts', icon: Bell, description: 'Communication and sync' },
+    { id: 'security', name: 'Vault', icon: Lock, description: 'Privacy and authentication' },
+    { id: 'banking', name: 'Treasury', icon: CreditCard, description: 'Settlement and routing' }
+  ]
+
   const [settings, setSettings] = useState({
     profile: {
-      name: 'John Doe',
-      email: 'john@example.com',
-      phone: '+91-9876543210',
+      name: '',
+      email: '',
+      phone: '',
       avatar: null
     },
     store: {
-      storeName: 'John\'s Electronics',
-      storeDescription: 'Quality electronics at affordable prices',
-      storeAddress: '123 Business Street, Mumbai, Maharashtra 400001',
-      gstin: '27XXXXX1234X1Z1',
-      pan: 'ABCDE1234F'
+      storeName: '',
+      storeDescription: '',
+      storeAddress: '',
+      gstin: '',
+      pan: ''
     },
     notifications: {
       orderNotifications: true,
@@ -36,30 +57,62 @@ export default function SellerSettings() {
       smsNotifications: true
     },
     banking: {
-      accountNumber: '****1234',
-      ifscCode: 'HDFC0001234',
-      bankName: 'HDFC Bank',
-      accountHolderName: 'John Doe'
+      accountNumber: '',
+      ifscCode: '',
+      bankName: '',
+      accountHolderName: ''
     }
   })
+  
   const [loading, setLoading] = useState(false)
+  const [initialLoading, setInitialLoading] = useState(true)
 
-  const tabs = [
-    { id: 'profile', name: 'Profile', icon: FaUserCircle },
-    { id: 'store', name: 'Store Info', icon: FaStore },
-    { id: 'notifications', name: 'Notifications', icon: FaBell },
-    { id: 'security', name: 'Security', icon: FaLock },
-    { id: 'banking', name: 'Banking', icon: FaCreditCard }
-  ]
+  useEffect(() => {
+    if (token) fetchSettings()
+  }, [token])
+
+  const fetchSettings = async () => {
+    try {
+      setInitialLoading(true)
+      const res = await fetch('/api/seller/settings', {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      const data = await res.json()
+      if (data.success) {
+        setSettings(data.settings)
+      }
+    } catch (error) {
+      console.error('Error fetching settings:', error)
+    } finally {
+      setInitialLoading(false)
+    }
+  }
 
   const handleSave = async () => {
     setLoading(true)
     try {
-      // Save settings API call here
-      await new Promise(resolve => setTimeout(resolve, 1000)) // Simulate API call
-      alert('Settings saved successfully!')
+      const res = await fetch('/api/seller/settings', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          section: activeTab,
+          data: settings[activeTab]
+        })
+      })
+
+      const data = await res.json()
+      if (data.success) {
+        toast.success(`${activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} parameters synchronized.`)
+        setSettings(data.settings)
+      } else {
+        throw new Error(data.message)
+      }
     } catch (error) {
-      alert('Error saving settings')
+      toast.error('Synchronization failed.')
+      console.error('Error saving settings:', error)
     } finally {
       setLoading(false)
     }
@@ -75,236 +128,310 @@ export default function SellerSettings() {
     }))
   }
 
-  return (
-    <div className="space-y-6">
-      {/* Page Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
-        <p className="text-gray-600">Manage your account and store preferences</p>
-      </div>
+  if (initialLoading) {
+    return (
+        <div className="flex flex-col items-center justify-center min-h-screen space-y-4">
+            <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+            <p className="text-gray-400 font-black uppercase tracking-widest text-[10px]">Accessing Vault Configuration...</p>
+        </div>
+    )
+  }
 
-      <div className="flex flex-col lg:flex-row gap-6">
-        {/* Sidebar */}
-        <div className="lg:w-1/4">
-          <nav className="space-y-1">
-            {tabs.map((tab) => {
-              const Icon = tab.icon
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`w-full flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
-                    activeTab === tab.id
-                      ? 'bg-blue-100 text-blue-700'
-                      : 'text-gray-600 hover:bg-gray-100'
-                  }`}
-                >
-                  <Icon className="w-5 h-5 mr-3" />
-                  {tab.name}
-                </button>
-              )
-            })}
-          </nav>
+  return (
+    <div className="min-h-screen bg-[#F8FAFC] p-6 lg:p-8">
+      <div className="max-w-[1400px] mx-auto space-y-8">
+        
+        {/* Modern Header */}
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+               <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/20">
+                  <ShieldCheck size={18} />
+               </div>
+               <span className="text-[10px] font-black text-blue-600 uppercase tracking-widest bg-blue-50 px-3 py-1 rounded-full">System Admin</span>
+            </div>
+            <h1 className="text-4xl font-black text-gray-900 tracking-tighter">Terminal Settings</h1>
+            <p className="text-gray-500 font-medium mt-1">Configure account parameters and store operational logic</p>
+          </div>
         </div>
 
-        {/* Content */}
-        <div className="lg:w-3/4">
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            {/* Profile Tab */}
-            {activeTab === 'profile' && (
-              <div className="space-y-6">
-                <h2 className="text-lg font-semibold text-gray-900">Profile Information</h2>
-                
-                <div className="flex items-center space-x-6">
-                  <div className="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center">
-                    <span className="text-gray-600 text-2xl font-semibold">
-                      {settings.profile.name.charAt(0).toUpperCase()}
-                    </span>
-                  </div>
-                  <div>
-                    <Button variant="outline" size="sm">Change Photo</Button>
-                    <p className="text-xs text-gray-500 mt-1">JPG, GIF or PNG. 1MB max.</p>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Input
-                    label="Full Name"
-                    value={settings.profile.name}
-                    onChange={(e) => updateSettings('profile', 'name', e.target.value)}
-                  />
-                  <Input
-                    label="Email"
-                    type="email"
-                    value={settings.profile.email}
-                    onChange={(e) => updateSettings('profile', 'email', e.target.value)}
-                  />
-                  <Input
-                    label="Phone"
-                    value={settings.profile.phone}
-                    onChange={(e) => updateSettings('profile', 'phone', e.target.value)}
-                  />
-                </div>
-              </div>
-            )}
-
-            {/* Store Tab */}
-            {activeTab === 'store' && (
-              <div className="space-y-6">
-                <h2 className="text-lg font-semibold text-gray-900">Store Information</h2>
-                
-                <div className="space-y-4">
-                  <Input
-                    label="Store Name"
-                    value={settings.store.storeName}
-                    onChange={(e) => updateSettings('store', 'storeName', e.target.value)}
-                  />
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Store Description
-                    </label>
-                    <textarea
-                      value={settings.store.storeDescription}
-                      onChange={(e) => updateSettings('store', 'storeDescription', e.target.value)}
-                      rows={3}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Store Address
-                    </label>
-                    <textarea
-                      value={settings.store.storeAddress}
-                      onChange={(e) => updateSettings('store', 'storeAddress', e.target.value)}
-                      rows={2}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                    />
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Input
-                      label="GSTIN"
-                      value={settings.store.gstin}
-                      onChange={(e) => updateSettings('store', 'gstin', e.target.value)}
-                    />
-                    <Input
-                      label="PAN"
-                      value={settings.store.pan}
-                      onChange={(e) => updateSettings('store', 'pan', e.target.value)}
-                    />
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Notifications Tab */}
-            {activeTab === 'notifications' && (
-              <div className="space-y-6">
-                <h2 className="text-lg font-semibold text-gray-900">Notification Preferences</h2>
-                
-                <div className="space-y-4">
-                  {Object.entries(settings.notifications).map(([key, value]) => (
-                    <div key={key} className="flex items-center justify-between">
-                      <div>
-                        <h3 className="text-sm font-medium text-gray-900">
-                          {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
-                        </h3>
+        <div className="flex flex-col lg:flex-row gap-10">
+          {/* Sidebar Navigation */}
+          <div className="lg:w-80 shrink-0 space-y-3">
+             {tabs.map((tab) => (
+                <button
+                   key={tab.id}
+                   onClick={() => setActiveTab(tab.id)}
+                   className={`w-full group text-left p-5 rounded-[2rem] transition-all relative overflow-hidden ${
+                      activeTab === tab.id 
+                      ? 'bg-[#0A1128] text-white shadow-2xl shadow-blue-900/10' 
+                      : 'bg-white text-gray-400 hover:bg-gray-50 border border-gray-100/50'
+                   }`}
+                >
+                   <div className="flex items-center gap-4 relative z-10">
+                      <div className={`p-3 rounded-2xl transition-all ${
+                         activeTab === tab.id ? 'bg-blue-600 text-white' : 'bg-gray-50 text-gray-300 group-hover:text-blue-600'
+                      }`}>
+                         <tab.icon size={20} />
                       </div>
-                      <label className="relative inline-flex items-center cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={value}
-                          onChange={(e) => updateSettings('notifications', key, e.target.checked)}
-                          className="sr-only peer"
-                        />
-                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                      </label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+                      <div>
+                         <p className="text-[11px] font-black uppercase tracking-widest leading-none mb-1">{tab.name}</p>
+                         <p className={`text-[9px] font-bold ${activeTab === tab.id ? 'text-white/40' : 'text-gray-300'}`}>{tab.description}</p>
+                      </div>
+                   </div>
+                   {activeTab === tab.id && <ChevronRight size={16} className="absolute right-6 top-1/2 -translate-y-1/2 text-white/20" />}
+                </button>
+             ))}
+          </div>
 
-            {/* Security Tab */}
-            {activeTab === 'security' && (
-              <div className="space-y-6">
-                <h2 className="text-lg font-semibold text-gray-900">Security Settings</h2>
-                
-                <div className="space-y-4">
-                  <Input
-                    label="Current Password"
-                    type="password"
-                    placeholder="Enter current password"
-                  />
-                  <Input
-                    label="New Password"
-                    type="password"
-                    placeholder="Enter new password"
-                  />
-                  <Input
-                    label="Confirm New Password"
-                    type="password"
-                    placeholder="Confirm new password"
-                  />
-                </div>
+          {/* Configuration Canvas */}
+          <div className="flex-1 min-w-0">
+             <div className="bg-white rounded-[3rem] p-10 lg:p-14 shadow-sm border border-gray-100/50 relative">
+                <AnimatePresence mode="wait">
+                   <motion.div
+                      key={activeTab}
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      transition={{ duration: 0.2 }}
+                      className="space-y-12"
+                   >
+                       {/* Tab Content Header */}
+                       <div className="flex items-center justify-between">
+                          <div>
+                             <h2 className="text-2xl font-black text-gray-900 tracking-tight">{tabs.find(t => t.id === activeTab).name} Protocol</h2>
+                             <p className="text-sm font-medium text-gray-400 mt-1">Modify and update your {activeTab} information.</p>
+                          </div>
+                          <div className="hidden sm:block">
+                             <div className="w-12 h-12 rounded-2xl bg-gray-50 flex items-center justify-center text-gray-300">
+                                {tabs.find(t => t.id === activeTab).icon && <div className="text-blue-600/20"><MoreVertical /></div>}
+                             </div>
+                          </div>
+                       </div>
 
-                <div className="border-t pt-6">
-                  <h3 className="text-sm font-medium text-gray-900 mb-3">Two-Factor Authentication</h3>
-                  <p className="text-sm text-gray-600 mb-4">
-                    Add an extra layer of security to your account by enabling two-factor authentication.
-                  </p>
-                  <Button variant="outline">Enable 2FA</Button>
-                </div>
-              </div>
-            )}
+                       {/* Profile Section */}
+                       {activeTab === 'profile' && (
+                          <div className="space-y-10">
+                             <div className="flex items-center gap-8 p-8 bg-gray-50/50 rounded-[2.5rem] border border-gray-100">
+                                <div className="relative group">
+                                   <div className="w-24 h-24 rounded-[2rem] bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-3xl font-black text-white shadow-xl">
+                                      {settings.profile.name?.charAt(0).toUpperCase()}
+                                   </div>
+                                   <button className="absolute -bottom-2 -right-2 p-2.5 bg-white text-gray-900 rounded-xl shadow-lg hover:scale-110 transition-transform">
+                                      <Camera size={14} />
+                                   </button>
+                                </div>
+                                <div className="space-y-1">
+                                   <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Profile Master Image</p>
+                                   <h4 className="text-lg font-black text-gray-900">{settings.profile.name || 'Anonymous Entity'}</h4>
+                                   <p className="text-xs font-bold text-gray-400">Resolution limited to 512x512 PNG/JPG</p>
+                                </div>
+                             </div>
 
-            {/* Banking Tab */}
-            {activeTab === 'banking' && (
-              <div className="space-y-6">
-                <h2 className="text-lg font-semibold text-gray-900">Banking Information</h2>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Input
-                    label="Account Holder Name"
-                    value={settings.banking.accountHolderName}
-                    onChange={(e) => updateSettings('banking', 'accountHolderName', e.target.value)}
-                  />
-                  <Input
-                    label="Account Number"
-                    value={settings.banking.accountNumber}
-                    onChange={(e) => updateSettings('banking', 'accountNumber', e.target.value)}
-                  />
-                  <Input
-                    label="IFSC Code"
-                    value={settings.banking.ifscCode}
-                    onChange={(e) => updateSettings('banking', 'ifscCode', e.target.value)}
-                  />
-                  <Input
-                    label="Bank Name"
-                    value={settings.banking.bankName}
-                    onChange={(e) => updateSettings('banking', 'bankName', e.target.value)}
-                  />
-                </div>
+                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <SettingInput 
+                                   label="Display Name" 
+                                   value={settings.profile.name} 
+                                   onChange={(v) => updateSettings('profile', 'name', v)} 
+                                   placeholder="Full Identity"
+                                />
+                                <SettingInput 
+                                   label="Primary Email" 
+                                   value={settings.profile.email} 
+                                   onChange={(v) => updateSettings('profile', 'email', v)} 
+                                   type="email"
+                                   placeholder="admin@store.io"
+                                />
+                                <SettingInput 
+                                   label="Direct Line" 
+                                   value={settings.profile.phone} 
+                                   onChange={(v) => updateSettings('profile', 'phone', v)} 
+                                   placeholder="+91-0000000000"
+                                />
+                             </div>
+                          </div>
+                       )}
 
-                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                  <p className="text-sm text-yellow-800">
-                    <strong>Note:</strong> Bank details are used for payment settlements. 
-                    Please ensure all information is accurate to avoid payment delays.
-                  </p>
-                </div>
-              </div>
-            )}
+                       {/* Store Section */}
+                       {activeTab === 'store' && (
+                          <div className="space-y-8">
+                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <SettingInput 
+                                   label="Brand Identity Name" 
+                                   value={settings.store.storeName} 
+                                   onChange={(v) => updateSettings('store', 'storeName', v)} 
+                                />
+                                <div className="md:col-span-2 space-y-2">
+                                   <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">Brand Narrative</label>
+                                   <textarea
+                                      value={settings.store.storeDescription}
+                                      onChange={(e) => updateSettings('store', 'storeDescription', e.target.value)}
+                                      rows={4}
+                                      className="w-full px-5 py-4 bg-gray-50/50 border border-transparent rounded-[1.5rem] text-[13px] font-bold focus:bg-white focus:border-blue-100 focus:ring-4 focus:ring-blue-500/5 transition-all outline-none resize-none"
+                                      placeholder="Elevator pitch for your store..."
+                                   />
+                                </div>
+                                <div className="md:col-span-2 space-y-2">
+                                   <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">Physical Dispatch Base</label>
+                                   <textarea
+                                      value={settings.store.storeAddress}
+                                      onChange={(e) => updateSettings('store', 'storeAddress', e.target.value)}
+                                      rows={2}
+                                      className="w-full px-5 py-4 bg-gray-50/50 border border-transparent rounded-[1.5rem] text-[13px] font-bold focus:bg-white focus:border-blue-100 focus:ring-4 focus:ring-blue-500/5 transition-all outline-none resize-none"
+                                      placeholder="Address line 1, 2..."
+                                   />
+                                </div>
+                                <SettingInput 
+                                   label="Tax ID (GSTIN)" 
+                                   value={settings.store.gstin} 
+                                   onChange={(v) => updateSettings('store', 'gstin', v)} 
+                                />
+                                <SettingInput 
+                                   label="Corporate PAN" 
+                                   value={settings.store.pan} 
+                                   onChange={(v) => updateSettings('store', 'pan', v)} 
+                                />
+                             </div>
+                          </div>
+                       )}
 
-            {/* Save Button */}
-            <div className="flex justify-end pt-6 border-t">
-              <Button onClick={handleSave} loading={loading} className="flex items-center space-x-2">
-                <FaSave className="w-4 h-4" />
-                <span>Save Changes</span>
-              </Button>
-            </div>
+                       {/* Notifications Section */}
+                       {activeTab === 'notifications' && (
+                          <div className="space-y-6">
+                             {Object.entries(settings.notifications).map(([key, value]) => (
+                                <div key={key} className="flex items-center justify-between p-7 bg-gray-50/30 rounded-[2rem] border border-gray-100/50 hover:bg-gray-50 transition-colors">
+                                   <div className="flex items-center gap-5">
+                                      <div className={`p-4 rounded-2xl ${value ? 'bg-blue-600 text-white' : 'bg-white text-gray-300'} shadow-sm transition-all`}>
+                                         {key.includes('order') ? <Smartphone size={20} /> : key.includes('payment') ? <CreditCard size={20} /> : <Mail size={20} />}
+                                      </div>
+                                      <div>
+                                         <h4 className="text-[11px] font-black text-gray-900 uppercase tracking-widest leading-none mb-1.5">
+                                            {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())} Channel
+                                         </h4>
+                                         <p className="text-[10px] font-bold text-gray-400 italic">Critical system updates dispatched via {key.includes('sms') ? 'encrypted cellular' : 'SMTP relay'}.</p>
+                                      </div>
+                                   </div>
+                                   <label className="relative inline-flex items-center cursor-pointer group">
+                                      <input
+                                         type="checkbox"
+                                         checked={value}
+                                         onChange={(e) => updateSettings('notifications', key, e.target.checked)}
+                                         className="sr-only peer"
+                                      />
+                                      <div className="w-14 h-8 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-blue-600 shadow-inner"></div>
+                                   </label>
+                                </div>
+                             ))}
+                          </div>
+                       )}
+
+                       {/* Security Section */}
+                       {activeTab === 'security' && (
+                          <div className="space-y-10">
+                             <div className="grid grid-cols-1 gap-8 max-w-lg">
+                                <SettingInput label="Current Secure Key" type="password" placeholder="••••••••" />
+                                <SettingInput label="New Entropy Passphrase" type="password" placeholder="Min 12 characters" />
+                                <SettingInput label="Verify Entropy" type="password" placeholder="Confirm passphrase" />
+                             </div>
+
+                             <div className="pt-10 border-t border-gray-100 flex flex-col md:flex-row items-center justify-between gap-8">
+                                <div className="space-y-2">
+                                   <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest flex items-center gap-2">
+                                      <ShieldCheck size={18} className="text-emerald-500" />
+                                      Multi-Factor Auth (MFA)
+                                   </h3>
+                                   <p className="text-xs font-bold text-gray-400 leading-relaxed max-w-sm">Requires TOTP or biometric challenge for high-quantum transactions and system resets.</p>
+                                </div>
+                                <button type="button" className="px-8 py-4 bg-emerald-50 text-emerald-600 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-100 transition-all active:scale-95">
+                                   Initialize MFA
+                                </button>
+                             </div>
+                          </div>
+                       )}
+
+                       {/* Banking Section */}
+                       {activeTab === 'banking' && (
+                          <div className="space-y-10">
+                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <SettingInput 
+                                   label="Account Beneficiary" 
+                                   value={settings.banking.accountHolderName} 
+                                   onChange={(v) => updateSettings('banking', 'accountHolderName', v)} 
+                                />
+                                <SettingInput 
+                                   label="Settlement Account ID" 
+                                   value={settings.banking.accountNumber} 
+                                   onChange={(v) => updateSettings('banking', 'accountNumber', v)} 
+                                />
+                                <SettingInput 
+                                   label="Routing Code (IFSC)" 
+                                   value={settings.banking.ifscCode} 
+                                   onChange={(v) => updateSettings('banking', 'ifscCode', v)} 
+                                />
+                                <SettingInput 
+                                   label="Lead Bank Domain" 
+                                   value={settings.banking.bankName}
+                                   onChange={(v) => updateSettings("banking", "bankName", v)}
+                                />
+                                <SettingInput
+                                   label="Corporate PAN (Tax ID)"
+                                   value={settings.store.pan}
+                                   onChange={(v) => updateSettings("store", "pan", v)}
+                                />
+                                <SettingInput
+                                   label="GST Registration Number"
+                                   value={settings.store.gstin}
+                                   onChange={(v) => updateSettings("store", "gstin", v)}
+                                />
+
+                             </div>
+
+                             <div className="bg-amber-50 rounded-[2rem] p-8 border border-amber-100 flex gap-5">
+                                <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-amber-600 shadow-sm shrink-0">
+                                   <Info size={24} />
+                                </div>
+                                <div className="space-y-1">
+                                   <p className="text-[10px] font-black text-amber-900 uppercase tracking-widest">Compliance Protocol</p>
+                                   <p className="text-xs font-bold text-amber-700/80 leading-relaxed">
+                                      Funds liquidation is gated behind zero-downtime routing validation. Ensure credentials match your registered corporate entity.
+                                   </p>
+                                </div>
+                             </div>
+                          </div>
+                       )}
+
+                       {/* Global Save Trigger */}
+                       <div className="pt-12 border-t border-gray-100 flex justify-end">
+                          <button 
+                             onClick={handleSave} 
+                             disabled={loading}
+                             className="px-12 py-5 bg-blue-600 text-white rounded-[1.5rem] font-black uppercase text-[11px] tracking-widest shadow-2xl shadow-blue-500/20 hover:bg-blue-700 active:scale-95 disabled:opacity-50 transition-all flex items-center justify-center gap-3"
+                          >
+                             {loading ? <RefreshCw size={18} className="animate-spin" /> : <Save size={18} />}
+                             Sync {activeTab} Data
+                          </button>
+                       </div>
+                   </motion.div>
+                </AnimatePresence>
+             </div>
           </div>
         </div>
       </div>
     </div>
   )
+}
+
+function SettingInput({ label, value, onChange, placeholder, type = "text" }) {
+   return (
+      <div className="space-y-2 group">
+         <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-2 group-focus-within:text-blue-600 transition-colors">{label}</label>
+         <input
+            type={type}
+            value={value || ''}
+            onChange={(e) => onChange(e.target.value)}
+            placeholder={placeholder}
+            className="w-full px-6 py-4 bg-gray-50/50 border border-transparent rounded-[1.5rem] text-[13px] font-black placeholder:text-gray-300 focus:bg-white focus:border-blue-100 focus:ring-4 focus:ring-blue-500/5 transition-all outline-none"
+         />
+      </div>
+   )
 }

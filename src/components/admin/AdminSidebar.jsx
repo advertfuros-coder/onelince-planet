@@ -16,6 +16,8 @@ import {
   FiUserPlus,
   FiTrendingUp,
   FiGift,
+  FiActivity,
+  FiTruck,
 } from 'react-icons/fi'
 import clsx from 'clsx'
 
@@ -26,12 +28,18 @@ export default function AdminSidebar({ onNavigate, isMobile = false }) {
     { label: 'Dashboard', href: '/admin/dashboard', icon: FiHome },
     { label: 'Users', href: '/admin/users', icon: FiUsers },
     { label: 'Sellers', href: '/admin/sellers', icon: FiUserPlus },
+    { label: 'Categories', href: '/admin/categories', icon: FiPackage },
     { label: 'Products', href: '/admin/products', icon: FiBox },
     { label: 'Orders', href: '/admin/orders', icon: FiShoppingCart },
     { label: 'Payout Requests', href: '/admin/payouts', icon: FiDollarSign },
     { label: 'Reviews', href: '/admin/reviews', icon: FiStar },
     { label: 'Analytics', href: '/admin/analytics', icon: FiBarChart2 },
+    { label: 'Competitor Intel', href: '/admin/competitor-analysis', icon: FiTrendingUp },
+    { label: 'Campaigns', href: '/admin/campaigns', icon: FiGift },
     { label: 'Coupons', href: '/admin/coupons', icon: FiGift },
+    { label: 'Marketing', href: '/admin/marketing', icon: FiActivity },
+    { label: 'Pending Pickups', href: '/admin/pending-pickups', icon: FiTruck },
+    { label: 'Settings', href: '/admin/settings', icon: FiSettings },
   ]
 
   const handleClick = () => {

@@ -65,6 +65,29 @@ const ProductSchema = new mongoose.Schema(
       },
     },
 
+    // Variant Options (e.g., Color, Size)
+    options: [
+      {
+        name: { type: String, required: true }, // e.g. "Color"
+        values: [String], // e.g. ["Red", "Blue"]
+      },
+    ],
+
+    // Actual Variants
+    variants: [
+      {
+        name: String, // e.g. "Red - S"
+        sku: { type: String, sparse: true }, // Unique SKU for variant
+        price: Number,
+        stock: { type: Number, default: 0 },
+        attributes: {
+          type: Map,
+          of: String, // { "Color": "Red", "Size": "S" }
+        },
+        imageIndex: { type: Number, default: 0 }, // Link to main images array
+      },
+    ],
+
     images: [
       {
         url: String,
@@ -134,5 +157,8 @@ ProductSchema.index({ sellerId: 1 });
 ProductSchema.index({ category: 1 });
 ProductSchema.index({ isActive: 1, isApproved: 1 });
 
-export default mongoose.models.Product ||
-  mongoose.model("Product", ProductSchema);
+if (mongoose.models.Product) {
+  delete mongoose.models.Product;
+}
+
+export default mongoose.model("Product", ProductSchema);

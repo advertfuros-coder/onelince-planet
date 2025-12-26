@@ -1,6 +1,7 @@
-import mongoose from 'mongoose';
+// lib/db/models/Coupon.js
+import mongoose from "mongoose";
 
-const CouponSchema = new mongoose.Schema(
+const couponSchema = new mongoose.Schema(
   {
     code: {
       type: String,
@@ -9,89 +10,86 @@ const CouponSchema = new mongoose.Schema(
       uppercase: true,
       trim: true,
     },
-    description: {
+
+    type: {
       type: String,
+      enum: ["percentage", "fixed", "free_shipping", "buy_x_get_y"],
       required: true,
     },
 
-    // Discount Configuration
-    discountType: {
-      type: String,
-      enum: ['percentage', 'fixed', 'free_shipping'],
-      required: true,
-    },
-    discountValue: {
+    // Discount details
+    value: {
       type: Number,
-      required: true,
-      min: 0,
-    },
-    maxDiscountAmount: {
-      type: Number, // For percentage type - maximum discount cap
-      default: null,
+      default: 0,
     },
 
-    // Coupon Scope
-    scope: {
-      type: String,
-      enum: ['platform', 'seller', 'product', 'category'],
-      default: 'platform',
+    // For buy_x_get_y offers
+    buyQuantity: Number,
+    getQuantity: Number,
+    buyProductIds: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
+    getProductIds: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
+
+    // Conditions
+    minimumPurchase: {
+      type: Number,
+      default: 0,
     },
-    sellerId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Seller',
-      default: null,
+
+    maximumDiscount: {
+      type: Number, // For percentage discounts
     },
-    applicableProducts: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Product',
-    }],
+
+    // Applicability
     applicableCategories: [String],
+    applicableProducts: [
+      { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
+    ],
+    excludedCategories: [String],
+    excludedProducts: [
+      { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
+    ],
 
-    // Purchase Requirements
-    minPurchaseAmount: {
-      type: Number,
-      default: 0,
-    },
-    minItemQuantity: {
-      type: Number,
-      default: 1,
-    },
-
-    // Usage Limits
-    totalUsageLimit: {
-      type: Number,
-      default: null, // null = unlimited
-    },
-    perUserLimit: {
-      type: Number,
-      default: 1,
-    },
-    currentUsageCount: {
-      type: Number,
-      default: 0,
+    // User restrictions
+    firstTimeOnly: {
+      type: Boolean,
+      default: false,
     },
 
-    // Date Validity
-    startDate: {
+    applicableUserTypes: {
+      type: [String],
+      enum: ["all", "new", "returning", "premium"],
+      default: ["all"],
+    },
+
+    specificUsers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+
+    // Usage limits
+    usageLimit: {
+      total: { type: Number }, // Total times coupon can be used
+      perUser: { type: Number, default: 1 },
+    },
+
+    usageCount: {
+      total: { type: Number, default: 0 },
+      users: [
+        {
+          userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+          count: { type: Number, default: 0 },
+          lastUsed: Date,
+        },
+      ],
+    },
+
+    // Time restrictions
+    validFrom: {
       type: Date,
       required: true,
     },
-    endDate: {
+
+    validUntil: {
       type: Date,
       required: true,
     },
-
-    // User Eligibility
-    userEligibility: {
-      type: String,
-      enum: ['all', 'new_customers', 'specific_users'],
-      default: 'all',
-    },
-    specificUsers: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-    }],
-    specificUserEmails: [String],
 
     // Status
     isActive: {
@@ -99,52 +97,121 @@ const CouponSchema = new mongoose.Schema(
       default: true,
     },
 
-    // Tracking
-    usedBy: [{
-      userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-      },
-      orderId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Order',
-      },
-      usedAt: {
-        type: Date,
-        default: Date.now,
-      },
-      discountApplied: Number,
-    }],
+    // Metadata
+    description: String,
+    internalNotes: String,
 
-    // Creator
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
       required: true,
     },
-    creatorType: {
-      type: String,
-      enum: ['admin', 'seller'],
-      default: 'admin',
+
+    // Analytics
+    analytics: {
+      totalRevenue: { type: Number, default: 0 },
+      totalOrders: { type: Number, default: 0 },
+      totalDiscount: { type: Number, default: 0 },
+      conversionRate: { type: Number, default: 0 },
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 );
 
 // Indexes
-CouponSchema.index({ code: 1 });
-CouponSchema.index({ isActive: 1, startDate: 1, endDate: 1 });
-CouponSchema.index({ scope: 1, sellerId: 1 });
+// couponSchema.index({ code: 1 }); // Already indexed by unique: true
+couponSchema.index({ validFrom: 1, validUntil: 1 });
+couponSchema.index({ isActive: 1 });
 
-// Check if coupon is valid
-CouponSchema.methods.isValid = function() {
+// Methods
+couponSchema.methods.isValid = function (userId, cartTotal, products) {
   const now = new Date();
-  return (
-    this.isActive &&
-    now >= this.startDate &&
-    now <= this.endDate &&
-    (this.totalUsageLimit === null || this.currentUsageCount < this.totalUsageLimit)
-  );
+
+  // Check if active
+  if (!this.isActive) {
+    return { valid: false, message: "Coupon is not active" };
+  }
+
+  // Check date validity
+  if (now < this.validFrom) {
+    return { valid: false, message: "Coupon is not yet valid" };
+  }
+
+  if (now > this.validUntil) {
+    return { valid: false, message: "Coupon has expired" };
+  }
+
+  // Check total usage limit
+  if (this.usageLimit.total && this.usageCount.total >= this.usageLimit.total) {
+    return { valid: false, message: "Coupon usage limit reached" };
+  }
+
+  // Check per-user usage limit
+  if (userId) {
+    const userUsage = this.usageCount.users.find(
+      (u) => u.userId.toString() === userId.toString()
+    );
+    if (
+      userUsage &&
+      this.usageLimit.perUser &&
+      userUsage.count >= this.usageLimit.perUser
+    ) {
+      return {
+        valid: false,
+        message: "You have already used this coupon maximum times",
+      };
+    }
+  }
+
+  // Check minimum purchase
+  if (this.minimumPurchase && cartTotal < this.minimumPurchase) {
+    return {
+      valid: false,
+      message: `Minimum purchase of ₹${this.minimumPurchase} required`,
+    };
+  }
+
+  return { valid: true };
 };
 
-export default mongoose.models.Coupon || mongoose.model('Coupon', CouponSchema);
+couponSchema.methods.calculateDiscount = function (cartTotal, items) {
+  let discount = 0;
+
+  switch (this.type) {
+    case "percentage":
+      discount = (cartTotal * this.value) / 100;
+      if (this.maximumDiscount) {
+        discount = Math.min(discount, this.maximumDiscount);
+      }
+      break;
+
+    case "fixed":
+      discount = Math.min(this.value, cartTotal);
+      break;
+
+    case "free_shipping":
+      discount = 0; // Handled separately in shipping calculation
+      break;
+
+    case "buy_x_get_y":
+      // Calculate buy X get Y discount
+      // Implementation depends on your cart structure
+      break;
+
+    default:
+      discount = 0;
+  }
+
+  return Math.round(discount * 100) / 100;
+};
+
+// Delete cached model to avoid conflicts
+if (mongoose.models.Coupon) {
+  delete mongoose.models.Coupon;
+}
+
+const Coupon = mongoose.model("Coupon", couponSchema);
+
+export default Coupon;

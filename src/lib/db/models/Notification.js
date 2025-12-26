@@ -16,17 +16,43 @@ const NotificationSchema = new mongoose.Schema(
       type: String,
       enum: [
         "NEW_ORDER",
-        "SELLER_REGISTRATION",
-        "PRODUCT_APPROVAL",
-        "PAYOUT_REQUEST",
-        "REVIEW_FLAGGED",
-        "LOW_STOCK",
-        "SYSTEM_UPDATE",
+        "ORDER_PROCESSING",
+        "ORDER_SHIPPED",
         "ORDER_CANCELLED",
-        "RETURN_REQUEST",
+        "RETURN_REQUESTED",
+        "RETURN_RECEIVED",
+        "RETURN_PROCESSED",
+        "LOW_STOCK",
+        "OUT_OF_STOCK",
+        "PRODUCT_APPROVED",
+        "PRODUCT_REJECTED",
+        "PAYOUT_INITIATED",
+        "PAYOUT_COMPLETED",
+        "PAYOUT_FAILED",
+        "REVIEW_RECEIVED",
+        "COMPETITOR_PRICE_ALERT",
+        "CAMPAIGN_PERFORMANCE",
+        "SYSTEM_MAINTENANCE",
+        "SECURITY_ALERT",
       ],
       required: true,
     },
+
+    category: {
+      type: String,
+      enum: [
+        "sales",
+        "inventory",
+        "financial",
+        "customers",
+        "marketing",
+        "system",
+      ],
+      default: "system",
+      index: true,
+    },
+
+    subType: String, // Dynamic sub-category tracking
 
     // Priority
     priority: {

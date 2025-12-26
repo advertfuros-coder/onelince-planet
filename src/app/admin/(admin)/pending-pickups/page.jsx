@@ -196,7 +196,7 @@ export default function PendingPickupsPage() {
                         <div key={index} className="flex items-center gap-4 bg-white p-3 rounded-lg">
                           <div className="relative w-16 h-16 flex-shrink-0 bg-gray-100 rounded-lg overflow-hidden">
                             {item.images && item.images[0] ? (
-                              <Image
+                              <img
                                 src={item.images[0]}
                                 alt={item.name}
                                 fill

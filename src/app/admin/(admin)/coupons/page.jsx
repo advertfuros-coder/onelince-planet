@@ -1,5 +1,12 @@
-import CouponsList from '@/app/components/admin/CouponsList';
+// app/admin/(admin)/coupons/page.jsx
+'use client';
+
+import CouponManager from '@/components/admin/CouponManager';
 
 export default function CouponsPage() {
-  return <CouponsList />;
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <CouponManager />
+    </div>
+  );
 }

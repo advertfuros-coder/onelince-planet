@@ -52,14 +52,18 @@ export function CartProvider({ children }) {
 
       setTimeout(() => toast.success('Added to cart'), 0)
       
+      const itemPrice = variant?.price || product.pricing?.salePrice || product.pricing?.basePrice;
+      const itemImage = (variant?.imageIndex !== undefined && product.images?.[variant.imageIndex]?.url) 
+        || product.images?.[0]?.url;
+
       return [...prevItems, {
         productId: product._id,
         name: product.name,
-        price: product.pricing?.salePrice || product.pricing?.basePrice,
-        image: product.images?.[0]?.url,
+        price: itemPrice,
+        image: itemImage,
         quantity,
         variant,
-        stock: product.inventory?.stock
+        stock: variant?.stock ?? product.inventory?.stock
       }]
     })
   }

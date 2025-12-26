@@ -28,7 +28,6 @@ export async function GET(request) {
     let training = await SellerTraining.findOne({ sellerId: decoded.userId });
 
     if (!training) {
-      // Create default training record with onboarding steps
       training = await SellerTraining.create({
         sellerId: decoded.userId,
         onboarding: {
@@ -58,29 +57,32 @@ export async function GET(request) {
               title: "Upload Documents",
               description: "Submit verification documents",
             },
-            {
-              stepNumber: 6,
-              title: "Complete Verification",
-              description: "Get verified as a seller",
-            },
-            {
-              stepNumber: 7,
-              title: "Set Pricing Strategy",
-              description: "Configure your pricing",
-            },
-            {
-              stepNumber: 8,
-              title: "Create First Campaign",
-              description: "Launch your first ad",
-            },
-            {
-              stepNumber: 9,
-              title: "Learn Analytics",
-              description: "Understand your metrics",
-            },
-            { stepNumber: 10, title: "Go Live!", description: "Start selling" },
           ],
         },
+        courses: [
+          {
+            courseId: "basics-101",
+            title: "E-commerce Essentials",
+            description:
+              "Master the fundamentals of online selling and customer psychology.",
+            category: "basics",
+            lessons: [
+              { title: "Market Dynamics", duration: 15, type: "video" },
+              { title: "Product Positioning", duration: 20, type: "article" },
+            ],
+          },
+          {
+            courseId: "ops-201",
+            title: "Logistics Architecture",
+            description:
+              "Optimizing your supply chain and fulfillment efficiency.",
+            category: "operations",
+            lessons: [
+              { title: "Warehouse Management", duration: 30, type: "video" },
+              { title: "Last-Mile Delivery", duration: 25, type: "article" },
+            ],
+          },
+        ],
       });
     }
 

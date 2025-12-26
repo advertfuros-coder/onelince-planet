@@ -2,40 +2,41 @@
 'use client'
 import { useState } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
-import { 
-  HeartIcon, 
-  EyeIcon, 
-  ShoppingCartIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  StarIcon
-} from '@heroicons/react/outline'
-import { HeartIcon as HeartSolidIcon, StarIcon as StarSolidIcon } from '@heroicons/react/solid'
+import {
+  FiHeart,
+  FiEye,
+  FiShoppingCart,
+  FiChevronLeft,
+  FiChevronRight,
+  FiStar
+} from 'react-icons/fi'
+import { FaHeart, FaStar } from 'react-icons/fa'
 import { formatPrice } from '../../lib/utils'
 import Button from '../ui/Button'
 import { useCart } from '../../lib/context/CartContext'
 import { toast } from 'react-hot-toast'
 
-export default function ProductGrid({ 
-  products = [], 
-  loading = false, 
-  totalPages = 0, 
-  currentPage = 1, 
+import ProductCard from './ProductCard'
+
+export default function ProductGrid({
+  products = [],
+  loading = false,
+  totalPages = 0,
+  currentPage = 1,
   onPageChange,
-  showFilters = true 
+  showFilters = true
 }) {
   const [wishlist, setWishlist] = useState([])
   const [viewMode, setViewMode] = useState('grid') // 'grid' or 'list'
   const { addItem } = useCart()
 
   const toggleWishlist = (productId) => {
-    setWishlist(prev => 
-      prev.includes(productId) 
+    setWishlist(prev =>
+      prev.includes(productId)
         ? prev.filter(id => id !== productId)
         : [...prev, productId]
     )
-    
+
     const isWishlisted = wishlist.includes(productId)
     toast.success(isWishlisted ? 'Removed from wishlist' : 'Added to wishlist')
   }
@@ -48,7 +49,7 @@ export default function ProductGrid({
   const generatePageNumbers = () => {
     const pages = []
     const maxVisible = 5
-    
+
     if (totalPages <= maxVisible) {
       for (let i = 1; i <= totalPages; i++) {
         pages.push(i)
@@ -76,7 +77,7 @@ export default function ProductGrid({
         pages.push(totalPages)
       }
     }
-    
+
     return pages
   }
 
@@ -88,7 +89,7 @@ export default function ProductGrid({
           <div className="h-6 bg-gray-300 rounded w-48 animate-pulse"></div>
           <div className="h-10 bg-gray-300 rounded w-40 animate-pulse"></div>
         </div>
-        
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {[...Array(12)].map((_, index) => (
             <div key={index} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
@@ -144,7 +145,7 @@ export default function ProductGrid({
             <span className="font-semibold">{totalPages * 20}</span> results
           </p>
         </div>
-        
+
         <div className="flex items-center gap-4">
           {/* View Mode Toggle */}
           <div className="flex items-center border border-gray-300 rounded-lg p-1">
@@ -167,7 +168,7 @@ export default function ProductGrid({
           </div>
 
           {/* Sort Options */}
-          <select 
+          <select
             className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
             onChange={(e) => {
               const [sortBy, order] = e.target.value.split(':')
@@ -188,8 +189,8 @@ export default function ProductGrid({
       {viewMode === 'grid' ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {products.map((product) => (
-            <ProductCard 
-              key={product._id} 
+            <ProductCard
+              key={product._id}
               product={product}
               isWishlisted={wishlist.includes(product._id)}
               onToggleWishlist={toggleWishlist}
@@ -200,8 +201,8 @@ export default function ProductGrid({
       ) : (
         <div className="space-y-4">
           {products.map((product) => (
-            <ProductListItem 
-              key={product._id} 
+            <ProductListItem
+              key={product._id}
               product={product}
               isWishlisted={wishlist.includes(product._id)}
               onToggleWishlist={toggleWishlist}
@@ -219,14 +220,14 @@ export default function ProductGrid({
               Page {currentPage} of {totalPages}
             </span>
           </div>
-          
+
           <div className="flex items-center space-x-2">
             <button
               onClick={() => onPageChange && onPageChange(currentPage - 1)}
               disabled={currentPage === 1}
               className="flex items-center px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <ChevronLeftIcon className="w-4 h-4 mr-1" />
+              <FiChevronLeft className="w-4 h-4 mr-1" />
               Previous
             </button>
 
@@ -236,13 +237,12 @@ export default function ProductGrid({
                   key={index}
                   onClick={() => typeof page === 'number' && onPageChange && onPageChange(page)}
                   disabled={page === '...' || page === currentPage}
-                  className={`px-3 py-2 text-sm font-medium border transition-colors ${
-                    page === currentPage
-                      ? 'bg-blue-600 text-white border-blue-600'
-                      : page === '...'
+                  className={`px-3 py-2 text-sm font-medium border transition-colors ${page === currentPage
+                    ? 'bg-blue-600 text-white border-blue-600'
+                    : page === '...'
                       ? 'bg-white text-gray-400 border-gray-300 cursor-default'
                       : 'bg-white text-gray-500 border-gray-300 hover:bg-gray-50'
-                  }`}
+                    }`}
                 >
                   {page}
                 </button>
@@ -255,7 +255,7 @@ export default function ProductGrid({
               className="flex items-center px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-r-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Next
-              <ChevronRightIcon className="w-4 h-4 ml-1" />
+              <FiChevronRight className="w-4 h-4 ml-1" />
             </button>
           </div>
         </div>
@@ -264,175 +264,9 @@ export default function ProductGrid({
   )
 }
 
-// Product Card Component for Grid View
-function ProductCard({ product, isWishlisted, onToggleWishlist, onAddToCart }) {
-  const discount = product.pricing.basePrice && product.pricing.salePrice ? 
-    Math.round(((product.pricing.basePrice - product.pricing.salePrice) / product.pricing.basePrice) * 100) : 0
-  const finalPrice = product.pricing.salePrice || product.pricing.basePrice
-
-  return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden group hover:shadow-lg hover:border-blue-300 transition-all duration-300">
-      {/* Product Image */}
-      <div className="relative overflow-hidden bg-gray-50">
-        <Link href={`/products/${product._id}`}>
-          <Image
-            src={product.images?.[0]?.url || '/images/placeholder-product.jpg'}
-            alt={product.name}
-            width={300}
-            height={240}
-            className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-          />
-        </Link>
-        
-        {/* Badges */}
-        <div className="absolute top-3 left-3 flex flex-col space-y-1">
-          {discount > 0 && (
-            <span className="bg-red-500 text-white px-2 py-1 rounded-full text-xs font-semibold">
-              -{discount}%
-            </span>
-          )}
-          {product.isFeatured && (
-            <span className="bg-blue-500 text-white px-2 py-1 rounded-full text-xs font-semibold">
-              Featured
-            </span>
-          )}
-          {product.isPromoted && (
-            <span className="bg-purple-500 text-white px-2 py-1 rounded-full text-xs font-semibold">
-              Sponsored
-            </span>
-          )}
-        </div>
-
-        {/* Action Buttons */}
-        <div className="absolute top-3 right-3 flex flex-col space-y-2 opacity-0 group-hover:opacity-100 transition-opacity">
-          <button
-            onClick={() => onToggleWishlist(product._id)}
-            className="p-2 bg-white rounded-full shadow-md hover:bg-gray-50 transition-colors"
-          >
-            {isWishlisted ? (
-              <HeartSolidIcon className="w-5 h-5 text-red-500" />
-            ) : (
-              <HeartIcon className="w-5 h-5 text-gray-600" />
-            )}
-          </button>
-          <Link href={`/products/${product._id}`}>
-            <button className="p-2 bg-white rounded-full shadow-md hover:bg-gray-50 transition-colors">
-              <EyeIcon className="w-5 h-5 text-gray-600" />
-            </button>
-          </Link>
-        </div>
-
-        {/* Stock Status */}
-        {product.inventory?.stock <= 5 && product.inventory?.stock > 0 && (
-          <div className="absolute bottom-3 left-3 bg-orange-500 text-white px-2 py-1 rounded-full text-xs font-semibold">
-            Only {product.inventory.stock} left!
-          </div>
-        )}
-
-        {product.inventory?.stock === 0 && (
-          <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <span className="bg-red-500 text-white px-4 py-2 rounded-full text-sm font-semibold">
-              Out of Stock
-            </span>
-          </div>
-        )}
-
-        {/* Quick Add to Cart */}
-        <div className="absolute bottom-3 left-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
-          <Button
-            onClick={() => onAddToCart(product)}
-            disabled={product.inventory?.stock === 0}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white text-sm py-2"
-          >
-            <ShoppingCartIcon className="w-4 h-4 mr-2" />
-            Add to Cart
-          </Button>
-        </div>
-      </div>
-
-      {/* Product Details */}
-      <div className="p-4">
-        {/* Category */}
-        <div className="mb-2">
-          <Link 
-            href={`/products?category=${product.category}`}
-            className="text-xs text-blue-600 hover:text-blue-800 uppercase tracking-wide font-medium"
-          >
-            {product.category}
-          </Link>
-        </div>
-        
-        {/* Product Name */}
-        <Link href={`/products/${product._id}`}>
-          <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 hover:text-blue-600 transition-colors leading-tight">
-            {product.name}
-          </h3>
-        </Link>
-
-        {/* Seller Info */}
-        {product.sellerId && (
-          <div className="mb-2">
-            <Link 
-              href={`/seller/${product.sellerId._id}`}
-              className="text-xs text-gray-500 hover:text-gray-700 transition-colors"
-            >
-              by {product.sellerId.storeInfo?.storeName || 'Seller'}
-            </Link>
-          </div>
-        )}
-
-        {/* Rating */}
-        <div className="flex items-center mb-3">
-          <div className="flex text-yellow-400 mr-2">
-            {[...Array(5)].map((_, i) => (
-              i < Math.floor(product.ratings?.average || 0) ? (
-                <StarSolidIcon key={i} className="w-4 h-4" />
-              ) : (
-                <StarIcon key={i} className="w-4 h-4" />
-              )
-            ))}
-          </div>
-          <span className="text-sm text-gray-500">
-            {product.ratings?.average ? product.ratings.average.toFixed(1) : '0.0'} ({product.ratings?.totalReviews || 0})
-          </span>
-        </div>
-
-        {/* Price */}
-        <div className="mb-4">
-          <div className="flex items-center space-x-2">
-            <span className="text-lg font-bold text-gray-900">
-              {formatPrice(finalPrice)}
-            </span>
-            {product.pricing.basePrice && product.pricing.salePrice && (
-              <span className="text-sm text-gray-500 line-through">
-                {formatPrice(product.pricing.basePrice)}
-              </span>
-            )}
-          </div>
-          {discount > 0 && (
-            <span className="text-sm text-green-600 font-medium">
-              You save {formatPrice(product.pricing.basePrice - product.pricing.salePrice)}
-            </span>
-          )}
-        </div>
-
-        {/* Add to Cart Button */}
-        <Button
-          onClick={() => onAddToCart(product)}
-          disabled={product.inventory?.stock === 0}
-          className="w-full"
-          variant="outline"
-        >
-          {product.inventory?.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
-        </Button>
-      </div>
-    </div>
-  )
-}
-
 // Product List Item Component for List View
 function ProductListItem({ product, isWishlisted, onToggleWishlist, onAddToCart }) {
-  const discount = product.pricing.basePrice && product.pricing.salePrice ? 
+  const discount = product.pricing.basePrice && product.pricing.salePrice ?
     Math.round(((product.pricing.basePrice - product.pricing.salePrice) / product.pricing.basePrice) * 100) : 0
   const finalPrice = product.pricing.salePrice || product.pricing.basePrice
 
@@ -442,11 +276,9 @@ function ProductListItem({ product, isWishlisted, onToggleWishlist, onAddToCart 
         {/* Product Image */}
         <div className="relative flex-shrink-0">
           <Link href={`/products/${product._id}`}>
-            <Image
+            <img
               src={product.images?.[0]?.url || '/images/placeholder-product.jpg'}
               alt={product.name}
-              width={160}
-              height={160}
               className="w-40 h-32 object-cover rounded-lg"
             />
           </Link>
@@ -462,13 +294,13 @@ function ProductListItem({ product, isWishlisted, onToggleWishlist, onAddToCart 
           <div className="flex justify-between items-start">
             <div className="flex-1">
               {/* Category */}
-              <Link 
+              <Link
                 href={`/products?category=${product.category}`}
                 className="text-xs text-blue-600 hover:text-blue-800 uppercase tracking-wide font-medium"
               >
                 {product.category}
               </Link>
-              
+
               {/* Product Name */}
               <Link href={`/products/${product._id}`}>
                 <h3 className="text-lg font-semibold text-gray-900 mt-1 mb-2 hover:text-blue-600 transition-colors">
@@ -479,7 +311,7 @@ function ProductListItem({ product, isWishlisted, onToggleWishlist, onAddToCart 
               {/* Seller */}
               {product.sellerId && (
                 <p className="text-sm text-gray-500 mb-2">
-                  by <Link 
+                  by <Link
                     href={`/seller/${product.sellerId._id}`}
                     className="text-blue-600 hover:text-blue-800"
                   >
@@ -493,9 +325,9 @@ function ProductListItem({ product, isWishlisted, onToggleWishlist, onAddToCart 
                 <div className="flex text-yellow-400 mr-2">
                   {[...Array(5)].map((_, i) => (
                     i < Math.floor(product.ratings?.average || 0) ? (
-                      <StarSolidIcon key={i} className="w-4 h-4" />
+                      <FaStar key={i} className="w-4 h-4" />
                     ) : (
-                      <StarIcon key={i} className="w-4 h-4" />
+                      <FiStar key={i} className="w-4 h-4" />
                     )
                   ))}
                 </div>
@@ -517,9 +349,9 @@ function ProductListItem({ product, isWishlisted, onToggleWishlist, onAddToCart 
                 className="p-2 text-gray-400 hover:text-red-500 transition-colors"
               >
                 {isWishlisted ? (
-                  <HeartSolidIcon className="w-5 h-5 text-red-500" />
+                  <FaHeart className="w-5 h-5 text-red-500" />
                 ) : (
-                  <HeartIcon className="w-5 h-5" />
+                  <FiHeart className="w-5 h-5" />
                 )}
               </button>
             </div>
@@ -551,7 +383,7 @@ function ProductListItem({ product, isWishlisted, onToggleWishlist, onAddToCart 
                   Only {product.inventory.stock} left!
                 </span>
               )}
-              
+
               <Button
                 onClick={() => onAddToCart(product)}
                 disabled={product.inventory?.stock === 0}

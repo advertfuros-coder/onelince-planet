@@ -74,3 +74,7 @@ You can now:
 - Uses realistic UAE data (Dubai addresses, AED prices)
 
 Enjoy testing! 🎉
+
+
+
+impletemt realtime notification system do competitor research and add you can use any npm package 

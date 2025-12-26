@@ -1,7 +1,6 @@
 // components/customer/TrendingProducts.jsx
 'use client'
 import { useState } from 'react'
-import Image from 'next/image'
 import Link from 'next/link'
 import { FiHeart, FiShoppingCart, FiChevronLeft, FiChevronRight } from 'react-icons/fi'
 import WishlistButton from '@/components/customer/WishlistButton'
@@ -99,8 +98,8 @@ export default function TrendingProducts({ products = [] }) {
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={`px-6 py-2.5 rounded-lg font-semibold transition-all duration-300 ${activeTab === tab.id
-                    ? tab.color
-                    : 'bg-white text-gray-700 border border-gray-200 hover:border-yellow-400'
+                  ? tab.color
+                  : 'bg-white text-gray-700 border border-gray-200 hover:border-yellow-400'
                   }`}
               >
                 {tab.label}
@@ -142,14 +141,12 @@ export default function TrendingProducts({ products = [] }) {
 
                 {/* Product Image */}
                 <Link href={`/products/${product._id}`}>
-                  <div className="relative w-full h-full">
+                  <div className="relative w-full h-full aspect-square">
                     {product.images?.[0] && (
                       <img
                         src={typeof product.images[0] === 'string' ? product.images[0] : product.images[0].url || product.images[0]}
                         alt={product.name}
-                        fill
-                        className="object-contain group-hover:scale-110 transition-transform duration-300"
-                        sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 16vw"
+                        className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300"
                       />
                     )}
                   </div>
@@ -188,11 +185,11 @@ export default function TrendingProducts({ products = [] }) {
                 {/* Price */}
                 <div className="flex items-center gap-2">
                   <span className="text-lg font-bold text-gray-900">
-                    ${product.price.toFixed(2)}
+                    ${(product.price || product.pricing?.salePrice || product.pricing?.basePrice || 0).toFixed(2)}
                   </span>
                   {product.mrp && product.mrp > product.price && (
                     <span className="text-sm text-gray-400 line-through">
-                      ${product.mrp.toFixed(2)}
+                      ${product.mrp?.toFixed(2)}
                     </span>
                   )}
                 </div>

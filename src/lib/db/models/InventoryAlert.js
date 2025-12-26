@@ -330,7 +330,7 @@ InventoryAlertSchema.statics.triggerAutoRestock = async function (alertId) {
   // Create restock order based on supplier method
   if (supplier.autoRestock.method === "email") {
     // Send email to supplier
-    const { sendEmail } = await import("../utils/emailService.js");
+    const { sendEmail } = await import("../../utils/emailService.js");
     await sendEmail({
       to: supplier.email,
       subject: `Auto-Restock Order - ${alert.productId.name}`,

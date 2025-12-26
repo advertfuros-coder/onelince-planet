@@ -1,22 +1,18 @@
-// app/api/seller/campaigns/route.js
+// app/api/seller/advertising/route.js
 import { NextResponse } from "next/server";
 import connectDB from "@/lib/db/mongodb";
-import Advertisement from "@/lib/db/models/Advertisement";
-import SellerSubscription from "@/lib/db/models/SellerSubscription";
+import Campaign from "@/lib/db/models/Campaign";
 import { verifyToken } from "@/lib/utils/auth";
 
-// GET - Fetch all campaigns
 export async function GET(request) {
   try {
     await connectDB();
-
     const token = request.headers.get("authorization")?.replace("Bearer ", "");
-    if (!token) {
+    if (!token)
       return NextResponse.json(
         { success: false, message: "Unauthorized" },
         { status: 401 }
       );
-    }
 
     const decoded = verifyToken(token);
     if (!decoded || decoded.role !== "seller") {
@@ -26,33 +22,22 @@ export async function GET(request) {
       );
     }
 
-    const { searchParams } = new URL(request.url);
-    const status = searchParams.get("status");
+    const campaigns = await Campaign.find({ createdBy: decoded.userId }).sort({
+      createdAt: -1,
+    });
 
-    let query = { sellerId: decoded.userId };
-    if (status) query.status = status;
-
-    const campaigns = await Advertisement.find(query)
-      .populate("products", "name images pricing")
-      .sort({ createdAt: -1 });
-
-    // Calculate summary stats
+    // Calculate stats
     const stats = {
-      total: campaigns.length,
-      active: campaigns.filter((c) => c.status === "active").length,
-      paused: campaigns.filter((c) => c.status === "paused").length,
-      totalSpent: campaigns.reduce((sum, c) => sum + c.budget.spent, 0),
-      totalRevenue: campaigns.reduce((sum, c) => sum + c.metrics.revenue, 0),
-      totalImpressions: campaigns.reduce(
-        (sum, c) => sum + c.metrics.impressions,
+      activeCampaigns: campaigns.filter((c) => c.status === "active").length,
+      totalSpent: campaigns.reduce((acc, c) => acc + (c.spent || 0), 0),
+      totalClicks: campaigns.reduce(
+        (acc, c) => acc + (c.stats?.clicks || 0),
         0
       ),
-      totalClicks: campaigns.reduce((sum, c) => sum + c.metrics.clicks, 0),
-      averageROAS:
-        campaigns.length > 0
-          ? campaigns.reduce((sum, c) => sum + c.metrics.roas, 0) /
-            campaigns.length
-          : 0,
+      totalConversions: campaigns.reduce(
+        (acc, c) => acc + (c.stats?.conversions || 0),
+        0
+      ),
     };
 
     return NextResponse.json({
@@ -61,30 +46,23 @@ export async function GET(request) {
       stats,
     });
   } catch (error) {
-    console.error("Campaigns GET Error:", error);
+    console.error("Advertising Error:", error);
     return NextResponse.json(
-      {
-        success: false,
-        message: "Server error",
-        error: error.message,
-      },
+      { success: false, message: "Server error" },
       { status: 500 }
     );
   }
 }
 
-// POST - Create new campaign
 export async function POST(request) {
   try {
     await connectDB();
-
     const token = request.headers.get("authorization")?.replace("Bearer ", "");
-    if (!token) {
+    if (!token)
       return NextResponse.json(
         { success: false, message: "Unauthorized" },
         { status: 401 }
       );
-    }
 
     const decoded = verifyToken(token);
     if (!decoded || decoded.role !== "seller") {
@@ -94,43 +72,30 @@ export async function POST(request) {
       );
     }
 
-    // Check subscription limits
-    const subscription = await SellerSubscription.findOne({
-      sellerId: decoded.userId,
-    });
-    if (!subscription || !subscription.hasFeature("sponsoredProducts")) {
+    const data = await request.json();
+
+    // Basic validation
+    if (!data.name || !data.type) {
       return NextResponse.json(
-        {
-          success: false,
-          message: "Upgrade your subscription to create ad campaigns",
-        },
-        { status: 403 }
+        { success: false, message: "Name and Type are required" },
+        { status: 400 }
       );
     }
 
-    const campaignData = await request.json();
-
-    // Create campaign
-    const campaign = await Advertisement.create({
-      ...campaignData,
-      sellerId: decoded.userId,
-      status: "draft",
-      "budget.remaining": campaignData.budget?.amount || 0,
+    const campaign = await Campaign.create({
+      ...data,
+      createdBy: decoded.userId,
+      status: "active", // Auto-activate for demo
     });
 
     return NextResponse.json({
       success: true,
-      message: "Campaign created successfully",
       campaign,
     });
   } catch (error) {
-    console.error("Campaign POST Error:", error);
+    console.error("Create Campaign Error:", error);
     return NextResponse.json(
-      {
-        success: false,
-        message: "Server error",
-        error: error.message,
-      },
+      { success: false, message: "Server error" },
       { status: 500 }
     );
   }

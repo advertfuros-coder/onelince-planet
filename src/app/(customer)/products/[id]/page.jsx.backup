@@ -1,0 +1,769 @@
+'use client'
+import { useState, useEffect } from 'react'
+import { useParams, useRouter } from 'next/navigation'
+import Image from 'next/image'
+import Link from 'next/link'
+import {
+  FiHeart,
+  FiShare2,
+  FiStar,
+  FiTruck,
+  FiShield,
+  FiRefreshCw,
+  FiCheck,
+  FiChevronRight,
+  FiMinus,
+  FiPlus,
+  FiMapPin,
+  FiPackage
+} from 'react-icons/fi'
+import { BiHeadphone, BiSupport } from 'react-icons/bi'
+import Button from '@/components/ui/Button'
+import { useCart } from '@/lib/context/CartContext'
+import { toast } from 'react-hot-toast'
+import { extractIdFromSlug } from '@/lib/utils/productUrl'
+
+export default function ProductDetailPage() {
+  const params = useParams()
+  const router = useRouter()
+  const { addItem } = useCart()
+
+
+  const [product, setProduct] = useState(null)
+  const [reviews, setReviews] = useState([])
+  const [reviewStats, setReviewStats] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [selectedImage, setSelectedImage] = useState(0)
+  const [selectedColor, setSelectedColor] = useState(null)
+  const [quantity, setQuantity] = useState(1)
+  const [pincode, setPincode] = useState('')
+  const [deliveryInfo, setDeliveryInfo] = useState(null)
+
+  // Fetch product data and reviews from API
+  useEffect(() => {
+    const fetchProductData = async () => {
+      if (!params.id) return
+      
+      // Extract actual product ID from slug
+      const productId = extractIdFromSlug(params.id)
+
+      try {
+        setLoading(true)
+        
+        // Fetch product details
+        const productResponse = await fetch(`/api/products/${productId}`)
+        
+        if (!productResponse.ok) {
+          throw new Error('Product not found')
+        }
+        
+        const productData = await productResponse.json()
+        
+        if (productData.success && productData.product) {
+          // Transform API data
+          const product = {
+            ...productData.product,
+            price: productData.product.pricing?.salePrice || productData.product.pricing?.basePrice || 0,
+            originalPrice: productData.product.pricing?.basePrice,
+            discount: productData.product.pricing?.basePrice && productData.product.pricing?.salePrice
+              ? Math.round(((productData.product.pricing.basePrice - productData.product.pricing.salePrice) / productData.product.pricing.basePrice) * 100)
+              : 0,
+            rating: productData.product.ratings?.average || 0,
+            reviews: productData.product.ratings?.totalReviews || 0,
+            inStock: productData.product.inventory?.stock > 0,
+            colors: productData.product.variants?.colors || [
+              { name: 'Default', code: '#E5E7EB', available: true }
+            ],
+            images: productData.product.images?.map(img => img.url) || [
+              'https://via.placeholder.com/800'
+            ],
+            seller: {
+              name: productData.product.sellerId?.storeInfo?.storeName || 'Official Store',
+              rating: 4.5,
+              products: 234
+            },
+            specifications: productData.product.specifications || {},
+            description: productData.product.description || '',
+            features: productData.product.features || []
+          }
+          
+          setProduct(product)
+          setSelectedColor(0)
+          
+          // Fetch reviews
+          try {
+            const reviewsResponse = await fetch(`/api/products/${productId}/reviews`)
+            if (reviewsResponse.ok) {
+              const reviewsData = await reviewsResponse.json()
+              if (reviewsData.success) {
+                setReviews(reviewsData.reviews || [])
+                setReviewStats(reviewsData.stats || null)
+              }
+            }
+          } catch (reviewError) {
+            console.error('Failed to fetch reviews:', reviewError)
+            setReviews([])
+          }
+        } else {
+          setProduct(null)
+        }
+      } catch (error) {
+        console.error('Failed to fetch product:', error)
+        setProduct(null)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchProductData()
+
+    // Cleanup
+    return () => {
+      setProduct(null)
+      setReviews([])
+      setReviewStats(null)
+      setSelectedImage(0)
+      setSelectedColor(null)
+      setQuantity(1)
+    }
+  }, [params.id])
+
+  const handleAddToCart = () => {
+    if (!product) return
+
+    addItem({
+      ...product,
+      quantity: quantity,
+      variant: { color: product.colors[selectedColor].name }
+    })
+
+    toast.success('Added to cart!')
+  }
+
+  const handleBuyNow = () => {
+    handleAddToCart()
+    router.push('/cart')
+  }
+
+  const checkDelivery = () => {
+    if (pincode.length === 6) {
+      setDeliveryInfo({
+        available: true,
+        date: 'Oct 24',
+        type: 'Standard Delivery',
+        cost: 'Free'
+      })
+      toast.success('Delivery available!')
+    } else {
+      toast.error('Please enter valid pincode')
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    )
+  }
+
+  if (!product) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Product not found</h2>
+          <Link href="/products" className="text-blue-600 hover:text-blue-700">
+            Browse all products
+          </Link>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50 pb-20">
+      {/* Breadcrumb */}
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 py-3">
+          <div className="flex items-center gap-2 text-sm text-gray-600">
+            <Link href="/" className="hover:text-blue-600">Home</Link>
+            <FiChevronRight className="w-4 h-4" />
+            <Link href="/products" className="hover:text-blue-600">Electronics</Link>
+            <FiChevronRight className="w-4 h-4" />
+            <Link href="/products?category=audio" className="hover:text-blue-600">Audio</Link>
+            <FiChevronRight className="w-4 h-4" />
+            <span className="text-gray-900 font-medium truncate max-w-xs">{product.name}</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Left Column - Images */}
+          <div className="lg:col-span-5">
+            <div className="sticky top-8">
+              <div className="flex gap-4">
+                {/* Thumbnails Sidebar */}
+                <div className="flex flex-col gap-3 w-20">
+                  {product.images.map((img, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setSelectedImage(index)}
+                      className={`aspect-square bg-white rounded-xl p-2 border-2 transition-all ${selectedImage === index
+                          ? 'border-blue-600 ring-2 ring-blue-100'
+                          : 'border-gray-200 hover:border-gray-300'
+                        }`}
+                    >
+                      <img src={img} alt={`View ${index + 1}`} className="w-full h-full object-contain" />
+                    </button>
+                  ))}
+                  {/* Play Video Placeholder */}
+                  <button className="aspect-square bg-gray-100 rounded-xl p-2 border-2 border-gray-200 flex items-center justify-center">
+                    <div className="w-6 h-6 rounded-full bg-white flex items-center justify-center shadow-sm">
+                      <div className="w-0 h-0 border-t-[5px] border-t-transparent border-l-[8px] border-l-blue-600 border-b-[5px] border-b-transparent ml-1" />
+                    </div>
+                  </button>
+                </div>
+
+                {/* Main Image */}
+                <div className="flex-1 bg-white rounded-3xl p-8 relative group min-h-[500px] flex items-center justify-center border border-gray-100 shadow-sm">
+                  <div className="absolute top-4 right-4 flex gap-2 z-10">
+                    <button className="w-10 h-10 bg-white rounded-full shadow-md flex items-center justify-center hover:bg-red-50 transition-colors group">
+                      <FiHeart className="w-5 h-5 text-gray-700 group-hover:text-red-500 transition-colors" />
+                    </button>
+                  </div>
+
+                  
+
+                  <div className="w-full h-full relative">
+                    <img
+                      src={product.images[selectedImage]}
+                      alt={product.name}
+                      className="w-full h-full object-contain mix-blend-multiply"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column - Product Info */}
+          <div className="lg:col-span-7">
+            <div className="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm">
+              {/* Product Title & Rating */}
+              <div className="mb-6">
+                <div className="flex justify-between items-start gap-4 mb-3">
+                  <h1 className="text-2xl md:text-3xl font-bold text-gray-900 leading-tight">
+                    {product.name}
+                  </h1>
+                  <button className="p-2 text-gray-400 hover:text-blue-600 transition-colors">
+                    <FiShare2 className="w-6 h-6" />
+                  </button>
+                </div>
+
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-1.5 bg-green-50 text-green-700 px-2 py-1 rounded-lg">
+                    <span className="font-bold text-sm">{product.rating}</span>
+                    <FiStar className="w-3 h-3 fill-green-700" />
+                  </div>
+                  <span className="text-sm text-gray-400">1,240 Ratings & 85 Reviews</span>
+                </div>
+              </div>
+
+              {/* Price */}
+              <div className="mb-6 pb-6 border-b border-gray-100">
+                <div className="flex items-center gap-3 mb-1">
+                  <span className="text-3xl font-bold text-gray-900">₹{product.price.toLocaleString()}</span>
+                  <span className="text-lg text-gray-400 line-through">₹{product.originalPrice.toLocaleString()}</span>
+                  <span className="px-2 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-md">20% OFF</span>
+                </div>
+                <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-3">Inclusive of all taxes</p>
+                <button className="flex items-center gap-2 text-blue-600 text-sm font-semibold hover:underline">
+                  <FiPackage className="w-4 h-4" />
+                  View price in AED (Approx. AED 880)
+                </button>
+              </div>
+
+              {/* Color Selection */}
+              <div className="mb-8">
+                <div className="flex justify-between items-center mb-3">
+                  <h3 className="text-sm font-bold text-gray-900">Color: <span className="text-blue-600">{product.colors[selectedColor]?.name}</span></h3>
+                </div>
+                <div className="flex gap-4">
+                  {product.colors.map((color, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setSelectedColor(index)}
+                      className={`w-10 h-10 rounded-full border-2 p-0.5 transition-all ${selectedColor === index
+                          ? 'border-blue-600 scale-110'
+                          : 'border-transparent hover:border-gray-200'
+                        }`}
+                    >
+                      <div
+                        className="w-full h-full rounded-full border border-gray-100 shadow-inner"
+                        style={{ backgroundColor: color.code }}
+                      />
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Delivery Estimate */}
+              <div className="mb-8 border border-gray-100 rounded-2xl overflow-hidden">
+                <div className="p-4 bg-gray-50/50 flex items-center justify-between border-b border-gray-100">
+                  <div className="flex items-center gap-2">
+                    <FiTruck className="w-5 h-5 text-gray-600" />
+                    <span className="text-sm font-bold text-gray-900">Delivery Estimate</span>
+                  </div>
+                  <button className="text-xs font-bold text-blue-600 hover:underline">Change</button>
+                </div>
+                <div className="p-4">
+                  <div className="relative mb-4">
+                    <input
+                      type="text"
+                      placeholder="400001 - Mumbai"
+                      value={pincode}
+                      onChange={(e) => setPincode(e.target.value)}
+                      className="w-full pl-4 pr-12 py-3 bg-white border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all placeholder:text-gray-400 font-medium"
+                    />
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                      <FiCheck className="w-4 h-4 text-white" />
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-500">Standard Delivery</span>
+                      <span className="text-sm font-bold text-gray-900">Free, by Oct 24</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-500">Express Delivery</span>
+                      <span className="text-sm font-bold text-gray-900">₹99, Tomorrow</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Quantity & Actions */}
+              <div className="flex items-center gap-4 mb-6">
+                <div className="flex items-center bg-gray-50 rounded-xl p-1 border border-gray-100">
+                  <button
+                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    className="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-white rounded-lg transition-all"
+                  >
+                    <FiMinus className="w-4 h-4" />
+                  </button>
+                  <span className="w-12 text-center font-bold text-gray-900">{quantity}</span>
+                  <button
+                    onClick={() => setQuantity(quantity + 1)}
+                    className="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-white rounded-lg transition-all"
+                  >
+                    <FiPlus className="w-4 h-4" />
+                  </button>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-green-500" />
+                  <span className="text-sm font-bold text-green-600">In Stock</span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4 mb-8">
+                <button
+                  onClick={handleAddToCart}
+                  className="py-4 bg-white border-2 border-blue-600 text-blue-600 font-bold rounded-xl hover:bg-blue-50 transition-all flex items-center justify-center gap-2 shadow-sm"
+                >
+                  <FiPackage className="w-5 h-5" />
+                  Add to Cart
+                </button>
+                <button
+                  onClick={handleBuyNow}
+                  className="py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-all shadow-lg shadow-blue-200"
+                >
+                  Buy Now
+                </button>
+              </div>
+
+              {/* Seller & Trust Badges */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Seller Card */}
+                <div className="p-4 bg-gray-50/50 rounded-2xl border border-gray-100 flex items-center gap-4">
+                  <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600 font-bold text-xl shadow-inner uppercase">
+                    {product.seller.name.charAt(0)}
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-0.5">Sold by</p>
+                    <Link href="#" className="text-sm font-bold text-gray-900 flex items-center gap-1 hover:text-blue-600">
+                      {product.seller.name}
+                      <FiShare2 className="w-3 h-3 -rotate-45" />
+                    </Link>
+                  </div>
+                  <div className="text-right">
+                    <div className="flex items-center gap-1 justify-end">
+                      <span className="text-sm font-bold text-gray-900">{product.seller.rating}</span>
+                      <FiStar className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                    </div>
+                    <p className="text-[10px] text-gray-400 font-bold uppercase">Positive Ratings</p>
+                  </div>
+                </div>
+
+                {/* Info Card */}
+                <div className="p-4 bg-gray-50/50 rounded-2xl border border-gray-100 grid grid-cols-3 gap-2">
+                  <div className="flex flex-col items-center text-center">
+                    <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center mb-1 shadow-sm">
+                      <FiShield className="w-4 h-4 text-green-600" />
+                    </div>
+                    <span className="text-[8px] font-bold text-gray-500 uppercase leading-tight">1 Year Warranty</span>
+                  </div>
+                  <div className="flex flex-col items-center text-center">
+                    <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center mb-1 shadow-sm">
+                      <span className="text-sm font-bold text-blue-600">₹</span>
+                    </div>
+                    <span className="text-[8px] font-bold text-gray-500 uppercase leading-tight">Cash on Delivery</span>
+                  </div>
+                  <div className="flex flex-col items-center text-center">
+                    <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center mb-1 shadow-sm">
+                      <FiRefreshCw className="w-4 h-4 text-orange-600" />
+                    </div>
+                    <span className="text-[8px] font-bold text-gray-500 uppercase leading-tight">7 Day Returns</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Have a question? */}
+              <button className="w-full mt-6 p-4 bg-white border border-gray-100 rounded-2xl flex items-center justify-between text-sm font-bold text-gray-900 hover:bg-gray-50 transition-all group">
+                Have a question?
+                <FiPlus className="w-5 h-5 text-gray-400 group-hover:text-blue-600 transition-colors" />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Description Tabs */}
+        <div className="mt-12 bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm">
+          <div className="flex overflow-x-auto no-scrollbar border-b border-gray-100 bg-gray-50/50">
+            {['description', 'specifications', 'shipping & returns', 'reviews (1.2k)'].map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`px-8 py-5 text-sm font-bold capitalize transition-all whitespace-nowrap ${activeTab === tab
+                    ? 'text-blue-600 bg-white shadow-[0_-2px_0_inset_#2563eb]'
+                    : 'text-gray-400 hover:text-gray-600'
+                  }`}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
+
+          <div className="p-8">
+            {activeTab === 'description' && (
+              <div className="max-w-4xl">
+                <div className="space-y-6">
+                  <p className="text-gray-700 leading-relaxed">
+                    <span className="font-bold text-gray-900">Industry-leading noise cancellation:</span> From airplane noise to people's voices, our WH-1000XM5 wireless headphones with 2 processors control 8 microphones for unprecedented noise cancellation and Auto NC Optimizer for optimizing noise cancellation based on your wearing conditions and environment.
+                  </p>
+                  <p className="text-gray-700 leading-relaxed">
+                    <span className="font-bold text-gray-900">Magnificent Sound:</span> Engineered to perfection with the new Integrated Processor V1.
+                  </p>
+                  <p className="text-gray-700 leading-relaxed">
+                    <span className="font-bold text-gray-900">Crystal clear hands-free calling:</span> Precise Voice Pickup Technology uses four beamforming microphones and an AI-based noise reduction algorithm.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12">
+                  <div className="flex flex-col items-center text-center p-6 bg-gray-50 rounded-2xl border border-gray-100">
+                    <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-4 shadow-sm">
+                      <div className="w-2 h-5 bg-blue-600 rounded-sm" />
+                    </div>
+                    <span className="text-[10px] font-bold text-gray-400 uppercase mb-1">Battery</span>
+                    <span className="text-sm font-bold text-gray-900">30H Battery</span>
+                  </div>
+                  <div className="flex flex-col items-center text-center p-6 bg-gray-50 rounded-2xl border border-gray-100">
+                    <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-4 shadow-sm text-blue-600">
+                      <FiPlus className="w-6 h-6 rotate-45" />
+                    </div>
+                    <span className="text-[10px] font-bold text-gray-400 uppercase mb-1">Audio</span>
+                    <span className="text-sm font-bold text-gray-900">Hi-Res Audio</span>
+                  </div>
+                  <div className="flex flex-col items-center text-center p-6 bg-gray-50 rounded-2xl border border-gray-100">
+                    <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-4 shadow-sm text-blue-600">
+                      <FiMinus className="w-6 h-6 rotate-90" />
+                    </div>
+                    <span className="text-[10px] font-bold text-gray-400 uppercase mb-1">Mic</span>
+                    <span className="text-sm font-bold text-gray-900">Crystal Mic</span>
+                  </div>
+                  <div className="flex flex-col items-center text-center p-6 bg-gray-50 rounded-2xl border border-gray-100">
+                    <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-4 shadow-sm text-blue-600">
+                      <FiPlus className="w-6 h-6" />
+                    </div>
+                    <span className="text-[10px] font-bold text-gray-400 uppercase mb-1">Connect</span>
+                    <span className="text-sm font-bold text-gray-900">Multi-point</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'specifications' && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
+                {Object.entries(product.specifications).map(([key, value]) => (
+                  <div key={key} className="flex justify-between py-4 border-b border-gray-50">
+                    <span className="text-sm font-bold text-gray-400 uppercase">{key}</span>
+                    <span className="text-sm font-bold text-gray-900">{value}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {activeTab === 'reviews (1.2k)' && (
+              <div className="space-y-8">
+                {/* Rating Summary */}
+                <div className="bg-gray-50 rounded-2xl p-8">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {/* Overall Rating */}
+                    <div className="flex flex-col items-center justify-center text-center border-r border-gray-200">
+                      <div className="text-6xl font-black text-gray-900 mb-2">{product.rating}</div>
+                      <div className="flex text-yellow-400 mb-2">
+                        {[...Array(5)].map((_, i) => (
+                          <FiStar key={i} className={`w-6 h-6 ${i < Math.floor(product.rating) ? 'fill-yellow-400' : ''}`} />
+                        ))}
+                      </div>
+                      <p className="text-sm text-gray-500 font-bold">Based on {product.reviews.toLocaleString()} Reviews</p>
+                    </div>
+
+                    {/* Rating Breakdown */}
+                    <div className="space-y-3">
+                      {[5, 4, 3, 2, 1].map((star) => {
+                        const percentage = star === 5 ? 73 : star === 4 ? 15 : star === 3 ? 8 : star === 2 ? 3 : 1
+                        return (
+                          <div key={star} className="flex items-center gap-3">
+                            <span className="text-sm font-bold text-gray-700 w-6">{star}</span>
+                            <FiStar className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                            <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                              <div 
+                                className="h-full bg-yellow-400 rounded-full transition-all duration-500"
+                                style={{ width: `${percentage}%` }}
+                              />
+                            </div>
+                            <span className="text-sm font-bold text-gray-500 w-12 text-right">{percentage}%</span>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Filter Tabs */}
+                <div className="flex items-center justify-between border-b border-gray-100 pb-4">
+                  <div className="flex gap-2">
+                    <button className="px-4 py-2 bg-blue-600 text-white text-sm font-bold rounded-full">
+                      All (85)
+                    </button>
+                    <button className="px-4 py-2 bg-gray-100 text-gray-700 text-sm font-bold rounded-full hover:bg-gray-200 transition-colors">
+                      Reviews (68)
+                    </button>
+                    <button className="px-4 py-2 bg-gray-100 text-gray-700 text-sm font-bold rounded-full hover:bg-gray-200 transition-colors">
+                      Images (23)
+                    </button>
+                    <button className="px-4 py-2 bg-gray-100 text-gray-700 text-sm font-bold rounded-full hover:bg-gray-200 transition-colors">
+                      Videos (8)
+                    </button>
+                    <button className="px-4 py-2 bg-gray-100 text-gray-700 text-sm font-bold rounded-full hover:bg-gray-200 transition-colors">
+                      Q&A (12)
+                    </button>
+                  </div>
+                  <select className="px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option>Most Relevant</option>
+                    <option>Newest First</option>
+                    <option>Highest Rated</option>
+                    <option>Lowest Rated</option>
+                    <option>Most Helpful</option>
+                  </select>
+                </div>
+
+                {/* Reviews List */}
+                <div className="space-y-6">
+                  {/* Review 1 */}
+                  <div className="border-b border-gray-100 pb-6">
+                    <div className="flex items-start gap-4">
+                      <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold flex-shrink-0">
+                        SK
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <h4 className="font-bold text-gray-900">Sanjay Kumar</h4>
+                          <span className="text-sm text-gray-400">• 2 days ago</span>
+                        </div>
+                        <div className="flex text-yellow-400 mb-3">
+                          {[...Array(5)].map((_, i) => (
+                            <FiStar key={i} className="w-4 h-4 fill-yellow-400" />
+                          ))}
+                        </div>
+                        <p className="text-gray-700 leading-relaxed mb-4">
+                          "Absolutely love these headphones! The platform sleek looks so sleek, and the noise cancellation is unreal on my commute. Highly recommend!"
+                        </p>
+                        
+                        {/* Review Images */}
+                        <div className="grid grid-cols-3 gap-3 mb-4">
+                          {[1, 2, 3].map((img) => (
+                            <div key={img} className="aspect-square bg-gray-100 rounded-xl overflow-hidden">
+                              <img 
+                                src={`https://images.unsplash.com/photo-${img === 1 ? '1546435770-a3e426bf472b' : img === 2 ? '1484704849700-f032a568e944' : '1505740420928-5e560c06d30e'}?w=300&h=300&fit=crop`}
+                                alt={`Review ${img}`}
+                                className="w-full h-full object-cover hover:scale-110 transition-transform duration-300 cursor-pointer"
+                              />
+                            </div>
+                          ))}
+                        </div>
+
+                        <div className="flex items-center gap-4 text-sm">
+                          <button className="flex items-center gap-2 text-gray-500 hover:text-blue-600 transition-colors font-bold">
+                            <FiPlus className="w-4 h-4" />
+                            <span>52</span>
+                          </button>
+                          <button className="flex items-center gap-2 text-gray-500 hover:text-blue-600 transition-colors font-bold">
+                            <FiShare2 className="w-4 h-4" />
+                            <span>3</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Review 2 */}
+                  <div className="border-b border-gray-100 pb-6">
+                    <div className="flex items-start gap-4">
+                      <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center text-green-600 font-bold flex-shrink-0">
+                        RM
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <h4 className="font-bold text-gray-900">Rahul Mehta</h4>
+                          <span className="text-sm text-gray-400">• 5 days ago</span>
+                        </div>
+                        <div className="flex text-yellow-400 mb-3">
+                          {[...Array(5)].map((_, i) => (
+                            <FiStar key={i} className="w-4 h-4 fill-yellow-400" />
+                          ))}
+                        </div>
+                        <p className="text-gray-700 leading-relaxed mb-4">
+                          "Great sound quality, bass is punchy for my music. Delivery to Mumbai was super fast, got it just 2 days ahead instead of a week I was thinking! Only one flaw came with a bent cable included."
+                        </p>
+                        
+                        <div className="flex items-center gap-4 text-sm">
+                          <button className="flex items-center gap-2 text-gray-500 hover:text-blue-600 transition-colors font-bold">
+                            <FiPlus className="w-4 h-4" />
+                            <span>41</span>
+                          </button>
+                          <button className="flex items-center gap-2 text-gray-500 hover:text-blue-600 transition-colors font-bold">
+                            <FiShare2 className="w-4 h-4" />
+                            <span>1</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Q&A Item */}
+                  <div className="border-b border-gray-100 pb-6">
+                    <div className="flex items-start gap-4">
+                      <div className="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 font-bold flex-shrink-0">
+                        GA
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <h4 className="font-bold text-gray-900">Question from Aditya S</h4>
+                          <span className="text-sm text-gray-400">• 1 day ago</span>
+                        </div>
+                        <p className="text-gray-700 leading-relaxed mb-3">
+                          "Are these headphones compatible with multiple devices simultaneously (multipoint connection)?"
+                        </p>
+                        
+                        {/* Answer */}
+                        <div className="bg-blue-50 rounded-xl p-4 ml-0 border-l-4 border-blue-600">
+                          <div className="flex items-center gap-2 mb-2">
+                            <span className="text-xs font-bold text-blue-600 uppercase">Official Answer</span>
+                          </div>
+                          <p className="text-sm text-gray-700">
+                            "Yes, the WH-1000XM5 supports multipoint connection, allowing you to connect to two devices simultaneously. This is a very convenient feature for switching between work and personal devices!"
+                          </p>
+                        </div>
+
+                        <div className="flex items-center gap-4 text-sm mt-3">
+                          <button className="flex items-center gap-2 text-gray-500 hover:text-blue-600 transition-colors font-bold">
+                            <FiPlus className="w-4 h-4" />
+                            <span>8</span>
+                          </button>
+                          <button className="flex items-center gap-2 text-gray-500 hover:text-blue-600 transition-colors font-bold">
+                            <FiShare2 className="w-4 h-4" />
+                            <span>2</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Review 3 with Video */}
+                  <div className="border-b border-gray-100 pb-6">
+                    <div className="flex items-start gap-4">
+                      <div className="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 font-bold flex-shrink-0">
+                        PS
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <h4 className="font-bold text-gray-900">Priya Sharma</h4>
+                          <span className="text-sm text-gray-400">• 1 week ago</span>
+                          <span className="px-2 py-0.5 bg-green-100 text-green-700 text-xs font-bold rounded">Verified Purchase</span>
+                        </div>
+                        <div className="flex text-yellow-400 mb-3">
+                          {[...Array(5)].map((_, i) => (
+                            <FiStar key={i} className="w-4 h-4 fill-yellow-400" />
+                          ))}
+                        </div>
+                        <p className="text-gray-700 leading-relaxed mb-4">
+                          "Unpacking and first impressions! These headphones are so comfortable and the sound is phenomenal. Definitely best for call quality too. Noise cancellation makes a hit."
+                        </p>
+                        
+                        {/* Video Thumbnail */}
+                        <div className="aspect-video bg-gray-900 rounded-xl overflow-hidden mb-4 relative group cursor-pointer">
+                          <img 
+                            src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&h=400&fit=crop"
+                            alt="Review video"
+                            className="w-full h-full object-cover opacity-70"
+                          />
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">
+                              <FiPlus className="w-8 h-8 text-blue-600 rotate-45" />
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-4 text-sm">
+                          <button className="flex items-center gap-2 text-gray-500 hover:text-blue-600 transition-colors font-bold">
+                            <FiPlus className="w-4 h-4" />
+                            <span>31</span>
+                          </button>
+                          <button className="flex items-center gap-2 text-gray-500 hover:text-blue-600 transition-colors font-bold">
+                            <FiShare2 className="w-4 h-4" />
+                            <span>5</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Load More Button */}
+                <div className="flex justify-center pt-6">
+                  <button className="flex items-center gap-2 px-8 py-3 bg-white border-2 border-blue-600 text-blue-600 font-bold rounded-xl hover:bg-blue-50 transition-all">
+                    <FiRefreshCw className="w-5 h-5" />
+                    Load More Community Content
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}

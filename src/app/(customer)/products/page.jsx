@@ -1,246 +1,139 @@
-// app/(customer)/products/page.jsx
 'use client'
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import axios from 'axios'
-import ProductCard from '@/components/customer/ProductCard'
-import Pagination from '@/components/ui/Pagination'
-import { FiFilter, FiGrid, FiList } from 'react-icons/fi'
+import ProductFilters from '@/components/customer/ProductFilters'
+import ProductGrid from '@/components/customer/ProductGrid'
+import { FiChevronRight } from 'react-icons/fi'
+import Link from 'next/link'
 
 export default function ProductsPage() {
-  const searchParams = useSearchParams()
-  const [products, setProducts] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [viewMode, setViewMode] = useState('grid')
-  const [filters, setFilters] = useState({
-    page: 1,
-    limit: 20,
-    category: searchParams.get('category') || '',
-    search: searchParams.get('search') || '',
-    minPrice: '',
-    maxPrice: '',
-    sortBy: searchParams.get('sortBy') || 'createdAt',
-    order: searchParams.get('order') || 'desc'
-  })
-  const [pagination, setPagination] = useState({
-    page: 1,
-    limit: 20,
-    total: 0,
-    pages: 0
-  })
+    const searchParams = useSearchParams()
+    const [products, setProducts] = useState([])
+    const [loading, setLoading] = useState(true)
+    const [totalPages, setTotalPages] = useState(0)
+    const [currentPage, setCurrentPage] = useState(1)
 
-  useEffect(() => {
-    fetchProducts()
-  }, [filters])
+    const [filters, setFilters] = useState({
+        search: searchParams.get('search') || '',
+        category: searchParams.get('category') || '',
+        minPrice: searchParams.get('minPrice') || '',
+        maxPrice: searchParams.get('maxPrice') || '',
+        brand: searchParams.get('brand') || '',
+        rating: searchParams.get('rating') || '',
+        verified: false,
+        fastDelivery: false,
+        sortBy: searchParams.get('sortBy') || 'relevance',
+        order: searchParams.get('order') || 'desc'
+    })
 
-  const fetchProducts = async () => {
-    try {
-      setLoading(true)
-      const params = new URLSearchParams()
-      
-      Object.entries(filters).forEach(([key, value]) => {
-        if (value) params.append(key, value)
-      })
+    useEffect(() => {
+        fetchProducts()
+    }, [filters, currentPage])
 
-      const response = await axios.get(`/api/products?${params.toString()}`)
-      
-      if (response.data.success) {
-        setProducts(response.data.products)
-        setPagination(response.data.pagination)
-      }
-    } catch (error) {
-      console.error('Error fetching products:', error)
-    } finally {
-      setLoading(false)
+    const fetchProducts = async () => {
+        try {
+            setLoading(true)
+            const params = new URLSearchParams()
+
+            Object.entries(filters).forEach(([key, value]) => {
+                if (value) params.append(key, value)
+            })
+
+            params.append('page', currentPage)
+            params.append('limit', 20)
+
+            const response = await axios.get(`/api/products?${params.toString()}`)
+
+            if (response.data.success) {
+                setProducts(response.data.products || [])
+                setTotalPages(response.data.totalPages || 1)
+            }
+        } catch (error) {
+            console.error('Failed to fetch products:', error)
+            setProducts([])
+        } finally {
+            setLoading(false)
+        }
     }
-  }
 
-  const handleFilterChange = (key, value) => {
-    setFilters(prev => ({ ...prev, [key]: value, page: 1 }))
-  }
+    const handlePageChange = (page) => {
+        setCurrentPage(page)
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
 
-  const categories = [
-    'All',
-    'Electronics',
-    'Fashion',
-    'Home & Decor',
-    'Beauty',
-    'Books',
-    'Sports',
-    'Groceries'
-  ]
+    return (
+        <div className="min-h-screen bg-white">
+            <div className="max-w-[1440px] mx-auto px-6 py-8">
+                {/* Breadcrumbs */}
+                <nav className="flex items-center gap-2 text-[13px] text-gray-500 mb-8 font-medium">
+                    <Link href="/" className="hover:text-blue-600 transition-colors">Home</Link>
+                    <FiChevronRight className="w-3.5 h-3.5" />
+                    <span className="text-[#1a1a1b] font-bold">Products</span>
+                    {filters.category && (
+                        <>
+                            <FiChevronRight className="w-3.5 h-3.5" />
+                            <span className="text-[#1a1a1b] font-bold capitalize">{filters.category}</span>
+                        </>
+                    )}
+                </nav>
 
-  return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Page Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          {filters.category || 'All Products'}
-        </h1>
-        <p className="text-gray-600">
-          {pagination.total} products found
-        </p>
-      </div>
+                <div className="flex gap-10">
+                    {/* Left Sidebar */}
+                    <aside className="w-[280px] flex-shrink-0 hidden lg:block">
+                        <ProductFilters filters={filters} onFiltersChange={setFilters} />
+                    </aside>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        {/* Sidebar Filters */}
-        <div className="lg:col-span-1">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 sticky top-24">
-            <div className="flex items-center space-x-2 mb-6">
-              <FiFilter className="w-5 h-5 text-gray-600" />
-              <h2 className="text-lg font-semibold text-gray-900">Filters</h2>
+                    {/* Main Content */}
+                    <main className="flex-1">
+                        {/* Results Header */}
+                        <div className="flex flex-col gap-6 mb-8">
+                            <div className="flex items-start justify-between">
+                                <div className="space-y-1">
+                                    <h1 className="text-[34px] font-black text-[#1a1a1b] leading-tight tracking-tight">
+                                        {filters.search ? `Search results for '${filters.search}'` :
+                                            filters.category ? `${filters.category.charAt(0).toUpperCase() + filters.category.slice(1)} Products` :
+                                                'All Products'}
+                                    </h1>
+                                    {!loading && (
+                                        <p className="text-[14px] font-bold text-gray-400">
+                                            Showing {products.length} of {totalPages * 20} results
+                                        </p>
+                                    )}
+                                </div>
+
+                                <div className="flex items-center gap-3">
+                                    {/* Sort Dropdown */}
+                                    <select
+                                        value={`${filters.sortBy}:${filters.order}`}
+                                        onChange={(e) => {
+                                            const [sortBy, order] = e.target.value.split(':')
+                                            setFilters(prev => ({ ...prev, sortBy, order }))
+                                        }}
+                                        className="px-5 py-2.5 bg-[#F8F9FA] rounded-[14px] border border-gray-100 font-bold text-[14px] text-[#1a1a1b] hover:border-gray-300 transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    >
+                                        <option value="relevance:desc">Sort by: Relevance</option>
+                                        <option value="createdAt:desc">Newest First</option>
+                                        <option value="pricing.salePrice:asc">Price: Low to High</option>
+                                        <option value="pricing.salePrice:desc">Price: High to Low</option>
+                                        <option value="ratings.average:desc">Customer Rating</option>
+                                        <option value="name:asc">Name: A to Z</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Product Grid */}
+                        <ProductGrid
+                            products={products}
+                            loading={loading}
+                            totalPages={totalPages}
+                            currentPage={currentPage}
+                            onPageChange={handlePageChange}
+                        />
+                    </main>
+                </div>
             </div>
-
-            {/* Categories */}
-            <div className="mb-6">
-              <h3 className="font-medium text-gray-900 mb-3">Categories</h3>
-              <div className="space-y-2">
-                {categories.map(category => (
-                  <button
-                    key={category}
-                    onClick={() => handleFilterChange('category', category === 'All' ? '' : category)}
-                    className={`block w-full text-left px-3 py-2 rounded-lg transition-colors ${
-                      (category === 'All' && !filters.category) || filters.category === category
-                        ? 'bg-blue-100 text-blue-600 font-medium'
-                        : 'text-gray-600 hover:bg-gray-100'
-                    }`}
-                  >
-                    {category}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Price Range */}
-            <div className="mb-6">
-              <h3 className="font-medium text-gray-900 mb-3">Price Range</h3>
-              <div className="space-y-3">
-                <input
-                  type="number"
-                  placeholder="Min Price"
-                  value={filters.minPrice}
-                  onChange={(e) => handleFilterChange('minPrice', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                />
-                <input
-                  type="number"
-                  placeholder="Max Price"
-                  value={filters.maxPrice}
-                  onChange={(e) => handleFilterChange('maxPrice', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                />
-              </div>
-            </div>
-
-            {/* Clear Filters */}
-            <button
-              onClick={() => setFilters({
-                page: 1,
-                limit: 20,
-                category: '',
-                search: '',
-                minPrice: '',
-                maxPrice: '',
-                sortBy: 'createdAt',
-                order: 'desc'
-              })}
-              className="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
-            >
-              Clear All Filters
-            </button>
-          </div>
         </div>
-
-        {/* Products Grid */}
-        <div className="lg:col-span-3">
-          {/* Sort and View Options */}
-          <div className="flex items-center justify-between mb-6 bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-            <div className="flex items-center space-x-4">
-              <label className="text-sm text-gray-600">Sort by:</label>
-              <select
-                value={`${filters.sortBy}-${filters.order}`}
-                onChange={(e) => {
-                  const [sortBy, order] = e.target.value.split('-')
-                  setFilters(prev => ({ ...prev, sortBy, order }))
-                }}
-                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="createdAt-desc">Newest First</option>
-                <option value="pricing.basePrice-asc">Price: Low to High</option>
-                <option value="pricing.basePrice-desc">Price: High to Low</option>
-                <option value="ratings.average-desc">Top Rated</option>
-                <option value="totalSales-desc">Best Selling</option>
-              </select>
-            </div>
-
-            <div className="flex items-center space-x-2">
-              <button
-                onClick={() => setViewMode('grid')}
-                className={`p-2 rounded-lg ${
-                  viewMode === 'grid' ? 'bg-blue-100 text-blue-600' : 'text-gray-600 hover:bg-gray-100'
-                }`}
-              >
-                <FiGrid className="w-5 h-5" />
-              </button>
-              <button
-                onClick={() => setViewMode('list')}
-                className={`p-2 rounded-lg ${
-                  viewMode === 'list' ? 'bg-blue-100 text-blue-600' : 'text-gray-600 hover:bg-gray-100'
-                }`}
-              >
-                <FiList className="w-5 h-5" />
-              </button>
-            </div>
-          </div>
-
-          {/* Products */}
-          {loading ? (
-            <div className="flex items-center justify-center py-20">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-            </div>
-          ) : products.length > 0 ? (
-            <>
-              <div className={`grid gap-6 ${
-                viewMode === 'grid' 
-                  ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' 
-                  : 'grid-cols-1'
-              }`}>
-                {products.map(product => (
-                  <ProductCard key={product._id} product={product} viewMode={viewMode} />
-                ))}
-              </div>
-
-              {/* Pagination */}
-              <div className="mt-10">
-                <Pagination
-                  currentPage={pagination.page}
-                  totalPages={pagination.pages}
-                  onPageChange={(page) => handleFilterChange('page', page)}
-                />
-              </div>
-            </>
-          ) : (
-            <div className="text-center py-20">
-              <p className="text-gray-600 text-lg">No products found</p>
-              <button
-                onClick={() => setFilters({
-                  page: 1,
-                  limit: 20,
-                  category: '',
-                  search: '',
-                  minPrice: '',
-                  maxPrice: '',
-                  sortBy: 'createdAt',
-                  order: 'desc'
-                })}
-                className="mt-4 text-blue-600 hover:text-blue-800 font-medium"
-              >
-                Clear filters and try again
-              </button>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  )
+    )
 }

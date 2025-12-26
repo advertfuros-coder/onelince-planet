@@ -1,0 +1,136 @@
+# ==================================================
+# ORDER MANAGEMENT SYSTEM - ENVIRONMENT VARIABLES
+# ==================================================
+# Copy these to your .env.local file and fill in your values
+
+# --------------------------------------------------
+# MSG91 Configuration
+# --------------------------------------------------
+# Sign up at: https://msg91.com/
+# Dashboard: https://msg91.com/in/
+
+MSG91_AUTH_KEY=your_msg91_auth_key_here
+MSG91_SENDER_ID=ONLPLT
+
+# Note: Replace ONLPLT with your approved sender ID from MSG91
+# Get sender ID from: MSG91 Dashboard -> SMS -> Sender ID
+
+# --------------------------------------------------
+# MSG91 WhatsApp Templates
+# --------------------------------------------------
+# Create these templates in MSG91 WhatsApp section
+# Wait for WhatsApp approval (24-48 hours)
+# Use the exact template names you create
+
+MSG91_TEMPLATE_ORDER_CONFIRMATION=order_confirmation_template
+MSG91_TEMPLATE_ORDER_PROCESSING=order_processing_template
+MSG91_TEMPLATE_ORDER_PACKED=order_packed_template
+MSG91_TEMPLATE_ORDER_SHIPPED=order_shipped_template
+MSG91_TEMPLATE_ORDER_OUT_FOR_DELIVERY=order_out_for_delivery_template
+MSG91_TEMPLATE_ORDER_DELIVERED=order_delivered_template
+MSG91_TEMPLATE_ORDER_CANCELLED=order_cancelled_template
+MSG91_TEMPLATE_RETURN_REQUESTED=return_requested_template
+MSG91_TEMPLATE_RETURN_APPROVED=return_approved_template
+MSG91_TEMPLATE_REFUND_PROCESSED=refund_processed_template
+
+# --------------------------------------------------
+# Email Configuration (Gmail)
+# --------------------------------------------------
+# For Gmail:
+# 1. Enable 2-Step Verification: https://myaccount.google.com/security
+# 2. Create App Password: https://myaccount.google.com/apppasswords
+#    - Select App: Mail
+#    - Select Device: Other (Online Planet)
+#    - Copy the 16-character password
+
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USER=your_email@gmail.com
+EMAIL_PASSWORD=your_gmail_app_password_16_chars
+EMAIL_FROM=noreply@onlineplanet.com
+EMAIL_FROM_NAME=Online Planet
+
+# Alternative SMTP Providers:
+# 
+# SendGrid:
+# EMAIL_HOST=smtp.sendgrid.net
+# EMAIL_PORT=587
+# EMAIL_USER=apikey
+# EMAIL_PASSWORD=your_sendgrid_api_key
+#
+# Mailgun:
+# EMAIL_HOST=smtp.mailgun.org
+# EMAIL_PORT=587
+# EMAIL_USER=your_mailgun_username
+# EMAIL_PASSWORD=your_mailgun_password
+
+# --------------------------------------------------
+# Application Configuration
+# --------------------------------------------------
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+
+# For production, change to your actual domain:
+# NEXT_PUBLIC_APP_URL=https://yourdomain.com
+
+# --------------------------------------------------
+# Razorpay Payment Gateway Configuration
+# --------------------------------------------------
+# Sign up at: https://dashboard.razorpay.com/signup
+# Dashboard: https://dashboard.razorpay.com/
+
+# Test Keys (for development)
+RAZORPAY_KEY_ID=rzp_test_YOUR_KEY_ID_HERE
+RAZORPAY_KEY_SECRET=YOUR_KEY_SECRET_HERE
+RAZORPAY_WEBHOOK_SECRET=YOUR_WEBHOOK_SECRET_HERE
+
+# Live Keys (for production - add when ready)
+# RAZORPAY_KEY_ID=rzp_live_YOUR_LIVE_KEY_ID
+# RAZORPAY_KEY_SECRET=YOUR_LIVE_KEY_SECRET
+
+# For seller payouts (optional)
+# RAZORPAY_ACCOUNT_NUMBER=YOUR_ACCOUNT_NUMBER
+
+# --------------------------------------------------
+# Shiprocket Shipping Integration
+# --------------------------------------------------
+# Dashboard: https://app.shiprocket.in/
+SHIPROCKET_EMAIL=mylearning2609@gmail.com
+SHIPROCKET_PASSWORD=mwKvV$w8s4Y0SXFH
+
+# Warehouse/Pickup Address - Lucknow
+SHIPROCKET_PICKUP_NAME=Home
+SHIPROCKET_PICKUP_ADDRESS=Lucknow Heart Pre School Sector 7 Vikas Nagar
+SHIPROCKET_PICKUP_CITY=Lucknow
+SHIPROCKET_PICKUP_STATE=Uttar Pradesh
+SHIPROCKET_PICKUP_PINCODE=226022
+SHIPROCKET_PICKUP_PHONE=9876543210
+SHIPROCKET_PICKUP_EMAIL=genforgestudio@gmail.com
+
+# --------------------------------------------------
+# Ekart Elite Shipping Integration
+# --------------------------------------------------
+# Dashboard: https://app.elite.ekartlogistics.in/
+EKART_CLIENT_ID=EKART_6908625194d105d9ba15353f
+EKART_CLIENT_NAME=Avanikart Trading Private Limited
+EKART_ENV=production
+
+EKART_USERNAME=naturemedica09@gmail.com
+EKART_PASSWORD=Abid9721@@
+
+EKART_SELLER_NAME=Nature Medica
+EKART_SELLER_ADDRESS=1st Floor Lucknow heart pre school sector 7 Vikas Nagar Lucknow
+EKART_GST_NUMBER=09ABBCA7981M1Z0
+
+EKART_PICKUP_LOCATION_NAME=1st Floor Lucknow heart pre school sector 7 Vikas Nagar Lucknow
+EKART_RETURN_LOCATION_NAME=1st Floor Lucknow heart pre school sector 7 Vikas Nagar Lucknow
+
+# --------------------------------------------------
+# Existing Configuration (if any)
+# --------------------------------------------------
+# Add your other existing environment variables below
+# Examples:
+
+# MONGODB_URI=your_mongodb_connection_string
+# NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your_cloudinary_name
+# GOOGLE_GEMINI_API_KEY=your_gemini_api_key
+# ... etc

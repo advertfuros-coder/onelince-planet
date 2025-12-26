@@ -27,7 +27,7 @@ const SellerSchema = new mongoose.Schema(
     },
     pan: {
       type: String,
-      required: true,
+      required: false, // Changed from true to prevent validation errors on older profiles
       uppercase: true,
     },
     businessType: {
@@ -44,7 +44,19 @@ const SellerSchema = new mongoose.Schema(
     },
     businessCategory: {
       type: String,
-      enum: ["manufacturer", "wholesaler", "retailer", "reseller", "brand"],
+      // Expanded enum to include common product categories to prevent crashes
+      enum: [
+        "manufacturer",
+        "wholesaler",
+        "retailer",
+        "reseller",
+        "brand",
+        "electronics",
+        "fashion",
+        "home",
+        "beauty",
+        "others",
+      ],
       default: "retailer",
     },
     establishedYear: {
@@ -55,10 +67,10 @@ const SellerSchema = new mongoose.Schema(
 
     // Bank Details
     bankDetails: {
-      accountNumber: { type: String, required: true },
-      ifscCode: { type: String, required: true, uppercase: true },
-      accountHolderName: { type: String, required: true },
-      bankName: { type: String, required: true },
+      accountNumber: { type: String, required: false },
+      ifscCode: { type: String, required: false, uppercase: true },
+      accountHolderName: { type: String, required: false },
+      bankName: { type: String, required: false },
       accountType: {
         type: String,
         enum: ["savings", "current"],
@@ -276,4 +288,8 @@ SellerSchema.pre("save", function (next) {
   next();
 });
 
-export default mongoose.models.Seller || mongoose.model("Seller", SellerSchema);
+if (mongoose.models.Seller) {
+  delete mongoose.models.Seller;
+}
+
+export default mongoose.model("Seller", SellerSchema);

@@ -138,6 +138,16 @@
   .delay-1000 {
     animation-delay: 1000ms;
   }
+
+  /* Vertical Text Utilities */
+  .vertical-text {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+  }
+
+  .writing-vertical {
+    writing-mode: vertical-rl;
+  }
 }
 
 body {

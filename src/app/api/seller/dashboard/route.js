@@ -172,11 +172,13 @@ export async function GET(request) {
     // 11. Calculate MONTHLY SALES DATA (Last 6 months)
     const now = new Date();
     const salesByMonth = {};
+    const grossSalesByMonth = {};
 
     for (let i = 5; i >= 0; i--) {
       const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
       const monthKey = date.toLocaleString("en-US", { month: "short" });
       salesByMonth[monthKey] = 0;
+      grossSalesByMonth[monthKey] = 0;
     }
 
     deliveredItems.forEach((item) => {
@@ -187,12 +189,14 @@ export async function GET(request) {
         const itemTotal = item.price * item.quantity;
         const itemCommission = (itemTotal * commissionRate) / 100;
         salesByMonth[monthKey] += itemTotal - itemCommission;
+        grossSalesByMonth[monthKey] += itemTotal;
       }
     });
 
     const salesData = Object.entries(salesByMonth).map(([month, sales]) => ({
       month,
       sales: Math.round(sales),
+      grossSales: Math.round(grossSalesByMonth[month]),
     }));
 
     // 12. Get TOP SELLING PRODUCTS
@@ -270,9 +274,15 @@ export async function GET(request) {
       activeProducts: products.filter((p) => p.isActive && p.isApproved).length,
       totalCustomers: uniqueCustomers.size,
     };
-    seller
-      .save()
-      .catch((err) => console.error("Failed to update seller stats:", err));
+    seller.save().catch((err) => {
+      if (err.name === "ValidationError") {
+        process.stdout.write(
+          "ℹ️ [Seller] Stats update skipped: Incomplete profile data.\n"
+        );
+      } else {
+        console.error("❌ Failed to update seller stats:", err.message);
+      }
+    });
 
     // ========== RESPONSE DATA ==========
     const responseData = {
