@@ -2,8 +2,8 @@
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
-import { 
-  FiClock, FiChevronLeft, FiChevronRight, FiZap, 
+import {
+  FiClock, FiChevronLeft, FiChevronRight, FiZap,
   FiStar, FiHeart, FiShoppingCart, FiTag, FiPercent, FiGift
 } from 'react-icons/fi'
 import { useCart } from '../../lib/context/CartContext'
@@ -22,6 +22,7 @@ export default function FlashSales() {
   const [activeCard, setActiveCard] = useState(null)
   const scrollContainerRef = useRef(null)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  const [isMounted, setIsMounted] = useState(false)
 
   const { addToCart } = useCart()
   const router = useRouter()
@@ -161,15 +162,20 @@ export default function FlashSales() {
     fetchFlashDeals()
   }, [])
 
+  // Set mounted state on client
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
   // Countdown timer
   useEffect(() => {
     const calculateTimeLeft = () => {
       const now = new Date()
       const endOfDay = new Date(now)
       endOfDay.setHours(23, 59, 59, 999)
-      
+
       const difference = endOfDay - now
-      
+
       if (difference > 0) {
         setTimeLeft({
           hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
@@ -271,7 +277,7 @@ export default function FlashSales() {
         className="absolute top-0 right-0 w-96 h-96 rounded-full blur-3xl opacity-30"
         style={{ background: colors.zomato }}
       />
-      
+
       <motion.div
         animate={{
           x: [0, -100, 0],
@@ -289,12 +295,12 @@ export default function FlashSales() {
       />
 
       {/* Floating Emojis */}
-      {floatingEmojis.map((emoji, index) => (
+      {isMounted && floatingEmojis.map((emoji, index) => (
         <motion.div
           key={index}
           className="absolute text-4xl"
           initial={{
-            x: Math.random() * window.innerWidth,
+            x: typeof window !== 'undefined' ? Math.random() * window.innerWidth : 0,
             y: Math.random() * 200,
             opacity: 0.3
           }}
@@ -325,7 +331,7 @@ export default function FlashSales() {
           className="text-center mb-12"
         >
           {/* Animated Title */}
-          <motion.div 
+          <motion.div
             className="flex items-center justify-center gap-4 mb-4"
             animate={{ scale: [1, 1.05, 1] }}
             transition={{ duration: 2, repeat: Infinity }}
@@ -380,7 +386,7 @@ export default function FlashSales() {
                   </motion.div>
                   <span className="text-2xl font-black text-gray-900">Ends in:</span>
                 </div>
-                
+
                 {[
                   { value: timeLeft.hours, label: 'HRS', emoji: '⏰' },
                   { value: timeLeft.minutes, label: 'MIN', emoji: '⏱️' },
@@ -393,7 +399,7 @@ export default function FlashSales() {
                       transition={{ duration: 0.5, repeat: Infinity }}
                       className="text-center"
                     >
-                      <div 
+                      <div
                         className="rounded-2xl px-4 py-3 min-w-[80px] shadow-lg"
                         style={{
                           background: `linear-gradient(135deg, ${[colors.zomato, colors.swiggy, colors.blinkit][index]}, ${[colors.swiggy, colors.blinkit, colors.purple][index]})`
@@ -501,7 +507,7 @@ export default function FlashSales() {
                             }}
                             className="absolute top-4 left-4 z-10"
                           >
-                            <div 
+                            <div
                               className="px-4 py-2 rounded-full font-black text-white shadow-2xl text-lg transform -rotate-12"
                               style={{ background: deal.color }}
                             >
@@ -532,7 +538,7 @@ export default function FlashSales() {
                               animate={wishlist.has(deal.id) ? { scale: [1, 1.3, 1] } : {}}
                               transition={{ duration: 0.3 }}
                             >
-                              <FiHeart 
+                              <FiHeart
                                 className={`w-6 h-6 ${wishlist.has(deal.id) ? 'fill-current' : ''}`}
                                 style={{ color: wishlist.has(deal.id) ? colors.zomato : '#666' }}
                               />
@@ -658,7 +664,7 @@ export default function FlashSales() {
                 className="flex-shrink-0 w-80"
               >
                 <Link href="/flash-deals">
-                  <div 
+                  <div
                     className="h-full min-h-[500px] rounded-3xl shadow-2xl flex flex-col items-center justify-center text-white p-10 text-center relative overflow-hidden"
                     style={{
                       background: `linear-gradient(135deg, ${colors.zomato}, ${colors.swiggy}, ${colors.blinkit}, ${colors.purple})`
@@ -678,7 +684,7 @@ export default function FlashSales() {
                     {/* Content */}
                     <div className="relative z-10">
                       <motion.div
-                        animate={{ 
+                        animate={{
                           scale: [1, 1.2, 1],
                           rotate: [0, 10, -10, 0]
                         }}

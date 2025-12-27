@@ -1,382 +1,325 @@
-// app/seller/(seller)/payouts/page.jsx
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useAuth } from '@/lib/context/AuthContext'
+import { motion } from 'framer-motion'
 import axios from 'axios'
+import { useAuth } from '@/lib/context/AuthContext'
 import {
-  Wallet,
+  DollarSign,
   ArrowUpRight,
-  ArrowDownLeft,
-  Download,
-  Filter,
-  Plus,
-  ChevronRight,
   Clock,
   CheckCircle2,
-  RefreshCw,
+  ChevronRight,
+  Download,
+  Filter,
+  TrendingUp,
   AlertCircle,
-  DollarSign,
-  Lock,
-  Globe,
-  Activity,
-  CreditCard,
-  Menu,
-  Calendar,
-  Search
+  Wallet
 } from 'lucide-react'
-import { motion, AnimatePresence } from 'framer-motion'
 import { toast } from 'react-hot-toast'
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts'
 
 export default function PayoutsPage() {
   const { token } = useAuth()
-  const [stats, setStats] = useState(null)
-  const [payouts, setPayouts] = useState([])
   const [loading, setLoading] = useState(true)
-  const [requesting, setRequesting] = useState(false)
-  const [showModal, setShowModal] = useState(false)
-  const [payoutAmount, setPayoutAmount] = useState('')
+  const [data, setData] = useState(null)
 
   useEffect(() => {
     if (token) {
-      fetchPayoutData()
+      fetchPayouts()
     }
   }, [token])
 
-  async function fetchPayoutData() {
+  const fetchPayouts = async () => {
     try {
       setLoading(true)
       const res = await axios.get('/api/seller/payouts', {
         headers: { Authorization: `Bearer ${token}` }
       })
-
       if (res.data.success) {
-        setStats({
-          availableBalance: res.data.stats.availableBalance,
-          pendingSettlement: res.data.stats.pendingPayouts,
-          lastPayout: res.data.payouts[0]?.amount || 0,
-          totalSettled: res.data.stats.totalPaidOut
-        })
-        setPayouts(res.data.payouts.map(p => ({
-          id: p._id,
-          date: new Date(p.createdAt).toLocaleDateString(),
-          amount: p.amount,
-          status: p.status,
-          method: p.bankDetails ? `${p.bankDetails.bankName} (...${p.bankDetails.accountNumber.slice(-4)})` : 'Bank Transfer'
-        })))
+        setData(res.data)
       }
-    } catch (error) {
-      console.error('Error fetching payouts:', error)
-      // Mock data for fallback
-      setStats({
-        availableBalance: 45890.50,
-        pendingSettlement: 12400.00,
-        lastPayout: 28500.00,
-        totalSettled: 154000.00
-      })
-      setPayouts([
-        { id: 'TXN-9021', date: '2025-12-22', amount: 28500, status: 'completed', method: 'Bank Transfer' },
-        { id: 'TXN-8942', date: '2025-12-15', amount: 12000, status: 'pending', method: 'UPI' },
-      ])
+    } catch (err) {
+      toast.error('Failed to load financial data')
     } finally {
       setLoading(false)
     }
   }
 
-  async function handleRequestPayout() {
-    if (!payoutAmount || isNaN(payoutAmount)) return toast.error('Enter valid amount')
-    if (payoutAmount > (stats?.availableBalance || 0)) return toast.error('Insufficient liquidity')
-
-    try {
-      setRequesting(true)
-      const res = await axios.post('/api/seller/payouts',
-        { amount: Number(payoutAmount) },
-        { headers: { Authorization: `Bearer ${token}` } }
-      )
-      if (res.data.success) {
-        toast.success('Withdrawal protocol initiated')
-        setShowModal(false)
-        fetchPayoutData()
-      }
-    } catch (error) {
-      toast.error('Withdrawal failed. Check balance.')
-    } finally {
-      setRequesting(false)
-    }
-  }
-
-  const formatCurrency = (val) => `₹${(val || 0).toLocaleString('en-IN')}`
-
-  if (loading && !stats) {
+  if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[80vh] space-y-4">
-        <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
-        <p className="text-gray-400 font-black uppercase tracking-widest text-[9px]">Analyzing Liquidity Pool...</p>
+      <div className="min-h-screen flex items-center justify-center p-8 bg-[#F8FAFC]">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+          <p className="text-xs font-black uppercase tracking-widest text-slate-400">Syncing Ledger...</p>
+        </div>
       </div>
     )
   }
 
+  const waterfallData = [
+    { name: 'Gross Sales', value: data?.waterfall?.grossSales, color: '#2563eb' },
+    { name: 'Commission', value: -data?.waterfall?.commission, color: '#ef4444' },
+    { name: 'Logistics', value: -data?.waterfall?.shipping, color: '#f59e0b' },
+    { name: 'Net Payout', value: data?.waterfall?.netPayout, color: '#10b981' },
+  ]
+
   return (
-    <div className="min-h-screen bg-[#F8FAFC] p-6 lg:p-8">
-      <div className="max-w-[1400px] mx-auto space-y-10">
+    <div className="min-h-screen bg-[#F8FAFC] pb-20">
+      <div className="max-w-[1400px] mx-auto p-6 lg:p-10 space-y-10">
 
-        {/* Header: Liquidity Console */}
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
-          <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <div className="w-10 h-10 rounded-2xl bg-blue-600 flex items-center justify-center text-white shadow-xl shadow-blue-500/20">
-                <Wallet size={22} />
-              </div>
-              <span className="text-[10px] font-black text-blue-600 uppercase tracking-widest bg-blue-50 px-4 py-1.5 rounded-full border border-blue-100">Financial Ledger</span>
-            </div>
-            <h1 className="text-5xl font-black text-gray-900 tracking-tighter leading-none uppercase">Liquidity Console</h1>
-            <p className="text-gray-500 font-bold uppercase tracking-widest text-[11px] mt-3 flex items-center gap-2">
-              <Globe size={14} className="text-blue-500" /> Settlement Frequency: T+2 Cycle — Node Active
-            </p>
+        {/* Header */}
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          <div>
+            <h1 className="text-4xl font-black text-slate-900 tracking-tight">Financials <span className="text-blue-600">.</span></h1>
+            <p className="text-slate-500 font-bold text-sm mt-1">Real-time revenue settlement and payout tracking.</p>
           </div>
-
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => setShowModal(true)}
-              className="px-8 py-5 bg-blue-600 text-white rounded-[1.8rem] text-[11px] font-black uppercase tracking-widest shadow-2xl shadow-blue-500/30 hover:bg-blue-500 transition-all active:scale-95 flex items-center gap-3"
-            >
-              <ArrowUpRight size={18} />
-              <span>Request Withdrawal</span>
-            </button>
-            <button className="p-5 bg-white border border-gray-100 rounded-[1.8rem] text-gray-400 hover:text-blue-600 transition-all shadow-sm">
-              <Download size={20} />
+          <div className="flex items-center gap-3">
+            <button className="flex items-center gap-2 px-6 py-3 bg-white border border-slate-200 text-slate-600 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 transition-all shadow-sm">
+              <Download size={14} /> Export Report
             </button>
           </div>
         </div>
 
-        {/* Balance Matrix */}
+        {/* Primary Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <BalanceCard label="Available Liquidity" value={formatCurrency(stats?.availableBalance)} icon={DollarSign} color="emerald" trend="Settled" />
-          <BalanceCard label="Pending Settlement" value={formatCurrency(stats?.pendingSettlement)} icon={Clock} color="amber" trend="Escrow" />
-          <BalanceCard label="Last Transmission" value={formatCurrency(stats?.lastPayout)} icon={ArrowUpRight} color="blue" trend="Completed" />
-          <BalanceCard label="Total Disbursed" value={formatCurrency(stats?.totalSettled)} icon={CheckCircle2} color="indigo" trend="Lifetime" />
+          <StatCard
+            title="Pending Payout"
+            value={`₹${data?.stats?.pendingPayout.toLocaleString()}`}
+            subtitle={`Scheduled for ${data?.stats?.nextPayoutDate}`}
+            icon={Clock}
+            variant="blue"
+          />
+          <StatCard
+            title="Lifetime Earnings"
+            value={`₹${data?.stats?.lifetimeEarnings.toLocaleString()}`}
+            subtitle="Total revenue generated"
+            icon={TrendingUp}
+            variant="indigo"
+          />
+          <StatCard
+            title="Total Withdrawn"
+            value={`₹${data?.stats?.totalWithdrawn.toLocaleString()}`}
+            subtitle="Successfully settled"
+            icon={CheckCircle2}
+            variant="green"
+          />
+          <StatCard
+            title="Marketplace Fees"
+            value={`5%`}
+            subtitle="Standard commission rate"
+            icon={AlertCircle}
+            variant="orange"
+          />
         </div>
 
-        {/* Encryption Protocol Notice */}
-        <div className="bg-gray-900 rounded-[3rem] p-10 relative overflow-hidden group border border-gray-800">
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-transparent pointer-events-none" />
-          <Activity className="absolute bottom-[-20%] right-[-5%] w-64 h-64 text-blue-500/10 group-hover:scale-110 transition-transform duration-700" />
+        {/* Main Content Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
 
-          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-3 gap-12 items-center">
-            <div className="lg:col-span-2 space-y-6 text-center lg:text-left">
-              <h3 className="text-2xl lg:text-3xl font-black text-white tracking-tight uppercase leading-none">
-                Institutional Settlement <span className="text-blue-500">Infrastructure</span>
-              </h3>
-              <p className="text-white/40 font-bold uppercase tracking-widest text-[10px] leading-relaxed max-w-2xl mx-auto lg:mx-0">
-                All financial transmissions are processed through encrypted banking nodes. Settlement cycles are automated based on your account topology and KYC verification status.
-              </p>
-              <div className="flex flex-wrap justify-center lg:justify-start gap-4">
-                <div className="px-4 py-2 bg-white/5 rounded-xl border border-white/10 text-[9px] font-black uppercase text-blue-400">AES-256 Bridge</div>
-                <div className="px-4 py-2 bg-white/5 rounded-xl border border-white/10 text-[9px] font-black uppercase text-blue-400">T+2 Protocol</div>
-                <div className="px-4 py-2 bg-white/5 rounded-xl border border-white/10 text-[9px] font-black uppercase text-blue-400">Verified Hub</div>
+          {/* Left Side: Waterfall Chart & Pending Orders */}
+          <div className="lg:col-span-8 space-y-10">
+
+            {/* Revenue Waterfall */}
+            <div className="bg-white rounded-[2.5rem] border border-slate-100 p-8 shadow-xl shadow-slate-200/20">
+              <div className="flex items-center justify-between mb-8">
+                <div>
+                  <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest">Revenue Waterfall</h3>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase mt-1">Breakdown for the current cycle</p>
+                </div>
+                <div className="p-3 bg-blue-50 text-blue-600 rounded-2xl">
+                  <Wallet size={20} />
+                </div>
+              </div>
+
+              <div className="h-[300px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={waterfallData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                    <XAxis
+                      dataKey="name"
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fontSize: 10, fontWeight: 800, fill: '#64748b' }}
+                      dy={10}
+                    />
+                    <YAxis hide />
+                    <Tooltip
+                      content={({ active, payload }) => {
+                        if (active && payload && payload.length) {
+                          return (
+                            <div className="bg-white p-4 rounded-2xl shadow-2xl border border-slate-100">
+                              <p className="text-[10px] font-black text-slate-400 uppercase mb-1">{payload[0].payload.name}</p>
+                              <p className="text-xl font-black text-slate-900">₹{Math.abs(payload[0].value).toLocaleString()}</p>
+                            </div>
+                          )
+                        }
+                        return null
+                      }}
+                    />
+                    <Bar dataKey="value" radius={[10, 10, 10, 10]} barSize={60}>
+                      {waterfallData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+
+              <div className="grid grid-cols-4 gap-4 mt-8">
+                {waterfallData.map((item, idx) => (
+                  <div key={idx} className="text-center">
+                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">{item.name}</p>
+                    <p className={`text-sm font-black ${item.value < 0 ? 'text-rose-500' : 'text-slate-900'}`}>
+                      {item.value < 0 ? '-' : ''}₹{Math.abs(item.value).toLocaleString()}
+                    </p>
+                  </div>
+                ))}
               </div>
             </div>
-            <div className="bg-white/5 p-8 rounded-[2.5rem] border border-white/10 backdrop-blur-md text-center">
-              <p className="text-[10px] font-black text-white/30 uppercase tracking-widest mb-2">Vault Integrity</p>
-              <p className="text-4xl font-black text-white tracking-tighter">100%</p>
-              <div className="mt-4 h-1 w-full bg-white/10 rounded-full overflow-hidden">
-                <div className="h-full bg-blue-500 w-full" />
+
+            {/* Eligible Orders for Next Payout */}
+            <div className="bg-white rounded-[2.5rem] border border-slate-100 p-8 shadow-xl shadow-slate-200/20">
+              <div className="flex items-center justify-between mb-8">
+                <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest">Upcoming Payout Items</h3>
+                <button className="text-[10px] font-black text-blue-600 uppercase tracking-widest hover:underline">View All Orders</button>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-slate-50">
+                      <th className="text-left py-4 text-[10px] font-black text-slate-400 uppercase">Order</th>
+                      <th className="text-left py-4 text-[10px] font-black text-slate-400 uppercase">Amount</th>
+                      <th className="text-left py-4 text-[10px] font-black text-slate-400 uppercase">Status</th>
+                      <th className="text-right py-4 text-[10px] font-black text-slate-400 uppercase">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-50">
+                    {data?.pendingOrders?.length > 0 ? (
+                      data.pendingOrders.map((order, idx) => (
+                        <tr key={idx} className="group hover:bg-slate-50/50 transition-colors">
+                          <td className="py-4">
+                            <p className="text-xs font-black text-slate-900">#{order.orderNumber}</p>
+                            <p className="text-[10px] font-bold text-slate-400">{new Date(order.date).toLocaleDateString()}</p>
+                          </td>
+                          <td className="py-4">
+                            <p className="text-xs font-black text-slate-900">₹{order.amount.toLocaleString()}</p>
+                            <p className="text-[9px] font-bold text-rose-500">-₹{order.commission.toLocaleString()} (fee)</p>
+                          </td>
+                          <td className="py-4">
+                            <span className="px-3 py-1 bg-emerald-50 text-emerald-600 rounded-full text-[9px] font-black uppercase tracking-widest">
+                              {order.status}
+                            </span>
+                          </td>
+                          <td className="py-4 text-right">
+                            <button className="p-2 text-slate-300 group-hover:text-blue-600 transition-colors">
+                              <ChevronRight size={16} />
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="4" className="py-10 text-center">
+                          <p className="text-xs font-bold text-slate-400">No pending orders for payout.</p>
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Transaction Ledger */}
-        <div className="bg-white rounded-[3rem] p-10 shadow-sm border border-gray-100/50 overflow-hidden">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
-            <div>
-              <h3 className="text-xl font-black text-gray-900 tracking-tight uppercase">Settlement History</h3>
-              <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1">Full audit trail of all financial nodes</p>
-            </div>
-            <div className="flex flex-wrap items-center gap-3">
-              <div className="relative group">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-blue-600 transition-colors" size={16} />
-                <input
-                  type="text"
-                  placeholder="TXN ID / AMOUNT"
-                  className="pl-12 pr-6 py-3 bg-gray-50 border-none rounded-2xl text-[10px] font-black uppercase tracking-widest focus:ring-4 focus:ring-blue-50 outline-none transition-all placeholder:text-gray-300 w-full md:w-64"
-                />
+          {/* Right Side: Payout History & Bank Info */}
+          <div className="lg:col-span-4 space-y-10">
+
+            {/* Summary Card */}
+            <div className="bg-[#1E293B] rounded-[2.5rem] p-8 text-white relative overflow-hidden">
+              <div className="relative z-10">
+                <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6">Settlement Account</h4>
+                <div className="flex items-center gap-4 mb-8">
+                  <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center text-blue-400">
+                    <Wallet size={24} />
+                  </div>
+                  <div>
+                    <p className="text-xs font-black tracking-tight">HDFC Bank</p>
+                    <p className="text-[10px] font-bold text-slate-400">**** 8291</p>
+                  </div>
+                </div>
+                <button className="w-full py-4 bg-blue-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-700 transition-all shadow-lg active:scale-95">
+                  Update Payment Details
+                </button>
               </div>
-              <button className="flex items-center gap-2 px-5 py-3 bg-gray-50 text-gray-500 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-gray-100 transition-colors">
-                <Filter size={14} /> Filter
+              <div className="absolute top-0 right-0 w-32 h-32 bg-blue-600 opacity-20 rounded-full blur-[70px]" />
+            </div>
+
+            {/* Recent History */}
+            <div className="bg-white rounded-[2.5rem] border border-slate-100 p-8 shadow-xl shadow-slate-200/20">
+              <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest mb-6">Recent History</h3>
+              <div className="space-y-6">
+                {data?.history?.length > 0 ? (
+                  data.history.map((payout, idx) => (
+                    <div key={idx} className="flex items-center justify-between group">
+                      <div className="flex items-center gap-4">
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${payout.status === 'completed' ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-50 text-slate-400'
+                          }`}>
+                          <CheckCircle2 size={16} />
+                        </div>
+                        <div>
+                          <p className="text-xs font-black text-slate-900">₹{payout.amount.toLocaleString()}</p>
+                          <p className="text-[10px] font-bold text-slate-400">{new Date(payout.createdAt).toLocaleDateString()}</p>
+                        </div>
+                      </div>
+                      <button className="text-[10px] font-black text-slate-300 group-hover:text-slate-900 transition-colors">
+                        INVOICE
+                      </button>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-center py-6">
+                    <p className="text-[10px] font-bold text-slate-400 uppercase">No history found</p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Support Card */}
+            <div className="bg-indigo-600 rounded-[2.5rem] p-8 text-white">
+              <h4 className="font-bold text-lg mb-2">Need Help?</h4>
+              <p className="text-indigo-100 text-xs font-medium mb-6">Facing issues with your payout? Our finance team is available 24/7.</p>
+              <button className="w-full py-4 bg-black/20 backdrop-blur-md text-white border border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-black/30 transition-all">
+                Raise Ticket
               </button>
             </div>
-          </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-gray-50">
-                  <th className="pb-6 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">Protocol ID</th>
-                  <th className="pb-6 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">Commit Date</th>
-                  <th className="pb-6 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">Amount</th>
-                  <th className="pb-6 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">Transmission Status</th>
-                  <th className="pb-6 text-right text-[10px] font-black text-gray-400 uppercase tracking-widest">Action</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-50">
-                {payouts.map((payout) => (
-                  <tr key={payout.id} className="group hover:bg-gray-50/50 transition-colors">
-                    <td className="py-6">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors">
-                          <Lock size={14} />
-                        </div>
-                        <span className="text-xs font-black text-gray-900 uppercase tracking-tighter">{payout.id}</span>
-                      </div>
-                    </td>
-                    <td className="py-6">
-                      <span className="text-xs font-bold text-gray-500 uppercase tracking-tight">{payout.date}</span>
-                    </td>
-                    <td className="py-6">
-                      <span className="text-sm font-black text-gray-900">{formatCurrency(payout.amount)}</span>
-                    </td>
-                    <td className="py-6">
-                      <StatusBadge status={payout.status} />
-                    </td>
-                    <td className="py-6 text-right">
-                      <button className="p-3 bg-gray-50 rounded-xl text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-all opacity-0 group-hover:opacity-100">
-                        <ChevronRight size={16} />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
           </div>
         </div>
 
       </div>
-
-      {/* Withdrawal Modal */}
-      <AnimatePresence>
-        {showModal && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setShowModal(false)}
-              className="absolute inset-0 bg-black/40 backdrop-blur-md"
-            />
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="relative bg-white rounded-[3.5rem] w-full max-w-xl p-10 lg:p-14 shadow-2xl overflow-hidden"
-            >
-              <div className="absolute top-0 right-0 p-10 opacity-[0.03] pointer-events-none">
-                <Wallet size={200} />
-              </div>
-
-              <div className="relative z-10 space-y-10">
-                <div className="space-y-4">
-                  <div className="w-16 h-16 rounded-2xl bg-blue-600 flex items-center justify-center text-white shadow-xl shadow-blue-500/20">
-                    <ArrowUpRight size={32} />
-                  </div>
-                  <h2 className="text-4xl font-black text-gray-900 tracking-tighter uppercase leading-none">Initiate Withdrawal</h2>
-                  <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Commit specific liquidity to settlement bridge</p>
-                </div>
-
-                <div className="space-y-6">
-                  <div className="bg-gray-50 p-6 rounded-[2rem] border border-gray-100 flex items-center justify-between">
-                    <div>
-                      <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1">Available Pool</p>
-                      <p className="text-2xl font-black text-emerald-600 tracking-tighter">{formatCurrency(stats?.availableBalance)}</p>
-                    </div>
-                    <div className="px-3 py-1 bg-emerald-50 text-emerald-600 rounded-full text-[8px] font-black uppercase tracking-widest border border-emerald-100">Verified</div>
-                  </div>
-
-                  <div className="space-y-3">
-                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-4">Disbursement Amount</label>
-                    <div className="relative group">
-                      <div className="absolute left-8 top-1/2 -translate-y-1/2 font-black text-gray-300 group-focus-within:text-blue-600 transition-colors">₹</div>
-                      <input
-                        type="number"
-                        value={payoutAmount}
-                        onChange={(e) => setPayoutAmount(e.target.value)}
-                        placeholder="0.00"
-                        className="w-full pl-14 pr-8 py-6 bg-gray-50 border-none rounded-[2.2rem] text-2xl font-black tracking-tighter focus:ring-4 focus:ring-blue-50 outline-none transition-all placeholder:text-gray-200"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex flex-col gap-4">
-                  <button
-                    onClick={handleRequestPayout}
-                    disabled={requesting || !payoutAmount}
-                    className="w-full py-6 bg-blue-600 text-white rounded-[2rem] text-[12px] font-black uppercase tracking-[0.2em] shadow-2xl shadow-blue-500/30 hover:bg-blue-500 transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-3"
-                  >
-                    {requesting ? <RefreshCw className="animate-spin" size={20} /> : <CheckCircle2 size={20} />}
-                    <span>Confirm Transmission</span>
-                  </button>
-                  <button
-                    onClick={() => setShowModal(false)}
-                    className="w-full py-6 text-gray-400 font-black uppercase tracking-widest text-[10px] hover:text-gray-600 transition-colors"
-                  >
-                    Abort Protocol
-                  </button>
-                </div>
-
-                <div className="flex items-center gap-2 justify-center">
-                  <Lock size={12} className="text-emerald-500" />
-                  <p className="text-[9px] font-bold text-gray-300 uppercase tracking-[0.1em]">Secured by SSL End-to-End Encryption</p>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
     </div>
   )
 }
 
-function BalanceCard({ label, value, icon: Icon, color, trend }) {
-  const colors = {
-    emerald: 'text-emerald-600 bg-emerald-50',
-    amber: 'text-amber-600 bg-amber-50',
-    blue: 'text-blue-600 bg-blue-50',
-    indigo: 'text-indigo-600 bg-indigo-50',
+function StatCard({ title, value, subtitle, icon: Icon, variant }) {
+  const variants = {
+    blue: 'bg-blue-50 text-blue-600',
+    indigo: 'bg-indigo-50 text-indigo-600',
+    green: 'bg-emerald-50 text-emerald-600',
+    orange: 'bg-orange-50 text-orange-600',
   }
+
   return (
-    <motion.div
-      whileHover={{ y: -5 }}
-      className="bg-white p-8 rounded-[2.8rem] shadow-sm border border-gray-100/50 flex flex-col justify-between group"
-    >
-      <div className="flex justify-between items-start mb-10">
-        <div className={`p-4 rounded-xl ${colors[color]} group-hover:scale-110 transition-transform duration-500`}>
+    <div className="bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-xl shadow-slate-200/20 group hover:translate-y-[-4px] transition-all">
+      <div className="flex justify-between items-start mb-6">
+        <div className={`p-3 rounded-2xl ${variants[variant]} group-hover:scale-110 transition-transform`}>
           <Icon size={20} />
         </div>
-        <div className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-tighter border ${colors[color]} bg-opacity-20`}>
-          {trend}
-        </div>
+        <ArrowUpRight size={16} className="text-slate-200 group-hover:text-slate-400 transition-colors" />
       </div>
-      <div>
-        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 leading-none">{label}</p>
-        <p className="text-3xl font-black text-gray-900 tracking-tighter leading-none">{value}</p>
-      </div>
-    </motion.div>
-  )
-}
-
-function StatusBadge({ status }) {
-  const config = {
-    completed: { color: 'text-emerald-600 bg-emerald-50 border-emerald-100', icon: CheckCircle2, label: 'Settled' },
-    pending: { color: 'text-amber-600 bg-amber-50 border-amber-100', icon: Clock, label: 'Processing' },
-    failed: { color: 'text-rose-600 bg-rose-50 border-rose-100', icon: AlertCircle, label: 'Review Required' },
-  }
-  const { color, icon: Icon, label } = config[status] || config.pending
-
-  return (
-    <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full border ${color} text-[9px] font-black uppercase tracking-widest`}>
-      <Icon size={12} />
-      <span>{label}</span>
+      <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">{title}</p>
+      <p className="text-2xl font-black text-slate-900 tracking-tight mb-1">{value}</p>
+      <p className="text-[10px] font-bold text-slate-400">{subtitle}</p>
     </div>
   )
 }

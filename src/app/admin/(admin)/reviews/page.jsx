@@ -141,7 +141,7 @@ export default function AdminReviewsPage() {
             <p className="text-gray-600 mt-1">Manage customer reviews and ratings</p>
           </div>
           <Link href="/admin/reviews/bulk" className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-             <span>Add Bulk Reviews</span>
+            <span>Add Bulk Reviews</span>
           </Link>
         </div>
 
@@ -161,14 +161,6 @@ export default function AdminReviewsPage() {
             color="text-green-600"
             bgColor="bg-green-50"
           />
-          <StatCard
-  label="Return Requests"
-  value={stats.returnedOrders || 0}
-  icon={<FiAlertCircle />}
-  color="text-red-600"
-  bgColor="bg-red-50"
-  small
-/>
           <StatCard
             label="Pending"
             value={stats.pendingReviews || 0}

@@ -7,6 +7,7 @@ import { AlertCircle } from 'lucide-react'
 import ModernDashboard from '@/components/seller/ModernDashboard'
 import AIBusinessCoachWidget from '@/components/seller/AIBusinessCoachWidget'
 import AIQuickActions from '@/components/seller/AIQuickActions'
+import UsageOverview from '@/components/seller/UsageOverview'
 
 export default function SellerDashboard() {
   const { token, user } = useAuth()
@@ -68,6 +69,9 @@ export default function SellerDashboard() {
           loading={loading}
           onRefresh={loadDashboardData}
         />
+
+        <UsageOverview token={token} />
+
 
         {/* Optional AI Widgets at bottom or as part of dashboard grid */}
         <div className="px-6 pb-12 grid grid-cols-1 lg:grid-cols-2 gap-6">

@@ -6,6 +6,7 @@ import Product from "@/lib/db/models/Product";
 import Seller from "@/lib/db/models/Seller";
 import { verifyToken } from "@/lib/utils/auth";
 import aiService from "@/lib/services/aiService";
+import mongoose from "mongoose";
 
 export async function GET(request) {
   try {
@@ -50,11 +51,11 @@ export async function GET(request) {
       categoryPerformance,
     ] = await Promise.all([
       // All seller products
-      Product.find({ sellerId: seller._id }).lean(),
+      Product.find({ sellerId: decoded.userId }).lean(),
 
       // All seller orders
       Order.find({
-        "items.seller": seller._id,
+        "items.seller": decoded.userId,
         createdAt: { $gte: startDate },
       }).lean(),
 
@@ -62,7 +63,11 @@ export async function GET(request) {
       Order.aggregate([
         { $match: { createdAt: { $gte: startDate } } },
         { $unwind: "$items" },
-        { $match: { "items.seller": seller._id } },
+        {
+          $match: {
+            "items.seller": new mongoose.Types.ObjectId(decoded.userId),
+          },
+        },
         {
           $group: {
             _id: null,
@@ -75,7 +80,11 @@ export async function GET(request) {
       Order.aggregate([
         { $match: { createdAt: { $gte: startDate } } },
         { $unwind: "$items" },
-        { $match: { "items.seller": seller._id } },
+        {
+          $match: {
+            "items.seller": new mongoose.Types.ObjectId(decoded.userId),
+          },
+        },
         { $group: { _id: "$_id" } },
         { $count: "total" },
       ]).then((res) => res[0]?.total || 0),
@@ -84,7 +93,11 @@ export async function GET(request) {
       Order.aggregate([
         { $match: { createdAt: { $gte: startDate } } },
         { $unwind: "$items" },
-        { $match: { "items.seller": seller._id } },
+        {
+          $match: {
+            "items.seller": new mongoose.Types.ObjectId(decoded.userId),
+          },
+        },
         {
           $group: {
             _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
@@ -101,7 +114,11 @@ export async function GET(request) {
       Order.aggregate([
         { $match: { createdAt: { $gte: startDate } } },
         { $unwind: "$items" },
-        { $match: { "items.seller": seller._id } },
+        {
+          $match: {
+            "items.seller": new mongoose.Types.ObjectId(decoded.userId),
+          },
+        },
         {
           $group: {
             _id: "$items.product",
@@ -128,7 +145,11 @@ export async function GET(request) {
       Order.aggregate([
         { $match: { createdAt: { $gte: startDate } } },
         { $unwind: "$items" },
-        { $match: { "items.seller": seller._id } },
+        {
+          $match: {
+            "items.seller": new mongoose.Types.ObjectId(decoded.userId),
+          },
+        },
         {
           $lookup: {
             from: "products",
@@ -170,7 +191,11 @@ export async function GET(request) {
       Order.aggregate([
         { $match: { createdAt: { $gte: previousStartDate, $lt: startDate } } },
         { $unwind: "$items" },
-        { $match: { "items.seller": seller._id } },
+        {
+          $match: {
+            "items.seller": new mongoose.Types.ObjectId(decoded.userId),
+          },
+        },
         {
           $group: {
             _id: null,
@@ -182,7 +207,11 @@ export async function GET(request) {
       Order.aggregate([
         { $match: { createdAt: { $gte: previousStartDate, $lt: startDate } } },
         { $unwind: "$items" },
-        { $match: { "items.seller": seller._id } },
+        {
+          $match: {
+            "items.seller": new mongoose.Types.ObjectId(decoded.userId),
+          },
+        },
         { $group: { _id: "$_id" } },
         { $count: "total" },
       ]).then((res) => res[0]?.total || 0),

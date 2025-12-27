@@ -4,42 +4,47 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
-  FiHome,
-  FiUsers,
-  FiBox,
-  FiShoppingCart,
-  FiDollarSign,
-  FiStar,
-  FiSettings,
-  FiBarChart2,
-  FiPackage,
-  FiUserPlus,
-  FiTrendingUp,
-  FiGift,
-  FiActivity,
-  FiTruck,
-} from 'react-icons/fi'
+  LayoutDashboard,
+  Users,
+  Box,
+  ShoppingCart,
+  DollarSign,
+  Star,
+  Settings,
+  BarChart3,
+  Package,
+  UserPlus,
+  TrendingUp,
+  Gift,
+  Activity,
+  Truck,
+  ChevronRight,
+  Monitor,
+  Crown
+} from 'lucide-react'
 import clsx from 'clsx'
+import { motion } from 'framer-motion'
 
 export default function AdminSidebar({ onNavigate, isMobile = false }) {
   const pathname = usePathname()
 
   const navItems = [
-    { label: 'Dashboard', href: '/admin/dashboard', icon: FiHome },
-    { label: 'Users', href: '/admin/users', icon: FiUsers },
-    { label: 'Sellers', href: '/admin/sellers', icon: FiUserPlus },
-    { label: 'Categories', href: '/admin/categories', icon: FiPackage },
-    { label: 'Products', href: '/admin/products', icon: FiBox },
-    { label: 'Orders', href: '/admin/orders', icon: FiShoppingCart },
-    { label: 'Payout Requests', href: '/admin/payouts', icon: FiDollarSign },
-    { label: 'Reviews', href: '/admin/reviews', icon: FiStar },
-    { label: 'Analytics', href: '/admin/analytics', icon: FiBarChart2 },
-    { label: 'Competitor Intel', href: '/admin/competitor-analysis', icon: FiTrendingUp },
-    { label: 'Campaigns', href: '/admin/campaigns', icon: FiGift },
-    { label: 'Coupons', href: '/admin/coupons', icon: FiGift },
-    { label: 'Marketing', href: '/admin/marketing', icon: FiActivity },
-    { label: 'Pending Pickups', href: '/admin/pending-pickups', icon: FiTruck },
-    { label: 'Settings', href: '/admin/settings', icon: FiSettings },
+    { label: 'Overview', href: '/admin/dashboard', icon: LayoutDashboard },
+    { label: 'Users', href: '/admin/users', icon: Users },
+    { label: 'Sellers', href: '/admin/sellers', icon: UserPlus },
+    { label: 'Categories', href: '/admin/categories', icon: Package },
+    { label: 'Products', href: '/admin/products', icon: Box },
+    { label: 'Orders', href: '/admin/orders', icon: ShoppingCart },
+    { label: 'Payout Requests', href: '/admin/payouts', icon: DollarSign },
+    { label: 'Reviews', href: '/admin/reviews', icon: Star },
+    { label: 'Analytics', href: '/admin/analytics', icon: BarChart3 },
+    { label: 'Competitor Intel', href: '/admin/competitor-analysis', icon: TrendingUp },
+    { label: 'Campaigns', href: '/admin/campaigns', icon: Gift },
+    { label: 'Coupons', href: '/admin/coupons', icon: Gift },
+    { label: 'Marketing', href: '/admin/marketing', icon: Activity },
+    { label: 'Pending Pickups', href: '/admin/pending-pickups', icon: Truck },
+    { label: 'Subscription Plans', href: '/admin/subscription-plans', icon: Crown },
+    { label: 'Settings', href: '/admin/settings', icon: Settings },
   ]
 
   const handleClick = () => {
@@ -51,29 +56,33 @@ export default function AdminSidebar({ onNavigate, isMobile = false }) {
   return (
     <aside
       className={clsx(
-        'w-64 bg-white flex flex-col h-screen',
-        isMobile ? 'shadow-xl' : 'border-r border-gray-200 shadow-sm sticky top-0 hidden lg:flex'
+        'w-72 bg-[#0F172A] flex flex-col h-screen overflow-hidden transition-all duration-300 relative',
+        isMobile ? 'shadow-2xl' : 'hidden lg:flex'
       )}
     >
-      {/* Logo */}
-      <div className="px-6 py-6 border-b border-gray-200">
+      {/* Background Glows */}
+      <div className="absolute top-[-10%] left-[-20%] w-[300px] h-[300px] bg-blue-600/10 rounded-full blur-[80px] pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-20%] w-[300px] h-[300px] bg-indigo-600/10 rounded-full blur-[80px] pointer-events-none" />
+
+      {/* Brand Section */}
+      <div className="px-8 py-10">
         <Link
           href="/admin/dashboard"
-          className="flex items-center space-x-2"
+          className="flex items-center space-x-3 group"
           onClick={handleClick}
         >
-          <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-xl">OP</span>
+          <div className="w-11 h-11 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/20 group-hover:rotate-6 transition-transform duration-300">
+            <span className="text-white font-black text-xl tracking-tighter">OP</span>
           </div>
           <div>
-            <h1 className="text-xl font-bold text-gray-900">OnlinePlanet</h1>
-            <p className="text-xs text-gray-500">Admin Panel</p>
+            <h1 className="text-lg font-black text-white leading-none tracking-tight">ONLINE PLANET</h1>
+            <p className="text-[10px] text-gray-400 font-black uppercase tracking-[0.2em] mt-1.5 opacity-60">Admin Terminal</p>
           </div>
         </Link>
       </div>
 
-      {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
+      {/* Navigation Matrix */}
+      <nav className="flex-1 overflow-y-auto px-4 py-4 custom-scrollbar space-y-1.5 z-10">
         {navItems.map(({ label, href, icon: Icon }) => {
           const isActive = pathname === href || pathname.startsWith(href + '/')
           return (
@@ -82,25 +91,42 @@ export default function AdminSidebar({ onNavigate, isMobile = false }) {
               href={href}
               onClick={handleClick}
               className={clsx(
-                'flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200',
-                'min-h-[44px]', // Touch-friendly minimum height
+                'group flex items-center justify-between px-4 py-3 rounded-2xl transition-all duration-200 relative overflow-hidden',
                 isActive
-                  ? 'bg-blue-50 text-blue-700 font-semibold shadow-sm'
-                  : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900 active:bg-gray-200'
+                  ? 'bg-blue-600/10 text-white shadow-sm border border-blue-500/20'
+                  : 'text-gray-400 hover:text-white hover:bg-white/5'
               )}
             >
-              <Icon className={clsx('text-xl', isActive ? 'text-blue-700' : 'text-gray-500')} />
-              <span>{label}</span>
+              <div className="flex items-center space-x-3">
+                <div className={clsx(
+                  'w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300',
+                  isActive ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/40' : 'bg-white/5 text-gray-500 group-hover:bg-white/10 group-hover:text-gray-300'
+                )}>
+                  <Icon size={18} />
+                </div>
+                <span className="text-[13px] font-bold tracking-tight">{label}</span>
+              </div>
+
+              {isActive && (
+                <motion.div layoutId="active-nav-indicator">
+                  <ChevronRight size={14} className="text-blue-500" />
+                </motion.div>
+              )}
             </Link>
           )
         })}
       </nav>
 
-      {/* Footer */}
-      <div className="px-6 py-4 border-t border-gray-200">
-        <div className="text-xs text-gray-500">
-          <p className="font-semibold">OnlinePlanet v1.0</p>
-          <p>© 2025 All rights reserved</p>
+      {/* System Footer */}
+      <div className="px-6 py-8 mt-auto border-t border-white/5 bg-white/[0.02]">
+        <div className="flex items-center justify-between">
+          <div className="space-y-1">
+            <p className="text-[10px] font-black text-white tracking-widest uppercase">System Core v4.2</p>
+            <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">© 2025 OnlinePlanet</p>
+          </div>
+          <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-gray-500">
+            <Monitor size={14} />
+          </div>
         </div>
       </div>
     </aside>

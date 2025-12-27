@@ -1,13 +1,13 @@
-// app/api/seller/returns/route.js
 import { NextResponse } from "next/server";
 import connectDB from "@/lib/db/mongodb";
-import Order from "@/lib/db/models/Order";
 import Seller from "@/lib/db/models/Seller";
+import Order from "@/lib/db/models/Order";
 import { verifyToken } from "@/lib/utils/auth";
 
 export async function GET(request) {
   try {
     await connectDB();
+
     const token = request.headers.get("authorization")?.replace("Bearer ", "");
     const decoded = verifyToken(token);
 
@@ -21,46 +21,122 @@ export async function GET(request) {
     const seller = await Seller.findOne({ userId: decoded.userId });
     if (!seller) {
       return NextResponse.json(
-        { success: false, message: "Seller not found" },
+        { success: false, message: "Seller profile not found" },
         { status: 404 }
       );
     }
 
-    // Fetch orders with return requests for this seller
-    const returns = await Order.find({
-      "items.seller": seller._id, // In some cases this is userId, in some its sellerId. Let's check model.
-      // Actually, Order model says items.seller is ref: 'User' (which is the seller's user ID)
+    // Get orders with return requests
+    const ordersWithReturns = await Order.find({
       "items.seller": decoded.userId,
-      status: "returned",
-      returnRequest: { $exists: true },
-    })
-      .populate("customer", "name email phone")
-      .sort({ "returnRequest.requestedAt": -1 });
+      "returnRequest.status": { $exists: true },
+    }).sort({ "returnRequest.requestedAt": -1 });
 
-    // Fallback search if 'returned' status is not set yet but request exists
-    const pendingReturns = await Order.find({
-      "items.seller": decoded.userId,
-      returnRequest: { $exists: true },
-      "returnRequest.status": "requested",
-    })
-      .populate("customer", "name email phone")
-      .sort({ "returnRequest.requestedAt": -1 });
-
-    // Combine and remove duplicates
-    const combined = [...returns, ...pendingReturns];
-    const uniqueReturns = Array.from(
-      new Set(combined.map((a) => a._id.toString()))
-    ).map((id) => combined.find((a) => a._id.toString() === id));
+    const stats = {
+      pendingApproval: ordersWithReturns.filter(
+        (o) => o.returnRequest.status === "requested"
+      ).length,
+      awaitingReceipt: ordersWithReturns.filter(
+        (o) => o.returnRequest.status === "approved"
+      ).length,
+      qualityCheck: ordersWithReturns.filter(
+        (o) => o.returnRequest.status === "received"
+      ).length,
+      resolvedThisMonth: ordersWithReturns.filter(
+        (o) =>
+          ["quality_passed", "refunded"].includes(o.returnRequest.status) &&
+          isThisMonth(o.returnRequest.resolvedAt)
+      ).length,
+    };
 
     return NextResponse.json({
       success: true,
-      returns: uniqueReturns,
+      stats,
+      returns: ordersWithReturns.map((order) => ({
+        id: order._id,
+        orderNumber: order.orderNumber,
+        customer: order.shippingAddress.name,
+        reason: order.returnRequest.reason,
+        description: order.returnRequest.description,
+        status: order.returnRequest.status,
+        requestedAt: order.returnRequest.requestedAt,
+        images: order.returnRequest.images,
+        refundAmount: order.returnRequest.refundAmount || order.pricing.total,
+      })),
     });
   } catch (error) {
-    console.error("Returns GET Error:", error);
+    console.error("❌ Returns API error:", error);
     return NextResponse.json(
-      { success: false, message: "Server error" },
+      { success: false, message: "Server error", error: error.message },
       { status: 500 }
     );
   }
+}
+
+export async function POST(request) {
+  try {
+    await connectDB();
+    const token = request.headers.get("authorization")?.replace("Bearer ", "");
+    const decoded = verifyToken(token);
+
+    if (!decoded || decoded.role !== "seller") {
+      return NextResponse.json(
+        { success: false, message: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
+    const { orderId, action, comment, condition } = await request.json();
+    const order = await Order.findById(orderId);
+
+    if (!order)
+      return NextResponse.json(
+        { success: false, message: "Order not found" },
+        { status: 404 }
+      );
+
+    // Update return status based on action
+    switch (action) {
+      case "APPROVE":
+        order.returnRequest.status = "approved";
+        break;
+      case "REJECT":
+        order.returnRequest.status = "rejected";
+        order.returnRequest.comments = comment;
+        break;
+      case "RECEIVED":
+        order.returnRequest.status = "received";
+        break;
+      case "RESOLVE":
+        order.returnRequest.status =
+          condition === "passed" ? "quality_passed" : "quality_failed";
+        order.returnRequest.qualityCheck = {
+          checkedAt: new Date(),
+          comments: comment,
+          condition: condition === "passed" ? "new" : "damaged",
+        };
+        order.returnRequest.resolvedAt = new Date();
+        break;
+    }
+
+    await order.save();
+    return NextResponse.json({
+      success: true,
+      message: `Return ${action.toLowerCase()}ed successfully`,
+    });
+  } catch (err) {
+    return NextResponse.json(
+      { success: false, message: err.message },
+      { status: 500 }
+    );
+  }
+}
+
+function isThisMonth(date) {
+  if (!date) return false;
+  const d = new Date(date);
+  const now = new Date();
+  return (
+    d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear()
+  );
 }

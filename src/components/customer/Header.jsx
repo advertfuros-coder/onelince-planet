@@ -12,7 +12,8 @@ import {
   FiChevronDown,
   FiMapPin,
   FiGift,
-  FiZap
+  FiZap,
+  FiShoppingBag
 } from 'react-icons/fi'
 import { useAuth } from '../../lib/context/AuthContext'
 import { useCart } from '../../lib/context/CartContext'
@@ -399,6 +400,15 @@ export default function Header() {
                   </>
                 )}
               </div>
+
+              {/* Want to Sell Button */}
+              <Link
+                href="/become-a-seller"
+                className="hidden lg:flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg font-semibold text-sm"
+              >
+                <FiShoppingBag className="w-4 h-4" />
+                <span>Want to Sell?</span>
+              </Link>
 
               {/* Cart */}
               <Link

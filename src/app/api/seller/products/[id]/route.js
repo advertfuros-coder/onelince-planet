@@ -1,8 +1,8 @@
-// app/api/seller/products/[id]/route.js
 import { NextResponse } from "next/server";
 import connectDB from "@/lib/db/mongodb";
 import Product from "@/lib/db/models/Product";
 import { verifyToken } from "@/lib/utils/auth";
+import mongoose from "mongoose";
 
 export async function GET(request, { params }) {
   try {
@@ -18,6 +18,13 @@ export async function GET(request, { params }) {
     }
 
     const { id } = await params;
+
+    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+      return NextResponse.json(
+        { success: false, message: "Invalid product ID" },
+        { status: 400 }
+      );
+    }
 
     // Find seller profile first to get the correct ID
     // (Consolidating logic with the main products route)
@@ -65,6 +72,14 @@ export async function PUT(request, { params }) {
     }
 
     const { id } = await params;
+
+    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+      return NextResponse.json(
+        { success: false, message: "Invalid product ID" },
+        { status: 400 }
+      );
+    }
+
     const body = await request.json();
 
     // Find seller profile first
@@ -128,6 +143,13 @@ export async function DELETE(request, { params }) {
     }
 
     const { id } = await params;
+
+    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+      return NextResponse.json(
+        { success: false, message: "Invalid product ID" },
+        { status: 400 }
+      );
+    }
 
     // Find seller profile first
     const seller = await import("@/lib/db/models/Seller").then((mod) =>

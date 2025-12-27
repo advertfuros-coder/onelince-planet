@@ -245,13 +245,13 @@ export default function AdminMarketingPage() {
             bgColor="bg-green-50"
           />
           <StatCard
-  label="Return Requests"
-  value={stats.returnedOrders || 0}
-  icon={<FiAlertCircle />}
-  color="text-red-600"
-  bgColor="bg-red-50"
-  small
-/>
+            label="Return Requests"
+            value={stats.returnedOrders || 0}
+            icon={<FiAlertCircle />}
+            color="text-red-600"
+            bgColor="bg-red-50"
+            small
+          />
           <StatCard
             label="Active Campaigns"
             value={stats.activeCampaigns}
@@ -412,11 +412,10 @@ export default function AdminMarketingPage() {
                         {(campaign.status === 'active' || campaign.status === 'paused') && (
                           <button
                             onClick={() => toggleCampaignStatus(campaign._id, campaign.status)}
-                            className={`p-2 rounded transition-colors ${
-                              campaign.status === 'active'
+                            className={`p-2 rounded transition-colors ${campaign.status === 'active'
                                 ? 'text-yellow-600 hover:bg-yellow-50'
                                 : 'text-green-600 hover:bg-green-50'
-                            }`}
+                              }`}
                           >
                             {campaign.status === 'active' ? <FiPause /> : <FiPlay />}
                           </button>

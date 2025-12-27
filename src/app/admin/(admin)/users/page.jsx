@@ -169,13 +169,12 @@ export default function UsersPage() {
                       </td>
                       <td className="px-6 py-4">
                         <span
-                          className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                            user.role === 'admin'
+                          className={`px-3 py-1 rounded-full text-xs font-semibold ${user.role === 'admin'
                               ? 'bg-purple-100 text-purple-700'
                               : user.role === 'seller'
-                              ? 'bg-blue-100 text-blue-700'
-                              : 'bg-green-100 text-green-700'
-                          }`}
+                                ? 'bg-blue-100 text-blue-700'
+                                : 'bg-green-100 text-green-700'
+                            }`}
                         >
                           {user.role}
                         </span>
@@ -209,11 +208,10 @@ export default function UsersPage() {
                           </Link>
                           <button
                             onClick={() => toggleUserStatus(user._id, user.isActive)}
-                            className={`p-2 rounded transition-colors ${
-                              user.isActive
+                            className={`p-2 rounded transition-colors ${user.isActive
                                 ? 'text-red-600 hover:bg-red-50'
                                 : 'text-green-600 hover:bg-green-50'
-                            }`}
+                              }`}
                             title={user.isActive ? 'Block User' : 'Activate User'}
                           >
                             {user.isActive ? <FiUserX /> : <FiUserCheck />}

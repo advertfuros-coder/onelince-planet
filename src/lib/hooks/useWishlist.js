@@ -30,7 +30,11 @@ export function useWishlist() {
         setWishlist(res.data.wishlist);
       }
     } catch (error) {
-      console.error("Fetch wishlist error:", error);
+      if (error.response?.status === 401) {
+        setWishlist({ items: [], count: 0 });
+      } else {
+        console.error("Fetch wishlist error:", error);
+      }
     } finally {
       setLoading(false);
     }

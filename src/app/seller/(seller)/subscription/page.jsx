@@ -1,4 +1,3 @@
-// app/seller/(seller)/subscription/page.jsx
 'use client'
 
 import { useState, useEffect } from 'react'
@@ -8,120 +7,44 @@ import {
     Check,
     X,
     Crown,
-    TrendingUp,
     Zap,
-    Star,
-    Activity,
-    Shield,
-    Target,
-    Activity as ActivityIcon,
-    ChevronRight,
-    ArrowUpRight,
-    Plus,
     Rocket,
-    Briefcase,
     Gem,
-    Cpu
+    Loader2,
+    Sparkles,
 } from 'lucide-react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { toast } from 'react-hot-toast'
-
-const tiers = [
-    {
-        id: 'free',
-        name: 'Seed',
-        price: 0,
-        description: 'Perfect for initial deployment',
-        features: [
-            { name: '50 Node Inventory', included: true },
-            { name: '5 Media Slots/Product', included: true },
-            { name: '1 Regional Hub', included: true },
-            { name: 'Core Telemetry', included: true },
-            { name: 'Bulk Injection', included: false },
-            { name: 'Neural Analytics', included: false },
-            { name: 'API Bridge', included: false },
-            { name: 'Priority Link', included: false },
-        ],
-        icon: Target,
-        color: 'gray',
-        popular: false
-    },
-    {
-        id: 'starter',
-        name: 'Velocity',
-        price: 999,
-        description: 'Accelerated growth protocol',
-        features: [
-            { name: '500 Node Inventory', included: true },
-            { name: '10 Media Slots/Product', included: true },
-            { name: '2 Regional Hubs', included: true },
-            { name: '5 Signal Rules', included: true },
-            { name: 'Bulk Injection', included: true },
-            { name: 'Neural Analytics', included: true },
-            { name: 'Multi-Hub Routing', included: true },
-            { name: 'Nexus Marketing', included: true },
-            { name: 'API Bridge', included: false },
-            { name: 'Priority Link', included: false },
-        ],
-        icon: Rocket,
-        color: 'blue',
-        popular: true
-    },
-    {
-        id: 'professional',
-        name: 'Quantum',
-        price: 2999,
-        description: 'High-bandwidth operations',
-        features: [
-            { name: '5,000 Node Inventory', included: true },
-            { name: '20 Media Slots/Product', included: true },
-            { name: '5 Regional Hubs', included: true },
-            { name: '20 Signal Rules', included: true },
-            { name: 'Bulk Injection', included: true },
-            { name: 'Neural Analytics', included: true },
-            { name: 'API Bridge', included: true },
-            { name: 'Priority Link', included: true },
-            { name: 'Competitor Scrutiny', included: true },
-            { name: 'Custom Telemetry', included: true },
-        ],
-        icon: Cpu,
-        color: 'purple',
-        popular: false
-    },
-    {
-        id: 'enterprise',
-        name: 'Apex',
-        price: 9999,
-        description: 'Omni-channel dominance',
-        features: [
-            { name: 'Unlimited Inventory', included: true },
-            { name: 'Unlimited Media', included: true },
-            { name: 'Unlimited Hubs', included: true },
-            { name: 'Unlimited Signals', included: true },
-            { name: 'Quantum Tier Access', included: true },
-            { name: 'White-Label Protocol', included: true },
-            { name: 'Dedicated Archon', included: true },
-            { name: 'Custom Interconnect', included: true },
-            { name: '24/7 Neural Support', included: true },
-            { name: 'SLA Guarantee', included: true },
-        ],
-        icon: Gem,
-        color: 'gold',
-        popular: false
-    }
-]
 
 export default function SubscriptionPage() {
     const { token } = useAuth()
+    const [plans, setPlans] = useState([])
     const [currentTier, setCurrentTier] = useState('free')
-    const [usage, setUsage] = useState({})
     const [loading, setLoading] = useState(true)
+    const [processingPlanId, setProcessingPlanId] = useState(null) // Track which plan is being processed
 
     useEffect(() => {
-        if (token) fetchSubscription()
+        if (token) {
+            fetchPlans()
+            fetchCurrentSubscription()
+        }
     }, [token])
 
-    async function fetchSubscription() {
+    // Fetch admin-configured plans
+    async function fetchPlans() {
+        try {
+            const res = await axios.get('/api/seller/subscription/plans')
+            if (res.data.success) {
+                setPlans(res.data.plans)
+            }
+        } catch (error) {
+            console.error('Error fetching plans:', error)
+            toast.error('Failed to load subscription plans')
+        }
+    }
+
+    // Fetch current subscription
+    async function fetchCurrentSubscription() {
         try {
             setLoading(true)
             const res = await axios.get('/api/seller/subscription', {
@@ -129,7 +52,6 @@ export default function SubscriptionPage() {
             })
             if (res.data.success) {
                 setCurrentTier(res.data.subscription?.tier || 'free')
-                setUsage(res.data.subscription?.usage || {})
             }
         } catch (error) {
             console.error('Error fetching subscription:', error)
@@ -148,339 +70,441 @@ export default function SubscriptionPage() {
         })
     }
 
-    async function handleUpgrade(tierId) {
-        if (tierId === currentTier) {
-            toast.error('Active Protocol Detected')
+    async function handleUpgrade(planId, billingInterval = 'monthly') {
+        // PROTECTION 1: Check if already processing
+        if (processingPlanId) {
+            toast.error('Please wait, processing your previous request...')
             return
         }
 
-        const loadingToast = toast.loading('Initiating Upgrade Protocol...')
+        // PROTECTION 2: Check if same as current plan
+        if (planId === currentTier) {
+            toast.error('You are already on this plan')
+            return
+        }
+
+        const plan = plans.find((p) => p.name === planId)
+        if (!plan) return
+
+        // If free plan, no payment needed
+        if (plan.pricing.monthly === 0) {
+            toast.error('Cannot upgrade to free plan')
+            return
+        }
+
+        // PROTECTION 3: Set processing state to disable button
+        setProcessingPlanId(planId)
+
+        const loadingToast = toast.loading('Initiating upgrade...')
 
         try {
+            // Create order
             const res = await axios.post(
-                '/api/seller/subscription/upgrade',
-                { tier: tierId },
+                '/api/seller/subscription/create-order',
+                { tier: planId, billingInterval },
                 { headers: { Authorization: `Bearer ${token}` } }
             )
 
             toast.dismiss(loadingToast)
 
             if (res.data.success) {
-                if (res.data.isPaid) {
-                    // Start Razorpay flow
-                    const isLoaded = await loadRazorpay()
-                    if (!isLoaded) {
-                        toast.error('Failed to load payment gateway')
-                        return
-                    }
-
-                    const options = {
-                        key: res.data.key,
-                        amount: res.data.order.amount,
-                        currency: res.data.order.currency,
-                        name: 'Online Planet Marketplace',
-                        description: `Upgrade to ${tierId} Tier`,
-                        order_id: res.data.order.orderId,
-                        handler: async function (response) {
-                            const verifyToast = toast.loading('Verifying Payment Pulse...')
-                            try {
-                                const verifyRes = await axios.post(
-                                    '/api/seller/subscription/verify',
-                                    {
-                                        ...response,
-                                        tier: tierId
-                                    },
-                                    { headers: { Authorization: `Bearer ${token}` } }
-                                )
-
-                                toast.dismiss(verifyToast)
-                                if (verifyRes.data.success) {
-                                    toast.success('System Evolution Complete')
-                                    fetchSubscription()
-                                } else {
-                                    toast.error('Verification Handshake Failed')
-                                }
-                            } catch (err) {
-                                toast.dismiss(verifyToast)
-                                toast.error('Signal Interrupted during Verification')
-                            }
-                        },
-                        prefill: {
-                            name: 'Seller Name', // Ideally from Auth context
-                            email: 'seller@example.com'
-                        },
-                        theme: {
-                            color: '#7C3AED'
-                        }
-                    }
-
-                    const rzp = new window.Razorpay(options)
-                    rzp.open()
-                } else {
-                    toast.success('System Upgrade Synchronized')
-                    fetchSubscription()
+                // Load Razorpay
+                const isLoaded = await loadRazorpay()
+                if (!isLoaded) {
+                    toast.error('Failed to load payment gateway')
+                    setProcessingPlanId(null) // Reset on error
+                    return
                 }
+
+                const options = {
+                    key: res.data.razorpayKeyId,
+                    amount: res.data.order.amount,
+                    currency: res.data.order.currency,
+                    name: 'Online Planet',
+                    description: `Upgrade to ${plan.displayName}`,
+                    order_id: res.data.order.id,
+                    handler: async function (response) {
+                        // INSTANT ACTIVATION - Don't wait for webhook
+                        const activationToast = toast.loading('Activating your plan...')
+                        
+                        try {
+                            // Call instant activation API
+                            const activationRes = await axios.post(
+                                '/api/seller/subscription/activate',
+                                {
+                                    tier: planId,
+                                    billingInterval,
+                                    paymentId: response.razorpay_payment_id,
+                                    orderId: response.razorpay_order_id,
+                                },
+                                { headers: { Authorization: `Bearer ${token}` } }
+                            )
+
+                            toast.dismiss(activationToast)
+
+                            if (activationRes.data.success) {
+                                toast.success(`🎉 ${plan.displayName} plan activated!`)
+                                console.log(`✅ Activated in ${activationRes.data.activationTime}ms`)
+                                
+                                // Reload page to show new plan
+                                setTimeout(() => {
+                                    window.location.reload()
+                                }, 1500)
+                            } else {
+                                toast.error('Activation failed. Please contact support.')
+                                setProcessingPlanId(null)
+                            }
+                        } catch (error) {
+                            toast.dismiss(activationToast)
+                            toast.error('Activation failed. Please refresh the page.')
+                            console.error('Activation error:', error)
+                            setProcessingPlanId(null)
+                        }
+                    },
+                    modal: {
+                        ondismiss: function () {
+                            // PROTECTION 4: Reset if user closes modal
+                            setProcessingPlanId(null)
+                            toast.error('Payment cancelled')
+                        },
+                    },
+                    prefill: {
+                        name: '',
+                        email: '',
+                    },
+                    theme: {
+                        color: plan.color || '#667eea',
+                    },
+                }
+
+                const rzp = new window.Razorpay(options)
+
+                // PROTECTION 5: Reset if payment fails
+                rzp.on('payment.failed', function (response) {
+                    setProcessingPlanId(null)
+                    toast.error('Payment failed. Please try again.')
+                })
+
+                rzp.open()
+            } else {
+                toast.error(res.data.message || 'Failed to create order')
+                setProcessingPlanId(null) // Reset on error
             }
         } catch (error) {
             toast.dismiss(loadingToast)
-            toast.error('Handshake failed')
+            toast.error('Upgrade failed')
+            console.error('Upgrade error:', error)
+            setProcessingPlanId(null) // Reset on error
         }
     }
 
     if (loading) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-screen space-y-4">
-                <div className="w-10 h-10 border-4 border-purple-600 border-t-transparent rounded-full animate-spin" />
-                <p className="text-gray-400 font-black uppercase tracking-widest text-[9px]">Analyzing Account Matrix...</p>
+            <div className="flex flex-col items-center justify-center min-h-screen">
+                <Loader2 className="w-12 h-12 animate-spin text-blue-600 mb-4" />
+                <p className="text-gray-600 font-medium">Loading subscription plans...</p>
             </div>
         )
     }
 
     return (
-        <div className="min-h-screen bg-[#F8FAFC] p-6 lg:p-8">
-            <div className="max-w-[1400px] mx-auto space-y-10">
-
-                {/* Header Grid */}
-                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
-                    <div className="space-y-4">
-                        <div className="flex items-center gap-2">
-                            <div className="w-10 h-10 rounded-2xl bg-purple-600 flex items-center justify-center text-white shadow-xl shadow-purple-500/20">
-                                <Crown size={22} />
-                            </div>
-                            <span className="text-[10px] font-black text-purple-600 uppercase tracking-widest bg-purple-50 px-4 py-1.5 rounded-full border border-purple-100">Membership Portal</span>
-                        </div>
-                        <h1 className="text-5xl font-black text-gray-900 tracking-tighter leading-none uppercase">Account Tier Matrix</h1>
-                        <p className="text-gray-500 font-bold uppercase tracking-widest text-[11px] mt-3 flex items-center gap-2">
-                            Active Intelligence Protocol: <span className="text-purple-600">{tiers.find(t => t.id === currentTier)?.name} Tier</span>
-                        </p>
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 p-6 lg:p-8">
+            <div className="max-w-7xl mx-auto">
+                {/* Header */}
+                <div className="text-center mb-12">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-bold mb-4">
+                        <Crown size={16} />
+                        Subscription Plans
                     </div>
-
-                    <div className="flex items-center gap-6 bg-white p-6 rounded-[2.8rem] shadow-sm border border-gray-100/50">
-                        <div className="text-right">
-                            <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest leading-none mb-2">Billing Cycle</p>
-                            <p className="text-lg font-black text-gray-900 leading-none capitalize">Monthly Payout</p>
-                        </div>
-                        <div className="w-[1px] h-10 bg-gray-100" />
-                        <div className="text-center px-4">
-                            <p className="text-[9px] font-black text-emerald-500 uppercase tracking-widest leading-none mb-2 underline underline-offset-4 decoration-2">Auto-Renew Active</p>
-                            <p className="text-lg font-black text-gray-900 leading-none">JAN 24, 2026</p>
-                        </div>
-                    </div>
+                    <h1 className="text-5xl font-black text-gray-900 mb-4">
+                        Choose Your Plan
+                    </h1>
+                    <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+                        Select the perfect plan for your business needs. Upgrade or downgrade anytime.
+                    </p>
                 </div>
 
-                {/* Telemetry Usage Panels */}
-                {currentTier !== 'free' && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <ModernUsagePanel label="Inventory Load" current={usage.productsListed || 0} limit={tiers.find(t => t.id === currentTier)?.features.find(f => f.name.includes('Node'))?.name.split(' ')[0] || '∞'} color="purple" icon={ActivityIcon} />
-                        <ModernUsagePanel label="Hub Capacity" current={usage.warehousesCreated || 0} limit={tiers.find(t => t.id === currentTier)?.features.find(f => f.name.includes('Hubs'))?.name.split(' ')[0] || '∞'} color="blue" icon={Shield} />
-                        <ModernUsagePanel label="Signal Signals" current={usage.pricingRulesActive || 0} limit={tiers.find(t => t.id === currentTier)?.features.find(f => f.name.includes('Signals'))?.name.split(' ')[0] || '∞'} color="emerald" icon={Zap} />
-                        <ModernUsagePanel label="Request Volume" current={usage.apiCallsThisMonth || 0} limit="∞" color="amber" icon={Cpu} />
-                    </div>
-                )}
-
-                {/* Evolution Matrix (Pricing) */}
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
-                    {tiers.map((tier, idx) => (
-                        <ModernPricingCard
-                            key={tier.id}
-                            tier={tier}
-                            idx={idx}
+                {/* Plans Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+                    {plans.map((plan, index) => (
+                        <PlanCard
+                            key={plan.id}
+                            plan={plan}
+                            index={index}
                             currentTier={currentTier}
+                            processingPlanId={processingPlanId}
                             onUpgrade={handleUpgrade}
                         />
                     ))}
                 </div>
 
-                {/* Comparative Protocol Analysis */}
-                <div className="bg-white rounded-[3.5rem] shadow-sm border border-gray-100 overflow-hidden">
-                    <div className="px-10 py-8 bg-gray-50/50 border-b border-gray-100 flex items-center justify-between">
-                        <div>
-                            <h2 className="text-2xl font-black text-gray-900 tracking-tighter uppercase">Detailed Comparative Analysis</h2>
-                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1 underline">Protocol Specification Matching</p>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <Shield size={16} className="text-indigo-500" />
-                            <span className="text-[9px] font-black text-gray-500 uppercase tracking-widest">Enterprise Verified</span>
-                        </div>
-                    </div>
+                {/* Features Comparison Table */}
+                <div className="bg-white rounded-3xl shadow-xl p-8 mb-8">
+                    <h2 className="text-3xl font-black text-gray-900 mb-8 text-center">
+                        Compare Plans
+                    </h2>
                     <div className="overflow-x-auto">
-                        <table className="w-full text-left">
+                        <table className="w-full">
                             <thead>
-                                <tr className="bg-white">
-                                    <th className="px-10 py-6 text-[10px] font-black text-gray-400 uppercase tracking-widest">Operation Domain</th>
-                                    {tiers.map(t => (
-                                        <th key={t.id} className="px-10 py-6 text-center text-[10px] font-black text-gray-900 uppercase tracking-widest">{t.name}</th>
+                                <tr className="border-b-2 border-gray-200">
+                                    <th className="text-left py-4 px-6 font-black text-gray-900">
+                                        Feature
+                                    </th>
+                                    {plans.map((plan) => (
+                                        <th
+                                            key={plan.id}
+                                            className="text-center py-4 px-6 font-black text-gray-900"
+                                        >
+                                            {plan.displayName}
+                                        </th>
                                     ))}
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-gray-50">
-                                {['Node Inventory', 'Media Compression', 'Regional Hubs', 'Signal Rules', 'Bulk Injection', 'Neural Analytics', 'API Bridge', 'Priority Link'].map((feature, idx) => (
-                                    <tr key={idx} className="hover:bg-gray-50/50 transition-colors">
-                                        <td className="px-10 py-5 text-[11px] font-black text-gray-900 uppercase tracking-tighter">{feature}</td>
-                                        {tiers.map(tier => {
-                                            const tierFeature = tier.features.find(f => f.name.includes(feature.split(' ')[0]))
-                                            return (
-                                                <td key={tier.id} className="px-10 py-5 text-center">
-                                                    {tierFeature?.included ? (
-                                                        <div className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-50 text-emerald-600"><Check size={14} /></div>
-                                                    ) : (
-                                                        <div className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gray-50 text-gray-300"><X size={14} /></div>
-                                                    )}
-                                                </td>
-                                            )
-                                        })}
-                                    </tr>
-                                ))}
+                            <tbody>
+                                <ComparisonRow
+                                    label="Products"
+                                    plans={plans}
+                                    getValue={(p) =>
+                                        p.features.maxProducts === -1
+                                            ? 'Unlimited'
+                                            : p.features.maxProducts
+                                    }
+                                />
+                                <ComparisonRow
+                                    label="Warehouses"
+                                    plans={plans}
+                                    getValue={(p) =>
+                                        p.features.maxWarehouses === -1
+                                            ? 'Unlimited'
+                                            : p.features.maxWarehouses
+                                    }
+                                />
+                                <ComparisonRow
+                                    label="Images per Product"
+                                    plans={plans}
+                                    getValue={(p) =>
+                                        p.features.maxImages === -1 ? 'Unlimited' : p.features.maxImages
+                                    }
+                                />
+                                <ComparisonRow
+                                    label="Bulk Upload"
+                                    plans={plans}
+                                    getValue={(p) => p.features.bulkUpload}
+                                    isBoolean
+                                />
+                                <ComparisonRow
+                                    label="Advanced Analytics"
+                                    plans={plans}
+                                    getValue={(p) => p.features.advancedAnalytics}
+                                    isBoolean
+                                />
+                                <ComparisonRow
+                                    label="API Access"
+                                    plans={plans}
+                                    getValue={(p) => p.features.apiAccess}
+                                    isBoolean
+                                />
+                                <ComparisonRow
+                                    label="Priority Support"
+                                    plans={plans}
+                                    getValue={(p) => p.features.prioritySupport}
+                                    isBoolean
+                                />
+                                <ComparisonRow
+                                    label="Dedicated Manager"
+                                    plans={plans}
+                                    getValue={(p) => p.features.dedicatedManager}
+                                    isBoolean
+                                />
                             </tbody>
                         </table>
                     </div>
-                </div>
-
-                {/* FAQ Feed */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <FAQPod question="Protocol Scaling latency?" answer="System upgrades are synchronized across all clusters in sub-500ms. No operational downtime detected during transition." />
-                    <FAQPod question="Resource Exhaustion?" answer="Approaching node limits triggers emergency signal notifications. Apex tier allows for unlimited volumetric scaling." />
-                    <FAQPod question="Encrypted Billing?" answer="All transactions are obfuscated via 256-bit AES protocols and backed by a 30-day integrity guarantee." />
-                    <FAQPod question="Cross-Tier Migration?" answer="Data persistence is maintained across all evolution steps. Reverting protocols triggers pro-rated credit attribution." />
                 </div>
             </div>
         </div>
     )
 }
 
-function ModernPricingCard({ tier, idx, currentTier, onUpgrade }) {
-    const isCurrentPlan = tier.id === currentTier
-    const Icon = tier.icon
+function PlanCard({ plan, index, currentTier, processingPlanId, onUpgrade }) {
+    const isCurrentPlan = currentTier === plan.name
+    const isFree = plan.pricing.monthly === 0
+    const isProcessing = processingPlanId === plan.name
+    const isAnyProcessing = processingPlanId !== null
 
-    const colors = {
-        gray: 'border-gray-200 text-gray-400',
-        blue: 'border-blue-200 text-blue-600',
-        purple: 'border-purple-200 text-purple-600',
-        gold: 'border-amber-200 text-amber-600'
+    // Icon mapping
+    const iconMap = {
+        '🌱': Sparkles,
+        '🚀': Rocket,
+        '💎': Gem,
+        '👑': Crown,
     }
+    const Icon = iconMap[plan.icon] || Zap
 
     return (
         <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: idx * 0.1 }}
-            className={`
-                group relative bg-white rounded-[3.5rem] p-8 shadow-sm border transition-all hover:shadow-2xl hover:shadow-indigo-500/5
-                ${tier.popular ? 'ring-2 ring-purple-600 ring-offset-4 ring-offset-[#F8FAFC] scale-105 z-10' : 'border-gray-100'}
-            `}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1 }}
+            className={`relative bg-white rounded-3xl p-8 shadow-lg border-2 transition-all hover:shadow-2xl ${plan.isPopular
+                ? 'border-blue-500 scale-105'
+                : isCurrentPlan
+                    ? 'border-green-500'
+                    : 'border-gray-200'
+                }`}
         >
-            {tier.popular && (
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 px-6 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-full text-[9px] font-black uppercase tracking-[0.2em] shadow-xl">
-                    Optimal Path
+            {/* Popular Badge */}
+            {plan.isPopular && (
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+                    <div className="px-4 py-1 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-xs font-black uppercase rounded-full shadow-lg">
+                        Most Popular
+                    </div>
                 </div>
             )}
 
-            <div className={`w-16 h-16 rounded-[1.8rem] bg-gray-50 flex items-center justify-center mb-10 group-hover:scale-110 transition-transform duration-500 ${colors[tier.color]}`}>
-                <Icon size={32} />
-            </div>
-
-            <h3 className="text-2xl font-black text-gray-900 tracking-tighter leading-none mb-3 uppercase">{tier.name}</h3>
-            <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest leading-none mb-8">Evolution Tier {idx + 1}</p>
-
-            <div className="mb-10">
-                <div className="flex items-end gap-1">
-                    <span className="text-4xl font-black text-gray-900 tracking-tighter">₹{tier.price.toLocaleString()}</span>
-                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 underline">/Cycle</span>
+            {/* Current Plan Badge */}
+            {isCurrentPlan && (
+                <div className="absolute top-4 right-4">
+                    <div className="px-3 py-1 bg-green-100 text-green-700 text-xs font-black uppercase rounded-full">
+                        Current Plan
+                    </div>
                 </div>
+            )}
+
+            {/* Icon */}
+            <div
+                className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-lg"
+                style={{ backgroundColor: plan.color + '20' }}
+            >
+                <span className="text-4xl">{plan.icon}</span>
             </div>
 
+            {/* Plan Name */}
+            <h3 className="text-2xl font-black text-gray-900 mb-2">
+                {plan.displayName}
+            </h3>
+            <p className="text-sm text-gray-600 mb-6">{plan.tagline || plan.description}</p>
+
+            {/* Price */}
+            <div className="mb-6">
+                <div className="flex items-baseline gap-2">
+                    <span className="text-4xl font-black text-gray-900">
+                        ₹{plan.pricing.monthly.toLocaleString()}
+                    </span>
+                    <span className="text-gray-500 font-medium">/month</span>
+                </div>
+                {plan.discounts.yearly > 0 && (
+                    <p className="text-sm text-green-600 font-bold mt-1">
+                        Save {plan.discounts.yearly}% with yearly billing
+                    </p>
+                )}
+            </div>
+
+            {/* CTA Button */}
             <button
-                onClick={() => onUpgrade(tier.id)}
-                disabled={isCurrentPlan}
-                className={`
-                    w-full py-5 rounded-[2rem] text-[10px] font-black uppercase tracking-widest transition-all
-                    ${isCurrentPlan
-                        ? 'bg-gray-50 text-gray-300 cursor-not-allowed border border-gray-100'
-                        : 'bg-gray-900 text-white hover:bg-purple-600 shadow-xl shadow-gray-900/10 hover:shadow-purple-500/20 active:scale-95 group-hover:-translate-y-1'}
-                `}
+                onClick={() => !isCurrentPlan && !isFree && !isAnyProcessing && onUpgrade(plan.name)}
+                disabled={isCurrentPlan || isFree || isAnyProcessing}
+                className={`w-full py-4 rounded-xl font-black text-sm uppercase tracking-wider transition-all mb-6 flex items-center justify-center gap-2 ${isCurrentPlan
+                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                    : isFree
+                        ? 'bg-gray-100 text-gray-600 cursor-default'
+                        : isProcessing
+                            ? 'bg-blue-400 text-white cursor-wait'
+                            : isAnyProcessing
+                                ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                                : plan.isPopular
+                                    ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:shadow-xl hover:scale-105'
+                                    : 'bg-gray-900 text-white hover:bg-gray-800 hover:shadow-lg'
+                    }`}
             >
-                {isCurrentPlan ? 'Current Operating Tier' : 'Initiate Evolution'}
+                {isProcessing ? (
+                    <>
+                        <Loader2 className="animate-spin" size={18} />
+                        Processing...
+                    </>
+                ) : isCurrentPlan ? (
+                    'Current Plan'
+                ) : isFree ? (
+                    'Free Forever'
+                ) : isAnyProcessing ? (
+                    'Please Wait...'
+                ) : (
+                    'Upgrade Now'
+                )}
             </button>
 
-            <div className="mt-10 space-y-4">
-                <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-2 px-2">Core Protocols</p>
-                {tier.features.map((feature, fIdx) => (
-                    <div key={fIdx} className="flex items-center gap-3 px-2">
-                        {feature.included ? (
-                            <Check size={14} className="text-emerald-500 shrink-0" />
-                        ) : (
-                            <X size={14} className="text-gray-200 shrink-0" />
-                        )}
-                        <span className={`text-[10px] font-black uppercase tracking-tighter ${feature.included ? 'text-gray-700' : 'text-gray-300'}`}>
-                            {feature.name}
-                        </span>
-                    </div>
-                ))}
-            </div>
-
-            <div className="absolute bottom-[-20%] right-[-10%] opacity-0 group-hover:opacity-10 transition-opacity pointer-events-none">
-                <Icon size={120} />
+            {/* Features */}
+            <div className="space-y-3">
+                <p className="text-xs font-black text-gray-400 uppercase tracking-wider">
+                    Includes:
+                </p>
+                <FeatureItem
+                    text={`${plan.features.maxProducts === -1 ? 'Unlimited' : plan.features.maxProducts} Products`}
+                    included={true}
+                />
+                <FeatureItem
+                    text={`${plan.features.maxWarehouses === -1 ? 'Unlimited' : plan.features.maxWarehouses} Warehouses`}
+                    included={true}
+                />
+                <FeatureItem
+                    text={`${plan.features.maxImages === -1 ? 'Unlimited' : plan.features.maxImages} Images/Product`}
+                    included={true}
+                />
+                <FeatureItem text="Bulk Upload" included={plan.features.bulkUpload} />
+                <FeatureItem
+                    text="Advanced Analytics"
+                    included={plan.features.advancedAnalytics}
+                />
+                <FeatureItem text="API Access" included={plan.features.apiAccess} />
+                <FeatureItem
+                    text="Priority Support"
+                    included={plan.features.prioritySupport}
+                />
+                {plan.features.dedicatedManager && (
+                    <FeatureItem text="Dedicated Manager" included={true} />
+                )}
             </div>
         </motion.div>
     )
 }
 
-function ModernUsagePanel({ label, current, limit, color, icon: Icon }) {
-    const percentage = limit === '∞' ? 0 : (current / parseInt(limit.replace(/,/g, ''))) * 100
-    const colorClasses = {
-        purple: 'text-purple-600 bg-purple-50 border-purple-100',
-        blue: 'text-blue-600 bg-blue-50 border-blue-100',
-        emerald: 'text-emerald-600 bg-emerald-50 border-emerald-100',
-        amber: 'text-amber-600 bg-amber-50 border-amber-100'
-    }
-
+function FeatureItem({ text, included }) {
     return (
-        <div className="bg-white rounded-[2.8rem] p-6 shadow-sm border border-gray-100/50 flex flex-col justify-between group overflow-hidden">
-            <div className="flex items-center justify-between mb-8">
-                <div className={`p-4 rounded-xl ${colorClasses[color]} border group-hover:scale-110 transition-transform duration-500`}><Icon size={18} /></div>
-                <div className="text-right">
-                    <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1.5 leading-none">{label}</p>
-                    <p className="text-lg font-black text-gray-900 tracking-tighter leading-none">{current} <span className="text-gray-300 text-[11px]">/ {limit}</span></p>
-                </div>
-            </div>
-            {limit !== '∞' && (
-                <div className="h-1.5 w-full bg-gray-50 rounded-full overflow-hidden">
-                    <motion.div
-                        initial={{ width: 0 }}
-                        animate={{ width: `${Math.min(percentage, 100)}%` }}
-                        className={`h-full rounded-full ${percentage > 90 ? 'bg-rose-500' : percentage > 70 ? 'bg-amber-500' : 'bg-indigo-500'}`}
-                    />
-                </div>
+        <div className="flex items-center gap-3">
+            {included ? (
+                <Check size={18} className="text-green-500 flex-shrink-0" />
+            ) : (
+                <X size={18} className="text-gray-300 flex-shrink-0" />
             )}
+            <span
+                className={`text-sm font-medium ${included ? 'text-gray-700' : 'text-gray-400'
+                    }`}
+            >
+                {text}
+            </span>
         </div>
     )
 }
 
-function FAQPod({ question, answer }) {
-    const [isOpen, setIsOpen] = useState(false)
+function ComparisonRow({ label, plans, getValue, isBoolean = false }) {
     return (
-        <div
-            onClick={() => setIsOpen(!isOpen)}
-            className="group bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100/50 cursor-pointer transition-all hover:border-purple-200"
-        >
-            <div className="flex items-center justify-between gap-4">
-                <h4 className="text-[11px] font-black text-gray-900 uppercase tracking-widest leading-relaxed underline decoration-purple-100 underline-offset-4 decoration-2">{question}</h4>
-                <div className={`p-2 rounded-xl bg-gray-50 text-gray-400 group-hover:text-purple-600 transition-all ${isOpen ? 'rotate-180 bg-purple-50' : ''}`}>
-                    <Plus size={14} className={isOpen ? 'rotate-45' : ''} />
-                </div>
-            </div>
-            <AnimatePresence>
-                {isOpen && (
-                    <motion.p
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: 'auto', opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        className="mt-6 text-[11px] font-medium text-gray-400 uppercase tracking-widest leading-relaxed overflow-hidden"
-                    >
-                        {answer}
-                    </motion.p>
-                )}
-            </AnimatePresence>
-        </div>
+        <tr className="border-b border-gray-100 hover:bg-gray-50">
+            <td className="py-4 px-6 font-bold text-gray-700">{label}</td>
+            {plans.map((plan) => {
+                const value = getValue(plan)
+                return (
+                    <td key={plan.id} className="py-4 px-6 text-center">
+                        {isBoolean ? (
+                            value ? (
+                                <Check size={20} className="inline text-green-500" />
+                            ) : (
+                                <X size={20} className="inline text-gray-300" />
+                            )
+                        ) : (
+                            <span className="font-bold text-gray-900">{value}</span>
+                        )}
+                    </td>
+                )
+            })}
+        </tr>
     )
 }

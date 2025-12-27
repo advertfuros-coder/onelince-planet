@@ -2,6 +2,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { useAuth } from '@/lib/context/AuthContext'
 import axios from 'axios'
 import Link from 'next/link'
@@ -28,6 +29,9 @@ import {
   RefreshCw,
   MoreVertical,
   Star,
+  Archive,
+  Zap,
+  ShieldCheck,
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { toast } from 'react-hot-toast'
@@ -41,7 +45,10 @@ export default function SellerProductsPage() {
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('')
-  const [selectedStatus, setSelectedStatus] = useState('')
+  const searchParams = useSearchParams()
+  const statusParam = searchParams.get('status')
+
+  const [selectedStatus, setSelectedStatus] = useState(statusParam || '')
   const [page, setPage] = useState(1)
   const [pagination, setPagination] = useState({})
   const [showBulkUpload, setShowBulkUpload] = useState(false)
@@ -129,6 +136,18 @@ export default function SellerProductsPage() {
     }
   }
 
+  const calculateHealth = (product) => {
+    let score = 0
+    if (product.name?.length > 20) score += 15
+    if (product.description?.length > 100) score += 15
+    if (product.images?.length >= 3) score += 20
+    if (product.highlights && product.highlights.filter(h => h.length > 5).length >= 3) score += 15
+    if (product.category) score += 10
+    if (product.sku) score += 10
+    if (product.keywords?.length > 10) score += 15
+    return Math.min(score, 100)
+  }
+
   const formatCurrency = (value) => `₹${(value || 0).toLocaleString('en-IN')}`
 
   const categories = [...new Set(products.map((p) => p.category))]
@@ -192,25 +211,27 @@ export default function SellerProductsPage() {
             delay={0.2}
           />
           <ModernStatCard
+            label="Signal Quality"
+            value={stats.lowHealth}
+            icon={Zap}
+            color="orange"
+            delay={0.3}
+            alert={stats.lowHealth > 0}
+            onClick={() => setSelectedStatus('low-health')}
+          />
+          <ModernStatCard
             label="Low Telemery"
             value={stats.lowStock}
             icon={AlertCircle}
             color="orange"
-            delay={0.3}
+            delay={0.4}
             alert
           />
           <ModernStatCard
-            label="Approval Queue"
-            value={stats.pending}
-            icon={RefreshCw}
-            color="amber"
-            delay={0.4}
-          />
-          <ModernStatCard
-            label="Shadowed"
-            value={stats.inactive}
-            icon={XCircle}
-            color="rose"
+            label="Workspace Drafts"
+            value={stats.drafts}
+            icon={Archive}
+            color="slate"
             delay={0.5}
           />
         </div>
@@ -249,8 +270,10 @@ export default function SellerProductsPage() {
                 <option value="">All Status</option>
                 <option value="active">Active</option>
                 <option value="inactive">Inactive</option>
+                <option value="low-health">Low Health</option>
                 <option value="pending">Pending</option>
                 <option value="approved">Approved</option>
+                <option value="draft">Drafts</option>
               </select>
             </div>
           </div>
@@ -308,6 +331,7 @@ export default function SellerProductsPage() {
                       <th className="px-6 py-5 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">SKU & Category</th>
                       <th className="px-6 py-5 text-right text-[10px] font-black text-gray-400 uppercase tracking-widest">Pricing</th>
                       <th className="px-6 py-5 text-center text-[10px] font-black text-gray-400 uppercase tracking-widest">Inventory</th>
+                      <th className="px-6 py-5 text-center text-[10px] font-black text-gray-400 uppercase tracking-widest">Health</th>
                       <th className="px-6 py-5 text-center text-[10px] font-black text-gray-400 uppercase tracking-widest">Visibility</th>
                       <th className="px-8 py-5 text-right text-[10px] font-black text-gray-400 uppercase tracking-widest">Actions</th>
                     </tr>
@@ -371,9 +395,23 @@ export default function SellerProductsPage() {
                           </div>
                         </td>
                         <td className="px-6 py-6 text-center">
+                          <div className="flex flex-col items-center gap-1.5">
+                            <div className={`px-3 py-1 rounded-full text-[10px] font-black uppercase flex items-center gap-1.5 ${calculateHealth(product) > 80 ? 'bg-emerald-50 text-emerald-600' : 'bg-blue-50 text-blue-600'}`}>
+                              <Zap size={10} />
+                              {calculateHealth(product)}% Quality
+                            </div>
+                            <div className="w-12 h-1 bg-gray-100 rounded-full overflow-hidden">
+                              <div
+                                className={`h-full transition-all duration-1000 ${calculateHealth(product) > 80 ? 'bg-emerald-500' : 'bg-blue-500'}`}
+                                style={{ width: `${calculateHealth(product)}%` }}
+                              />
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-6 text-center">
                           <div className="flex flex-col items-center gap-2">
-                            <ModernStatusBadge status={product.isActive ? 'active' : 'inactive'} />
-                            {!product.isApproved && (
+                            <ModernStatusBadge status={product.isDraft ? 'draft' : (product.isActive ? 'active' : 'inactive')} />
+                            {!product.isApproved && !product.isDraft && (
                               <span className="text-[9px] font-black uppercase tracking-widest text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">Pending Hub Approval</span>
                             )}
                           </div>
@@ -391,7 +429,7 @@ export default function SellerProductsPage() {
                               {product.isActive ? <XCircle size={18} /> : <CheckCircle2 size={18} />}
                             </button>
                             <Link
-                              href={`/seller/products/${product._id}`}
+                              href={`/seller/products/edit/${product._id}`}
                               className="p-2.5 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-xl transition-all"
                             >
                               <Edit2 size={18} />
@@ -466,13 +504,14 @@ export default function SellerProductsPage() {
   )
 }
 
-function ModernStatCard({ label, value, icon: Icon, color, delay, alert }) {
+function ModernStatCard({ label, value, icon: Icon, color, delay, alert, onClick }) {
   const colors = {
     blue: 'text-blue-600 bg-blue-50',
     emerald: 'text-emerald-600 bg-emerald-50',
     rose: 'text-rose-600 bg-rose-50',
     amber: 'text-amber-600 bg-amber-50',
     orange: 'text-orange-600 bg-orange-50',
+    slate: 'text-slate-600 bg-slate-50',
   }
 
   return (
@@ -480,7 +519,8 @@ function ModernStatCard({ label, value, icon: Icon, color, delay, alert }) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay }}
-      className={`bg-white p-6 rounded-[2.2rem] shadow-sm border ${alert ? 'border-orange-100' : 'border-gray-100/50'} relative overflow-hidden group`}
+      onClick={onClick}
+      className={`bg-white p-6 rounded-[2.2rem] shadow-sm border ${alert ? 'border-orange-100' : 'border-gray-100/50'} relative overflow-hidden group ${onClick ? 'cursor-pointer' : ''}`}
     >
       {alert && <div className="absolute top-0 right-0 w-8 h-8 bg-orange-500/10 rounded-bl-[2rem] flex items-center justify-center"><div className="w-1.5 h-1.5 bg-orange-500 rounded-full animate-ping" /></div>}
       <div className="flex items-center gap-4">
@@ -500,6 +540,7 @@ function ModernStatusBadge({ status }) {
   const statusConfig = {
     active: { bg: 'bg-emerald-50', text: 'text-emerald-600', label: 'Live Storefront' },
     inactive: { bg: 'bg-gray-100', text: 'text-gray-400', label: 'Hidden/Paused' },
+    draft: { bg: 'bg-slate-100', text: 'text-slate-600', label: 'In-Progress Draft' },
   }
 
   const config = statusConfig[status] || statusConfig.inactive

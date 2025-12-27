@@ -1,9 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { 
-  FiPackage, FiSearch, FiEye, FiTruck, FiCheckCircle, 
-  FiClock, FiDollarSign, FiShoppingBag, FiRefreshCw, 
+import {
+  FiPackage, FiSearch, FiEye, FiTruck, FiCheckCircle,
+  FiClock, FiDollarSign, FiShoppingBag, FiRefreshCw,
   FiAlertCircle, FiSend, FiX
 } from 'react-icons/fi';
 import { toast } from 'react-hot-toast';
@@ -32,7 +32,7 @@ export default function AdminOrdersPage() {
         router.push('/login');
         return;
       }
-      
+
       if (user && user.role !== 'admin') {
         toast.error('Access denied. Admin account required.');
         router.push('/');
@@ -56,7 +56,7 @@ export default function AdminOrdersPage() {
       const response = await axios.get(`/api/admin/orders?${params}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
-      
+
       if (response.data.success) {
         setOrders(response.data.orders);
         setStats(response.data.stats);
@@ -110,7 +110,7 @@ export default function AdminOrdersPage() {
     try {
       const response = await axios.post(
         `/api/admin/orders/${selectedOrder._id}/assign-shiprocket`,
-        { 
+        {
           courierId: courierId,
           adminId: user._id
         },
@@ -290,24 +290,22 @@ export default function AdminOrdersPage() {
             {statusFilters.map(filter => {
               const Icon = filter.icon;
               const count = filter.value === 'all' ? stats?.total : stats?.[filter.value] || 0;
-              
+
               return (
                 <button
                   key={filter.value}
                   onClick={() => setSelectedStatus(filter.value)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition ${
-                    selectedStatus === filter.value
-                      ? 'bg-blue-600 text-white shadow-lg'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition ${selectedStatus === filter.value
+                    ? 'bg-blue-600 text-white shadow-lg'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
                 >
                   <Icon />
                   <span>{filter.label}</span>
-                  <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${
-                    selectedStatus === filter.value
-                      ? 'bg-white text-blue-600'
-                      : 'bg-white text-gray-700'
-                  }`}>
+                  <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${selectedStatus === filter.value
+                    ? 'bg-white text-blue-600'
+                    : 'bg-white text-gray-700'
+                    }`}>
                     {count}
                   </span>
                 </button>
@@ -327,8 +325,8 @@ export default function AdminOrdersPage() {
             <FiPackage className="text-6xl text-gray-300 mx-auto mb-4" />
             <h2 className="text-2xl font-bold text-gray-900 mb-2">No Orders Found</h2>
             <p className="text-gray-600">
-              {searchTerm || selectedStatus !== 'all' 
-                ? 'Try adjusting your filters' 
+              {searchTerm || selectedStatus !== 'all'
+                ? 'Try adjusting your filters'
                 : 'No orders available'}
             </p>
           </div>
@@ -354,8 +352,8 @@ export default function AdminOrdersPage() {
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4 p-4 bg-gray-50 rounded-lg">
                     <div>
                       <p className="text-xs text-gray-600 mb-1">Customer</p>
-                      <p className="font-semibold text-gray-900">{order.shippingAddress.name}</p>
-                      <p className="text-sm text-gray-600">{order.shippingAddress.phone}</p>
+                      <p className="font-semibold text-gray-900">{order.shippingAddress?.name || 'N/A'}</p>
+                      <p className="text-sm text-gray-600">{order.shippingAddress?.phone || 'N/A'}</p>
                     </div>
                     <div>
                       <p className="text-xs text-gray-600 mb-1">Seller</p>
@@ -366,7 +364,7 @@ export default function AdminOrdersPage() {
                     <div>
                       <p className="text-xs text-gray-600 mb-1">Delivery Address</p>
                       <p className="text-sm text-gray-900">
-                        {order.shippingAddress.city}, {order.shippingAddress.state} - {order.shippingAddress.pincode}
+                        {order.shippingAddress?.city}, {order.shippingAddress?.state} - {order.shippingAddress?.pincode}
                       </p>
                     </div>
                   </div>

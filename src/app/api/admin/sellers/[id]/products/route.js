@@ -1,40 +1,42 @@
-import { NextResponse } from 'next/server'
-import connectDB from '@/lib/db/mongodb'
-import Product from '@/lib/db/models/Product'
-import mongoose from 'mongoose'
+import { NextResponse } from "next/server";
+import connectDB from "@/lib/db/mongodb";
+import Product from "@/lib/db/models/Product";
+import mongoose from "mongoose";
 
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic";
 
 export async function GET(request, { params }) {
   try {
-    await connectDB()
+    await connectDB();
 
-    console.log('📦 Fetching products for seller:', params.id)
+    // Await params before accessing its properties
+    const { id } = await params;
 
-    if (!mongoose.Types.ObjectId.isValid(params.id)) {
+    console.log("📦 Fetching products for seller:", id);
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json(
-        { success: false, message: 'Invalid Seller ID' },
+        { success: false, message: "Invalid Seller ID" },
         { status: 400 }
-      )
+      );
     }
 
-    const products = await Product.find({ sellerId: params._id })
-      .populate('category', 'name')
+    const products = await Product.find({ sellerId: id })
+      .populate("category", "name")
       .sort({ createdAt: -1 })
-      .lean()
+      .lean();
 
-    console.log('✅ Products found:', products.length)
+    console.log("✅ Products found:", products.length);
 
     return NextResponse.json({
       success: true,
-      products: products
-    })
-
+      products: products,
+    });
   } catch (error) {
-    console.error('❌ Get products error:', error)
+    console.error("❌ Get products error:", error);
     return NextResponse.json(
       { success: false, message: error.message },
       { status: 500 }
-    )
+    );
   }
 }

@@ -1,286 +1,294 @@
-// seller/(seller)/shipping/page.jsx
 'use client'
 
 import { useState, useEffect } from 'react'
-import {
-  Truck,
-  Package,
-  MapPin,
-  Plus,
-  Edit,
-  Trash2,
-  ChevronRight,
-  ShieldCheck,
-  Zap,
-  Clock,
-  Navigation,
-  Box,
-  Globe,
-  RefreshCw,
-  MoreVertical,
-  CheckCircle2
-} from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
+import axios from 'axios'
 import { useAuth } from '@/lib/context/AuthContext'
-import { formatPrice } from '@/lib/utils'
+import {
+   Truck,
+   Package,
+   CheckCircle2,
+   Printer,
+   Search,
+   ChevronRight,
+   Filter,
+   Box,
+   Clock,
+   Download,
+   Eye
+} from 'lucide-react'
 import { toast } from 'react-hot-toast'
 
-export default function SellerShipping() {
-  const { token } = useAuth()
-  const [shippingRules, setShippingRules] = useState([])
-  const [pickupAddress, setPickupAddress] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [showAddForm, setShowAddForm] = useState(false)
+export default function ShippingPage() {
+   const { token } = useAuth()
+   const [loading, setLoading] = useState(true)
+   const [data, setData] = useState(null)
+   const [activeTab, setActiveTab] = useState('pending')
+   const [searchQuery, setSearchQuery] = useState('')
 
-  useEffect(() => {
-    if (token) fetchShippingSettings()
-  }, [token])
-
-  const fetchShippingSettings = async () => {
-    try {
-      setLoading(true)
-      const res = await fetch('/api/seller/shipping', {
-        headers: { Authorization: `Bearer ${token}` }
-      })
-      const data = await res.json()
-      if (data.success) {
-        setShippingRules(data.shippingRules)
-        setPickupAddress(data.pickupAddress)
+   useEffect(() => {
+      if (token) {
+         fetchShippingData()
       }
-    } catch (error) {
-      console.error('Error fetching shipping settings:', error)
-      toast.error('Failed to retrieve logistics logic')
-    } finally {
-      setLoading(false)
-    }
-  }
+   }, [token])
 
-  if (loading) {
-     return (
-         <div className="flex flex-col items-center justify-center min-h-screen space-y-4">
-             <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
-             <p className="text-gray-400 font-black uppercase tracking-widest text-[10px]">Accessing Logistics Protocol...</p>
-         </div>
-     )
-  }
+   const fetchShippingData = async () => {
+      try {
+         setLoading(true)
+         const res = await axios.get('/api/seller/shipping', {
+            headers: { Authorization: `Bearer ${token}` }
+         })
+         if (res.data.success) {
+            setData(res.data)
+         }
+      } catch (err) {
+         toast.error('Failed to load shipping data')
+      } finally {
+         setLoading(false)
+      }
+   }
 
-  return (
-    <div className="min-h-screen bg-[#F8FAFC] p-6 lg:p-8">
-      <div className="max-w-[1500px] mx-auto space-y-8">
-        
-        {/* Modern Header */}
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-               <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white shadow-lg shadow-indigo-500/20">
-                  <Truck size={18} />
-               </div>
-               <span className="text-[10px] font-black text-indigo-600 uppercase tracking-widest bg-indigo-50 px-3 py-1 rounded-full">Fulfillment Logic</span>
+   const handleAction = async (orderId, action) => {
+      try {
+         const res = await axios.post('/api/seller/shipping', { orderId, action }, {
+            headers: { Authorization: `Bearer ${token}` }
+         })
+         if (res.data.success) {
+            toast.success('Action successfully executed')
+            fetchShippingData()
+         }
+      } catch (err) {
+         toast.error('Action failed')
+      }
+   }
+
+   const filteredOrders = data?.orders?.filter(order => {
+      const matchesTab = activeTab === 'all' ||
+         (activeTab === 'pending' && ['confirmed', 'processing'].includes(order.status)) ||
+         (activeTab === 'ready' && order.status === 'ready_for_pickup') ||
+         (activeTab === 'shipped' && order.status === 'shipped');
+
+      const matchesSearch = order.orderNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
+         order.customer.toLowerCase().includes(searchQuery.toLowerCase());
+
+      return matchesTab && matchesSearch;
+   });
+
+   if (loading) {
+      return (
+         <div className="min-h-screen flex items-center justify-center p-8 bg-[#F8FAFC]">
+            <div className="flex flex-col items-center gap-4">
+               <div className="w-12 h-12 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin" />
+               <p className="text-xs font-black uppercase tracking-widest text-slate-400">Loading Fleet...</p>
             </div>
-            <h1 className="text-4xl font-black text-gray-900 tracking-tighter">Shipping Architecture</h1>
-            <p className="text-gray-500 font-medium mt-1">Configure delivery boundaries, pickup terminals and pricing rules</p>
-          </div>
-
-          <button 
-             onClick={() => setShowAddForm(true)}
-             className="px-8 py-4 bg-indigo-600 text-white rounded-[1.5rem] font-black uppercase text-[11px] tracking-widest shadow-2xl shadow-indigo-500/20 hover:bg-indigo-700 transition-all active:scale-95 flex items-center justify-center gap-2"
-          >
-             <Plus size={18} />
-             Define Shipping Rule
-          </button>
-        </div>
-
-        {/* Status Metrics */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-           <LogisticsMetric 
-              label="Active Protocols" 
-              value={shippingRules.filter(r => r.isActive).length} 
-              icon={Zap} 
-              color="indigo" 
-           />
-           <LogisticsMetric 
-              label="Coverage Range" 
-              value="All India" 
-              icon={Globe} 
-              color="emerald" 
-           />
-           <LogisticsMetric 
-              label="SLA Efficiency" 
-              value="3-4 Days" 
-              icon={Clock} 
-              color="blue" 
-           />
-        </div>
-
-        {/* Shipping Rules Table */}
-        <div className="bg-white rounded-[2.5rem] shadow-sm border border-gray-100/50 overflow-hidden">
-           <div className="p-8 border-b border-gray-100 flex items-center justify-between bg-gray-50/30">
-              <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest">Global Shipping Rules</h3>
-              <div className="flex items-center gap-4">
-                 <button onClick={fetchShippingSettings} className="p-2 text-gray-300 hover:text-indigo-600 transition-colors">
-                    <RefreshCw size={18} />
-                 </button>
-              </div>
-           </div>
-
-           <div className="divide-y divide-gray-100">
-              {shippingRules.length === 0 ? (
-                 <div className="text-center py-32 space-y-6">
-                    <div className="w-20 h-20 bg-indigo-50 rounded-full flex items-center justify-center mx-auto">
-                       <Navigation size={32} className="text-indigo-300" />
-                    </div>
-                    <div className="max-w-sm mx-auto">
-                       <h4 className="text-xl font-black text-gray-900 tracking-tight">Logistics void detected</h4>
-                       <p className="text-gray-500 text-sm mt-2 mb-6">Without shipping rules, customers won't be able to calculate delivery costs for their geozone.</p>
-                       <button 
-                          onClick={() => setShowAddForm(true)}
-                          className="px-6 py-3 bg-gray-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-lg hover:bg-black transition-all"
-                       >
-                          Initialize Protocol
-                       </button>
-                    </div>
-                 </div>
-              ) : (
-                 shippingRules.map((rule, idx) => (
-                    <motion.div 
-                       key={rule.id || idx}
-                       initial={{ opacity: 0, x: -10 }}
-                       animate={{ opacity: 1, x: 0 }}
-                       transition={{ delay: idx * 0.05 }}
-                       className="p-8 group hover:bg-gray-50/50 transition-all flex flex-col sm:flex-row items-center justify-between gap-8"
-                    >
-                       <div className="flex items-center gap-6 w-full sm:w-auto">
-                          <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-sm border ${
-                             rule.isActive ? 'bg-indigo-50 border-indigo-100 text-indigo-600' : 'bg-gray-50 border-gray-100 text-gray-400'
-                          }`}>
-                             <Truck size={24} />
-                          </div>
-                          <div>
-                             <div className="flex items-center gap-3 mb-1">
-                                <h4 className="text-lg font-black text-gray-900 tracking-tight leading-none">{rule.name}</h4>
-                                <span className={`px-2 py-0.5 rounded-lg border text-[9px] font-black uppercase tracking-tight ${
-                                   rule.isActive ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-gray-50 text-gray-400 border-gray-100'
-                                }`}>
-                                   {rule.isActive ? 'Active' : 'Dormant'}
-                                </span>
-                             </div>
-                             <div className="flex items-center gap-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-2">
-                                <span className="flex items-center gap-1"><Package size={12} className="text-indigo-400" /> {rule.type === 'weight' ? 'Weight Multiplier' : 'Order Momentum'}</span>
-                                <span className="flex items-center gap-1"><Clock size={12} className="text-indigo-400" /> {rule.deliveryTime}</span>
-                             </div>
-                          </div>
-                       </div>
-
-                       <div className="flex flex-wrap gap-12 flex-1 justify-center sm:justify-start">
-                          <div>
-                             <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1.5 leading-none">Threshold Conditions</p>
-                             <p className="text-xs font-black text-gray-800">
-                                {rule.type === 'weight' ? `${rule.conditions.minWeight}kg — ${rule.conditions.maxWeight}kg` : `Above ${formatPrice(rule.conditions.minOrderValue)}`}
-                             </p>
-                          </div>
-                          <div>
-                             <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1.5 leading-none">Base Liquidation</p>
-                             <p className="text-base font-black text-indigo-600">{formatPrice(rule.pricing.baseRate)}</p>
-                          </div>
-                          {rule.pricing.freeShippingThreshold && (
-                             <div>
-                                <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1.5 leading-none">Zero-Cost Floor</p>
-                                <p className="text-xs font-black text-emerald-600">Free @ {formatPrice(rule.pricing.freeShippingThreshold)}</p>
-                             </div>
-                          )}
-                       </div>
-
-                       <div className="flex items-center gap-2">
-                          <button className="p-3 bg-white border border-gray-100 rounded-xl text-gray-400 hover:text-indigo-600 hover:shadow-md transition-all">
-                             <Edit size={16} />
-                          </button>
-                          <button className="p-3 bg-white border border-gray-100 rounded-xl text-gray-400 hover:text-rose-600 hover:shadow-md transition-all">
-                             <Trash2 size={16} />
-                          </button>
-                       </div>
-                    </motion.div>
-                 ))
-              )}
-           </div>
-        </div>
-
-        {/* Pickup Terminal Section */}
-        <div className="bg-white rounded-[2.5rem] p-10 shadow-sm border border-gray-100/50">
-           <div className="flex items-center justify-between mb-8">
-              <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest flex items-center gap-2">
-                 <Box size={20} className="text-indigo-600" />
-                 Pickup Dispatch Hub
-              </h3>
-           </div>
-           
-           {pickupAddress ? (
-              <div className="flex flex-col lg:flex-row gap-10">
-                 <div className="flex-1 bg-gray-50/50 rounded-[2rem] p-8 border border-gray-100 flex items-start gap-6 group hover:bg-gray-50 transition-all">
-                    <div className="w-16 h-16 rounded-2xl bg-white border border-gray-100 flex items-center justify-center text-indigo-600 shadow-sm">
-                       <MapPin size={28} />
-                    </div>
-                    <div>
-                       <div className="flex items-center gap-3 mb-2">
-                          <h4 className="text-lg font-black text-gray-900 tracking-tighter">{pickupAddress.name}</h4>
-                          <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest bg-emerald-50 px-2 py-0.5 rounded-lg border border-emerald-100">Primary Hub</span>
-                       </div>
-                       <div className="space-y-1">
-                          <p className="text-sm font-bold text-gray-500">{pickupAddress.street}</p>
-                          <p className="text-sm font-black text-gray-700">{pickupAddress.city}, {pickupAddress.state} {pickupAddress.pincode}</p>
-                          <p className="text-xs font-black text-indigo-500 uppercase tracking-widest mt-3 flex items-center gap-1.5"><Clock size={12} /> Contact Route: {pickupAddress.phone}</p>
-                       </div>
-                    </div>
-                 </div>
-                 
-                 <div className="lg:w-72 flex flex-col justify-center">
-                    <button 
-                       className="w-full py-4 bg-white border border-gray-200 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:border-indigo-200 hover:text-indigo-600 transition-all active:scale-95 flex items-center justify-center gap-2"
-                    >
-                       <Edit size={16} />
-                       Modify Hub Coordinates
-                    </button>
-                    <p className="text-[9px] font-bold text-gray-300 uppercase tracking-widest text-center mt-3">Verified Dispatch Terminal</p>
-                 </div>
-              </div>
-           ) : (
-              <div className="bg-gray-50/30 border-2 border-dashed border-gray-100 rounded-[2.5rem] p-16 text-center space-y-6">
-                 <div className="w-20 h-20 bg-white border border-gray-100 rounded-3xl flex items-center justify-center mx-auto shadow-sm">
-                    <MapPin size={32} className="text-gray-200" />
-                 </div>
-                 <div className="max-w-sm mx-auto">
-                    <h4 className="text-xl font-black text-gray-900 tracking-tighter">Hub Coordinates Missing</h4>
-                    <p className="text-gray-500 text-sm mt-2 mb-8 italic">Courier partners require a verified dispatch address to facilitate shipment pickup protocols.</p>
-                    <button className="px-8 py-4 bg-gray-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-xl hover:bg-black transition-all">
-                       Initialize Hub Terminal
-                    </button>
-                 </div>
-              </div>
-           )}
-        </div>
-      </div>
-    </div>
-  )
-}
-
-function LogisticsMetric({ label, value, icon: Icon, color }) {
-   const colors = {
-      indigo: 'text-indigo-600 bg-indigo-50 border-indigo-100',
-      emerald: 'text-emerald-600 bg-emerald-50 border-emerald-100',
-      blue: 'text-blue-600 bg-blue-50 border-blue-100',
+         </div>
+      )
    }
 
    return (
-      <div className="bg-white p-6 rounded-[2.2rem] shadow-sm border border-gray-100/50 group overflow-hidden relative">
-         <div className="flex items-center gap-4 relative z-10">
-            <div className={`p-4 rounded-xl shadow-sm border ${colors[color]} group-hover:scale-110 transition-transform duration-500`}>
-               <Icon size={22} />
+      <div className="min-h-screen bg-[#F8FAFC] pb-20">
+         <div className="max-w-[1400px] mx-auto p-6 lg:p-10 space-y-8">
+
+            {/* Header */}
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+               <div>
+                  <h1 className="text-4xl font-black text-slate-900 tracking-tight">Shipping Hub <span className="text-emerald-600">.</span></h1>
+                  <p className="text-slate-500 font-bold text-sm mt-1">Manage manifests, labels, and courier handovers.</p>
+               </div>
+               <div className="flex items-center gap-3">
+                  <button className="flex items-center gap-2 px-6 py-3 bg-emerald-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-200">
+                     <Printer size={14} /> Bulk Print Labels
+                  </button>
+               </div>
             </div>
-            <div>
-               <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1.5">{label}</p>
-               <p className="text-2xl font-black text-gray-900 tracking-tight">{value}</p>
+
+            {/* Shipping Metrics */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+               <ShippingStat
+                  title="To manifest"
+                  value={data?.stats?.pending}
+                  icon={Package}
+                  color="text-amber-600"
+                  bgColor="bg-amber-100"
+               />
+               <ShippingStat
+                  title="Ready for Pickup"
+                  value={data?.stats?.ready}
+                  icon={Clock}
+                  color="text-blue-600"
+                  bgColor="bg-blue-100"
+               />
+               <ShippingStat
+                  title="Shipped Today"
+                  value={data?.stats?.shippedToday}
+                  icon={CheckCircle2}
+                  color="text-emerald-600"
+                  bgColor="bg-emerald-100"
+               />
+               <ShippingStat
+                  title="Pickup Point"
+                  value={data?.stats?.pickupPoint}
+                  icon={Truck}
+                  color="text-indigo-600"
+                  bgColor="bg-indigo-100"
+               />
             </div>
+
+            {/* Logistics Controls Area */}
+            <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-200/20 overflow-hidden">
+
+               {/* Filters Header */}
+               <div className="p-4 border-b border-slate-50 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  <div className="flex bg-slate-50/50 p-1 rounded-2xl border border-slate-100">
+                     {['pending', 'ready', 'shipped', 'all'].map((tab) => (
+                        <button
+                           key={tab}
+                           onClick={() => setActiveTab(tab)}
+                           className={`px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === tab ? 'bg-white text-slate-900 shadow-sm border border-slate-100' : 'text-slate-400 hover:text-slate-600'
+                              }`}
+                        >
+                           {tab}
+                        </button>
+                     ))}
+                  </div>
+
+                  <div className="relative">
+                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" size={16} />
+                     <input
+                        type="text"
+                        placeholder="Search Shipment ID or Client..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="pl-12 pr-6 py-3 bg-slate-50 border border-slate-100 rounded-2xl text-xs font-bold outline-none focus:bg-white focus:border-emerald-500 transition-all w-full md:w-[300px]"
+                     />
+                  </div>
+               </div>
+
+               {/* Shipments Table */}
+               <div className="overflow-x-auto">
+                  <table className="w-full">
+                     <thead>
+                        <tr className="bg-slate-50/30">
+                           <th className="text-left px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Shipment Detail</th>
+                           <th className="text-left px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Destination</th>
+                           <th className="text-left px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Courier Partner</th>
+                           <th className="text-left px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Status</th>
+                           <th className="text-right px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Operations</th>
+                        </tr>
+                     </thead>
+                     <tbody className="divide-y divide-slate-50">
+                        {filteredOrders?.length > 0 ? (
+                           filteredOrders.map((order) => (
+                              <tr key={order.id} className="group hover:bg-slate-50/50 transition-colors">
+                                 <td className="px-8 py-6">
+                                    <div className="flex items-center gap-4">
+                                       <div className="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center text-slate-400">
+                                          <Box size={20} />
+                                       </div>
+                                       <div>
+                                          <p className="text-xs font-black text-slate-900">#{order.orderNumber}</p>
+                                          <p className="text-[10px] font-bold text-slate-400">{new Date(order.date).toLocaleDateString()}</p>
+                                       </div>
+                                    </div>
+                                 </td>
+                                 <td className="px-8 py-6">
+                                    <p className="text-xs font-black text-slate-900">{order.customer}</p>
+                                    <p className="text-[10px] font-bold text-slate-400">{order.itemsCount} Items in Package</p>
+                                 </td>
+                                 <td className="px-8 py-6">
+                                    <div className="flex items-center gap-2">
+                                       <div className="w-6 h-6 bg-slate-900 rounded-lg flex items-center justify-center">
+                                          <Truck size={12} className="text-white" />
+                                       </div>
+                                       <span className="text-xs font-black text-slate-700">{order.courier}</span>
+                                    </div>
+                                    {order.trackingId && <p className="text-[9px] font-bold text-emerald-600 mt-1 uppercase tracking-tight">{order.trackingId}</p>}
+                                 </td>
+                                 <td className="px-8 py-6">
+                                    <ShipmentStatus status={order.status} />
+                                 </td>
+                                 <td className="px-8 py-6 text-right">
+                                    <div className="flex items-center justify-end gap-2">
+                                       {['confirmed', 'processing'].includes(order.status) && (
+                                          <button
+                                             onClick={() => handleAction(order.id, 'READY_FOR_PICKUP')}
+                                             className="px-4 py-2 bg-emerald-50 text-emerald-600 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-600 hover:text-white transition-all border border-emerald-100"
+                                          >
+                                             Mark Ready
+                                          </button>
+                                       )}
+                                       {order.status === 'ready_for_pickup' && (
+                                          <button className="p-2 text-slate-400 hover:text-emerald-600 transition-colors">
+                                             <Printer size={16} />
+                                          </button>
+                                       )}
+                                       <button className="p-2 text-slate-400 hover:text-indigo-600 transition-colors">
+                                          <Eye size={18} />
+                                       </button>
+                                    </div>
+                                 </td>
+                              </tr>
+                           ))
+                        ) : (
+                           <tr>
+                              <td colSpan="5" className="py-20 text-center">
+                                 <div className="flex flex-col items-center gap-2 grayscale">
+                                    <Box size={40} className="text-slate-200" />
+                                    <p className="text-xs font-black text-slate-400 uppercase tracking-widest">No matching shipments found</p>
+                                 </div>
+                              </td>
+                           </tr>
+                        )}
+                     </tbody>
+                  </table>
+               </div>
+            </div>
+
+            {/* Courier Pickup Banner */}
+            <div className="bg-slate-900 rounded-[2.5rem] p-10 text-white relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
+               <div className="relative z-10 space-y-2">
+                  <span className="text-emerald-400 text-[10px] font-black uppercase tracking-[0.3em]">Logistics Alert</span>
+                  <h3 className="text-2xl font-black tracking-tight">Daily Courier Pickup Cycle</h3>
+                  <p className="text-slate-400 text-sm font-medium">Last pickup scan occurred at 04:30 PM. Next window in 14 hours.</p>
+               </div>
+               <button className="relative z-10 px-8 py-4 bg-white text-slate-900 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-emerald-50 transition-all shadow-xl shadow-white/5 active:scale-95">
+                  DOWNLOAD DAILY MANIFEST
+               </button>
+               <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-600 opacity-20 rounded-full blur-[100px]" />
+            </div>
+
          </div>
-         <div className="absolute top-0 right-0 w-24 h-24 bg-gray-50/50 -mr-12 -mt-12 rounded-full pointer-events-none group-hover:scale-125 transition-transform duration-700" />
       </div>
+   )
+}
+
+function ShippingStat({ title, value, icon: Icon, color, bgColor }) {
+   return (
+      <div className="bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-xl shadow-slate-200/20 flex items-center gap-6 group hover:translate-y-[-4px] transition-all">
+         <div className={`p-4 rounded-2xl ${bgColor} ${color} group-hover:scale-110 transition-transform`}>
+            <Icon size={24} />
+         </div>
+         <div>
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{title}</p>
+            <p className="text-2xl font-black text-slate-900 tracking-tight">{value || 0}</p>
+         </div>
+      </div>
+   )
+}
+
+function ShipmentStatus({ status }) {
+   const configs = {
+      confirmed: { label: 'Awaiting Pack', color: 'bg-amber-50 text-amber-600 border-amber-100' },
+      processing: { label: 'In Packing', color: 'bg-blue-50 text-blue-600 border-blue-100' },
+      ready_for_pickup: { label: 'Ready for Fleet', color: 'bg-indigo-50 text-indigo-600 border-indigo-100' },
+      shipped: { label: 'In Transit', color: 'bg-emerald-50 text-emerald-600 border-emerald-100' },
+   }
+
+   const config = configs[status] || { label: status, color: 'bg-slate-50 text-slate-600 border-slate-100' }
+
+   return (
+      <span className={`px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border ${config.color}`}>
+         {config.label}
+      </span>
    )
 }

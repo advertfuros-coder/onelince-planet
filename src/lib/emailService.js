@@ -1,15 +1,24 @@
-import nodemailer from 'nodemailer';
+import nodemailer from "nodemailer";
 
 class EmailService {
   constructor() {
+    const smtpPort = parseInt(process.env.SMTP_PORT) || 587;
+    const isSecure = process.env.SMTP_SECURE === "true";
+
     this.transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
-      port: parseInt(process.env.SMTP_PORT),
-      secure: process.env.SMTP_SECURE === 'true',
+      port: smtpPort,
+      secure: isSecure, // true for 465 (SSL), false for other ports (use STARTTLS)
       auth: {
         user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS
-      }
+        pass: process.env.SMTP_PASS,
+      },
+      tls: {
+        rejectUnauthorized: false,
+      },
+      connectionTimeout: 10000,
+      greetingTimeout: 10000,
+      socketTimeout: 10000,
     });
   }
 
@@ -20,14 +29,14 @@ class EmailService {
         to,
         subject,
         html,
-        attachments
+        attachments,
       };
 
       const info = await this.transporter.sendMail(mailOptions);
-      console.log('✅ Email sent:', info.messageId);
+      console.log("✅ Email sent:", info.messageId);
       return { success: true, messageId: info.messageId };
     } catch (error) {
-      console.error('❌ Email send error:', error);
+      console.error("❌ Email send error:", error);
       throw error;
     }
   }
@@ -39,9 +48,9 @@ class EmailService {
   // 1. Email Verification
   async sendVerificationEmail(user, verificationToken) {
     const verificationUrl = `${process.env.NEXT_PUBLIC_URL}/verify-email?token=${verificationToken}`;
-    
+
     const html = `
-      ${this.getEmailHeader('Verify Your Email')}
+      ${this.getEmailHeader("Verify Your Email")}
       <div class="content">
         <h2>Welcome to Online Planet! 🎉</h2>
         <p>Hi ${user.name},</p>
@@ -63,15 +72,15 @@ class EmailService {
 
     return await this.sendEmail({
       to: user.email,
-      subject: 'Verify Your Email - Online Planet',
-      html
+      subject: "Verify Your Email - Online Planet",
+      html,
     });
   }
 
   // 2. Welcome Email (After Verification)
   async sendWelcomeEmail(user) {
     const html = `
-      ${this.getEmailHeader('Welcome to Online Planet!')}
+      ${this.getEmailHeader("Welcome to Online Planet!")}
       <div class="content">
         <h2>Welcome Aboard! 🎊</h2>
         <p>Hi ${user.name},</p>
@@ -88,7 +97,9 @@ class EmailService {
         </div>
         
         <div class="button-container">
-          <a href="${process.env.NEXT_PUBLIC_URL}/products" class="button">Start Shopping</a>
+          <a href="${
+            process.env.NEXT_PUBLIC_URL
+          }/products" class="button">Start Shopping</a>
         </div>
       </div>
       ${this.getEmailFooter()}
@@ -96,17 +107,17 @@ class EmailService {
 
     return await this.sendEmail({
       to: user.email,
-      subject: 'Welcome to Online Planet!',
-      html
+      subject: "Welcome to Online Planet!",
+      html,
     });
   }
 
   // 3. Password Reset
   async sendPasswordResetEmail(user, resetToken) {
     const resetUrl = `${process.env.NEXT_PUBLIC_URL}/reset-password?token=${resetToken}`;
-    
+
     const html = `
-      ${this.getEmailHeader('Reset Your Password')}
+      ${this.getEmailHeader("Reset Your Password")}
       <div class="content">
         <h2>Password Reset Request</h2>
         <p>Hi ${user.name},</p>
@@ -133,15 +144,15 @@ class EmailService {
 
     return await this.sendEmail({
       to: user.email,
-      subject: 'Reset Your Password - Online Planet',
-      html
+      subject: "Reset Your Password - Online Planet",
+      html,
     });
   }
 
   // 4. Order Confirmation
   async sendOrderConfirmation(order) {
     const html = `
-      ${this.getEmailHeader('Order Confirmed!')}
+      ${this.getEmailHeader("Order Confirmed!")}
       <div class="content">
         <h2>Thank You for Your Order! 🎉</h2>
         <p>Hi ${order.shippingAddress.name},</p>
@@ -171,19 +182,27 @@ class EmailService {
         
         <h3>Items Ordered:</h3>
         <div class="items-table">
-          ${order.items.map(item => `
+          ${order.items
+            .map(
+              (item) => `
             <div class="item-row">
               <div class="item-info">
                 <strong>${item.name}</strong><br>
                 <small>Quantity: ${item.quantity}</small>
               </div>
-              <div class="item-price">₹${(item.price * item.quantity).toLocaleString()}</div>
+              <div class="item-price">₹${(
+                item.price * item.quantity
+              ).toLocaleString()}</div>
             </div>
-          `).join('')}
+          `
+            )
+            .join("")}
         </div>
         
         <div class="button-container">
-          <a href="${process.env.NEXT_PUBLIC_URL}/orders/${order.orderNumber}" class="button">Track Order</a>
+          <a href="${process.env.NEXT_PUBLIC_URL}/orders/${
+      order.orderNumber
+    }" class="button">Track Order</a>
         </div>
       </div>
       ${this.getEmailFooter()}
@@ -192,29 +211,34 @@ class EmailService {
     return await this.sendEmail({
       to: order.shippingAddress.email,
       subject: `Order Confirmation - #${order.orderNumber}`,
-      html
+      html,
     });
   }
 
   // 5. Order Status Update
   async sendOrderStatusUpdate(order, newStatus, message) {
     const statusEmojis = {
-      confirmed: '✅',
-      processing: '⚙️',
-      ready_for_pickup: '📦',
-      pickup: '🚚',
-      shipped: '🚀',
-      delivered: '🎉',
-      cancelled: '❌',
-      returned: '↩️'
+      confirmed: "✅",
+      processing: "⚙️",
+      ready_for_pickup: "📦",
+      pickup: "🚚",
+      shipped: "🚀",
+      delivered: "🎉",
+      cancelled: "❌",
+      returned: "↩️",
     };
 
     const html = `
-      ${this.getEmailHeader('Order Status Update')}
+      ${this.getEmailHeader("Order Status Update")}
       <div class="content">
-        <h2>Order Status Updated ${statusEmojis[newStatus] || '📋'}</h2>
+        <h2>Order Status Updated ${statusEmojis[newStatus] || "📋"}</h2>
         <p>Hi ${order.shippingAddress.name},</p>
-        <p>${message || `Your order status has been updated to: <strong>${newStatus.replace(/_/g, ' ').toUpperCase()}</strong>`}</p>
+        <p>${
+          message ||
+          `Your order status has been updated to: <strong>${newStatus
+            .replace(/_/g, " ")
+            .toUpperCase()}</strong>`
+        }</p>
         
         <div class="order-summary">
           <table style="width: 100%;">
@@ -224,19 +248,27 @@ class EmailService {
             </tr>
             <tr>
               <td><strong>Current Status:</strong></td>
-              <td><strong>${newStatus.replace(/_/g, ' ').toUpperCase()}</strong></td>
+              <td><strong>${newStatus
+                .replace(/_/g, " ")
+                .toUpperCase()}</strong></td>
             </tr>
-            ${order.shiprocket?.awbCode ? `
+            ${
+              order.shiprocket?.awbCode
+                ? `
               <tr>
                 <td><strong>Tracking Number:</strong></td>
                 <td>${order.shiprocket.awbCode}</td>
               </tr>
-            ` : ''}
+            `
+                : ""
+            }
           </table>
         </div>
         
         <div class="button-container">
-          <a href="${process.env.NEXT_PUBLIC_URL}/orders/${order.orderNumber}" class="button">View Order Details</a>
+          <a href="${process.env.NEXT_PUBLIC_URL}/orders/${
+      order.orderNumber
+    }" class="button">View Order Details</a>
         </div>
       </div>
       ${this.getEmailFooter()}
@@ -245,14 +277,14 @@ class EmailService {
     return await this.sendEmail({
       to: order.shippingAddress.email,
       subject: `Order Update - #${order.orderNumber}`,
-      html
+      html,
     });
   }
 
   // 6. Order Shipped
   async sendOrderShipped(order) {
     const html = `
-      ${this.getEmailHeader('Order Shipped!')}
+      ${this.getEmailHeader("Order Shipped!")}
       <div class="content">
         <h2>Your Order is On The Way! 🚀</h2>
         <p>Hi ${order.shippingAddress.name},</p>
@@ -267,11 +299,11 @@ class EmailService {
             </tr>
             <tr>
               <td><strong>Courier:</strong></td>
-              <td>${order.shiprocket?.courierName || 'N/A'}</td>
+              <td>${order.shiprocket?.courierName || "N/A"}</td>
             </tr>
             <tr>
               <td><strong>Tracking Number:</strong></td>
-              <td><strong>${order.shiprocket?.awbCode || 'N/A'}</strong></td>
+              <td><strong>${order.shiprocket?.awbCode || "N/A"}</strong></td>
             </tr>
             <tr>
               <td><strong>Expected Delivery:</strong></td>
@@ -281,7 +313,9 @@ class EmailService {
         </div>
         
         <div class="button-container">
-          <a href="https://shiprocket.co/tracking/${order.shiprocket?.awbCode}" class="button">Track Shipment</a>
+          <a href="https://shiprocket.co/tracking/${
+            order.shiprocket?.awbCode
+          }" class="button">Track Shipment</a>
         </div>
       </div>
       ${this.getEmailFooter()}
@@ -290,14 +324,14 @@ class EmailService {
     return await this.sendEmail({
       to: order.shippingAddress.email,
       subject: `Order Shipped - #${order.orderNumber}`,
-      html
+      html,
     });
   }
 
   // 7. Order Delivered with Invoice
   async sendOrderDelivered(order, invoiceHTML) {
     const html = `
-      ${this.getEmailHeader('Order Delivered!')}
+      ${this.getEmailHeader("Order Delivered!")}
       <div class="content">
         <h2>Order Delivered Successfully! 🎉</h2>
         <p>Hi ${order.shippingAddress.name},</p>
@@ -312,7 +346,9 @@ class EmailService {
             </tr>
             <tr>
               <td><strong>Delivered On:</strong></td>
-              <td>${new Date(order.shipping.deliveredAt).toLocaleDateString()}</td>
+              <td>${new Date(
+                order.shipping.deliveredAt
+              ).toLocaleDateString()}</td>
             </tr>
             <tr>
               <td><strong>Total Amount:</strong></td>
@@ -327,7 +363,9 @@ class EmailService {
         </div>
         
         <div class="button-container">
-          <a href="${process.env.NEXT_PUBLIC_URL}/orders/${order.orderNumber}" class="button">View Order Details</a>
+          <a href="${process.env.NEXT_PUBLIC_URL}/orders/${
+      order.orderNumber
+    }" class="button">View Order Details</a>
         </div>
         
         <div class="info-box" style="background: #e3f2fd;">
@@ -341,7 +379,7 @@ class EmailService {
     return await this.sendEmail({
       to: order.shippingAddress.email,
       subject: `Order Delivered - #${order.orderNumber}`,
-      html
+      html,
     });
   }
 
@@ -352,7 +390,7 @@ class EmailService {
   // 8. Seller Registration Confirmation
   async sendSellerRegistrationConfirmation(seller) {
     const html = `
-      ${this.getEmailHeader('Seller Registration Received')}
+      ${this.getEmailHeader("Seller Registration Received")}
       <div class="content">
         <h2>Thank You for Registering! 🎊</h2>
         <p>Hi ${seller.businessName},</p>
@@ -400,17 +438,17 @@ class EmailService {
 
     return await this.sendEmail({
       to: seller.email,
-      subject: 'Seller Registration Received - Online Planet',
-      html
+      subject: "Seller Registration Received - Online Planet",
+      html,
     });
   }
 
   // 9. Seller Approval
   async sendSellerApproval(seller) {
     const loginUrl = `${process.env.NEXT_PUBLIC_URL}/seller/login`;
-    
+
     const html = `
-      ${this.getEmailHeader('Congratulations! You\'re Approved!')}
+      ${this.getEmailHeader("Congratulations! You're Approved!")}
       <div class="content">
         <h2>🎉 Welcome to Online Planet Seller Network!</h2>
         <p>Hi ${seller.businessName},</p>
@@ -441,7 +479,7 @@ class EmailService {
             </tr>
             <tr>
               <td><strong>Store Name:</strong></td>
-              <td>${seller.storeInfo?.storeName || 'Not set'}</td>
+              <td>${seller.storeInfo?.storeName || "Not set"}</td>
             </tr>
             <tr>
               <td><strong>Email:</strong></td>
@@ -470,15 +508,16 @@ class EmailService {
 
     return await this.sendEmail({
       to: seller.email,
-      subject: 'Congratulations! Your Seller Account is Approved - Online Planet',
-      html
+      subject:
+        "Congratulations! Your Seller Account is Approved - Online Planet",
+      html,
     });
   }
 
   // 10. Seller Rejection
   async sendSellerRejection(seller, reason) {
     const html = `
-      ${this.getEmailHeader('Seller Application Update')}
+      ${this.getEmailHeader("Seller Application Update")}
       <div class="content">
         <h2>Application Status Update</h2>
         <p>Hi ${seller.businessName},</p>
@@ -506,15 +545,15 @@ class EmailService {
 
     return await this.sendEmail({
       to: seller.email,
-      subject: 'Seller Application Status - Online Planet',
-      html
+      subject: "Seller Application Status - Online Planet",
+      html,
     });
   }
 
   // 11. New Order Notification to Seller
   async sendNewOrderNotificationToSeller(seller, order) {
     const html = `
-      ${this.getEmailHeader('New Order Received!')}
+      ${this.getEmailHeader("New Order Received!")}
       <div class="content">
         <h2>🎉 You Have a New Order!</h2>
         <p>Hi ${seller.storeInfo?.storeName || seller.businessName},</p>
@@ -544,14 +583,20 @@ class EmailService {
         
         <h3>Items to Prepare:</h3>
         <div class="items-table">
-          ${order.items.map(item => `
+          ${order.items
+            .map(
+              (item) => `
             <div class="item-row">
               <div class="item-info">
                 <strong>${item.name}</strong><br>
-                <small>SKU: ${item.sku || 'N/A'} | Quantity: ${item.quantity}</small>
+                <small>SKU: ${item.sku || "N/A"} | Quantity: ${
+                item.quantity
+              }</small>
               </div>
             </div>
-          `).join('')}
+          `
+            )
+            .join("")}
         </div>
         
         <div class="info-box" style="background: #fff3e0;">
@@ -564,7 +609,9 @@ class EmailService {
         </div>
         
         <div class="button-container">
-          <a href="${process.env.NEXT_PUBLIC_URL}/seller/orders/${order._id}" class="button">View Order Details</a>
+          <a href="${process.env.NEXT_PUBLIC_URL}/seller/orders/${
+      order._id
+    }" class="button">View Order Details</a>
         </div>
       </div>
       ${this.getEmailFooter()}
@@ -573,14 +620,14 @@ class EmailService {
     return await this.sendEmail({
       to: seller.email,
       subject: `New Order Received - #${order.orderNumber}`,
-      html
+      html,
     });
   }
 
   // 12. Low Stock Alert to Seller
   async sendLowStockAlert(seller, product) {
     const html = `
-      ${this.getEmailHeader('Low Stock Alert')}
+      ${this.getEmailHeader("Low Stock Alert")}
       <div class="content">
         <h2>⚠️ Low Stock Alert</h2>
         <p>Hi ${seller.storeInfo?.storeName || seller.businessName},</p>
@@ -595,11 +642,13 @@ class EmailService {
             </tr>
             <tr>
               <td><strong>SKU:</strong></td>
-              <td>${product.sku || 'N/A'}</td>
+              <td>${product.sku || "N/A"}</td>
             </tr>
             <tr>
               <td><strong>Current Stock:</strong></td>
-              <td><strong style="color: #f44336;">${product.inventory?.stock || 0} units</strong></td>
+              <td><strong style="color: #f44336;">${
+                product.inventory?.stock || 0
+              } units</strong></td>
             </tr>
             <tr>
               <td><strong>Low Stock Threshold:</strong></td>
@@ -619,7 +668,9 @@ class EmailService {
         </div>
         
         <div class="button-container">
-          <a href="${process.env.NEXT_PUBLIC_URL}/seller/products/${product._id}/edit" class="button">Update Stock</a>
+          <a href="${process.env.NEXT_PUBLIC_URL}/seller/products/edit/${
+      product._id
+    }" class="button">Update Stock</a>
         </div>
       </div>
       ${this.getEmailFooter()}
@@ -628,14 +679,14 @@ class EmailService {
     return await this.sendEmail({
       to: seller.email,
       subject: `Low Stock Alert - ${product.name}`,
-      html
+      html,
     });
   }
 
   // 13. Out of Stock Alert
   async sendOutOfStockAlert(seller, product) {
     const html = `
-      ${this.getEmailHeader('Out of Stock Alert')}
+      ${this.getEmailHeader("Out of Stock Alert")}
       <div class="content">
         <h2>❌ Product Out of Stock</h2>
         <p>Hi ${seller.storeInfo?.storeName || seller.businessName},</p>
@@ -650,7 +701,7 @@ class EmailService {
             </tr>
             <tr>
               <td><strong>SKU:</strong></td>
-              <td>${product.sku || 'N/A'}</td>
+              <td>${product.sku || "N/A"}</td>
             </tr>
             <tr>
               <td><strong>Current Stock:</strong></td>
@@ -673,7 +724,9 @@ class EmailService {
         </div>
         
         <div class="button-container">
-          <a href="${process.env.NEXT_PUBLIC_URL}/seller/products/${product._id}/edit" class="button">Restock Now</a>
+          <a href="${process.env.NEXT_PUBLIC_URL}/seller/products/edit/${
+      product._id
+    }" class="button">Restock Now</a>
         </div>
       </div>
       ${this.getEmailFooter()}
@@ -682,14 +735,14 @@ class EmailService {
     return await this.sendEmail({
       to: seller.email,
       subject: `Out of Stock Alert - ${product.name}`,
-      html
+      html,
     });
   }
 
   // 14. Product Approved
   async sendProductApproved(seller, product) {
     const html = `
-      ${this.getEmailHeader('Product Approved!')}
+      ${this.getEmailHeader("Product Approved!")}
       <div class="content">
         <h2>✅ Your Product is Live!</h2>
         <p>Hi ${seller.storeInfo?.storeName || seller.businessName},</p>
@@ -704,11 +757,13 @@ class EmailService {
             </tr>
             <tr>
               <td><strong>SKU:</strong></td>
-              <td>${product.sku || 'N/A'}</td>
+              <td>${product.sku || "N/A"}</td>
             </tr>
             <tr>
               <td><strong>Price:</strong></td>
-              <td>₹${product.pricing?.salePrice || product.pricing?.basePrice}</td>
+              <td>₹${
+                product.pricing?.salePrice || product.pricing?.basePrice
+              }</td>
             </tr>
             <tr>
               <td><strong>Approval Date:</strong></td>
@@ -718,7 +773,9 @@ class EmailService {
         </div>
         
         <div class="button-container">
-          <a href="${process.env.NEXT_PUBLIC_URL}/products/${product._id}" class="button">View Product</a>
+          <a href="${process.env.NEXT_PUBLIC_URL}/products/${
+      product._id
+    }" class="button">View Product</a>
         </div>
         
         <div class="info-box" style="background: #e3f2fd;">
@@ -737,14 +794,14 @@ class EmailService {
     return await this.sendEmail({
       to: seller.email,
       subject: `Product Approved - ${product.name}`,
-      html
+      html,
     });
   }
 
   // 15. Product Rejected
   async sendProductRejected(seller, product, reason) {
     const html = `
-      ${this.getEmailHeader('Product Review Update')}
+      ${this.getEmailHeader("Product Review Update")}
       <div class="content">
         <h2>Product Needs Revision</h2>
         <p>Hi ${seller.storeInfo?.storeName || seller.businessName},</p>
@@ -759,7 +816,7 @@ class EmailService {
             </tr>
             <tr>
               <td><strong>SKU:</strong></td>
-              <td>${product.sku || 'N/A'}</td>
+              <td>${product.sku || "N/A"}</td>
             </tr>
           </table>
         </div>
@@ -779,7 +836,9 @@ class EmailService {
         </div>
         
         <div class="button-container">
-          <a href="${process.env.NEXT_PUBLIC_URL}/seller/products/${product._id}/edit" class="button">Edit Product</a>
+          <a href="${process.env.NEXT_PUBLIC_URL}/seller/products/edit/${
+      product._id
+    }" class="button">Edit Product</a>
         </div>
       </div>
       ${this.getEmailFooter()}
@@ -788,7 +847,7 @@ class EmailService {
     return await this.sendEmail({
       to: seller.email,
       subject: `Product Review Required - ${product.name}`,
-      html
+      html,
     });
   }
 
@@ -799,7 +858,7 @@ class EmailService {
   // 16. New Seller Registration (Admin)
   async notifyAdminNewSellerRegistration(seller) {
     const html = `
-      ${this.getEmailHeader('New Seller Registration')}
+      ${this.getEmailHeader("New Seller Registration")}
       <div class="content">
         <h2>📝 New Seller Application</h2>
         <p>A new seller has registered and is awaiting approval.</p>
@@ -827,7 +886,9 @@ class EmailService {
         </div>
         
         <div class="button-container">
-          <a href="${process.env.NEXT_PUBLIC_URL}/admin/sellers/${seller._id}" class="button">Review Application</a>
+          <a href="${process.env.NEXT_PUBLIC_URL}/admin/sellers/${
+      seller._id
+    }" class="button">Review Application</a>
         </div>
       </div>
       ${this.getEmailFooter()}
@@ -835,15 +896,15 @@ class EmailService {
 
     return await this.sendEmail({
       to: process.env.ADMIN_EMAIL || process.env.SMTP_FROM_EMAIL,
-      subject: 'New Seller Registration - Action Required',
-      html
+      subject: "New Seller Registration - Action Required",
+      html,
     });
   }
 
   // 17. New Order (Admin)
   async notifyAdminNewOrder(order) {
     const html = `
-      ${this.getEmailHeader('New Order Placed')}
+      ${this.getEmailHeader("New Order Placed")}
       <div class="content">
         <h2>🛒 New Order Received</h2>
         <p>A new order has been placed on Online Planet.</p>
@@ -875,7 +936,9 @@ class EmailService {
         </div>
         
         <div class="button-container">
-          <a href="${process.env.NEXT_PUBLIC_URL}/admin/orders/${order._id}" class="button">View Order</a>
+          <a href="${process.env.NEXT_PUBLIC_URL}/admin/orders/${
+      order._id
+    }" class="button">View Order</a>
         </div>
       </div>
       ${this.getEmailFooter()}
@@ -884,7 +947,7 @@ class EmailService {
     return await this.sendEmail({
       to: process.env.ADMIN_EMAIL || process.env.SMTP_FROM_EMAIL,
       subject: `New Order - #${order.orderNumber}`,
-      html
+      html,
     });
   }
 

@@ -33,13 +33,13 @@ export async function GET(request) {
 
     // ========== REAL DATA CALCULATIONS ==========
 
-    // 1. Get all products for this seller
-    const products = await Product.find({ sellerId: seller._id });
+    // 1. Get all products for this seller (using User ID)
+    const products = await Product.find({ sellerId: decoded.userId });
     const productIds = products.map((p) => p._id);
 
-    // 2. Get all orders containing seller's products
+    // 2. Get all orders containing seller's products (using User ID)
     const allOrders = await Order.find({
-      "items.seller": seller._id,
+      "items.seller": decoded.userId,
     }).populate("customer", "name email phone");
 
     // 3. Filter items belonging to this seller from all orders
@@ -48,7 +48,7 @@ export async function GET(request) {
 
     allOrders.forEach((order) => {
       const sellerItems = order.items.filter(
-        (item) => item.seller.toString() === seller._id.toString()
+        (item) => item.seller.toString() === decoded.userId.toString()
       );
 
       if (sellerItems.length > 0) {
@@ -227,6 +227,39 @@ export async function GET(request) {
         revenue: Math.round(p.revenue),
       }));
 
+    // 12.5 CALCULATE CATALOG QUALITY
+    const calculateProductHealth = (p) => {
+      let score = 0;
+      if (p.name?.length > 20) score += 15;
+      if (p.description?.length > 100) score += 15;
+      if (p.images?.length >= 3) score += 20;
+      if (p.highlights && p.highlights.length >= 3) score += 15;
+      if (p.category) score += 10;
+      if (p.sku) score += 10;
+      if (p.keywords?.length > 10) score += 15;
+      return Math.min(score, 100);
+    };
+
+    const productsWithHealth = products.map((p) => {
+      const id = p._id?.toString();
+      return {
+        _id: id,
+        id: id,
+        name: p.name,
+        images: p.images,
+        pricing: p.pricing,
+        health: calculateProductHealth(p),
+      };
+    });
+
+    const avgCatalogQuality =
+      products.length > 0
+        ? productsWithHealth.reduce((acc, curr) => acc + curr.health, 0) /
+          products.length
+        : 0;
+
+    const lowQualityListings = productsWithHealth.filter((p) => p.health < 60);
+
     // 13. Calculate THIS MONTH vs LAST MONTH
     const thisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
     const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
@@ -332,6 +365,12 @@ export async function GET(request) {
         pendingOrders: orderStatusBreakdown.pending,
         processingOrders: orderStatusBreakdown.processing,
         shippedOrders: orderStatusBreakdown.shipped,
+        lowQualityListings: lowQualityListings.length,
+      },
+      catalogQuality: {
+        average: Math.round(avgCatalogQuality),
+        lowQualityCount: lowQualityListings.length,
+        atRiskListings: lowQualityListings.slice(0, 5),
       },
     };
 

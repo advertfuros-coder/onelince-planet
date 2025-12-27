@@ -5,6 +5,7 @@ import Order from "@/lib/db/models/Order";
 import Product from "@/lib/db/models/Product";
 import Seller from "@/lib/db/models/Seller";
 import { verifyToken } from "@/lib/utils/auth";
+import mongoose from "mongoose";
 
 export async function GET(request) {
   try {
@@ -44,12 +45,12 @@ export async function GET(request) {
       Order.aggregate([
         {
           $match: {
-            "items.seller": seller._id,
+            "items.seller": new mongoose.Types.ObjectId(decoded.userId),
             createdAt: { $gte: startDate },
           },
         },
         { $unwind: "$items" },
-        { $match: { "items.seller": seller._id } },
+        { $match: { "items.seller": new mongoose.Types.ObjectId(decoded.userId) } },
         {
           $group: {
             _id: null,
@@ -78,12 +79,12 @@ export async function GET(request) {
       Order.aggregate([
         {
           $match: {
-            "items.seller": seller._id,
+            "items.seller": new mongoose.Types.ObjectId(decoded.userId),
             createdAt: { $gte: startDate },
           },
         },
         { $unwind: "$items" },
-        { $match: { "items.seller": seller._id } },
+        { $match: { "items.seller": new mongoose.Types.ObjectId(decoded.userId) } },
         {
           $group: {
             _id: { $dateToString: { format: "%b %d", date: "$createdAt" } },
@@ -107,12 +108,12 @@ export async function GET(request) {
       Order.aggregate([
         {
           $match: {
-            "items.seller": seller._id,
+            "items.seller": new mongoose.Types.ObjectId(decoded.userId),
             createdAt: { $gte: startDate },
           },
         },
         { $unwind: "$items" },
-        { $match: { "items.seller": seller._id } },
+        { $match: { "items.seller": new mongoose.Types.ObjectId(decoded.userId) } },
         {
           $lookup: {
             from: "products",
@@ -135,7 +136,7 @@ export async function GET(request) {
       Order.aggregate([
         {
           $match: {
-            "items.seller": seller._id,
+            "items.seller": new mongoose.Types.ObjectId(decoded.userId),
             createdAt: { $gte: startDate },
           },
         },

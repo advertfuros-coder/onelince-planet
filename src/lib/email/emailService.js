@@ -1,0 +1,154 @@
+// lib/email/emailService.js
+
+/**
+ * Email Service for sending transactional emails
+ */
+
+class EmailService {
+  constructor() {
+    this.transporter = null;
+    this.nodemailer = null;
+  }
+
+  async loadNodemailer() {
+    if (!this.nodemailer) {
+      this.nodemailer = await import("nodemailer").then((m) => m.default || m);
+    }
+    return this.nodemailer;
+  }
+
+  async initialize() {
+    // Force reinitialize to pick up any env variable changes
+    this.transporter = null;
+
+    if (!this.transporter) {
+      const nodemailer = await this.loadNodemailer();
+
+      // Configure based on environment
+      if (process.env.EMAIL_SERVICE === "gmail") {
+        this.transporter = nodemailer.createTransport({
+          service: "gmail",
+          auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASSWORD,
+          },
+        });
+      } else if (process.env.SMTP_HOST) {
+        // Custom SMTP configuration
+        const smtpPort = parseInt(process.env.SMTP_PORT) || 587;
+        const isSecure = process.env.SMTP_SECURE === "true";
+        const smtpUser = process.env.SMTP_USER;
+        const smtpPass = process.env.SMTP_PASS || process.env.SMTP_PASSWORD;
+
+        console.log("🔧 SMTP Configuration Debug:");
+        console.log("  Host:", process.env.SMTP_HOST);
+        console.log(
+          "  Port (raw):",
+          process.env.SMTP_PORT,
+          "Type:",
+          typeof process.env.SMTP_PORT
+        );
+        console.log("  Port (parsed):", smtpPort, "Type:", typeof smtpPort);
+        console.log(
+          "  Secure (raw):",
+          process.env.SMTP_SECURE,
+          "Type:",
+          typeof process.env.SMTP_SECURE
+        );
+        console.log("  Secure (parsed):", isSecure, "Type:", typeof isSecure);
+        console.log("  User:", smtpUser);
+        console.log(
+          "  Pass:",
+          smtpPass ? `***${smtpPass.slice(-4)}` : "NOT SET"
+        );
+
+        this.transporter = nodemailer.createTransport({
+          host: process.env.SMTP_HOST,
+          port: smtpPort,
+          secure: isSecure, // true for 465 (SSL), false for other ports (use STARTTLS)
+          auth: {
+            user: smtpUser,
+            pass: smtpPass,
+          },
+          // Additional options for better compatibility with various SMTP providers
+          tls: {
+            rejectUnauthorized: false, // Accept self-signed certificates (use with caution in production)
+          },
+          connectionTimeout: 10000, // 10 seconds
+          greetingTimeout: 10000,
+          socketTimeout: 10000,
+        });
+
+        console.log(
+          `📧 SMTP configured: ${process.env.SMTP_HOST}:${smtpPort} (secure: ${isSecure})`
+        );
+      } else {
+        // Development mode - use Ethereal (fake SMTP)
+        const testAccount = await nodemailer.createTestAccount();
+        this.transporter = nodemailer.createTransport({
+          host: "smtp.ethereal.email",
+          port: 587,
+          secure: false,
+          auth: {
+            user: testAccount.user,
+            pass: testAccount.pass,
+          },
+        });
+        console.log("📧 Using Ethereal Email for development");
+        console.log("Test account:", testAccount.user);
+      }
+    }
+    return this.transporter;
+  }
+
+  async sendEmail({ to, subject, html, text }) {
+    try {
+      const nodemailer = await this.loadNodemailer();
+      await this.initialize();
+
+      const mailOptions = {
+        from: `"${
+          process.env.SMTP_FROM_NAME ||
+          process.env.EMAIL_FROM_NAME ||
+          "Online Planet"
+        }" <${
+          process.env.SMTP_FROM_EMAIL ||
+          process.env.EMAIL_FROM ||
+          "noreply@onlineplanet.com"
+        }>`,
+        to,
+        subject,
+        html,
+        text: text || this.stripHtml(html),
+      };
+
+      const info = await this.transporter.sendMail(mailOptions);
+
+      console.log("✅ Email sent:", info.messageId);
+
+      // Log preview URL for Ethereal
+      const previewUrl = nodemailer.getTestMessageUrl(info);
+      if (previewUrl) {
+        console.log("📧 Preview URL:", previewUrl);
+      }
+
+      return {
+        success: true,
+        messageId: info.messageId,
+        previewUrl,
+      };
+    } catch (error) {
+      console.error("❌ Email sending error:", error);
+      return {
+        success: false,
+        error: error.message,
+      };
+    }
+  }
+
+  stripHtml(html) {
+    return html.replace(/<[^>]*>/g, "");
+  }
+}
+
+export default new EmailService();

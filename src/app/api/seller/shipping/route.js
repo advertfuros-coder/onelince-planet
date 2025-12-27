@@ -1,13 +1,13 @@
-// app/api/seller/shipping/route.js
 import { NextResponse } from "next/server";
 import connectDB from "@/lib/db/mongodb";
-import ShippingRule from "@/lib/db/models/ShippingRule";
 import Seller from "@/lib/db/models/Seller";
+import Order from "@/lib/db/models/Order";
 import { verifyToken } from "@/lib/utils/auth";
 
 export async function GET(request) {
   try {
     await connectDB();
+
     const token = request.headers.get("authorization")?.replace("Bearer ", "");
     const decoded = verifyToken(token);
 
@@ -18,38 +18,66 @@ export async function GET(request) {
       );
     }
 
-    // specific query for seller using userId or sellerId depending on schema
-    // ShippingRule uses sellerId as User ID ref based on my definition
-    const rules = await ShippingRule.find({ sellerId: decoded.userId }).sort({
-      createdAt: -1,
-    });
-
-    // Fetch pickup address from Seller profile
     const seller = await Seller.findOne({ userId: decoded.userId });
-    const pickupAddress = seller?.pickupAddress || null;
+    if (!seller) {
+      return NextResponse.json(
+        { success: false, message: "Seller profile not found" },
+        { status: 404 }
+      );
+    }
+
+    // Get orders that require shipping action (pending, confirmed, processing, packed, ready_for_pickup)
+    const shippingOrders = await Order.find({
+      "items.seller": decoded.userId,
+      status: {
+        $in: [
+          "confirmed",
+          "processing",
+          "packed",
+          "ready_for_pickup",
+          "shipped",
+        ],
+      },
+    }).sort({ createdAt: -1 });
+
+    const stats = {
+      pending: shippingOrders.filter((o) =>
+        ["confirmed", "processing"].includes(o.status)
+      ).length,
+      ready: shippingOrders.filter((o) => o.status === "ready_for_pickup")
+        .length,
+      shippedToday: shippingOrders.filter(
+        (o) => o.status === "shipped" && isToday(o.updatedAt)
+      ).length,
+      pickupPoint: seller.pickupAddress?.city || "Not Set",
+    };
 
     return NextResponse.json({
       success: true,
-      shippingRules: rules.map((rule) => ({
-        id: rule._id,
-        name: rule.name,
-        isActive: rule.isActive,
-        type: rule.type,
-        conditions: rule.conditions,
-        pricing: rule.pricing,
-        deliveryTime: rule.deliveryTime,
+      stats,
+      orders: shippingOrders.map((order) => ({
+        id: order._id,
+        orderNumber: order.orderNumber,
+        date: order.createdAt,
+        customer: order.shippingAddress.name,
+        itemsCount: order.items.filter(
+          (i) => i.seller.toString() === decoded.userId.toString()
+        ).length,
+        status: order.status,
+        courier: order.shiprocket?.courierName || "Standard",
+        trackingId: order.shiprocket?.awbCode || order.shipping?.trackingId,
       })),
-      pickupAddress,
     });
   } catch (error) {
-    console.error("Shipping API GET Error:", error);
+    console.error("❌ Shipping API error:", error);
     return NextResponse.json(
-      { success: false, message: "Server error" },
+      { success: false, message: "Server error", error: error.message },
       { status: 500 }
     );
   }
 }
 
+// POST for updating status (Ready for Pickup / Manifest)
 export async function POST(request) {
   try {
     await connectDB();
@@ -63,33 +91,46 @@ export async function POST(request) {
       );
     }
 
-    const data = await request.json();
+    const { orderId, action } = await request.json();
+    const order = await Order.findById(orderId);
 
-    // Basic validation
-    if (!data.name || !data.pricing?.baseRate) {
+    if (!order)
       return NextResponse.json(
-        { success: false, message: "Missing required fields" },
-        { status: 400 }
+        { success: false, message: "Order not found" },
+        { status: 404 }
       );
+
+    if (action === "READY_FOR_PICKUP") {
+      order.status = "ready_for_pickup";
+      order.pickup.sellerMarked = true;
+      order.pickup.sellerMarkedAt = new Date();
+      order.timeline.push({
+        status: "ready_for_pickup",
+        description: "Seller marked order as ready for pickup.",
+        timestamp: new Date(),
+      });
     }
 
-    const rule = await ShippingRule.create({
-      sellerId: decoded.userId,
-      ...data,
-    });
+    await order.save();
 
     return NextResponse.json({
       success: true,
-      rule: {
-        id: rule._id,
-        ...rule._doc,
-      },
+      message: "Order status updated",
     });
-  } catch (error) {
-    console.error("Shipping API POST Error:", error);
+  } catch (err) {
     return NextResponse.json(
-      { success: false, message: "Server error" },
+      { success: false, message: err.message },
       { status: 500 }
     );
   }
+}
+
+function isToday(date) {
+  const d = new Date(date);
+  const now = new Date();
+  return (
+    d.getDate() === now.getDate() &&
+    d.getMonth() === now.getMonth() &&
+    d.getFullYear() === now.getFullYear()
+  );
 }

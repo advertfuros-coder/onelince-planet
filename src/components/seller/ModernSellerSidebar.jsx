@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
+  Package,
   LayoutDashboard,
   ShoppingBag,
   ClipboardList,
@@ -52,6 +53,7 @@ const menuSections = [
     title: 'Catalog & Inventory',
     items: [
       { name: 'Products', href: '/seller/products', icon: ShoppingBag },
+      { name: 'Inventory Master', href: '/seller/inventory', icon: Package, badge: 'Live' },
       { name: 'Warehouses', href: '/seller/warehouses', icon: MapPin, badge: 'New' },
       { name: 'Inventory Alerts', href: '/seller/inventory-alerts', icon: AlertCircle, badge: 'New' },
       { name: 'Pricing Rules', href: '/seller/pricing-rules', icon: Zap, badge: 'New' },

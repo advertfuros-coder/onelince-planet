@@ -4,15 +4,25 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/context/AuthContext'
-import { FiUser, FiLogOut, FiSettings, FiChevronDown, FiSearch } from 'react-icons/fi'
+import {
+  User,
+  LogOut,
+  Settings,
+  ChevronDown,
+  ChevronRight,
+  Search,
+  Bell,
+  Command,
+  Plus
+} from 'lucide-react'
 import MobileMenu from './MobileMenu'
+import clsx from 'clsx'
 import NotificationCenter from './NotificationCenter'
 
 export default function AdminHeader() {
   const { user, logout } = useAuth()
   const router = useRouter()
   const [showDropdown, setShowDropdown] = useState(false)
-  const [showMobileSearch, setShowMobileSearch] = useState(false)
 
   const handleLogout = () => {
     logout()
@@ -20,109 +30,103 @@ export default function AdminHeader() {
   }
 
   return (
-    <header className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-30">
-      <div className="flex items-center justify-between px-4 md:px-6 py-3 md:py-4">
-        {/* Left: Mobile Menu + Logo/Title */}
-        <div className="flex items-center space-x-3">
-          <MobileMenu />
-          <h1 className="text-lg md:text-xl font-bold text-gray-900 lg:hidden">
-            Admin
-          </h1>
-        </div>
+    <header className="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-30 transition-all duration-300">
+      <div className="flex items-center justify-between px-6 py-4">
 
-        {/* Center: Search Bar (Desktop) - Hint for Cmd+K */}
-        <div className="hidden md:flex flex-1 max-w-xl mx-4">
-          <button
-            onClick={() => {
-              // Trigger global search
-              const event = new KeyboardEvent('keydown', {
-                key: 'k',
-                metaKey: true,
-                bubbles: true,
-              })
-              document.dispatchEvent(event)
-            }}
-            className="w-full text-left"
-          >
-            <div className="relative w-full">
-              <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
-              <div className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-500 cursor-pointer hover:border-blue-400 hover:bg-white transition-colors flex items-center justify-between">
-                <span>Search... (Cmd+K)</span>
-                <kbd className="hidden lg:inline-block px-2 py-1 text-xs bg-white border border-gray-300 rounded">⌘K</kbd>
+        {/* Left: Branding & Search Hook */}
+        <div className="flex items-center space-x-8">
+          <div className="lg:hidden">
+            <MobileMenu />
+          </div>
+
+          <div className="hidden md:flex items-center w-[400px]">
+            <button
+              onClick={() => {
+                const event = new KeyboardEvent('keydown', {
+                  key: 'k',
+                  metaKey: true,
+                  bubbles: true,
+                })
+                document.dispatchEvent(event)
+              }}
+              className="w-full flex items-center justify-between px-4 py-2.5 bg-gray-100/50 hover:bg-gray-100 border border-gray-200 rounded-2xl group transition-all duration-200"
+            >
+              <div className="flex items-center gap-3 text-gray-400 group-hover:text-blue-600 transition-colors">
+                <Search size={18} />
+                <span className="text-xs font-bold uppercase tracking-widest leading-none">Global Terminal Seek</span>
               </div>
-            </div>
-          </button>
+              <div className="flex items-center gap-1.5 px-2 py-1 bg-white border border-gray-200 rounded-lg shadow-sm">
+                <Command size={10} className="text-gray-400" />
+                <span className="text-[10px] font-black text-gray-500 uppercase">K</span>
+              </div>
+            </button>
+          </div>
         </div>
 
-        {/* Right Side - Notifications & Profile */}
-        <div className="flex items-center space-x-2 md:space-x-4">
-          {/* Mobile Search Button */}
-          <button
-            onClick={() => {
-              const event = new KeyboardEvent('keydown', {
-                key: 'k',
-                metaKey: true,
-                bubbles: true,
-              })
-              document.dispatchEvent(event)
-            }}
-            className="md:hidden p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-full transition-colors"
-            aria-label="Search"
-          >
-            <FiSearch size={22} />
+        {/* Right Side: Quick Actions & Profile */}
+        <div className="flex items-center space-x-6">
+
+          {/* Quick Create Button */}
+          <button className="hidden lg:flex items-center gap-2 px-4 py-2 bg-[#0F172A] text-white rounded-xl hover:bg-black transition-all shadow-lg shadow-gray-200 active:scale-95 group">
+            <Plus size={16} className="group-hover:rotate-90 transition-transform duration-300" />
+            <span className="text-[10px] font-black uppercase tracking-widest">Quick Create</span>
           </button>
 
-          {/* Notifications - Now using NotificationCenter */}
-          <NotificationCenter />
+          {/* Notifications Hub */}
+          <div className="relative">
+            <NotificationCenter />
+          </div>
 
-          {/* Profile Dropdown */}
+          <div className="w-[1px] h-6 bg-gray-200" />
+
+          {/* Profile Sector */}
           <div className="relative">
             <button
               onClick={() => setShowDropdown(!showDropdown)}
-              className="flex items-center space-x-2 md:space-x-3 px-2 md:px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors"
-              aria-expanded={showDropdown}
-              aria-label="User menu"
+              className="flex items-center gap-3 p-1.5 rounded-2xl hover:bg-gray-50 transition-all duration-300 border border-transparent hover:border-gray-100"
             >
-              <div className="w-9 h-9 md:w-10 md:h-10 bg-gradient-to-br from-blue-600 to-blue-800 rounded-full flex items-center justify-center">
-                <span className="text-white font-semibold text-sm">{user?.name?.[0] || 'A'}</span>
+              <div className="w-9 h-9 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20 text-white">
+                <span className="font-black text-xs uppercase tracking-tighter">
+                  {user?.name?.[0] || 'A'}
+                </span>
               </div>
-              <div className="hidden md:block text-left">
-                <p className="text-sm font-semibold text-gray-900">{user?.name || 'Admin'}</p>
-                <p className="text-xs text-gray-500">{user?.email || 'admin@onlineplanet.com'}</p>
+
+              <div className="hidden md:block text-left pr-2">
+                <p className="text-[11px] font-black text-gray-900 uppercase tracking-tight leading-none">
+                  {user?.name || 'Administrator'}
+                </p>
+                <div className="flex items-center gap-1 mt-1 text-emerald-500">
+                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="text-[9px] font-black uppercase tracking-[0.1em]">Root Access</span>
+                </div>
               </div>
-              <FiChevronDown className="hidden md:block text-gray-600" />
+
+              <ChevronDown size={14} className={clsx('text-gray-400 transition-transform duration-300', showDropdown && 'rotate-180')} />
             </button>
 
-            {/* Profile Dropdown Menu */}
+            {/* Premium Dropdown Menu */}
             {showDropdown && (
-              <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 z-20">
-                <div className="px-4 py-3 border-b border-gray-200">
-                  <p className="text-sm font-semibold text-gray-900">{user?.name || 'Admin'}</p>
-                  <p className="text-xs text-gray-500">{user?.email || 'admin@onlineplanet.com'}</p>
+              <div className="absolute right-0 mt-3 w-64 bg-white rounded-3xl shadow-2xl shadow-blue-900/10 border border-gray-100 overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-300">
+                <div className="px-6 py-6 bg-gray-50/50 border-b border-gray-100">
+                  <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Authenticated Account</p>
+                  <p className="text-sm font-black text-gray-900">{user?.email || 'admin@onlineplanet.com'}</p>
                 </div>
-                <div className="py-2">
-                  <button
-                    onClick={() => router.push('/admin/profile')}
-                    className="flex items-center space-x-3 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
-                  >
-                    <FiUser />
-                    <span>My Profile</span>
-                  </button>
-                  <button
-                    onClick={() => router.push('/admin/settings')}
-                    className="flex items-center space-x-3 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
-                  >
-                    <FiSettings />
-                    <span>Settings</span>
-                  </button>
+
+                <div className="p-2">
+                  <MenuButton icon={User} label="Profile Overview" onClick={() => router.push('/admin/profile')} />
+                  <MenuButton icon={Settings} label="System Settings" onClick={() => router.push('/admin/settings')} />
                 </div>
-                <div className="border-t border-gray-200 py-2">
+
+                <div className="p-2 border-t border-gray-50">
                   <button
                     onClick={handleLogout}
-                    className="flex items-center space-x-3 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                    className="flex items-center justify-between w-full px-4 py-3 text-rose-600 hover:bg-rose-50 rounded-2xl transition-all duration-200 group"
                   >
-                    <FiLogOut />
-                    <span>Logout</span>
+                    <div className="flex items-center gap-3">
+                      <LogOut size={16} />
+                      <span className="text-[11px] font-black uppercase tracking-widest">Terminate Session</span>
+                    </div>
+                    <ChevronRight size={14} className="opacity-0 group-hover:opacity-100 transition-all" />
                   </button>
                 </div>
               </div>
@@ -130,21 +134,21 @@ export default function AdminHeader() {
           </div>
         </div>
       </div>
-
-      {/* Mobile Search Bar (Expandable) */}
-      {showMobileSearch && (
-        <div className="px-4 pb-3 md:hidden">
-          <div className="relative w-full">
-            <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
-            <input
-              type="text"
-              placeholder="Search..."
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              autoFocus
-            />
-          </div>
-        </div>
-      )}
     </header>
+  )
+}
+
+function MenuButton({ icon: Icon, label, onClick }) {
+  return (
+    <button
+      onClick={onClick}
+      className="flex items-center justify-between w-full px-4 py-3 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-2xl transition-all duration-200 group text-left"
+    >
+      <div className="flex items-center gap-3">
+        <Icon size={16} />
+        <span className="text-[11px] font-black uppercase tracking-widest">{label}</span>
+      </div>
+      <ChevronRight size={14} className="opacity-0 group-hover:opacity-100 transition-all translate-x-[-4px] group-hover:translate-x-0 transition-transform" />
+    </button>
   )
 }

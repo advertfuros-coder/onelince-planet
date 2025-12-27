@@ -1,15 +1,24 @@
-import nodemailer from 'nodemailer';
+import nodemailer from "nodemailer";
 
 class EmailService {
   constructor() {
+    const smtpPort = parseInt(process.env.SMTP_PORT) || 587;
+    const isSecure = process.env.SMTP_SECURE === "true";
+
     this.transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
-      port: parseInt(process.env.SMTP_PORT),
-      secure: process.env.SMTP_SECURE === 'false',
+      port: smtpPort,
+      secure: isSecure, // true for 465 (SSL), false for other ports (use STARTTLS)
       auth: {
         user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS
-      }
+        pass: process.env.SMTP_PASS,
+      },
+      tls: {
+        rejectUnauthorized: false,
+      },
+      connectionTimeout: 10000,
+      greetingTimeout: 10000,
+      socketTimeout: 10000,
     });
   }
 
@@ -20,14 +29,14 @@ class EmailService {
         to,
         subject,
         html,
-        attachments
+        attachments,
       };
 
       const info = await this.transporter.sendMail(mailOptions);
-      console.log('Email sent:', info.messageId);
+      console.log("Email sent:", info.messageId);
       return { success: true, messageId: info.messageId };
     } catch (error) {
-      console.error('Email send error:', error);
+      console.error("Email send error:", error);
       throw error;
     }
   }
@@ -39,7 +48,7 @@ class EmailService {
     return await this.sendEmail({
       to: order.shippingAddress.email,
       subject,
-      html
+      html,
     });
   }
 
@@ -50,17 +59,17 @@ class EmailService {
     return await this.sendEmail({
       to: order.shippingAddress.email,
       subject,
-      html
+      html,
     });
   }
 
   async sendInvoice(order, invoiceHtml) {
     const subject = `Invoice - Order #${order.orderNumber}`;
-    
+
     return await this.sendEmail({
       to: order.shippingAddress.email,
       subject,
-      html: invoiceHtml
+      html: invoiceHtml,
     });
   }
 
@@ -98,7 +107,9 @@ class EmailService {
             <div class="order-info">
               <h3>Order Details</h3>
               <p><strong>Order Number:</strong> #${order.orderNumber}</p>
-              <p><strong>Order Date:</strong> ${new Date(order.createdAt).toLocaleDateString()}</p>
+              <p><strong>Order Date:</strong> ${new Date(
+                order.createdAt
+              ).toLocaleDateString()}</p>
               <p><strong>Total Amount:</strong> ₹${order.pricing.total.toLocaleString()}</p>
               
               <h3 style="margin-top: 20px;">Items Ordered:</h3>
@@ -111,13 +122,17 @@ class EmailService {
                   </tr>
                 </thead>
                 <tbody>
-                  ${order.items.map(item => `
+                  ${order.items
+                    .map(
+                      (item) => `
                     <tr>
                       <td>${item.name}</td>
                       <td>${item.quantity}</td>
                       <td>₹${(item.price * item.quantity).toLocaleString()}</td>
                     </tr>
-                  `).join('')}
+                  `
+                    )
+                    .join("")}
                 </tbody>
               </table>
               
@@ -125,14 +140,22 @@ class EmailService {
               <p>
                 ${order.shippingAddress.name}<br>
                 ${order.shippingAddress.addressLine1}<br>
-                ${order.shippingAddress.addressLine2 ? order.shippingAddress.addressLine2 + '<br>' : ''}
-                ${order.shippingAddress.city}, ${order.shippingAddress.state} - ${order.shippingAddress.pincode}<br>
+                ${
+                  order.shippingAddress.addressLine2
+                    ? order.shippingAddress.addressLine2 + "<br>"
+                    : ""
+                }
+                ${order.shippingAddress.city}, ${
+      order.shippingAddress.state
+    } - ${order.shippingAddress.pincode}<br>
                 ${order.shippingAddress.phone}
               </p>
             </div>
             
             <center>
-              <a href="${process.env.NEXT_PUBLIC_URL}/orders/${order.orderNumber}" class="button">Track Your Order</a>
+              <a href="${process.env.NEXT_PUBLIC_URL}/orders/${
+      order.orderNumber
+    }" class="button">Track Your Order</a>
             </center>
           </div>
           
@@ -180,14 +203,18 @@ class EmailService {
             <div class="order-info">
               <h3>Order Summary</h3>
               <p><strong>Order Number:</strong> #${order.orderNumber}</p>
-              <p><strong>Delivered On:</strong> ${new Date(order.shipping.deliveredAt).toLocaleDateString()}</p>
+              <p><strong>Delivered On:</strong> ${new Date(
+                order.shipping.deliveredAt
+              ).toLocaleDateString()}</p>
               <p><strong>Total Amount:</strong> ₹${order.pricing.total.toLocaleString()}</p>
               
               <p style="margin-top: 20px;">Please find your invoice attached with this email.</p>
             </div>
             
             <center>
-              <a href="${process.env.NEXT_PUBLIC_URL}/orders/${order.orderNumber}" class="button">View Order Details</a>
+              <a href="${process.env.NEXT_PUBLIC_URL}/orders/${
+      order.orderNumber
+    }" class="button">View Order Details</a>
             </center>
             
             <p style="text-align: center; margin-top: 20px;">

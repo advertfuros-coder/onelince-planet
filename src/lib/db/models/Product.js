@@ -12,7 +12,9 @@ const ProductSchema = new mongoose.Schema(
 
     name: {
       type: String,
-      required: true,
+      required: function () {
+        return this.get("isDraft") !== true;
+      },
       trim: true,
     },
     description: String,
@@ -20,21 +22,29 @@ const ProductSchema = new mongoose.Schema(
 
     category: {
       type: String, // Or ObjectId if using Category model
-      required: true,
+      required: function () {
+        return this.get("isDraft") !== true;
+      },
     },
     subCategory: String,
 
     brand: String,
     sku: {
       type: String,
-      required: true,
+      required: function () {
+        return this.get("isDraft") !== true;
+      },
       unique: true,
+      sparse: true, // Allow multiple null/empty SKUs for drafts
     },
 
     pricing: {
       basePrice: {
         type: Number,
-        required: true,
+        required: function () {
+          const isDraft = this.get ? this.get("isDraft") : this.isDraft;
+          return isDraft !== true;
+        },
       },
       salePrice: Number,
       costPrice: Number,
@@ -129,7 +139,10 @@ const ProductSchema = new mongoose.Schema(
     },
 
     tags: [String],
-
+    keywords: [String], // Backend search terms
+    highlights: [String], // Key feature bullet points
+    hsnCode: String, // For tax/compliance
+ 
     isActive: {
       type: Boolean,
       default: true,
@@ -143,6 +156,10 @@ const ProductSchema = new mongoose.Schema(
       default: false,
     },
 
+    isDraft: {
+      type: Boolean,
+      default: false,
+    },
     viewCount: {
       type: Number,
       default: 0,

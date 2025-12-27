@@ -160,13 +160,12 @@ export default function SellersPage() {
                       </td>
                       <td className="px-6 py-4">
                         <span
-                          className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                            seller.tier === 'premium'
+                          className={`px-3 py-1 rounded-full text-xs font-semibold ${seller.tier === 'premium'
                               ? 'bg-purple-100 text-purple-700'
                               : seller.tier === 'basic'
-                              ? 'bg-blue-100 text-blue-700'
-                              : 'bg-gray-100 text-gray-700'
-                          }`}
+                                ? 'bg-blue-100 text-blue-700'
+                                : 'bg-gray-100 text-gray-700'
+                            }`}
                         >
                           {seller.tier || 'Free'}
                         </span>

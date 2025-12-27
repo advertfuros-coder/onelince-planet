@@ -20,7 +20,8 @@ import {
     Users,
     AlertTriangle,
     Eye,
-    RefreshCw
+    RefreshCw,
+    Edit2
 } from 'lucide-react'
 import {
     BarChart,
@@ -54,7 +55,8 @@ export default function ModernDashboard({ dashboardData, loading, onRefresh }) {
         lowStockProducts: dashboardData?.lowStockProducts || [],
         orderStatus: dashboardData?.orderStatusBreakdown || {},
         performance: dashboardData?.sellerInfo?.performance || { orderFulfillmentRate: 0 },
-        alerts: dashboardData?.alerts || { lowStock: 0, pendingOrders: 0 }
+        alerts: dashboardData?.alerts || { lowStock: 0, pendingOrders: 0, lowQualityListings: 0 },
+        catalogQuality: dashboardData?.catalogQuality || { average: 0, lowQualityCount: 0, atRiskListings: [] }
     }
 
     return (
@@ -91,7 +93,7 @@ export default function ModernDashboard({ dashboardData, loading, onRefresh }) {
                     <div className="lg:col-span-3 space-y-6">
 
                         {/* Real Metric Cards mapping the Donezo UI */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             <StatCard
                                 title="Net Revenue"
                                 value={`₹${safeData.netRevenue.toLocaleString()}`}
@@ -100,16 +102,26 @@ export default function ModernDashboard({ dashboardData, loading, onRefresh }) {
                                 primary
                             />
                             <StatCard
+                                title="Active Assets"
+                                value={safeData.activeProducts.toLocaleString()}
+                                trend={`${safeData.lowStockProducts.length} low stock`}
+                                icon={Package}
+                            />
+                            <StatCard
+                                title="Catalog Quality"
+                                value={`${safeData.catalogQuality.average}%`}
+                                trend={`${safeData.catalogQuality.lowQualityCount} needing attention`}
+                                icon={TrendingUp}
+                                color="emerald"
+                            />
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <StatCard
                                 title="Total Orders"
                                 value={safeData.totalOrders.toLocaleString()}
                                 trend={`${safeData.orderStatus.delivered || 0} Delivered`}
                                 icon={ShoppingBag}
-                            />
-                            <StatCard
-                                title="Active Products"
-                                value={safeData.activeProducts.toLocaleString()}
-                                trend={`${safeData.lowStockProducts.length} low stock`}
-                                icon={Package}
                             />
                             <StatCard
                                 title="Total Customers"
@@ -250,6 +262,42 @@ export default function ModernDashboard({ dashboardData, loading, onRefresh }) {
                                     <ShoppingBag size={20} />
                                     <span>Handle Orders</span>
                                 </Link>
+
+                                {safeData.catalogQuality.lowQualityCount > 0 && (
+                                    <div className="mt-4 p-4 bg-orange-50 border border-orange-100 rounded-2xl">
+                                        <div className="flex items-start gap-3">
+                                            <AlertTriangle size={16} className="text-orange-500 mt-0.5" />
+                                            <div>
+                                                <p className="text-[10px] font-black text-orange-600 uppercase">Optimization Alert</p>
+                                                <p className="text-xs font-bold text-gray-700 mt-1">{safeData.catalogQuality.lowQualityCount} listings have poor health scores. Optimize them to improve visibility.</p>
+
+                                                <div className="mt-3 space-y-2">
+                                                    {safeData.catalogQuality.atRiskListings.map(listing => (
+                                                        <div key={listing._id} className="flex items-center justify-between p-2 bg-white/50 rounded-xl border border-orange-100/50">
+                                                            <div className="flex items-center gap-2">
+                                                                <div className="w-8 h-8 rounded-lg bg-gray-100 overflow-hidden">
+                                                                    <img src={listing.images?.[0]?.url} alt="" className="w-full h-full object-cover" />
+                                                                </div>
+                                                                <div className="min-w-0">
+                                                                    <p className="text-[10px] font-bold text-gray-900 truncate w-32">{listing.name}</p>
+                                                                    <p className="text-[9px] font-medium text-gray-500">₹{listing.pricing?.basePrice}</p>
+                                                                </div>
+                                                            </div>
+                                                            <Link
+                                                                href={`/seller/products/edit/${listing._id || listing.id}`}
+                                                                className="p-1.5 hover:bg-orange-100 rounded-lg text-orange-600 transition-colors"
+                                                            >
+                                                                <Edit2 size={12} />
+                                                            </Link>
+                                                        </div>
+                                                    ))}
+                                                </div>
+
+                                                <Link href="/seller/products?status=low-health" className="text-[10px] font-black text-orange-600 underline mt-3 inline-block uppercase">View All Fixes</Link>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </div>
 

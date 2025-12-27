@@ -23,7 +23,7 @@ export async function GET(request) {
     const ids = searchParams.get("ids"); // Comma-separated product IDs
 
     // Build query
-    const query = { isActive: true };
+    const query = { isActive: true, isDraft: { $ne: true } };
 
     // Fetch by specific IDs (for recently viewed)
     if (ids) {

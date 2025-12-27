@@ -1,173 +1,136 @@
-// app/api/seller/payouts/route.js
-import { NextResponse } from 'next/server'
-import connectDB from '@/lib/db/mongodb'
-import Payout from '@/lib/db/models/Payout'
-import Order from '@/lib/db/models/Order'
-import Seller from '@/lib/db/models/Seller'
-import { verifyToken } from '@/lib/utils/auth'
+import { NextResponse } from "next/server";
+import connectDB from "@/lib/db/mongodb";
+import Seller from "@/lib/db/models/Seller";
+import Order from "@/lib/db/models/Order";
+import Payout from "@/lib/db/models/Payout";
+import { verifyToken } from "@/lib/utils/auth";
 
 export async function GET(request) {
   try {
-    await connectDB()
-    const token = request.headers.get('authorization')?.replace('Bearer ', '')
-    const decoded = verifyToken(token)
+    await connectDB();
 
-    if (!decoded) {
-      return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 })
+    const token = request.headers.get("authorization")?.replace("Bearer ", "");
+    const decoded = verifyToken(token);
+
+    if (!decoded || decoded.role !== "seller") {
+      return NextResponse.json(
+        { success: false, message: "Unauthorized" },
+        { status: 401 }
+      );
     }
 
-    // Get seller
-    const seller = await Seller.findOne({ userId: decoded.userId })
+    const seller = await Seller.findOne({ userId: decoded.userId });
     if (!seller) {
-      return NextResponse.json({ success: false, message: 'Seller not found' }, { status: 404 })
+      return NextResponse.json(
+        { success: false, message: "Seller profile not found" },
+        { status: 404 }
+      );
     }
 
-    const { searchParams } = new URL(request.url)
-    const status = searchParams.get('status')
+    // 1. Get all payouts for this seller
+    const payouts = await Payout.find({ sellerId: seller._id }).sort({
+      createdAt: -1,
+    });
 
-    // Get payouts
-    let query = { sellerId: seller._id }
-    if (status) {
-      query.status = status
-    }
+    // 2. Calculate Pending Payouts from Orders
+    // An order is eligible for payout if it is 'delivered' and payment is 'paid' (or 'cod' and 'delivered')
+    // and it hasn't been included in a Payout yet.
 
-    const payouts = await Payout.find(query)
-      .sort({ createdAt: -1 })
-      .populate('orders')
-      .lean()
+    // We need to find orders that contain this seller's products
+    const paidPayouts = await Payout.find({
+      sellerId: seller._id,
+      status: "completed",
+    });
+    const paidOrderIds = paidPayouts.reduce(
+      (acc, p) => [...acc, ...p.orders],
+      []
+    );
 
-    // Calculate available balance (delivered orders not yet paid out)
-    const deliveredOrders = await Order.aggregate([
-      { $unwind: '$items' },
-      { $match: { 'items.seller': seller._id, 'items.status': 'delivered' } },
-      {
-        $group: {
-          _id: '$_id',
-          total: { $sum: { $multiply: ['$items.price', '$items.quantity'] } },
-        },
-      },
-    ])
+    const allSellerOrders = await Order.find({
+      "items.seller": decoded.userId,
+      status: "delivered",
+      _id: { $nin: paidOrderIds },
+    });
 
-    const totalDeliveredRevenue = deliveredOrders.reduce((sum, order) => sum + order.total, 0)
+    let pendingAmount = 0;
+    let grossSales = 0;
+    let totalCommission = 0;
+    let totalShipping = 0;
 
-    // Get total paid out
-    const paidOutAmount = await Payout.aggregate([
-      { $match: { sellerId: seller._id, status: 'completed' } },
-      { $group: { _id: null, total: { $sum: '$amount' } } },
-    ]).then((res) => res[0]?.total || 0)
+    const commissionRate = seller.commissionRate || 5;
 
-    // Get pending payouts
-    const pendingPayouts = await Payout.aggregate([
-      { $match: { sellerId: seller._id, status: { $in: ['pending', 'processing'] } } },
-      { $group: { _id: null, total: { $sum: '$amount' } } },
-    ]).then((res) => res[0]?.total || 0)
+    const pendingOrders = allSellerOrders.map((order) => {
+      const sellerItems = order.items.filter(
+        (item) => item.seller.toString() === decoded.userId.toString()
+      );
 
-    const availableBalance = totalDeliveredRevenue - paidOutAmount - pendingPayouts
+      const orderSubtotal = sellerItems.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
+      );
+      const commission = (orderSubtotal * commissionRate) / 100;
+      // For now, assume shipping is split or a flat fee per order if applicable.
+      // In a real system, this would be more complex.
+      const shipping = 0;
+      const netAmount = orderSubtotal - commission - shipping;
 
-    // Get stats
-    const stats = {
-      totalEarnings: totalDeliveredRevenue,
-      availableBalance: Math.max(0, availableBalance),
-      pendingPayouts,
-      totalPaidOut: paidOutAmount,
-    }
+      pendingAmount += netAmount;
+      grossSales += orderSubtotal;
+      totalCommission += commission;
+      totalShipping += shipping;
+
+      return {
+        id: order._id,
+        orderNumber: order.orderNumber,
+        date: order.createdAt,
+        amount: orderSubtotal,
+        commission,
+        net: netAmount,
+        status: order.status,
+      };
+    });
+
+    // 3. Lifetime stats
+    const lifetimeCompletedPayouts = payouts.filter(
+      (p) => p.status === "completed"
+    );
+    const totalWithdrawn = lifetimeCompletedPayouts.reduce(
+      (sum, p) => sum + p.amount,
+      0
+    );
 
     return NextResponse.json({
       success: true,
-      payouts,
-      stats,
-      bankDetails: seller.bankDetails,
-    })
+      stats: {
+        pendingPayout: Math.round(pendingAmount),
+        nextPayoutDate: getNextThursday(),
+        lifetimeEarnings: Math.round(totalWithdrawn + pendingAmount),
+        totalWithdrawn: Math.round(totalWithdrawn),
+      },
+      waterfall: {
+        grossSales: Math.round(grossSales),
+        commission: Math.round(totalCommission),
+        shipping: Math.round(totalShipping),
+        netPayout: Math.round(pendingAmount),
+      },
+      history: payouts,
+      pendingOrders: pendingOrders.slice(0, 10), // Last 10 pending
+    });
   } catch (error) {
-    console.error('Payouts GET error:', error)
-    return NextResponse.json({ success: false, message: 'Server error', error: error.message }, { status: 500 })
+    console.error("❌ Payouts API error:", error);
+    return NextResponse.json(
+      { success: false, message: "Server error", error: error.message },
+      { status: 500 }
+    );
   }
 }
 
-export async function POST(request) {
-  try {
-    await connectDB()
-    const token = request.headers.get('authorization')?.replace('Bearer ', '')
-    const decoded = verifyToken(token)
-
-    if (!decoded) {
-      return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 })
-    }
-
-    const seller = await Seller.findOne({ userId: decoded.userId })
-    if (!seller) {
-      return NextResponse.json({ success: false, message: 'Seller not found' }, { status: 404 })
-    }
-
-    // Check if bank details are complete
-    if (!seller.bankDetails?.accountNumber || !seller.bankDetails?.ifscCode) {
-      return NextResponse.json(
-        { success: false, message: 'Please add your bank details before requesting a payout' },
-        { status: 400 }
-      )
-    }
-
-    const body = await request.json()
-    const { amount, orderIds } = body
-
-    if (!amount || amount <= 0) {
-      return NextResponse.json({ success: false, message: 'Invalid amount' }, { status: 400 })
-    }
-
-    // Calculate available balance
-    const deliveredOrders = await Order.aggregate([
-      { $unwind: '$items' },
-      { $match: { 'items.seller': seller._id, 'items.status': 'delivered' } },
-      {
-        $group: {
-          _id: '$_id',
-          total: { $sum: { $multiply: ['$items.price', '$items.quantity'] } },
-        },
-      },
-    ])
-
-    const totalDeliveredRevenue = deliveredOrders.reduce((sum, order) => sum + order.total, 0)
-
-    const paidOutAmount = await Payout.aggregate([
-      { $match: { sellerId: seller._id, status: 'completed' } },
-      { $group: { _id: null, total: { $sum: '$amount' } } },
-    ]).then((res) => res[0]?.total || 0)
-
-    const pendingPayouts = await Payout.aggregate([
-      { $match: { sellerId: seller._id, status: { $in: ['pending', 'processing'] } } },
-      { $group: { _id: null, total: { $sum: '$amount' } } },
-    ]).then((res) => res[0]?.total || 0)
-
-    const availableBalance = totalDeliveredRevenue - paidOutAmount - pendingPayouts
-
-    if (amount > availableBalance) {
-      return NextResponse.json(
-        { success: false, message: `Insufficient balance. Available: ₹${availableBalance.toFixed(2)}` },
-        { status: 400 }
-      )
-    }
-
-    // Create payout request
-    const payout = await Payout.create({
-      sellerId: seller._id,
-      amount,
-      orders: orderIds || [],
-      bankDetails: {
-        accountHolderName: seller.bankDetails.accountHolderName,
-        accountNumber: seller.bankDetails.accountNumber,
-        ifscCode: seller.bankDetails.ifscCode,
-        bankName: seller.bankDetails.bankName,
-      },
-      status: 'pending',
-    })
-
-    return NextResponse.json({
-      success: true,
-      message: 'Payout request submitted successfully',
-      payout,
-    })
-  } catch (error) {
-    console.error('Payout POST error:', error)
-    return NextResponse.json({ success: false, message: 'Server error', error: error.message }, { status: 500 })
+function getNextThursday() {
+  const d = new Date();
+  d.setDate(d.getDate() + ((4 + 7 - d.getDay()) % 7));
+  if (d.getDay() === 4 && new Date().getDay() === 4) {
+    // If today is Thursday, but it's already late or we want next week
+    // d.setDate(d.getDate() + 7);
   }
+  return d.toISOString().split("T")[0];
 }

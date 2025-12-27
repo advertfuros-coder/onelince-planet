@@ -79,6 +79,8 @@ export default function ProductDetailPage() {
 
         const productData = await productResponse.json()
 
+        console.log(productData)
+
         if (productData.success && productData.product) {
           const product = {
             ...productData.product,
@@ -88,8 +90,10 @@ export default function ProductDetailPage() {
               ? Math.round(((productData.product.pricing.basePrice - productData.product.pricing.salePrice) / productData.product.pricing.basePrice) * 100)
               : 0,
             rating: productData.product.ratings?.average || 0,
-            reviews: productData.product.ratings?.totalReviews || 0,
+            reviews: productData.product.ratings?.count || 0,
             inStock: productData.product.inventory?.stock > 0,
+            options: productData.product.options || [],
+            variants: productData.product.variants || [],
             colors: productData.product.variants?.colors || [
               { name: 'Default', code: '#E5E7EB', available: true }
             ],
@@ -99,13 +103,13 @@ export default function ProductDetailPage() {
               rating: 4.5,
               products: 234
             },
-            specifications: productData.product.specifications || {},
+            specifications: productData.product.specifications || [],
             description: productData.product.description || '',
-            features: productData.product.features || []
+            features: productData.product.features || [],
+            highlights: productData.product.highlights || []
           }
 
           setProduct(product)
-          setSelectedColor(0)
 
           if (productData.product.relatedProducts) {
             setRelatedProducts(productData.product.relatedProducts)
@@ -187,8 +191,11 @@ export default function ProductDetailPage() {
     if (product && product.variants?.length > 0) {
       const variant = product.variants.find(v => {
         const vAttrs = v.attributes instanceof Map ? Object.fromEntries(v.attributes) : v.attributes;
-        // Compare attributes with selectedOptions
-        return JSON.stringify(vAttrs) === JSON.stringify(selectedOptions)
+        // Robust object comparison
+        const keys = Object.keys(vAttrs);
+        const selectedKeys = Object.keys(selectedOptions);
+        if (keys.length !== selectedKeys.length) return false;
+        return keys.every(k => vAttrs[k] === selectedOptions[k]);
       })
       setActiveVariant(variant || null)
 
@@ -385,8 +392,8 @@ export default function ProductDetailPage() {
                       key={index}
                       onClick={() => setSelectedImage(index)}
                       className={`aspect-square bg-white rounded-xl p-2 border-2 transition-all hover:scale-105 ${selectedImage === index
-                          ? 'border-blue-600 ring-2 ring-blue-100'
-                          : 'border-gray-200 hover:border-gray-300'
+                        ? 'border-blue-600 ring-2 ring-blue-100'
+                        : 'border-gray-200 hover:border-gray-300'
                         }`}
                     >
                       <img src={img} alt={`View ${index + 1}`} className="w-full h-full object-contain" />
@@ -474,10 +481,29 @@ export default function ProductDetailPage() {
                     </span>
                   </div>
                 </div>
+
+                {/* Key Highlights (Amazon Style) */}
+                {product.highlights && product.highlights.length > 0 && (
+                  <div className="mt-6 pt-6 border-t border-gray-100">
+                    <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide mb-4 flex items-center gap-2">
+                      <FiZap className="text-orange-500" /> Key Highlights
+                    </h3>
+                    <ul className="space-y-3">
+                      {product.highlights.map((highlight, idx) => (
+                        <li key={idx} className="flex items-start gap-3">
+                          <div className="w-1.5 h-1.5 rounded-full bg-blue-600 mt-1.5 flex-shrink-0" />
+                          <span className="text-sm text-gray-700 leading-relaxed font-medium">
+                            {highlight}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
 
               {/* Variant Selection Logic */}
-              {product.options && product.options.map((option, optIdx) => (
+              {product.options && product.options.filter(opt => opt.values?.length > 0).map((option, optIdx) => (
                 <div key={optIdx} className="mb-6 pb-6 border-b border-gray-100">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
@@ -487,19 +513,44 @@ export default function ProductDetailPage() {
                       {selectedOptions[option.name]}
                     </span>
                   </div>
-                  <div className="flex flex-wrap gap-3">
-                    {option.values.map((val, valIdx) => (
-                      <button
-                        key={valIdx}
-                        onClick={() => setSelectedOptions(prev => ({ ...prev, [option.name]: val }))}
-                        className={`px-4 py-2 rounded-xl border-2 transition-all hover:scale-105 text-sm font-bold ${selectedOptions[option.name] === val
-                            ? 'border-blue-600 bg-blue-50 text-blue-600 ring-2 ring-blue-100 scale-105'
-                            : 'border-gray-200 text-gray-600 hover:border-gray-300'
-                          }`}
-                      >
-                        {val}
-                      </button>
-                    ))}
+                  <div className="flex flex-wrap gap-4">
+                    {option.values.map((val, valIdx) => {
+                      // Find a variant that has this specific value to show its image as a thumbnail
+                      const linkedVariant = product.variants?.find(v => {
+                        const vAttrs = v.attributes instanceof Map ? Object.fromEntries(v.attributes) : v.attributes;
+                        return vAttrs[option.name] === val;
+                      });
+                      const hasImage = linkedVariant && linkedVariant.imageIndex !== undefined && product.images[linkedVariant.imageIndex];
+
+                      return (
+                        <button
+                          key={valIdx}
+                          onClick={() => setSelectedOptions(prev => ({ ...prev, [option.name]: val }))}
+                          className={`group relative flex items-center gap-2 rounded-xl border-2 transition-all duration-300 ${selectedOptions[option.name] === val
+                            ? 'border-blue-600 bg-blue-50/50 ring-4 ring-blue-50 scale-105'
+                            : 'border-gray-100 hover:border-blue-200 bg-white hover:bg-slate-50'
+                            } ${hasImage ? 'pl-1.5 pr-4 py-1.5' : 'px-5 py-2.5'}`}
+                        >
+                          {hasImage && (
+                            <div className="w-10 h-10 rounded-lg overflow-hidden border border-gray-100 bg-white flex-shrink-0">
+                              <img
+                                src={product.images[linkedVariant.imageIndex]}
+                                alt={val}
+                                className="w-full h-full object-contain"
+                              />
+                            </div>
+                          )}
+                          <span className={`text-sm font-bold tracking-tight transition-colors ${selectedOptions[option.name] === val ? 'text-blue-700' : 'text-gray-600 group-hover:text-blue-600'}`}>
+                            {val}
+                          </span>
+                          {selectedOptions[option.name] === val && (
+                            <div className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-blue-600 rounded-full flex items-center justify-center text-white border-2 border-white shadow-sm">
+                              <FiCheck className="w-2.5 h-2.5" />
+                            </div>
+                          )}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
               ))}
@@ -910,8 +961,8 @@ export default function ProductDetailPage() {
                           <FiStar
                             key={i}
                             className={`w-6 h-6 ${i < Math.floor(reviewStats.averageRating || 0)
-                                ? 'fill-yellow-400'
-                                : ''
+                              ? 'fill-yellow-400'
+                              : ''
                               }`}
                           />
                         ))}
@@ -957,12 +1008,12 @@ export default function ProductDetailPage() {
                       <div className="flex items-start gap-4">
                         <div
                           className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg flex-shrink-0 ${[
-                              'bg-blue-100 text-blue-600',
-                              'bg-green-100 text-green-600',
-                              'bg-purple-100 text-purple-600',
-                              'bg-orange-100 text-orange-600',
-                              'bg-pink-100 text-pink-600'
-                            ][index % 5]
+                            'bg-blue-100 text-blue-600',
+                            'bg-green-100 text-green-600',
+                            'bg-purple-100 text-purple-600',
+                            'bg-orange-100 text-orange-600',
+                            'bg-pink-100 text-pink-600'
+                          ][index % 5]
                             }`}
                         >
                           {review.userId?.name?.charAt(0).toUpperCase() || 'U'}

@@ -57,35 +57,94 @@ export async function GET(request) {
       query.isApproved = false;
     } else if (status === "approved") {
       query.isApproved = true;
+    } else if (status === "draft") {
+      query.isDraft = true;
     }
 
-    const products = await Product.find(query)
-      .sort({ createdAt: -1 })
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .lean();
+    // Default: Don't show drafts in normal lists unless specifically asked
+    if (status !== "draft") {
+      query.isDraft = { $ne: true };
+    }
 
-    const total = await Product.countDocuments(query);
+    let products;
+    let total;
 
-    // Get stats
+    if (status === "low-health") {
+      // For low-health, we need to calculate health for all and filter
+      // Note: This is acceptable for seller-specific catalogs (~few thousand max)
+      const allSellerProducts = await Product.find({
+        sellerId: seller._id,
+        isDraft: { $ne: true },
+      }).lean();
+
+      const calculateHealth = (p) => {
+        let score = 0;
+        if (p.name?.length > 20) score += 15;
+        if (p.description?.length > 100) score += 15;
+        if (p.images?.length >= 3) score += 20;
+        if (p.highlights && p.highlights.length >= 3) score += 15;
+        if (p.category) score += 10;
+        if (p.sku) score += 10;
+        if (p.keywords?.length > 10) score += 15;
+        return Math.min(score, 100);
+      };
+
+      const filtered = allSellerProducts.filter((p) => calculateHealth(p) < 70);
+      total = filtered.length;
+      products = filtered.slice((page - 1) * limit, page * limit);
+    } else {
+      products = await Product.find(query)
+        .sort({ createdAt: -1 })
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .lean();
+      total = await Product.countDocuments(query);
+    }
+
+    // Get stats efficiently
+    const allProductsForStats = await Product.find({ sellerId: seller._id, isDraft: { $ne: true } }).select('name description images highlights category inventory.sku keywords').lean();
+    
+    const calculateHealth = (p) => {
+      let score = 0;
+      if (p.name?.length > 20) score += 15;
+      if (p.description?.length > 100) score += 15;
+      if (p.images?.length >= 3) score += 20;
+      if (p.highlights && p.highlights.length >= 3) score += 15;
+      if (p.category) score += 10;
+      if (p.inventory?.sku || p.sku) score += 10;
+      if (p.keywords?.length > 10) score += 15;
+      return Math.min(score, 100);
+    };
+
+    const lowHealthCount = allProductsForStats.filter(p => calculateHealth(p) < 70).length;
+
     const stats = {
       total: await Product.countDocuments({ sellerId: seller._id }),
       active: await Product.countDocuments({
         sellerId: seller._id,
         isActive: true,
+        isDraft: { $ne: true },
       }),
       inactive: await Product.countDocuments({
         sellerId: seller._id,
         isActive: false,
+        isDraft: { $ne: true },
       }),
       pending: await Product.countDocuments({
         sellerId: seller._id,
         isApproved: false,
+        isDraft: { $ne: true },
+      }),
+      drafts: await Product.countDocuments({
+        sellerId: seller._id,
+        isDraft: true,
       }),
       lowStock: await Product.countDocuments({
         sellerId: seller._id,
+        isDraft: { $ne: true },
         $expr: { $lte: ["$inventory.stock", "$inventory.lowStockThreshold"] },
       }),
+      lowHealth: lowHealthCount
     };
 
     return NextResponse.json({
@@ -143,7 +202,7 @@ export async function POST(request) {
     const product = await Product.create({
       ...body,
       sellerId: seller._id,
-      isApproved: true,
+      isApproved: false, // Moved to manual/quality-check review queue
     });
 
     return NextResponse.json({

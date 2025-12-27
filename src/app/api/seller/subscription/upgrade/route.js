@@ -41,7 +41,7 @@ export async function POST(request) {
       const rzpOrder = await razorpayService.createOrder(
         amount,
         "INR",
-        `sub_${decoded.userId}_${tier}_${Date.now()}`,
+        `sub_${Date.now().toString().slice(-10)}`, // Max 40 chars
         {
           sellerId: decoded.userId,
           tier: tier,
