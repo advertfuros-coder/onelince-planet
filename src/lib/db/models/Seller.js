@@ -178,6 +178,21 @@ const SellerSchema = new mongoose.Schema(
         default: false,
       },
       agreementSignedAt: Date,
+      requestedDocuments: [
+        {
+          title: String,
+          description: String,
+          status: {
+            type: String,
+            enum: ["pending", "uploaded", "verified", "rejected"],
+            default: "pending",
+          },
+          url: String,
+          uploadedAt: Date,
+          requestedAt: { type: Date, default: Date.now },
+          rejectionReason: String,
+        },
+      ],
     },
 
     // Verification Status
@@ -263,6 +278,56 @@ const SellerSchema = new mongoose.Schema(
     isVerified: {
       type: Boolean,
       default: false,
+    },
+
+    // Activity Logs
+    activityLogs: [
+      {
+        type: {
+          type: String,
+          enum: ['admin', 'seller', 'system'],
+          required: true
+        },
+        action: {
+          type: String,
+          required: true
+        },
+        description: String,
+        details: String,
+        timestamp: {
+          type: Date,
+          default: Date.now
+        },
+        performedBy: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'User'
+        }
+      }
+    ],
+
+    // Admin Notes
+    adminNotes: [
+      {
+        note: {
+          type: String,
+          required: true
+        },
+        createdBy: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'User',
+          required: true
+        },
+        createdAt: {
+          type: Date,
+          default: Date.now
+        }
+      }
+    ],
+
+    // Average Response Time (for customer queries)
+    avgResponseTime: {
+      type: String,
+      default: '< 24h'
     },
   },
   {

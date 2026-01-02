@@ -73,40 +73,70 @@ export async function PUT(request, { params }) {
       performance,
       warehouses,
       subscriptionPlan,
+      rejectionReason,
     } = body;
 
     // Unwrap params
     const { id } = await params;
 
-    const seller = await Seller.findByIdAndUpdate(
-      id,
-      {
-        businessName,
-        tier,
-        isActive,
-        isVerified,
-        verificationStatus,
-        commission,
-        bankDetails,
-        pickupAddress,
-        storeInfo,
-        documents,
-        verificationSteps,
-        ratings,
-        salesStats,
-        performance,
-        warehouses,
-        subscriptionPlan,
-      },
-      { new: true, runValidators: true }
-    );
-
+    const seller = await Seller.findById(id);
     if (!seller) {
       return NextResponse.json(
         { success: false, message: "Seller not found" },
         { status: 404 }
       );
     }
+
+    // Track what changed for activity log
+    const changes = [];
+    if (isActive !== undefined && seller.isActive !== isActive) {
+      changes.push(isActive ? "Account activated" : "Account suspended");
+    }
+    if (isVerified !== undefined && seller.isVerified !== isVerified) {
+      changes.push(isVerified ? "Seller verified" : "Verification revoked");
+    }
+    if (
+      verificationStatus &&
+      seller.verificationStatus !== verificationStatus
+    ) {
+      changes.push(`Verification status changed to ${verificationStatus}`);
+    }
+
+    // Update seller - only update fields that are provided
+    if (businessName !== undefined) seller.businessName = businessName;
+    if (tier !== undefined) seller.tier = tier;
+    if (isActive !== undefined) seller.isActive = isActive;
+    if (isVerified !== undefined) seller.isVerified = isVerified;
+    if (verificationStatus !== undefined)
+      seller.verificationStatus = verificationStatus;
+    if (commission !== undefined) seller.commission = commission;
+    if (bankDetails !== undefined) seller.bankDetails = bankDetails;
+    if (pickupAddress !== undefined) seller.pickupAddress = pickupAddress;
+    if (storeInfo !== undefined) seller.storeInfo = storeInfo;
+    if (documents !== undefined) seller.documents = documents;
+    if (verificationSteps !== undefined)
+      seller.verificationSteps = verificationSteps;
+    if (ratings !== undefined) seller.ratings = ratings;
+    if (salesStats !== undefined) seller.salesStats = salesStats;
+    if (performance !== undefined) seller.performance = performance;
+    if (warehouses !== undefined) seller.warehouses = warehouses;
+    if (subscriptionPlan !== undefined)
+      seller.subscriptionPlan = subscriptionPlan;
+    if (rejectionReason !== undefined) seller.rejectionReason = rejectionReason;
+
+    // Add activity log if there were changes
+    if (changes.length > 0) {
+      if (!seller.activityLogs) seller.activityLogs = [];
+      seller.activityLogs.push({
+        type: "admin",
+        action: "Seller Updated",
+        description: changes.join(", "),
+        timestamp: new Date(),
+        performedBy: decoded.userId,
+      });
+    }
+
+    await seller.save();
 
     return NextResponse.json({
       success: true,

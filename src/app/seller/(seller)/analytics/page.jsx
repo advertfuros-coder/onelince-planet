@@ -101,7 +101,7 @@ export default function SellerAnalytics() {
       <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC]">
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
-          <p className="text-gray-500 font-bold animate-pulse">Computing Insights...</p>
+          <p className="text-gray-500 font-bold animate-pulse">Loading Analytics...</p>
         </div>
       </div>
     )
@@ -114,8 +114,8 @@ export default function SellerAnalytics() {
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-6">
           <div>
-            <h1 className="text-3xl font-black text-gray-900 tracking-tight">Business Intelligence</h1>
-            <p className="text-gray-500 mt-1 font-medium">Deep dive into your store performance and customer behavior</p>
+            <h1 className="text-3xl font-black text-gray-900 tracking-tight">Sales Analytics</h1>
+            <p className="text-gray-500 mt-1 font-medium">Track your store performance and understand your customers</p>
           </div>
 
           <div className="flex items-center gap-3">
@@ -125,8 +125,8 @@ export default function SellerAnalytics() {
                   key={range}
                   onClick={() => setDateRange(range)}
                   className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${dateRange === range
-                      ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30'
-                      : 'text-gray-500 hover:bg-gray-50'
+                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30'
+                    : 'text-gray-500 hover:bg-gray-50'
                     }`}
                 >
                   {range === '7days' ? '1W' : range === '30days' ? '1M' : '3M'}
@@ -146,7 +146,7 @@ export default function SellerAnalytics() {
           {/* Payments Funnel Visualization */}
           <div className="lg:col-span-2 bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100/50 relative overflow-hidden group">
             <div className="flex items-center justify-between mb-8">
-              <h3 className="text-xl font-black text-gray-900">Order Funnel</h3>
+              <h3 className="text-xl font-black text-gray-900">Order Progress</h3>
               <button className="p-2 hover:bg-gray-50 rounded-xl transition-colors">
                 <MoreHorizontal size={20} className="text-gray-400" />
               </button>
@@ -187,7 +187,7 @@ export default function SellerAnalytics() {
               {/* Drop-off Tooltip (Absolute) */}
               <div className="absolute top-[35%] left-[55%] animate-in fade-in slide-in-from-left-4 duration-500">
                 <div className="bg-white/90 backdrop-blur-md p-3 rounded-2xl shadow-2xl border border-gray-100 flex items-center gap-2">
-                  <span className="text-[11px] font-bold text-gray-900">Conv. Rate: <span className="text-blue-600">{analyticsData.overview.conversionRate || 85}%</span></span>
+                  <span className="text-[11px] font-bold text-gray-900">Success Rate: <span className="text-blue-600">{analyticsData.overview.conversionRate || 85}%</span></span>
                   <div className="w-[1px] h-3 bg-gray-200" />
                   <span className="text-[11px] font-bold text-gray-400">Success: <span className="text-emerald-500">High</span></span>
                 </div>
@@ -201,7 +201,7 @@ export default function SellerAnalytics() {
                   <Zap size={16} fill="currentColor" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-[11px] font-black text-blue-900/40 uppercase tracking-widest mb-0.5">Performance Insight</p>
+                  <p className="text-[11px] font-black text-blue-900/40 uppercase tracking-widest mb-0.5">Quick Insight</p>
                   <p className="text-xs font-bold text-blue-900/60">
                     {analyticsData.growth.orders > 0
                       ? `Order volume is up by ${analyticsData.growth.orders.toFixed(1)}% - click to see why.`
@@ -217,7 +217,7 @@ export default function SellerAnalytics() {
           <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100/50 flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-black text-gray-900">Revenue Volume</h3>
+                <h3 className="text-xl font-black text-gray-900">Total Revenue</h3>
                 <button className="p-2 hover:bg-gray-50 rounded-xl transition-colors">
                   <MoreHorizontal size={20} className="text-gray-400" />
                 </button>
@@ -234,21 +234,21 @@ export default function SellerAnalytics() {
 
               <div className="space-y-6">
                 <ProgressStat
-                  label="Direct Market"
+                  label="Direct Sales"
                   value={analyticsData.overview.totalRevenue * 0.7}
                   total={analyticsData.overview.totalRevenue}
                   color="bg-emerald-500"
                   stripes
                 />
                 <ProgressStat
-                  label="Wholesale/Bulk"
+                  label="Bulk Orders"
                   value={analyticsData.overview.totalRevenue * 0.2}
                   total={analyticsData.overview.totalRevenue}
                   color="bg-blue-500"
                   stripes
                 />
                 <ProgressStat
-                  label="Promotional"
+                  label="Offers & Discounts"
                   value={analyticsData.overview.totalRevenue * 0.1}
                   total={analyticsData.overview.totalRevenue}
                   color="bg-pink-500"
@@ -265,7 +265,7 @@ export default function SellerAnalytics() {
           {/* Retention Stepped Chart */}
           <div className="lg:col-span-1 lg:row-span-2 bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100/50">
             <div className="flex items-center justify-between mb-8">
-              <h3 className="text-xl font-black text-gray-900">Retention</h3>
+              <h3 className="text-xl font-black text-gray-900">Customer Loyalty</h3>
               <button className="p-2 hover:bg-gray-50 rounded-xl transition-colors">
                 <MoreHorizontal size={20} className="text-gray-400" />
               </button>
@@ -305,7 +305,7 @@ export default function SellerAnalytics() {
           <div className="lg:col-span-2 space-y-6">
 
             <MetricCard
-              title="Total Transactions"
+              title="Total Orders"
               value={analyticsData.overview.totalOrders.toLocaleString()}
               change={`${analyticsData.growth.orders >= 0 ? '+' : ''}${analyticsData.growth.orders.toFixed(1)}%`}
               data={analyticsData.salesTrend}
@@ -314,7 +314,7 @@ export default function SellerAnalytics() {
             />
 
             <MetricCard
-              title="Active Customers"
+              title="Total Customers"
               value={analyticsData.customerInsights.totalCustomers.toLocaleString()}
               change={`+${analyticsData.customerInsights.newCustomers} New`}
               data={analyticsData.salesTrend}
@@ -329,7 +329,7 @@ export default function SellerAnalytics() {
             <div className="absolute top-10 right-10">
               <div className="bg-white/10 backdrop-blur-md px-4 py-2 rounded-2xl flex items-center gap-2 border border-white/20">
                 <Zap size={14} className="text-blue-400" />
-                <span className="text-xs font-bold uppercase tracking-widest">Growth Forecast</span>
+                <span className="text-xs font-bold uppercase tracking-widest">Revenue Forecast</span>
               </div>
             </div>
 
@@ -372,7 +372,7 @@ function FunnelStep({ label, value, height, active, highlight }) {
       </div>
       <div
         className={`w-full rounded-t-2xl transition-all duration-1000 ease-out ${highlight ? 'bg-gradient-to-t from-blue-700 to-blue-500' :
-            active ? 'bg-blue-100 relative' : 'bg-gray-50'
+          active ? 'bg-blue-100 relative' : 'bg-gray-50'
           }`}
         style={{ height }}
       >

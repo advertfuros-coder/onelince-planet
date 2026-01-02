@@ -1,1645 +1,1502 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, use } from 'react'
 import { useRouter } from 'next/navigation'
+import { useAuth } from '@/lib/context/AuthContext'
 import axios from 'axios'
 import {
-  FiArrowLeft, FiMail, FiPhone, FiGlobe, FiMapPin, FiCalendar,
-  FiCheckCircle, FiXCircle, FiFileText, FiFacebook, FiInstagram,
-  FiLinkedin, FiTwitter, FiYoutube, FiDollarSign, FiShoppingCart,
-  FiPackage, FiUsers, FiTrendingUp, FiStar, FiClock, FiTruck,
-  FiAward, FiEdit2, FiAlertCircle, FiSettings, FiDownload,
-  FiUpload, FiTrash2, FiPause, FiPlay, FiZap, FiBox,
-  FiMessageSquare, FiActivity, FiShield, FiDatabase
+    FiArrowLeft, FiUser, FiBriefcase, FiShoppingBag, FiPackage, FiDollarSign,
+    FiClock, FiFileText, FiShield, FiMapPin, FiMail, FiPhone, FiEye,
+    FiStar, FiLayers, FiCheckCircle, FiXCircle, FiAlertCircle, FiPlus,
+    FiMessageSquare, FiActivity, FiTrendingUp, FiCalendar, FiCreditCard,
+    FiEdit, FiDownload, FiBarChart2, FiTrendingDown, FiPercent,
+    FiShoppingCart, FiUsers, FiRefreshCw, FiHash, FiGlobe, FiHome,
+    FiSearch
 } from 'react-icons/fi'
-import {
-  PieChart, Pie, Cell, BarChart, Bar, LineChart, Line,
-  XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
-  RadialBarChart, RadialBar, AreaChart, Area
-} from 'recharts'
-import { useAuth } from '@/lib/context/AuthContext'
-import { toast } from 'react-hot-toast'
-import Link from 'next/link'
-
-const COLORS = ['#10B981', '#3B82F6', '#F59E0B', '#8B5CF6', '#EF4444']
-
-export default function AdminSellerDetailPage({ params: paramsPromise }) {
-  const { token, user } = useAuth()
-  const router = useRouter()
-  const [params, setParams] = useState(null)
-  const [seller, setSeller] = useState(null)
-  const [sellerOrders, setSellerOrders] = useState([])
-  const [sellerProducts, setSellerProducts] = useState([])
-  const [sellerReviews, setSellerReviews] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [activeTab, setActiveTab] = useState('overview')
-  const [showEditModal, setShowEditModal] = useState(false)
-  const [showPlanModal, setShowPlanModal] = useState(false)
-  const [showCommissionModal, setShowCommissionModal] = useState(false)
-  const [selectedProduct, setSelectedProduct] = useState(null)
-  const [processingAction, setProcessingAction] = useState(false)
-
-  useEffect(() => {
-    // Unwrap params
-    const unwrapParams = async () => {
-      const resolvedParams = await paramsPromise
-      setParams(resolvedParams)
-    }
-    unwrapParams()
-  }, [paramsPromise])
-
-  useEffect(() => {
-    if (params?.id && token) {
-      fetchAllData()
-    }
-  }, [params, token])
-
-  async function fetchAllData() {
-    setLoading(true)
-    try {
-      await Promise.all([
-        fetchSellerDetails(),
-        fetchSellerOrders(),
-        fetchSellerProducts(),
-        fetchSellerReviews()
-      ])
-    } catch (error) {
-      console.error('Error fetching ', error)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  async function fetchSellerDetails() {
-    try {
-      const res = await axios.get(`/api/admin/sellers/${params.id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      })
-      if (res.data.success) {
-        setSeller(res.data.seller)
-      }
-    } catch (error) {
-      console.error('Error fetching seller:', error)
-      toast.error('Failed to fetch seller details')
-    }
-  }
-
-  async function fetchSellerOrders() {
-    try {
-      const res = await axios.get(`/api/seller/orders?sellerId=${params.id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      })
-      console.log(res)
-      if (res.data.success) {
-        setSellerOrders(res.data.orders)
-      }
-    } catch (error) {
-      console.error('Error fetching orders:', error)
-    }
-  }
-
-  async function fetchSellerProducts() {
-    try {
-      const res = await axios.get(`/api/admin/sellers/${params.id}/products`, {
-        headers: { Authorization: `Bearer ${token}` }
-      })
-      console.log(res)
-      if (res.data.success) {
-        setSellerProducts(res.data.products)
-      }
-    } catch (error) {
-      console.error('Error fetching products:', error)
-    }
-  }
-
-  async function fetchSellerReviews() {
-    try {
-      const res = await axios.get(`/api/admin/sellers/${params.id}/reviews`, {
-        headers: { Authorization: `Bearer ${token}` }
-      })
-      if (res.data.success) {
-        setSellerReviews(res.data.reviews)
-      }
-    } catch (error) {
-      console.error('Error fetching reviews:', error)
-    }
-  }
-
-  // Action Handlers
-  async function handleToggleStatus() {
-    if (!confirm(`${seller.isActive ? 'Deactivate' : 'Activate'} this seller?`)) return
-
-    setProcessingAction(true)
-    try {
-      const res = await axios.patch(
-        `/api/admin/sellers/${params.id}/toggle-status`,
-        {},
-        { headers: { Authorization: `Bearer ${token}` } }
-      )
-      if (res.data.success) {
-        toast.success(`Seller ${seller.isActive ? 'deactivated' : 'activated'} successfully`)
-        fetchSellerDetails()
-      }
-    } catch (error) {
-      toast.error('Failed to update status')
-    } finally {
-      setProcessingAction(false)
-    }
-  }
-
-  async function handleUpdateCommission(newCommission) {
-    setProcessingAction(true)
-    try {
-      const res = await axios.patch(
-        `/api/admin/sellers/${params.id}/commission`,
-        { commission: parseFloat(newCommission) },
-        { headers: { Authorization: `Bearer ${token}` } }
-      )
-      if (res.data.success) {
-        toast.success('Commission updated successfully')
-        setShowCommissionModal(false)
-        fetchSellerDetails()
-      }
-    } catch (error) {
-      toast.error('Failed to update commission')
-    } finally {
-      setProcessingAction(false)
-    }
-  }
-
-  async function handleUpdatePlan(plan) {
-    setProcessingAction(true)
-    try {
-      const res = await axios.patch(
-        `/api/admin/sellers/${params.id}/plan`,
-        { plan },
-        { headers: { Authorization: `Bearer ${token}` } }
-      )
-      if (res.data.success) {
-        toast.success('Plan updated successfully')
-        setShowPlanModal(false)
-        fetchSellerDetails()
-      }
-    } catch (error) {
-      toast.error('Failed to update plan')
-    } finally {
-      setProcessingAction(false)
-    }
-  }
-
-  async function handleToggleProductStatus(productId, currentStatus) {
-    if (!confirm(`${currentStatus ? 'Disable' : 'Enable'} this product?`)) return
-
-    try {
-      const res = await axios.patch(
-        `/api/admin/products/${productId}/toggle-status`,
-        {},
-        { headers: { Authorization: `Bearer ${token}` } }
-      )
-      if (res.data.success) {
-        toast.success('Product status updated')
-        fetchSellerProducts()
-      }
-    } catch (error) {
-      toast.error('Failed to update product')
-    }
-  }
-
-  async function handleVerifyDocument(docType) {
-    try {
-      const res = await axios.patch(
-        `/api/admin/sellers/${params.id}/verify-document`,
-        { documentType: docType },
-        { headers: { Authorization: `Bearer ${token}` } }
-      )
-      if (res.data.success) {
-        toast.success('Document verified')
-        fetchSellerDetails()
-      }
-    } catch (error) {
-      toast.error('Failed to verify document')
-    }
-  }
-
-  async function handleDeleteReview(reviewId) {
-    if (!confirm('Delete this review?')) return
-
-    try {
-      const res = await axios.delete(
-        `/api/admin/reviews/${reviewId}`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      )
-      if (res.data.success) {
-        toast.success('Review deleted')
-
-        fetchSellerReviews()
-      }
-    } catch (error) {
-      toast.error('Failed to delete review')
-    }
-  }
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-600 border-t-transparent"></div>
-      </div>
-    )
-  }
-
-  if (!seller) return null
-
-  // Calculate stats
-  const orderStats = {
-    total: sellerOrders.length,
-    confirmed: sellerOrders.filter(o => o.status === 'confirmed').length,
-    processing: sellerOrders.filter(o => o.status === 'processing').length,
-    shipped: sellerOrders.filter(o => o.status === 'shipped').length,
-    delivered: sellerOrders.filter(o => o.status === 'delivered').length,
-    cancelled: sellerOrders.filter(o => o.status === 'cancelled').length,
-    returned: sellerOrders.filter(o => o.status === 'returned').length,
-    totalRevenue: sellerOrders
-      .filter(o => !['cancelled', 'returned'].includes(o.status))
-      .reduce((sum, o) => sum + (o.pricing?.total || 0), 0)
-  }
-
-  const productStats = {
-    total: sellerProducts.length,
-    active: sellerProducts.filter(p => p.isActive).length,
-    inactive: sellerProducts.filter(p => !p.isActive).length,
-    outOfStock: sellerProducts.filter(p => (p.inventory?.stock || 0) === 0).length,
-    lowStock: sellerProducts.filter(p => {
-      const stock = p.inventory?.stock || 0
-      const threshold = p.inventory?.lowStockThreshold || 10
-      return stock > 0 && stock <= threshold
-    }).length
-  }
-
-  // Chart data
-  const ratingData = [
-    { name: '5★', value: seller.ratings?.breakdown?.five || 0, fill: '#10B981' },
-    { name: '4★', value: seller.ratings?.breakdown?.four || 0, fill: '#3B82F6' },
-    { name: '3★', value: seller.ratings?.breakdown?.three || 0, fill: '#F59E0B' },
-    { name: '2★', value: seller.ratings?.breakdown?.two || 0, fill: '#F97316' },
-    { name: '1★', value: seller.ratings?.breakdown?.one || 0, fill: '#EF4444' }
-  ]
-
-  const orderStatusData = [
-    { name: 'Confirmed', value: orderStats.confirmed, fill: '#10B981' },
-    { name: 'Processing', value: orderStats.processing, fill: '#3B82F6' },
-    { name: 'Shipped', value: orderStats.shipped, fill: '#8B5CF6' },
-    { name: 'Delivered', value: orderStats.delivered, fill: '#F59E0B' },
-    { name: 'Cancelled', value: orderStats.cancelled, fill: '#EF4444' }
-  ]
-
-  const productStatusData = [
-    { name: 'Active', value: productStats.active, fill: '#10B981' },
-    { name: 'Inactive', value: productStats.inactive, fill: '#6B7280' },
-    { name: 'Out of Stock', value: productStats.outOfStock, fill: '#EF4444' },
-    { name: 'Low Stock', value: productStats.lowStock, fill: '#F59E0B' }
-  ]
-
-  return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header with Banner */}
-      <div className="relative">
-        <img
-          src={seller.storeInfo?.storeBanner || '/images/default-banner.jpg'}
-          alt="Store Banner"
-          className="w-full h-48 object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-
-        <div className="absolute bottom-0 left-0 right-0 p-6">
-          <div className="max-w-7xl mx-auto flex items-end space-x-6">
-            <img
-              src={seller.storeInfo?.storeLogo || '/images/default-logo.png'}
-              alt={seller.businessName}
-              className="w-24 h-24 rounded-xl border-4 border-white shadow-xl bg-white object-cover"
-            />
-            <div className="flex-1 pb-2">
-              <h1 className="text-3xl font-bold text-white mb-1">{seller.businessName}</h1>
-              <div className="flex items-center space-x-4 text-white/90">
-                <span className="capitalize">{seller.businessCategory}</span>
-                <span>•</span>
-                <span className="capitalize">{seller.businessType?.replace(/_/g, ' ')}</span>
-                <span>•</span>
-                <span>Member since {new Date(seller.createdAt).toLocaleDateString()}</span>
-              </div>
-            </div>
-            <button
-              onClick={() => router.push('/admin/sellers')}
-              className="px-4 py-2 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white rounded-lg transition-colors flex items-center space-x-2"
-            >
-              <FiArrowLeft />
-              <span>Back</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Status Bar */}
-      <div className="bg-white border-b">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-6">
-              <div className="flex items-center space-x-2">
-                {seller.isActive ? (
-                  <>
-                    <FiCheckCircle className="text-green-600" />
-                    <span className="text-green-700 font-semibold">Active</span>
-                  </>
-                ) : (
-                  <>
-                    <FiXCircle className="text-red-600" />
-                    <span className="text-red-700 font-semibold">Inactive</span>
-                  </>
-                )}
-              </div>
-              <div className="flex items-center space-x-2">
-                {seller.isVerified ? (
-                  <>
-                    <FiShield className="text-blue-600" />
-                    <span className="text-blue-700 font-semibold">Verified</span>
-                  </>
-                ) : (
-                  <>
-                    <FiAlertCircle className="text-yellow-600" />
-                    <span className="text-yellow-700 font-semibold capitalize">
-                      {seller.verificationStatus}
-                    </span>
-                  </>
-                )}
-              </div>
-              <div className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-semibold capitalize">
-                {seller.subscriptionPlan} Plan
-              </div>
-              <div className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold">
-                {seller.commissionRate}% Commission
-              </div>
-            </div>
-
-            <div className="flex items-center space-x-3">
-              <button
-                onClick={handleToggleStatus}
-                disabled={processingAction}
-                className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition font-medium disabled:opacity-50 ${seller.isActive
-                  ? 'bg-red-100 text-red-700 hover:bg-red-200'
-                  : 'bg-green-100 text-green-700 hover:bg-green-200'
-                  }`}
-              >
-                {seller.isActive ? <FiPause /> : <FiPlay />}
-                <span>{seller.isActive ? 'Deactivate' : 'Activate'}</span>
-              </button>
-
-              <button
-                onClick={() => setShowEditModal(true)}
-                className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium"
-              >
-                <FiEdit2 />
-                <span>Edit Seller</span>
-              </button>
-
-              <button className="p-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition">
-                <FiSettings className="text-gray-700" />
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Tabs */}
-      <div className="bg-white border-b sticky top-0 z-10 shadow-sm">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex space-x-8 overflow-x-auto">
-            {[
-              { value: 'overview', label: 'Overview', icon: FiActivity },
-              { value: 'products', label: 'Products', icon: FiBox },
-              { value: 'orders', label: 'Orders', icon: FiShoppingCart },
-              { value: 'reviews', label: 'Reviews', icon: FiMessageSquare },
-              { value: 'analytics', label: 'Analytics', icon: FiTrendingUp },
-              { value: 'settings', label: 'Settings', icon: FiSettings },
-              { value: 'documents', label: 'Documents', icon: FiFileText },
-              { value: 'payouts', label: 'Payouts', icon: FiDollarSign }
-            ].map((tab) => {
-              const Icon = tab.icon
-              return (
-                <button
-                  key={tab.value}
-                  onClick={() => setActiveTab(tab.value)}
-                  className={`py-4 border-b-2 transition-colors flex items-center space-x-2 whitespace-nowrap ${activeTab === tab.value
-                    ? 'border-blue-600 text-blue-600 font-semibold'
-                    : 'border-transparent text-gray-600 hover:text-gray-900'
-                    }`}
-                >
-                  <Icon />
-                  <span>{tab.label}</span>
-                </button>
-              )
-            })}
-          </div>
-        </div>
-      </div>
-
-      {/* Content */}
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        {activeTab === 'overview' && (
-          <OverviewTab
-            seller={seller}
-            orderStats={orderStats}
-            productStats={productStats}
-            ratingData={ratingData}
-            orderStatusData={orderStatusData}
-            productStatusData={productStatusData}
-            sellerOrders={sellerOrders}
-            sellerProducts={sellerProducts}
-          />
-        )}
-
-        {activeTab === 'products' && (
-          <ProductsTab
-            products={sellerProducts}
-            onToggleStatus={handleToggleProductStatus}
-            onRefresh={fetchSellerProducts}
-          />
-        )}
-
-        {activeTab === 'orders' && (
-          <OrdersTab
-            orders={sellerOrders}
-            stats={orderStats}
-            onRefresh={fetchSellerOrders}
-          />
-        )}
-
-        {activeTab === 'reviews' && (
-          <ReviewsTab
-            reviews={sellerReviews}
-            onDelete={handleDeleteReview}
-            onRefresh={fetchSellerReviews}
-          />
-        )}
-
-        {activeTab === 'analytics' && (
-          <AnalyticsTab
-            seller={seller}
-            orders={sellerOrders}
-            products={sellerProducts}
-            orderStats={orderStats}
-          />
-        )}
-
-        {activeTab === 'settings' && (
-          <SettingsTab
-            seller={seller}
-            onUpdateCommission={() => setShowCommissionModal(true)}
-            onUpdatePlan={() => setShowPlanModal(true)}
-            onRefresh={fetchSellerDetails}
-          />
-        )}
-
-        {activeTab === 'documents' && (
-          <DocumentsTab
-            seller={seller}
-            onVerify={handleVerifyDocument}
-            onRefresh={fetchSellerDetails}
-          />
-        )}
-
-        {activeTab === 'payouts' && (
-          <PayoutsTab
-            seller={seller}
-            orders={sellerOrders}
-            stats={orderStats}
-          />
-        )}
-      </div>
-
-      {/* Modals */}
-      {showCommissionModal && (
-        <CommissionModal
-          currentCommission={seller.commissionRate}
-          onSave={handleUpdateCommission}
-          onClose={() => setShowCommissionModal(false)}
-          processing={processingAction}
-        />
-      )}
-
-      {showPlanModal && (
-        <PlanModal
-          currentPlan={seller.subscriptionPlan}
-          onSave={handleUpdatePlan}
-          onClose={() => setShowPlanModal(false)}
-          processing={processingAction}
-        />
-      )}
-    </div>
-  )
-}
-
-// Component: Overview Tab
-function OverviewTab({ seller, orderStats, productStats, ratingData, orderStatusData, productStatusData, sellerOrders, sellerProducts }) {
-  return (
-    <div className="space-y-6">
-      {/* Key Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <MetricCard
-          icon={<FiDollarSign className="text-green-600" />}
-          label="Total Revenue"
-          value={`₹${orderStats.totalRevenue.toLocaleString()}`}
-          bgColor="bg-green-50"
-        />
-        <MetricCard
-          icon={<FiShoppingCart className="text-blue-600" />}
-          label="Total Orders"
-          value={orderStats.total.toLocaleString()}
-          bgColor="bg-blue-50"
-        />
-        <MetricCard
-          icon={<FiPackage className="text-purple-600" />}
-          label="Active Products"
-          value={productStats.active}
-          subtitle={`of ${productStats.total} total`}
-          bgColor="bg-purple-50"
-        />
-        <MetricCard
-          icon={<FiStar className="text-yellow-600" />}
-          label="Average Rating"
-          value={`${seller.ratings?.average || 0}/5`}
-          subtitle={`${seller.ratings?.totalReviews || 0} reviews`}
-          bgColor="bg-yellow-50"
-        />
-      </div>
-
-      {/* Charts Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <ChartCard title="Customer Ratings">
-          <ResponsiveContainer width="100%" height={280}>
-            <PieChart>
-              <Pie
-                data={ratingData}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`}
-                outerRadius={80}
-                fill="#8884d8"
-                dataKey="value"
-              >
-                {ratingData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.fill} />
-                ))}
-              </Pie>
-              <Tooltip />
-            </PieChart>
-          </ResponsiveContainer>
-        </ChartCard>
-
-        <ChartCard title="Order Status Distribution">
-          <ResponsiveContainer width="100%" height={280}>
-            <BarChart data={orderStatusData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" angle={-45} textAnchor="end" height={80} />
-              <YAxis />
-              <Tooltip />
-              <Bar dataKey="value" fill="#3B82F6" />
-            </BarChart>
-          </ResponsiveContainer>
-        </ChartCard>
-
-        <ChartCard title="Product Status">
-          <ResponsiveContainer width="100%" height={280}>
-            <PieChart>
-              <Pie
-                data={productStatusData}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`}
-                outerRadius={80}
-                fill="#8884d8"
-                dataKey="value"
-              >
-                {productStatusData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.fill} />
-                ))}
-              </Pie>
-              <Tooltip />
-            </PieChart>
-          </ResponsiveContainer>
-        </ChartCard>
-      </div>
-
-      {/* Recent Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <InfoCard title="Recent Orders">
-          <div className="space-y-3">
-            {sellerOrders.slice(0, 5).map((order) => (
-              <Link
-                key={order._id}
-                href={`/admin/orders/${order._id}`}
-                className="block p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition"
-              >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-bold text-gray-900">#{order.orderNumber}</p>
-                    <p className="text-sm text-gray-600">
-                      {new Date(order.createdAt).toLocaleDateString()}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-lg font-bold text-blue-600">
-                      ₹{order.pricing.total.toLocaleString()}
-                    </p>
-                    <span className={`text-xs px-2 py-1 rounded-full font-semibold ${order.status === 'delivered' ? 'bg-green-100 text-green-800' :
-                      order.status === 'cancelled' ? 'bg-red-100 text-red-800' :
-                        'bg-blue-100 text-blue-800'
-                      }`}>
-                      {order.status.toUpperCase()}
-                    </span>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </InfoCard>
-
-        <InfoCard title="Top Products">
-          <div className="space-y-3">
-            {sellerProducts.slice(0, 5).map((product) => (
-              <Link
-                key={product._id}
-                href={`/admin/products/${product._id}`}
-                className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition"
-              >
-                <img
-                  src={product.images?.[0]?.url || '/placeholder.png'}
-                  alt={product.name}
-                  className="w-12 h-12 object-cover rounded-lg"
-                />
-                <div className="flex-1">
-                  <p className="font-semibold text-gray-900 line-clamp-1">{product.name}</p>
-                  <p className="text-sm text-gray-600">
-                    Stock: {product.inventory?.stock || 0}
-                  </p>
-                </div>
-                <p className="font-bold text-blue-600">
-                  ₹{product.pricing?.salePrice || product.pricing?.basePrice}
-                </p>
-              </Link>
-            ))}
-          </div>
-        </InfoCard>
-      </div>
-    </div>
-  )
-}
-
-// Component: Products Tab
-function ProductsTab({ products, onToggleStatus, onRefresh }) {
-  const [searchTerm, setSearchTerm] = useState('')
-  const [statusFilter, setStatusFilter] = useState('all')
-
-  const filteredProducts = products.filter(p => {
-    const matchesSearch = p.name?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false
-    const matchesStatus = statusFilter === 'all' ||
-      (statusFilter === 'active' && p.isActive) ||
-      (statusFilter === 'inactive' && !p.isActive) ||
-      (statusFilter === 'outOfStock' && (p.inventory?.stock || 0) === 0)
-
-    return matchesSearch && matchesStatus
-  })
-
-  return (
-    <div className="space-y-6">
-      {/* Filters */}
-      <div className="bg-white rounded-lg shadow-sm p-4 flex flex-col sm:flex-row gap-4">
-        <div className="flex-1">
-          <input
-            type="text"
-            placeholder="Search products..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-        <select
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-          className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          <option value="all">All Products</option>
-          <option value="active">Active</option>
-          <option value="inactive">Inactive</option>
-          <option value="outOfStock">Out of Stock</option>
-        </select>
-        <button
-          onClick={onRefresh}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-        >
-          Refresh
-        </button>
-      </div>
-
-      {/* Products Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredProducts.map((product) => (
-          <div key={product._id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-            <img
-              src={product.images?.[0]?.url || '/placeholder.png'}
-              alt={product.name}
-              className="w-full h-48 object-cover"
-            />
-            <div className="p-4">
-              <h3 className="font-bold text-gray-900 mb-2 line-clamp-2">{product.name}</h3>
-              <div className="flex items-center justify-between mb-3">
-                <p className="text-2xl font-bold text-blue-600">
-                  ₹{product.pricing?.salePrice || product.pricing?.basePrice}
-                </p>
-                <span className={`px-2 py-1 rounded-full text-xs font-semibold ${product.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                  }`}>
-                  {product.isActive ? 'Active' : 'Inactive'}
-                </span>
-              </div>
-              <div className="text-sm text-gray-600 mb-3">
-                <p>Stock: <strong>{product.inventory?.stock || 0}</strong></p>
-                <p>SKU: {product.sku || 'N/A'}</p>
-              </div>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => onToggleStatus(product._id, product.isActive)}
-                  className={`flex-1 px-3 py-2 rounded-lg text-sm font-medium transition ${product.isActive
-                    ? 'bg-red-100 text-red-700 hover:bg-red-200'
-                    : 'bg-green-100 text-green-700 hover:bg-green-200'
-                    }`}
-                >
-                  {product.isActive ? 'Disable' : 'Enable'}
-                </button>
-                <Link
-                  href={`/admin/products/${product._id}`}
-                  className="flex-1 px-3 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium text-center hover:bg-blue-700 transition"
-                >
-                  View
-                </Link>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {filteredProducts.length === 0 && (
-        <div className="bg-white rounded-lg shadow-sm p-12 text-center">
-          <FiPackage className="mx-auto text-6xl text-gray-300 mb-4" />
-          <p className="text-gray-600">No products found</p>
-        </div>
-      )}
-    </div>
-  )
-}
-
-// Component: Orders Tab
-function OrdersTab({ orders, stats, onRefresh }) {
-  const [statusFilter, setStatusFilter] = useState('all')
-
-  const filteredOrders = orders.filter(o =>
-    statusFilter === 'all' || o.status === statusFilter
-  )
-
-  return (
-    <div className="space-y-6">
-      {/* Order Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <StatCard label="Total Orders" value={stats.total} color="text-blue-600" />
-        <StatCard label="Delivered" value={stats.delivered} color="text-green-600" />
-        <StatCard label="Cancelled" value={stats.cancelled} color="text-red-600" />
-        <StatCard label="Revenue" value={`₹${stats.totalRevenue.toLocaleString()}`} color="text-purple-600" />
-      </div>
-
-      {/* Filter */}
-      <div className="bg-white rounded-lg shadow-sm p-4 flex justify-between items-center">
-        <select
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-          className="px-4 py-2 border border-gray-300 rounded-lg"
-        >
-          <option value="all">All Orders</option>
-          <option value="confirmed">Confirmed</option>
-          <option value="processing">Processing</option>
-          <option value="shipped">Shipped</option>
-          <option value="delivered">Delivered</option>
-          <option value="cancelled">Cancelled</option>
-        </select>
-        <button
-          onClick={onRefresh}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-        >
-          Refresh
-        </button>
-      </div>
-
-      {/* Orders List */}
-      <div className="space-y-4">
-        {filteredOrders.map((order) => (
-          <Link
-            key={order._id}
-            href={`/admin/orders/${order._id}`}
-            className="block bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition"
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-xl font-bold text-gray-900">#{order.orderNumber}</h3>
-                <p className="text-sm text-gray-600">{new Date(order.createdAt).toLocaleString()}</p>
-              </div>
-              <div className="text-right">
-                <p className="text-2xl font-bold text-blue-600">₹{order.pricing.total.toLocaleString()}</p>
-                <span className={`inline-block mt-1 px-3 py-1 rounded-full text-xs font-semibold ${order.status === 'delivered' ? 'bg-green-100 text-green-800' :
-                  order.status === 'cancelled' ? 'bg-red-100 text-red-800' :
-                    'bg-blue-100 text-blue-800'
-                  }`}>
-                  {order.status.toUpperCase()}
-                </span>
-              </div>
-            </div>
-          </Link>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-// Component: Reviews Tab
-function ReviewsTab({ reviews, onDelete, onRefresh }) {
-  return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Customer Reviews ({reviews.length})</h2>
-        <button
-          onClick={onRefresh}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-        >
-          Refresh
-        </button>
-      </div>
-
-      <div className="space-y-4">
-        {reviews.map((review) => (
-          <div key={review._id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <div className="flex items-start justify-between mb-3">
-              <div>
-                <div className="flex items-center space-x-2 mb-2">
-                  <div className="flex">
-                    {[...Array(5)].map((_, i) => (
-                      <FiStar
-                        key={i}
-                        className={i < review.rating ? 'text-yellow-500 fill-current' : 'text-gray-300'}
-                      />
-                    ))}
-                  </div>
-                  <span className="font-bold text-gray-900">{review.rating}/5</span>
-                </div>
-                <p className="text-sm text-gray-600">By {review.customer?.name || 'Anonymous'}</p>
-                <p className="text-xs text-gray-500">{new Date(review.createdAt).toLocaleDateString()}</p>
-              </div>
-              <button
-                onClick={() => onDelete(review._id)}
-                className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition"
-              >
-                <FiTrash2 />
-              </button>
-            </div>
-            <p className="text-gray-700">{review.comment}</p>
-            {review.product && (
-              <Link
-                href={`/admin/products/${review.product._id}`}
-                className="mt-3 inline-block text-sm text-blue-600 hover:underline"
-              >
-                View Product: {review.product.name}
-              </Link>
-            )}
-          </div>
-        ))}
-      </div>
-
-      {reviews.length === 0 && (
-        <div className="bg-white rounded-lg shadow-sm p-12 text-center">
-          <FiMessageSquare className="mx-auto text-6xl text-gray-300 mb-4" />
-          <p className="text-gray-600">No reviews yet</p>
-        </div>
-      )}
-    </div>
-  )
-}
-
-// Component: Analytics Tab
-function AnalyticsTab({ seller, orders, products, orderStats }) {
-  // Calculate monthly revenue
-  const monthlyRevenue = orders.reduce((acc, order) => {
-    if (['cancelled', 'returned'].includes(order.status)) return acc
-
-    const month = new Date(order.createdAt).toLocaleDateString('en-US', { month: 'short' })
-    const existing = acc.find(item => item.name === month)
-
-    if (existing) {
-      existing.revenue += order.pricing.total
-      existing.orders += 1
-    } else {
-      acc.push({ name: month, revenue: order.pricing.total, orders: 1 })
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts'
+
+export default function SellerDetailsPage({ params }) {
+    const { id } = use(params)
+    const router = useRouter()
+    const { token } = useAuth()
+
+    const [seller, setSeller] = useState(null)
+    const [stats, setStats] = useState(null)
+    const [products, setProducts] = useState([])
+    const [orders, setOrders] = useState([])
+    const [reviews, setReviews] = useState([])
+    const [activityLogs, setActivityLogs] = useState([])
+    const [notes, setNotes] = useState([])
+    const [loading, setLoading] = useState(true)
+    const [activeTab, setActiveTab] = useState('overview')
+    const [showRequestModal, setShowRequestModal] = useState(false)
+    const [requestData, setRequestData] = useState({ title: '', description: '' })
+    const [showNoteModal, setShowNoteModal] = useState(false)
+    const [noteText, setNoteText] = useState('')
+    
+    // Search and Filter states
+    const [productSearch, setProductSearch] = useState('')
+    const [productFilter, setProductFilter] = useState('all') // all, active, inactive
+    const [orderSearch, setOrderSearch] = useState('')
+    const [orderFilter, setOrderFilter] = useState('all') // all, pending, delivered, cancelled
+
+    useEffect(() => {
+        if (token && id) fetchAllData()
+    }, [id, token])
+
+    const fetchAllData = async () => {
+        try {
+            setLoading(true)
+            const headers = { Authorization: `Bearer ${token}` }
+            const [sellerRes, prodRes, orderRes, reviewRes, logsRes, notesRes] = await Promise.all([
+                axios.get(`/api/admin/sellers/${id}`, { headers }),
+                axios.get(`/api/admin/sellers/${id}/products`, { headers }),
+                axios.get(`/api/admin/sellers/${id}/orders`, { headers }),
+                axios.get(`/api/admin/sellers/${id}/reviews`, { headers }),
+                axios.get(`/api/admin/sellers/${id}/activity-logs`, { headers }).catch(() => ({ data: { success: true, logs: [] } })),
+                axios.get(`/api/admin/sellers/${id}/notes`, { headers }).catch(() => ({ data: { success: true, notes: [] } }))
+            ])
+            if (sellerRes.data.success) { setSeller(sellerRes.data.seller); setStats(sellerRes.data.stats) }
+            if (prodRes.data.success) setProducts(prodRes.data.products)
+            if (orderRes.data.success) setOrders(orderRes.data.orders)
+            if (reviewRes.data.success) setReviews(reviewRes.data.reviews)
+            if (logsRes.data.success) setActivityLogs(logsRes.data.logs || [])
+            if (notesRes.data.success) setNotes(notesRes.data.notes || [])
+        } finally { setLoading(false) }
     }
 
-    return acc
-  }, [])
-
-  // Calculate category performance
-  const categoryPerformance = products.reduce((acc, product) => {
-    const category = product.category || 'Uncategorized'
-    const existing = acc.find(item => item.name === category)
-
-    if (existing) {
-      existing.products += 1
-      if (product.isActive) existing.active += 1
-    } else {
-      acc.push({ name: category, products: 1, active: product.isActive ? 1 : 0 })
-    }
-
-    return acc
-  }, [])
-
-  // Performance metrics
-  const avgOrderValue = orderStats.total > 0 ? (orderStats.totalRevenue / orderStats.total) : 0
-  const fulfillmentRate = orderStats.total > 0 ? ((orderStats.delivered / orderStats.total) * 100) : 0
-  const cancellationRate = orderStats.total > 0 ? ((orderStats.cancelled / orderStats.total) * 100) : 0
-  const returnRate = orderStats.total > 0 ? ((orderStats.returned / orderStats.total) * 100) : 0
-
-  return (
-    <div className="space-y-6">
-      {/* Performance KPIs */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <KPICard
-          label="Avg Order Value"
-          value={`₹${avgOrderValue.toFixed(2)}`}
-          icon={<FiDollarSign />}
-          color="bg-green-100 text-green-600"
-        />
-        <KPICard
-          label="Fulfillment Rate"
-          value={`${fulfillmentRate.toFixed(1)}%`}
-          icon={<FiCheckCircle />}
-          color="bg-blue-100 text-blue-600"
-        />
-        <KPICard
-          label="Cancellation Rate"
-          value={`${cancellationRate.toFixed(1)}%`}
-          icon={<FiXCircle />}
-          color="bg-red-100 text-red-600"
-        />
-        <KPICard
-          label="Return Rate"
-          value={`${returnRate.toFixed(1)}%`}
-          icon={<FiAlertCircle />}
-          color="bg-yellow-100 text-yellow-600"
-        />
-      </div>
-
-      {/* Revenue & Orders Chart */}
-      <ChartCard title="Monthly Revenue & Orders">
-        <ResponsiveContainer width="100%" height={300}>
-          <AreaChart data={monthlyRevenue}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis yAxisId="left" />
-            <YAxis yAxisId="right" orientation="right" />
-            <Tooltip />
-            <Legend />
-            <Area
-              yAxisId="left"
-              type="monotone"
-              dataKey="revenue"
-              stroke="#3B82F6"
-              fill="#3B82F6"
-              fillOpacity={0.6}
-              name="Revenue (₹)"
-            />
-            <Area
-              yAxisId="right"
-              type="monotone"
-              dataKey="orders"
-              stroke="#10B981"
-              fill="#10B981"
-              fillOpacity={0.6}
-              name="Orders"
-            />
-          </AreaChart>
-        </ResponsiveContainer>
-      </ChartCard>
-
-      {/* Category Performance */}
-      <ChartCard title="Category Performance">
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={categoryPerformance}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="products" fill="#3B82F6" name="Total Products" />
-            <Bar dataKey="active" fill="#10B981" name="Active Products" />
-          </BarChart>
-        </ResponsiveContainer>
-      </ChartCard>
-
-      {/* Performance Score */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <InfoCard title="Performance Scorecard">
-          <div className="space-y-4">
-            <ScoreBar label="Order Fulfillment" value={fulfillmentRate} max={100} color="bg-green-500" />
-            <ScoreBar label="Product Quality (Avg Rating)" value={seller.ratings?.average * 20 || 0} max={100} color="bg-blue-500" />
-            <ScoreBar label="Customer Satisfaction" value={(seller.performance?.customerSatisfactionScore || 0) * 20} max={100} color="bg-purple-500" />
-            <ScoreBar label="On-Time Delivery" value={seller.performance?.orderFulfillmentRate || 0} max={100} color="bg-orange-500" />
-          </div>
-        </InfoCard>
-
-        <InfoCard title="Key Insights">
-          <div className="space-y-3">
-            <InsightCard
-              icon={<FiTrendingUp className="text-green-600" />}
-              title="Best Performance"
-              description={`Fulfillment rate at ${fulfillmentRate.toFixed(1)}%`}
-              type="success"
-            />
-            <InsightCard
-              icon={<FiAlertCircle className="text-yellow-600" />}
-              title="Needs Attention"
-              description={`${products.filter(p => (p.inventory?.stock || 0) <= (p.inventory?.lowStockThreshold || 10)).length} products low on stock`}
-              type="warning"
-            />
-            <InsightCard
-              icon={<FiStar className="text-blue-600" />}
-              title="Customer Feedback"
-              description={`${seller.ratings?.average || 0}/5 from ${seller.ratings?.totalReviews || 0} reviews`}
-              type="info"
-            />
-          </div>
-        </InfoCard>
-      </div>
-    </div>
-  )
-}
-
-// Component: Settings Tab
-function SettingsTab({ seller, onUpdateCommission, onUpdatePlan, onRefresh }) {
-  return (
-    <div className="space-y-6">
-      {/* Account Settings */}
-      <InfoCard title="Account Settings">
-        <div className="space-y-4">
-          <SettingRow
-            label="Business Name"
-            value={seller.businessName}
-            action={<button className="text-blue-600 hover:underline">Edit</button>}
-          />
-          <SettingRow
-            label="Email"
-            value={seller.userId?.email || 'N/A'}
-            action={<button className="text-blue-600 hover:underline">Edit</button>}
-          />
-          <SettingRow
-            label="Phone"
-            value={seller.userId?.phone || 'N/A'}
-            action={<button className="text-blue-600 hover:underline">Edit</button>}
-          />
-          <SettingRow
-            label="Subscription Plan"
-            value={<span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-semibold capitalize">{seller.subscriptionPlan}</span>}
-            action={
-              <button
-                onClick={onUpdatePlan}
-                className="px-3 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"
-              >
-                Change Plan
-              </button>
-            }
-          />
-          <SettingRow
-            label="Commission Rate"
-            value={`${seller.commissionRate}%`}
-            action={
-              <button
-                onClick={onUpdateCommission}
-                className="px-3 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"
-              >
-                Update
-              </button>
-            }
-          />
-        </div>
-      </InfoCard>
-
-      {/* Subscription Details */}
-      <InfoCard title="Subscription Details">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div>
-            <p className="text-sm text-gray-600 mb-1">Plan Type</p>
-            <p className="text-lg font-semibold text-gray-900 capitalize">{seller.subscriptionPlan}</p>
-          </div>
-          <div>
-            <p className="text-sm text-gray-600 mb-1">Start Date</p>
-            <p className="text-lg font-semibold text-gray-900">
-              {new Date(seller.subscriptionStartDate).toLocaleDateString()}
-            </p>
-          </div>
-          <div>
-            <p className="text-sm text-gray-600 mb-1">Expiry Date</p>
-            <p className="text-lg font-semibold text-gray-900">
-              {new Date(seller.subscriptionExpiry).toLocaleDateString()}
-            </p>
-          </div>
-        </div>
-      </InfoCard>
-
-      {/* Store Settings */}
-      <InfoCard title="Store Information">
-        <div className="space-y-4">
-          <div>
-            <p className="text-sm text-gray-600 mb-1">Store Name</p>
-            <p className="text-lg font-semibold text-gray-900">{seller.storeInfo?.storeName}</p>
-          </div>
-          <div>
-            <p className="text-sm text-gray-600 mb-1">Store Description</p>
-            <p className="text-gray-700">{seller.storeInfo?.storeDescription}</p>
-          </div>
-          <div>
-            <p className="text-sm text-gray-600 mb-2">Categories</p>
-            <div className="flex flex-wrap gap-2">
-              {seller.storeInfo?.storeCategories?.map((cat, idx) => (
-                <span key={idx} className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
-                  {cat}
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
-      </InfoCard>
-
-      {/* Bank Details */}
-      <InfoCard title="Bank Account">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <InfoRow label="Account Holder" value={seller.bankDetails?.accountHolderName} />
-          <InfoRow label="Account Number" value={seller.bankDetails?.accountNumber} />
-          <InfoRow label="IFSC Code" value={seller.bankDetails?.ifscCode} />
-          <InfoRow label="Bank Name" value={seller.bankDetails?.bankName} />
-          <InfoRow label="Branch" value={seller.bankDetails?.branch} />
-          <InfoRow label="Account Type" value={seller.bankDetails?.accountType?.toUpperCase()} />
-        </div>
-      </InfoCard>
-
-      {/* Pickup Address */}
-      <InfoCard title="Primary Pickup Address">
-        <div className="space-y-2">
-          <p className="font-medium text-gray-900">{seller.pickupAddress?.addressLine1}</p>
-          {seller.pickupAddress?.addressLine2 && <p className="text-gray-700">{seller.pickupAddress.addressLine2}</p>}
-          <p className="text-gray-700">
-            {seller.pickupAddress?.city}, {seller.pickupAddress?.state} - {seller.pickupAddress?.pincode}
-          </p>
-          <p className="text-gray-700">{seller.pickupAddress?.country}</p>
-        </div>
-      </InfoCard>
-    </div>
-  )
-}
-
-// Component: Documents Tab
-function DocumentsTab({ seller, onVerify, onRefresh }) {
-  return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold">Verification Documents</h2>
-        <button
-          onClick={onRefresh}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-        >
-          Refresh
-        </button>
-      </div>
-
-      {/* Verification Steps */}
-      <InfoCard title="Verification Status">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-          {Object.entries(seller.verificationSteps || {}).map(([key, value]) => (
-            <div key={key} className="text-center p-4 bg-gray-50 rounded-lg">
-              {value ? (
-                <FiCheckCircle className="w-8 h-8 text-green-600 mx-auto mb-2" />
-              ) : (
-                <FiXCircle className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-              )}
-              <p className="text-sm font-medium text-gray-900 capitalize">
-                {key.replace(/([A-Z])/g, ' $1').trim()}
-              </p>
-              <p className={`text-xs mt-1 ${value ? 'text-green-600' : 'text-gray-500'}`}>
-                {value ? 'Verified' : 'Pending'}
-              </p>
-            </div>
-          ))}
-        </div>
-      </InfoCard>
-
-      {/* Documents List */}
-      {Object.entries(seller.documents || {}).map(([key, doc]) => {
-        if (typeof doc === 'object' && doc.url) {
-          return (
-            <DocumentCard
-              key={key}
-              title={key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
-              url={doc.url}
-              verified={doc.verified}
-              uploadedAt={doc.uploadedAt}
-              type={doc.type}
-              onVerify={() => onVerify(key)}
-            />
-          )
+    const handleAction = async (type) => {
+        let body = {}
+        if (type === 'verify') body = { isVerified: true, verificationStatus: 'verified', isActive: true }
+        else if (type === 'reject') {
+            const reason = prompt("Rejection reason:")
+            if (!reason) return
+            body = { isVerified: false, verificationStatus: 'rejected', rejectionReason: reason }
         }
-        return null
-      })}
+        else if (type === 'suspend') body = { isActive: false }
+        else if (type === 'activate') body = { isActive: true }
 
-      {/* Agreement Status */}
-      {seller.documents?.agreementSigned && (
-        <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-center space-x-3">
-          <FiCheckCircle className="text-green-600 text-xl" />
-          <div>
-            <p className="font-semibold text-green-900">Agreement Signed</p>
-            <p className="text-sm text-green-700">
-              Signed on {new Date(seller.documents.agreementSignedAt).toLocaleDateString()}
-            </p>
-          </div>
-        </div>
-      )}
-    </div>
-  )
-}
+        try {
+            await axios.put(`/api/admin/sellers/${id}`, body, { headers: { Authorization: `Bearer ${token}` } })
+            fetchAllData()
+        } catch (err) { alert('Action failed') }
+    }
 
-// Component: Payouts Tab
-function PayoutsTab({ seller, orders, stats }) {
-  const completedOrders = orders.filter(o => o.status === 'delivered')
-  const pendingAmount = completedOrders
-    .filter(o => !o.payment.sellerPaid)
-    .reduce((sum, o) => {
-      const commission = (o.pricing.total * seller.commissionRate) / 100
-      return sum + (o.pricing.total - commission)
-    }, 0)
+    const handleRequestDocument = async (e) => {
+        e.preventDefault()
+        try {
+            await axios.post(`/api/admin/sellers/${id}/request-document`, requestData, { headers: { Authorization: `Bearer ${token}` } })
+            setShowRequestModal(false)
+            setRequestData({ title: '', description: '' })
+            fetchAllData()
+        } catch { }
+    }
 
-  const paidAmount = completedOrders
-    .filter(o => o.payment.sellerPaid)
-    .reduce((sum, o) => {
-      const commission = (o.pricing.total * seller.commissionRate) / 100
-      return sum + (o.pricing.total - commission)
-    }, 0)
+    const handleAddNote = async (e) => {
+        e.preventDefault()
+        if (!noteText.trim()) return
+        try {
+            await axios.post(`/api/admin/sellers/${id}/notes`, { note: noteText }, { headers: { Authorization: `Bearer ${token}` } })
+            setShowNoteModal(false)
+            setNoteText('')
+            fetchAllData()
+        } catch { }
+    }
 
-  return (
-    <div className="space-y-6">
-      {/* Payout Summary */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl shadow-lg p-6 text-white">
-          <FiDollarSign className="text-3xl mb-2 opacity-80" />
-          <p className="text-sm opacity-90">Total Earnings</p>
-          <p className="text-3xl font-bold">₹{(pendingAmount + paidAmount).toLocaleString()}</p>
-        </div>
-        <div className="bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-xl shadow-lg p-6 text-white">
-          <FiClock className="text-3xl mb-2 opacity-80" />
-          <p className="text-sm opacity-90">Pending Payout</p>
-          <p className="text-3xl font-bold">₹{pendingAmount.toLocaleString()}</p>
-        </div>
-        <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-lg p-6 text-white">
-          <FiCheckCircle className="text-3xl mb-2 opacity-80" />
-          <p className="text-sm opacity-90">Paid Out</p>
-          <p className="text-3xl font-bold">₹{paidAmount.toLocaleString()}</p>
-        </div>
-      </div>
+    if (loading) return <div className="flex items-center justify-center min-h-[60vh]"><div className="w-10 h-10 border-4 border-slate-200 border-t-indigo-500 rounded-full animate-spin"></div></div>
+    if (!seller) return <div className="text-center py-20"><p>Seller not found</p></div>
 
-      {/* Commission Breakdown */}
-      <InfoCard title="Commission Breakdown">
-        <div className="space-y-3">
-          <div className="flex justify-between p-3 bg-gray-50 rounded-lg">
-            <span className="text-gray-700">Commission Rate</span>
-            <span className="font-bold text-gray-900">{seller.commissionRate}%</span>
-          </div>
-          <div className="flex justify-between p-3 bg-gray-50 rounded-lg">
-            <span className="text-gray-700">Total Order Value</span>
-            <span className="font-bold text-gray-900">₹{stats.totalRevenue.toLocaleString()}</span>
-          </div>
-          <div className="flex justify-between p-3 bg-gray-50 rounded-lg">
-            <span className="text-gray-700">Platform Commission</span>
-            <span className="font-bold text-red-600">
-              -₹{((stats.totalRevenue * seller.commissionRate) / 100).toLocaleString()}
-            </span>
-          </div>
-          <div className="flex justify-between p-3 bg-blue-50 rounded-lg border-2 border-blue-200">
-            <span className="text-blue-900 font-semibold">Seller Earnings</span>
-            <span className="font-bold text-blue-600">
-              ₹{(stats.totalRevenue - (stats.totalRevenue * seller.commissionRate) / 100).toLocaleString()}
-            </span>
-          </div>
-        </div>
-      </InfoCard>
+    const salesData = orders.slice(0, 7).reverse().map(o => ({ date: new Date(o.createdAt).toLocaleDateString(undefined, { day: 'numeric', month: 'short' }), amount: o.totalAmount }))
+    const categoryData = products.reduce((acc, p) => { const cat = p.category?.name || 'Uncategorized'; acc[cat] = (acc[cat] || 0) + 1; return acc }, {})
+    const pieData = Object.entries(categoryData).map(([name, value]) => ({ name, value }))
+    const COLORS = ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4']
 
-      {/* Recent Payouts */}
-      <InfoCard title="Payout History">
-        <div className="space-y-3">
-          {completedOrders.slice(0, 10).map((order) => {
-            const commission = (order.pricing.total * seller.commissionRate) / 100
-            const sellerAmount = order.pricing.total - commission
+    // Calculate performance metrics
+    const calculateHealthScore = () => {
+        let score = 0
+        // Verification status (30 points)
+        if (seller.verificationStatus === 'verified') score += 30
+        else if (seller.verificationStatus === 'pending') score += 15
+        
+        // Active status (10 points)
+        if (seller.isActive) score += 10
+        
+        // Rating (20 points)
+        const avgRating = seller.ratings?.average || 0
+        score += (avgRating / 5) * 20
+        
+        // Order count (20 points)
+        const orderCount = stats?.orderCount || 0
+        if (orderCount > 100) score += 20
+        else if (orderCount > 50) score += 15
+        else if (orderCount > 10) score += 10
+        else if (orderCount > 0) score += 5
+        
+        // Revenue (20 points)
+        const revenue = stats?.totalRevenue || 0
+        if (revenue > 100000) score += 20
+        else if (revenue > 50000) score += 15
+        else if (revenue > 10000) score += 10
+        else if (revenue > 0) score += 5
+        
+        return Math.round(score)
+    }
 
-            return (
-              <div key={order._id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                <div>
-                  <p className="font-semibold text-gray-900">#{order.orderNumber}</p>
-                  <p className="text-sm text-gray-600">{new Date(order.createdAt).toLocaleDateString()}</p>
+    const healthScore = calculateHealthScore()
+    const fulfillmentRate = orders.length > 0 ? Math.round((orders.filter(o => o.status === 'delivered').length / orders.length) * 100) : 0
+    const returnRate = orders.length > 0 ? Math.round((orders.filter(o => o.status === 'returned' || o.status === 'refunded').length / orders.length) * 100) : 0
+    const responseTime = seller.avgResponseTime || '< 24h'
+
+    const getHealthColor = (score) => {
+        if (score >= 80) return { bg: 'bg-emerald-50', text: 'text-emerald-600', border: 'border-emerald-200' }
+        if (score >= 60) return { bg: 'bg-blue-50', text: 'text-blue-600', border: 'border-blue-200' }
+        if (score >= 40) return { bg: 'bg-amber-50', text: 'text-amber-600', border: 'border-amber-200' }
+        return { bg: 'bg-rose-50', text: 'text-rose-600', border: 'border-rose-200' }
+    }
+
+    const healthColor = getHealthColor(healthScore)
+
+    // Smart Alerts Detection
+    const detectAlerts = () => {
+        const alerts = []
+        
+        // Low health score alert
+        if (healthScore < 60) {
+            alerts.push({
+                type: 'critical',
+                icon: FiAlertCircle,
+                title: 'Low Health Score',
+                message: `Seller health score is ${healthScore}/100. Immediate attention required.`,
+                action: 'Review seller performance'
+            })
+        }
+        
+        // High return rate alert
+        if (returnRate > 15) {
+            alerts.push({
+                type: 'warning',
+                icon: FiRefreshCw,
+                title: 'High Return Rate',
+                message: `Return rate is ${returnRate}%. This is above the acceptable threshold.`,
+                action: 'Investigate product quality'
+            })
+        }
+        
+        // Low rating alert
+        if (seller.ratings?.average < 3.5 && seller.ratings?.count > 5) {
+            alerts.push({
+                type: 'warning',
+                icon: FiStar,
+                title: 'Low Customer Ratings',
+                message: `Average rating is ${seller.ratings.average}/5. Customer satisfaction needs improvement.`,
+                action: 'Review customer feedback'
+            })
+        }
+        
+        // Pending verification
+        if (seller.verificationStatus === 'pending') {
+            alerts.push({
+                type: 'info',
+                icon: FiClock,
+                title: 'Pending Verification',
+                message: 'Seller account is awaiting verification.',
+                action: 'Review documents'
+            })
+        }
+        
+        // Document requests pending
+        const pendingDocs = seller.documents?.requestedDocuments?.filter(d => d.status === 'pending').length || 0
+        if (pendingDocs > 0) {
+            alerts.push({
+                type: 'info',
+                icon: FiFileText,
+                title: 'Pending Document Requests',
+                message: `${pendingDocs} document request(s) awaiting seller response.`,
+                action: 'Follow up with seller'
+            })
+        }
+        
+        // Sudden sales drop (if last 7 days revenue is significantly lower)
+        const recentRevenue = salesData.slice(-3).reduce((sum, d) => sum + d.amount, 0)
+        const avgRevenue = (stats?.totalRevenue || 0) / Math.max(1, salesData.length)
+        if (salesData.length >= 7 && recentRevenue < avgRevenue * 0.5) {
+            alerts.push({
+                type: 'warning',
+                icon: FiTrendingDown,
+                title: 'Sales Decline Detected',
+                message: 'Recent sales are significantly lower than average.',
+                action: 'Check seller activity'
+            })
+        }
+        
+        // No recent activity
+        const daysSinceLastOrder = orders.length > 0 
+            ? Math.floor((new Date() - new Date(orders[0].createdAt)) / (1000 * 60 * 60 * 24))
+            : 999
+        if (daysSinceLastOrder > 30 && seller.isActive) {
+            alerts.push({
+                type: 'info',
+                icon: FiActivity,
+                title: 'No Recent Orders',
+                message: `No orders in the last ${daysSinceLastOrder} days.`,
+                action: 'Check seller engagement'
+            })
+        }
+        
+        // Opportunity: High performer
+        if (healthScore >= 90 && stats?.orderCount >= 50) {
+            alerts.push({
+                type: 'success',
+                icon: FiTrendingUp,
+                title: 'Top Performer',
+                message: 'This seller is performing exceptionally well!',
+                action: 'Consider featured placement'
+            })
+        }
+        
+        return alerts
+    }
+
+    const smartAlerts = detectAlerts()
+
+    // Comparative Analytics (Category Average Benchmarks)
+    const categoryBenchmarks = {
+        avgHealthScore: 75,
+        avgFulfillmentRate: 85,
+        avgReturnRate: 8,
+        avgRating: 4.2,
+        avgOrderValue: 1500,
+        avgResponseTime: '18h'
+    }
+
+    const tabs = [
+        { id: 'overview', label: 'Overview', icon: FiActivity },
+        { id: 'business', label: 'Business Info', icon: FiBriefcase },
+        { id: 'products', label: 'Products', icon: FiLayers },
+        { id: 'orders', label: 'Orders', icon: FiPackage },
+        { id: 'reviews', label: 'Reviews', icon: FiMessageSquare },
+        { id: 'documents', label: 'Documents', icon: FiFileText },
+        { id: 'financials', label: 'Financials', icon: FiDollarSign },
+        { id: 'compliance', label: 'Compliance & Performance', icon: FiAlertCircle },
+        { id: 'activity-log', label: 'Activity Log', icon: FiClock },
+        { id: 'communications', label: 'Communications', icon: FiMail },
+        { id: 'settings', label: 'Settings', icon: FiEdit },
+    ]
+
+    return (
+        <div className="max-w-7xl mx-auto space-y-6 pb-20">
+            {/* Header */}
+            <div className="bg-white rounded-2xl border border-slate-200 p-6">
+                <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center gap-4">
+                        <button onClick={() => router.back()} className="p-2 hover:bg-slate-50 rounded-lg"><FiArrowLeft className="w-5 h-5" /></button>
+                        <div className="w-16 h-16 rounded-xl bg-slate-100 flex items-center justify-center overflow-hidden">
+                            {seller.storeInfo?.storeLogo ? <img src={seller.storeInfo.storeLogo} className="w-full h-full object-cover" /> : <FiShoppingBag className="w-8 h-8 text-slate-400" />}
+                        </div>
+                        <div>
+                            <div className="flex items-center gap-3">
+                                <h1 className="text-2xl font-bold text-slate-900">{seller.storeInfo?.storeName || seller.businessName}</h1>
+                                <span className={`px-2 py-0.5 rounded-lg text-[10px] font-bold ${seller.verificationStatus === 'verified' ? 'bg-emerald-100 text-emerald-700' : seller.verificationStatus === 'pending' ? 'bg-amber-100 text-amber-700' : 'bg-rose-100 text-rose-700'}`}>
+                                    {seller.verificationStatus}
+                                </span>
+                            </div>
+                            <p className="text-sm text-slate-500 mt-1">ID: {seller._id} • Joined {new Date(seller.createdAt).toLocaleDateString()}</p>
+                        </div>
+                    </div>
+                    <div className="flex gap-2">
+                        {seller.verificationStatus === 'pending' ? (
+                            <>
+                                <button onClick={() => handleAction('verify')} className="px-4 py-2 bg-emerald-600 text-white rounded-lg font-bold text-sm"><FiCheckCircle className="inline mr-1" /> Verify</button>
+                                <button onClick={() => handleAction('reject')} className="px-4 py-2 bg-rose-100 text-rose-700 rounded-lg font-bold text-sm">Reject</button>
+                            </>
+                        ) : (
+                            <button onClick={() => handleAction(seller.isActive ? 'suspend' : 'activate')} className={`px-4 py-2 rounded-lg font-bold text-sm ${seller.isActive ? 'bg-rose-100 text-rose-700' : 'bg-indigo-600 text-white'}`}>
+                                {seller.isActive ? 'Suspend' : 'Activate'}
+                            </button>
+                        )}
+                        <button onClick={() => setShowRequestModal(true)} className="px-4 py-2 bg-indigo-50 text-indigo-600 rounded-lg font-bold text-sm">Request Doc</button>
+                    </div>
                 </div>
-                <div className="text-right">
-                  <p className="font-bold text-gray-900">₹{sellerAmount.toLocaleString()}</p>
-                  <span className={`text-xs px-2 py-1 rounded-full font-semibold ${order.payment.sellerPaid
-                    ? 'bg-green-100 text-green-700'
-                    : 'bg-yellow-100 text-yellow-700'
-                    }`}>
-                    {order.payment.sellerPaid ? 'Paid' : 'Pending'}
-                  </span>
+
+                {/* Quick Stats */}
+                <div className="space-y-4">
+                    {/* Health Score - Prominent */}
+                    <div className={`${healthColor.bg} border-2 ${healthColor.border} p-6 rounded-2xl`}>
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <h3 className="text-sm font-bold text-slate-500 uppercase tracking-wide mb-2">Seller Health Score</h3>
+                                <div className="flex items-baseline gap-3">
+                                    <span className={`text-5xl font-bold ${healthColor.text}`}>{healthScore}</span>
+                                    <span className="text-2xl text-slate-400 font-medium">/100</span>
+                                </div>
+                                <p className="text-xs text-slate-500 mt-2">
+                                    {healthScore >= 80 ? '🎉 Excellent Performance' : healthScore >= 60 ? '✅ Good Standing' : healthScore >= 40 ? '⚠️ Needs Attention' : '❌ Critical Issues'}
+                                </p>
+                            </div>
+                            <div className="relative w-32 h-32">
+                                <svg className="transform -rotate-90 w-32 h-32">
+                                    <circle cx="64" cy="64" r="56" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-slate-200" />
+                                    <circle cx="64" cy="64" r="56" stroke="currentColor" strokeWidth="8" fill="transparent" 
+                                        strokeDasharray={`${(healthScore / 100) * 351.86} 351.86`}
+                                        className={healthColor.text}
+                                        strokeLinecap="round" />
+                                </svg>
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                    <FiShield className={`w-10 h-10 ${healthColor.text}`} />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Other Metrics Grid */}
+                    <div className="grid grid-cols-4 gap-4">
+                        <div className="bg-indigo-50 p-4 rounded-xl border border-indigo-100">
+                            <div className="flex items-center gap-2 text-indigo-600 mb-2"><FiDollarSign className="w-5 h-5" /></div>
+                            <p className="text-2xl font-bold text-slate-900">₹{(stats?.totalRevenue || 0).toLocaleString()}</p>
+                            <p className="text-xs text-slate-500 font-medium">Total Revenue</p>
+                        </div>
+                        <div className="bg-emerald-50 p-4 rounded-xl border border-emerald-100">
+                            <div className="flex items-center gap-2 text-emerald-600 mb-2"><FiPackage className="w-5 h-5" /></div>
+                            <p className="text-2xl font-bold text-slate-900">{stats?.orderCount || 0}</p>
+                            <p className="text-xs text-slate-500 font-medium">Total Orders</p>
+                        </div>
+                        <div className="bg-amber-50 p-4 rounded-xl border border-amber-100">
+                            <div className="flex items-center gap-2 text-amber-600 mb-2"><FiStar className="w-5 h-5" /></div>
+                            <p className="text-2xl font-bold text-slate-900">{seller.ratings?.average || 0}</p>
+                            <p className="text-xs text-slate-500 font-medium">Avg Rating</p>
+                        </div>
+                        <div className="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                            <div className="flex items-center gap-2 text-blue-600 mb-2"><FiLayers className="w-5 h-5" /></div>
+                            <p className="text-2xl font-bold text-slate-900">{stats?.productCount || 0}</p>
+                            <p className="text-xs text-slate-500 font-medium">Products</p>
+                        </div>
+                    </div>
+
+                    {/* Performance Metrics Grid */}
+                    <div className="grid grid-cols-4 gap-4">
+                        <div className="bg-cyan-50 p-4 rounded-xl border border-cyan-100">
+                            <div className="flex items-center gap-2 text-cyan-600 mb-2"><FiCheckCircle className="w-5 h-5" /></div>
+                            <p className="text-2xl font-bold text-slate-900">{fulfillmentRate}%</p>
+                            <p className="text-xs text-slate-500 font-medium">Fulfillment Rate</p>
+                        </div>
+                        <div className="bg-rose-50 p-4 rounded-xl border border-rose-100">
+                            <div className="flex items-center gap-2 text-rose-600 mb-2"><FiRefreshCw className="w-5 h-5" /></div>
+                            <p className="text-2xl font-bold text-slate-900">{returnRate}%</p>
+                            <p className="text-xs text-slate-500 font-medium">Return Rate</p>
+                        </div>
+                        <div className="bg-purple-50 p-4 rounded-xl border border-purple-100">
+                            <div className="flex items-center gap-2 text-purple-600 mb-2"><FiClock className="w-5 h-5" /></div>
+                            <p className="text-2xl font-bold text-slate-900">{responseTime}</p>
+                            <p className="text-xs text-slate-500 font-medium">Avg Response Time</p>
+                        </div>
+                        <div className="bg-violet-50 p-4 rounded-xl border border-violet-100">
+                            <div className="flex items-center gap-2 text-violet-600 mb-2"><FiUsers className="w-5 h-5" /></div>
+                            <p className="text-2xl font-bold text-slate-900">{seller.ratings?.count || 0}</p>
+                            <p className="text-xs text-slate-500 font-medium">Total Reviews</p>
+                        </div>
+                    </div>
                 </div>
-              </div>
-            )
-          })}
-        </div>
-      </InfoCard>
-    </div>
-  )
-}
+            </div>
 
-// Helper Components
-function MetricCard({ icon, label, value, subtitle, bgColor }) {
-  return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-      <div className="flex items-center justify-between mb-3">
-        <div className={`p-3 rounded-lg ${bgColor}`}>{icon}</div>
-      </div>
-      <p className="text-sm text-gray-600 mb-1">{label}</p>
-      <p className="text-2xl font-bold text-gray-900">{value}</p>
-      {subtitle && <p className="text-xs text-gray-500 mt-1">{subtitle}</p>}
-    </div>
-  )
-}
-
-function ChartCard({ title, children }) {
-  return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-      <h3 className="text-lg font-bold text-gray-900 mb-4">{title}</h3>
-      {children}
-    </div>
-  )
-}
-
-function InfoCard({ title, children }) {
-  return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-      <h3 className="text-lg font-bold text-gray-900 mb-4">{title}</h3>
-      {children}
-    </div>
-  )
-}
-
-function InfoRow({ label, value }) {
-  return (
-    <div className="flex justify-between py-2 border-b last:border-b-0">
-      <span className="text-sm text-gray-600">{label}</span>
-      <span className="text-sm font-medium text-gray-900">{value || 'N/A'}</span>
-    </div>
-  )
-}
-
-function StatCard({ label, value, color }) {
-  return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center">
-      <p className="text-sm text-gray-600 mb-2">{label}</p>
-      <p className={`text-3xl font-bold ${color}`}>{value}</p>
-    </div>
-  )
-}
-
-function KPICard({ label, value, icon, color }) {
-  return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-      <div className={`inline-flex p-3 rounded-lg ${color} mb-3`}>
-        {icon}
-      </div>
-      <p className="text-sm text-gray-600 mb-1">{label}</p>
-      <p className="text-2xl font-bold text-gray-900">{value}</p>
-    </div>
-  )
-}
-
-function ScoreBar({ label, value, max, color }) {
-  // Ensure value is a number and handle edge cases
-  const numericValue = typeof value === 'number' ? value : parseFloat(value) || 0
-  const percentage = (numericValue / max) * 100
-
-  return (
-    <div>
-      <div className="flex justify-between mb-1">
-        <span className="text-sm font-medium text-gray-700">{label}</span>
-        <span className="text-sm font-semibold text-gray-900">{numericValue.toFixed(0)}%</span>
-      </div>
-      <div className="w-full bg-gray-200 rounded-full h-3">
-        <div
-          className={`h-3 rounded-full ${color} transition-all duration-300`}
-          style={{ width: `${percentage}%` }}
-        ></div>
-      </div>
-    </div>
-  )
-}
-
-function InsightCard({ icon, title, description, type }) {
-  const colors = {
-    success: 'bg-green-50 border-green-200',
-    warning: 'bg-yellow-50 border-yellow-200',
-    info: 'bg-blue-50 border-blue-200'
-  }
-
-  return (
-    <div className={`p-4 rounded-lg border ${colors[type]}`}>
-      <div className="flex items-start space-x-3">
-        <div className="mt-1">{icon}</div>
-        <div>
-          <p className="font-semibold text-gray-900">{title}</p>
-          <p className="text-sm text-gray-600">{description}</p>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-function SettingRow({ label, value, action }) {
-  return (
-    <div className="flex items-center justify-between py-3 border-b last:border-b-0">
-      <div>
-        <p className="text-sm text-gray-600">{label}</p>
-        <div className="mt-1">{typeof value === 'string' ? <p className="font-medium text-gray-900">{value}</p> : value}</div>
-      </div>
-      {action}
-    </div>
-  )
-}
-
-function DocumentCard({ title, url, verified, uploadedAt, type, onVerify }) {
-  return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 flex items-center justify-between">
-      <div className="flex items-center space-x-4">
-        <div className="p-3 bg-blue-50 rounded-lg">
-          <FiFileText className="text-blue-600 text-xl" />
-        </div>
-        <div>
-          <h4 className="font-semibold text-gray-900">{title}</h4>
-          {type && <p className="text-xs text-gray-500 capitalize">{type}</p>}
-          <p className="text-xs text-gray-500">
-            Uploaded: {new Date(uploadedAt).toLocaleDateString()}
-          </p>
-        </div>
-      </div>
-      <div className="flex items-center space-x-3">
-        {verified ? (
-          <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-semibold flex items-center space-x-1">
-            <FiCheckCircle />
-            <span>Verified</span>
-          </span>
-        ) : (
-          <>
-            <span className="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-sm font-semibold flex items-center space-x-1">
-              <FiAlertCircle />
-              <span>Pending</span>
-            </span>
-            <button
-              onClick={onVerify}
-              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm font-medium"
-            >
-              Verify
-            </button>
-          </>
-        )}
-        <a
-          href={url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium"
-        >
-          View
-        </a>
-      </div>
-    </div>
-  )
-}
-
-// Modal Components
-function CommissionModal({ currentCommission, onSave, onClose, processing }) {
-  const [commission, setCommission] = useState(currentCommission)
-
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">Update Commission Rate</h2>
-        <p className="text-gray-600 mb-6">
-          Set the commission percentage for this seller. This will apply to all future orders.
-        </p>
-
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Commission Rate (%)
-          </label>
-          <input
-            type="number"
-            min="0"
-            max="100"
-            step="0.1"
-            value={commission}
-            onChange={(e) => setCommission(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        <div className="flex space-x-3">
-          <button
-            onClick={onClose}
-            disabled={processing}
-            className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition disabled:opacity-50"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={() => onSave(commission)}
-            disabled={processing}
-            className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
-          >
-            {processing ? 'Saving...' : 'Save'}
-          </button>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-function PlanModal({ currentPlan, onSave, onClose, processing }) {
-  const [selectedPlan, setSelectedPlan] = useState(currentPlan)
-
-  const plans = [
-    { value: 'free', label: 'Free', features: ['5 Products', 'Basic Support', '10% Commission'] },
-    { value: 'basic', label: 'Basic', features: ['50 Products', 'Email Support', '8% Commission'] },
-    { value: 'pro', label: 'Pro', features: ['200 Products', 'Priority Support', '5% Commission'] },
-    { value: 'enterprise', label: 'Enterprise', features: ['Unlimited Products', '24/7 Support', '3% Commission'] }
-  ]
-
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">Update Subscription Plan</h2>
-        <p className="text-gray-600 mb-6">
-          Choose a new plan for this seller. Changes will take effect immediately.
-        </p>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-          {plans.map((plan) => (
-            <button
-              key={plan.value}
-              onClick={() => setSelectedPlan(plan.value)}
-              className={`p-4 rounded-lg border-2 transition text-left ${selectedPlan === plan.value
-                ? 'border-blue-600 bg-blue-50'
-                : 'border-gray-200 hover:border-gray-300'
-                }`}
-            >
-              <h3 className="text-lg font-bold text-gray-900 mb-2 capitalize">{plan.label}</h3>
-              <ul className="space-y-1">
-                {plan.features.map((feature, idx) => (
-                  <li key={idx} className="text-sm text-gray-600 flex items-center">
-                    <FiCheckCircle className="text-green-600 mr-2" />
-                    {feature}
-                  </li>
+            {/* Tabs */}
+            <div className="flex gap-2 overflow-x-auto no-scrollbar">
+                {tabs.map(tab => (
+                    <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`flex items-center gap-2 px-4 py-2.5 rounded-lg font-bold text-sm whitespace-nowrap ${activeTab === tab.id ? 'bg-indigo-600 text-white' : 'bg-white text-slate-600 border border-slate-200'}`}>
+                        <tab.icon className="w-4 h-4" /> {tab.label}
+                    </button>
                 ))}
-              </ul>
-            </button>
-          ))}
-        </div>
+            </div>
 
-        <div className="flex space-x-3">
-          <button
-            onClick={onClose}
-            disabled={processing}
-            className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition disabled:opacity-50"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={() => onSave(selectedPlan)}
-            disabled={processing}
-            className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
-          >
-            {processing ? 'Updating...' : 'Update Plan'}
-          </button>
+            {/* Content */}
+            {activeTab === 'overview' && (
+                <div className="space-y-6">
+                    {/* Charts Row */}
+                    <div className="grid grid-cols-3 gap-6">
+                        <div className="col-span-2 bg-white p-6 rounded-2xl border border-slate-200">
+                            <h3 className="text-lg font-bold mb-4 flex items-center gap-2"><FiTrendingUp className="text-indigo-600" /> Revenue Trend</h3>
+                            <ResponsiveContainer width="100%" height={300}>
+                                <AreaChart data={salesData}>
+                                    <defs><linearGradient id="colorAmt" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#6366f1" stopOpacity={0.1} /><stop offset="95%" stopColor="#6366f1" stopOpacity={0} /></linearGradient></defs>
+                                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                                    <XAxis dataKey="date" tick={{ fontSize: 12 }} />
+                                    <YAxis tick={{ fontSize: 12 }} />
+                                    <Tooltip />
+                                    <Area type="monotone" dataKey="amount" stroke="#6366f1" strokeWidth={3} fill="url(#colorAmt)" />
+                                </AreaChart>
+                            </ResponsiveContainer>
+                        </div>
+                        <div className="bg-white p-6 rounded-2xl border border-slate-200">
+                            <h3 className="text-lg font-bold mb-4">Category Split</h3>
+                            <ResponsiveContainer width="100%" height={300}>
+                                <PieChart><Pie data={pieData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} label>{pieData.map((_, i) => <Cell key={`cell-${i}`} fill={COLORS[i % COLORS.length]} />)}</Pie><Tooltip /></PieChart>
+                            </ResponsiveContainer>
+                        </div>
+                    </div>
+
+                    {/* Smart Alerts */}
+                    {smartAlerts.length > 0 && (
+                        <div className="bg-white p-6 rounded-2xl border border-slate-200">
+                            <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+                                <FiAlertCircle className="text-amber-600" /> Smart Alerts & Insights
+                            </h3>
+                            <div className="grid grid-cols-2 gap-4">
+                                {smartAlerts.map((alert, idx) => (
+                                    <div key={idx} className={`p-4 rounded-xl border-2 ${
+                                        alert.type === 'critical' ? 'bg-rose-50 border-rose-200' :
+                                        alert.type === 'warning' ? 'bg-amber-50 border-amber-200' :
+                                        alert.type === 'success' ? 'bg-emerald-50 border-emerald-200' :
+                                        'bg-blue-50 border-blue-200'
+                                    }`}>
+                                        <div className="flex items-start gap-3">
+                                            <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
+                                                alert.type === 'critical' ? 'bg-rose-100' :
+                                                alert.type === 'warning' ? 'bg-amber-100' :
+                                                alert.type === 'success' ? 'bg-emerald-100' :
+                                                'bg-blue-100'
+                                            }`}>
+                                                <alert.icon className={`w-5 h-5 ${
+                                                    alert.type === 'critical' ? 'text-rose-600' :
+                                                    alert.type === 'warning' ? 'text-amber-600' :
+                                                    alert.type === 'success' ? 'text-emerald-600' :
+                                                    'text-blue-600'
+                                                }`} />
+                                            </div>
+                                            <div className="flex-1">
+                                                <h4 className="font-bold text-slate-900 mb-1">{alert.title}</h4>
+                                                <p className="text-sm text-slate-600 mb-2">{alert.message}</p>
+                                                <button className={`text-xs font-bold ${
+                                                    alert.type === 'critical' ? 'text-rose-700' :
+                                                    alert.type === 'warning' ? 'text-amber-700' :
+                                                    alert.type === 'success' ? 'text-emerald-700' :
+                                                    'text-blue-700'
+                                                } hover:underline`}>
+                                                    {alert.action} →
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Comparative Analytics */}
+                    <div className="bg-white p-6 rounded-2xl border border-slate-200">
+                        <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+                            <FiBarChart2 className="text-indigo-600" /> Performance vs. Category Average
+                        </h3>
+                        <div className="grid grid-cols-3 gap-6">
+                            {/* Health Score Comparison */}
+                            <div className="space-y-3">
+                                <div className="flex items-center justify-between">
+                                    <span className="text-sm font-medium text-slate-700">Health Score</span>
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-sm text-slate-500">{categoryBenchmarks.avgHealthScore}</span>
+                                        <span className="text-lg font-bold text-slate-900">{healthScore}</span>
+                                        {healthScore > categoryBenchmarks.avgHealthScore ? (
+                                            <FiTrendingUp className="w-4 h-4 text-emerald-600" />
+                                        ) : (
+                                            <FiTrendingDown className="w-4 h-4 text-rose-600" />
+                                        )}
+                                    </div>
+                                </div>
+                                <div className="relative h-2 bg-slate-200 rounded-full overflow-hidden">
+                                    <div className="absolute h-full bg-slate-400 rounded-full" style={{width: `${categoryBenchmarks.avgHealthScore}%`}}></div>
+                                    <div className={`absolute h-full ${healthScore > categoryBenchmarks.avgHealthScore ? 'bg-emerald-500' : 'bg-rose-500'} rounded-full`} style={{width: `${healthScore}%`}}></div>
+                                </div>
+                                <p className="text-xs text-slate-500">
+                                    {healthScore > categoryBenchmarks.avgHealthScore 
+                                        ? `${healthScore - categoryBenchmarks.avgHealthScore} points above average`
+                                        : `${categoryBenchmarks.avgHealthScore - healthScore} points below average`
+                                    }
+                                </p>
+                            </div>
+
+                            {/* Fulfillment Rate Comparison */}
+                            <div className="space-y-3">
+                                <div className="flex items-center justify-between">
+                                    <span className="text-sm font-medium text-slate-700">Fulfillment Rate</span>
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-sm text-slate-500">{categoryBenchmarks.avgFulfillmentRate}%</span>
+                                        <span className="text-lg font-bold text-slate-900">{fulfillmentRate}%</span>
+                                        {fulfillmentRate > categoryBenchmarks.avgFulfillmentRate ? (
+                                            <FiTrendingUp className="w-4 h-4 text-emerald-600" />
+                                        ) : (
+                                            <FiTrendingDown className="w-4 h-4 text-rose-600" />
+                                        )}
+                                    </div>
+                                </div>
+                                <div className="relative h-2 bg-slate-200 rounded-full overflow-hidden">
+                                    <div className="absolute h-full bg-slate-400 rounded-full" style={{width: `${categoryBenchmarks.avgFulfillmentRate}%`}}></div>
+                                    <div className={`absolute h-full ${fulfillmentRate > categoryBenchmarks.avgFulfillmentRate ? 'bg-emerald-500' : 'bg-rose-500'} rounded-full`} style={{width: `${fulfillmentRate}%`}}></div>
+                                </div>
+                                <p className="text-xs text-slate-500">
+                                    {fulfillmentRate > categoryBenchmarks.avgFulfillmentRate 
+                                        ? `${fulfillmentRate - categoryBenchmarks.avgFulfillmentRate}% above average`
+                                        : `${categoryBenchmarks.avgFulfillmentRate - fulfillmentRate}% below average`
+                                    }
+                                </p>
+                            </div>
+
+                            {/* Rating Comparison */}
+                            <div className="space-y-3">
+                                <div className="flex items-center justify-between">
+                                    <span className="text-sm font-medium text-slate-700">Customer Rating</span>
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-sm text-slate-500">{categoryBenchmarks.avgRating}</span>
+                                        <span className="text-lg font-bold text-slate-900">{seller.ratings?.average || 0}</span>
+                                        {(seller.ratings?.average || 0) > categoryBenchmarks.avgRating ? (
+                                            <FiTrendingUp className="w-4 h-4 text-emerald-600" />
+                                        ) : (
+                                            <FiTrendingDown className="w-4 h-4 text-rose-600" />
+                                        )}
+                                    </div>
+                                </div>
+                                <div className="relative h-2 bg-slate-200 rounded-full overflow-hidden">
+                                    <div className="absolute h-full bg-slate-400 rounded-full" style={{width: `${(categoryBenchmarks.avgRating / 5) * 100}%`}}></div>
+                                    <div className={`absolute h-full ${(seller.ratings?.average || 0) > categoryBenchmarks.avgRating ? 'bg-emerald-500' : 'bg-rose-500'} rounded-full`} style={{width: `${((seller.ratings?.average || 0) / 5) * 100}%`}}></div>
+                                </div>
+                                <p className="text-xs text-slate-500">
+                                    {(seller.ratings?.average || 0) > categoryBenchmarks.avgRating 
+                                        ? `${((seller.ratings?.average || 0) - categoryBenchmarks.avgRating).toFixed(1)} stars above average`
+                                        : `${(categoryBenchmarks.avgRating - (seller.ratings?.average || 0)).toFixed(1)} stars below average`
+                                    }
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Performance Summary */}
+                        <div className="mt-6 p-4 bg-gradient-to-r from-indigo-50 to-blue-50 rounded-xl border border-indigo-200">
+                            <div className="flex items-center gap-3">
+                                <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center">
+                                    <FiBarChart2 className="w-6 h-6 text-indigo-600" />
+                                </div>
+                                <div className="flex-1">
+                                    <h4 className="font-bold text-indigo-900 mb-1">Performance Summary</h4>
+                                    <p className="text-sm text-indigo-700">
+                                        {healthScore > categoryBenchmarks.avgHealthScore && fulfillmentRate > categoryBenchmarks.avgFulfillmentRate
+                                            ? '🎉 This seller is outperforming the category average across multiple metrics!'
+                                            : healthScore < categoryBenchmarks.avgHealthScore - 10
+                                            ? '⚠️ This seller needs support to improve performance metrics.'
+                                            : '📊 This seller is performing at par with category standards.'
+                                        }
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Seller Journey Timeline */}
+                    <div className="bg-white p-6 rounded-2xl border border-slate-200">
+                        <h3 className="text-lg font-bold mb-6 flex items-center gap-2"><FiCalendar className="text-indigo-600" /> Seller Journey Timeline</h3>
+                        <div className="relative">
+                            {/* Timeline Line */}
+                            <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gradient-to-b from-indigo-500 via-emerald-500 to-slate-300"></div>
+                            
+                            {/* Timeline Events */}
+                            <div className="space-y-6 relative">
+                                {/* Registration */}
+                                <div className="flex gap-4 items-start">
+                                    <div className="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center flex-shrink-0 relative z-10 border-4 border-white">
+                                        <FiUser className="w-4 h-4 text-white" />
+                                    </div>
+                                    <div className="flex-1 bg-indigo-50 border border-indigo-200 p-4 rounded-xl">
+                                        <div className="flex items-center justify-between mb-1">
+                                            <h4 className="font-bold text-slate-900">Account Created</h4>
+                                            <span className="text-xs text-slate-500">{new Date(seller.createdAt).toLocaleDateString()}</span>
+                                        </div>
+                                        <p className="text-sm text-slate-600">Seller registered on the platform</p>
+                                    </div>
+                                </div>
+
+                                {/* Verification */}
+                                {seller.approvedAt && (
+                                    <div className="flex gap-4 items-start">
+                                        <div className="w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center flex-shrink-0 relative z-10 border-4 border-white">
+                                            <FiCheckCircle className="w-4 h-4 text-white" />
+                                        </div>
+                                        <div className="flex-1 bg-emerald-50 border border-emerald-200 p-4 rounded-xl">
+                                            <div className="flex items-center justify-between mb-1">
+                                                <h4 className="font-bold text-slate-900">Verified</h4>
+                                                <span className="text-xs text-slate-500">{new Date(seller.approvedAt).toLocaleDateString()}</span>
+                                            </div>
+                                            <p className="text-sm text-slate-600">Account verification completed</p>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* First Product */}
+                                {products.length > 0 && (
+                                    <div className="flex gap-4 items-start">
+                                        <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center flex-shrink-0 relative z-10 border-4 border-white">
+                                            <FiLayers className="w-4 h-4 text-white" />
+                                        </div>
+                                        <div className="flex-1 bg-blue-50 border border-blue-200 p-4 rounded-xl">
+                                            <div className="flex items-center justify-between mb-1">
+                                                <h4 className="font-bold text-slate-900">First Product Listed</h4>
+                                                <span className="text-xs text-slate-500">{new Date(products[products.length - 1]?.createdAt || seller.createdAt).toLocaleDateString()}</span>
+                                            </div>
+                                            <p className="text-sm text-slate-600">Started selling on the platform</p>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* First Sale */}
+                                {orders.length > 0 && (
+                                    <div className="flex gap-4 items-start">
+                                        <div className="w-8 h-8 rounded-full bg-amber-500 flex items-center justify-center flex-shrink-0 relative z-10 border-4 border-white">
+                                            <FiShoppingCart className="w-4 h-4 text-white" />
+                                        </div>
+                                        <div className="flex-1 bg-amber-50 border border-amber-200 p-4 rounded-xl">
+                                            <div className="flex items-center justify-between mb-1">
+                                                <h4 className="font-bold text-slate-900">First Sale</h4>
+                                                <span className="text-xs text-slate-500">{new Date(orders[orders.length - 1]?.createdAt || seller.createdAt).toLocaleDateString()}</span>
+                                            </div>
+                                            <p className="text-sm text-slate-600">Made their first sale</p>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Milestones */}
+                                {stats?.orderCount >= 100 && (
+                                    <div className="flex gap-4 items-start">
+                                        <div className="w-8 h-8 rounded-full bg-purple-500 flex items-center justify-center flex-shrink-0 relative z-10 border-4 border-white">
+                                            <FiTrendingUp className="w-4 h-4 text-white" />
+                                        </div>
+                                        <div className="flex-1 bg-purple-50 border border-purple-200 p-4 rounded-xl">
+                                            <div className="flex items-center justify-between mb-1">
+                                                <h4 className="font-bold text-slate-900">🎉 100+ Orders Milestone</h4>
+                                                <span className="text-xs text-slate-500">Achievement Unlocked</span>
+                                            </div>
+                                            <p className="text-sm text-slate-600">Reached 100 orders - Growing seller!</p>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {stats?.totalRevenue >= 100000 && (
+                                    <div className="flex gap-4 items-start">
+                                        <div className="w-8 h-8 rounded-full bg-rose-500 flex items-center justify-center flex-shrink-0 relative z-10 border-4 border-white">
+                                            <FiDollarSign className="w-4 h-4 text-white" />
+                                        </div>
+                                        <div className="flex-1 bg-rose-50 border border-rose-200 p-4 rounded-xl">
+                                            <div className="flex items-center justify-between mb-1">
+                                                <h4 className="font-bold text-slate-900">🏆 ₹1L+ Revenue Milestone</h4>
+                                                <span className="text-xs text-slate-500">Achievement Unlocked</span>
+                                            </div>
+                                            <p className="text-sm text-slate-600">Crossed ₹1 Lakh in total revenue!</p>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Current Status */}
+                                <div className="flex gap-4 items-start">
+                                    <div className={`w-8 h-8 rounded-full ${seller.isActive ? 'bg-emerald-500' : 'bg-slate-400'} flex items-center justify-center flex-shrink-0 relative z-10 border-4 border-white`}>
+                                        <FiActivity className="w-4 h-4 text-white" />
+                                    </div>
+                                    <div className={`flex-1 ${seller.isActive ? 'bg-emerald-50 border-emerald-200' : 'bg-slate-50 border-slate-200'} border p-4 rounded-xl`}>
+                                        <div className="flex items-center justify-between mb-1">
+                                            <h4 className="font-bold text-slate-900">Current Status</h4>
+                                            <span className="text-xs text-slate-500">Now</span>
+                                        </div>
+                                        <p className="text-sm text-slate-600">
+                                            {seller.isActive ? '✅ Active and selling' : '⏸️ Account suspended'}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {activeTab === 'business' && (
+                <div className="grid grid-cols-2 gap-6">
+                    <div className="bg-white p-6 rounded-2xl border border-slate-200 space-y-6">
+                        <h3 className="text-lg font-bold flex items-center gap-2"><FiBriefcase className="text-indigo-600" /> Business Details</h3>
+                        <div className="grid grid-cols-2 gap-4">
+                            <InfoItem label="Business Name" value={seller.businessName} />
+                            <InfoItem label="Business Type" value={seller.businessType} />
+                            <InfoItem label="GST/TRN" value={seller.gstin || seller.trn} />
+                            <InfoItem label="PAN" value={seller.pan} />
+                            <InfoItem label="Email" value={seller.email} icon={FiMail} />
+                            <InfoItem label="Phone" value={seller.phone} icon={FiPhone} />
+                        </div>
+                    </div>
+                    <div className="bg-white p-6 rounded-2xl border border-slate-200 space-y-6">
+                        <h3 className="text-lg font-bold flex items-center gap-2"><FiMapPin className="text-emerald-600" /> Pickup Address</h3>
+                        <div className="space-y-3">
+                            <InfoItem label="Address" value={seller.pickupAddress?.addressLine1} />
+                            <InfoItem label="City" value={seller.pickupAddress?.city} />
+                            <InfoItem label="State" value={seller.pickupAddress?.state} />
+                            <InfoItem label="Pincode" value={seller.pickupAddress?.pincode} />
+                            <InfoItem label="Country" value={seller.pickupAddress?.country} />
+                        </div>
+                    </div>
+                    <div className="col-span-2 bg-white p-6 rounded-2xl border border-slate-200 space-y-6">
+                        <h3 className="text-lg font-bold flex items-center gap-2"><FiShoppingBag className="text-blue-600" /> Store Information</h3>
+                        <div className="grid grid-cols-3 gap-4">
+                            <InfoItem label="Store Name" value={seller.storeInfo?.storeName} />
+                            <InfoItem label="Store URL" value={seller.storeInfo?.storeUrl} icon={FiGlobe} />
+                            <InfoItem label="Description" value={seller.storeInfo?.description} />
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {activeTab === 'products' && (
+                <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+                    {/* Search and Filter Bar */}
+                    <div className="p-4 border-b border-slate-200 bg-slate-50">
+                        <div className="flex items-center gap-4">
+                            <div className="flex-1 relative">
+                                <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
+                                <input
+                                    type="text"
+                                    placeholder="Search products by name..."
+                                    value={productSearch}
+                                    onChange={(e) => setProductSearch(e.target.value)}
+                                    className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                />
+                            </div>
+                            <select
+                                value={productFilter}
+                                onChange={(e) => setProductFilter(e.target.value)}
+                                className="px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+                            >
+                                <option value="all">All Products</option>
+                                <option value="active">Active Only</option>
+                                <option value="inactive">Inactive Only</option>
+                            </select>
+                            <div className="text-sm text-slate-600 font-medium whitespace-nowrap">
+                                {products.filter(p => {
+                                    const matchesSearch = p.name.toLowerCase().includes(productSearch.toLowerCase())
+                                    const matchesFilter = productFilter === 'all' || 
+                                        (productFilter === 'active' && p.isActive) ||
+                                        (productFilter === 'inactive' && !p.isActive)
+                                    return matchesSearch && matchesFilter
+                                }).length} of {products.length} products
+                            </div>
+                        </div>
+                    </div>
+
+                    <table className="w-full">
+                        <thead className="bg-slate-50 border-b border-slate-200">
+                            <tr>
+                                <th className="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Product</th>
+                                <th className="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Price</th>
+                                <th className="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Stock</th>
+                                <th className="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Rating</th>
+                                <th className="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100">
+                            {products.filter(p => {
+                                const matchesSearch = p.name.toLowerCase().includes(productSearch.toLowerCase())
+                                const matchesFilter = productFilter === 'all' || 
+                                    (productFilter === 'active' && p.isActive) ||
+                                    (productFilter === 'inactive' && !p.isActive)
+                                return matchesSearch && matchesFilter
+                            }).map(p => (
+                                <tr key={p._id} className="hover:bg-slate-50">
+                                    <td className="px-6 py-4">
+                                        <div className="flex items-center gap-3">
+                                            <img src={p.images?.[0]?.url || p.images?.[0]} className="w-10 h-10 rounded-lg object-cover" />
+                                            <span className="font-medium text-slate-900">{p.name}</span>
+                                        </div>
+                                    </td>
+                                    <td className="px-6 py-4 font-bold">₹{p.price}</td>
+                                    <td className="px-6 py-4 text-slate-600">{p.stock}</td>
+                                    <td className="px-6 py-4"><span className="flex items-center gap-1 text-amber-500"><FiStar className="fill-current" /> {p.ratings?.average || 0}</span></td>
+                                    <td className="px-6 py-4"><span className={`px-2 py-1 rounded-lg text-[10px] font-bold ${p.isActive ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600'}`}>{p.isActive ? 'ACTIVE' : 'INACTIVE'}</span></td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                    {products.filter(p => {
+                        const matchesSearch = p.name.toLowerCase().includes(productSearch.toLowerCase())
+                        const matchesFilter = productFilter === 'all' || 
+                            (productFilter === 'active' && p.isActive) ||
+                            (productFilter === 'inactive' && !p.isActive)
+                        return matchesSearch && matchesFilter
+                    }).length === 0 && (
+                        <div className="text-center py-12">
+                            <FiSearch className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+                            <p className="text-slate-500">No products found matching your criteria</p>
+                        </div>
+                    )}
+                </div>
+            )}
+
+            {activeTab === 'orders' && (
+                <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+                    {/* Search and Filter Bar */}
+                    <div className="p-4 border-b border-slate-200 bg-slate-50">
+                        <div className="flex items-center gap-4">
+                            <div className="flex-1 relative">
+                                <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
+                                <input
+                                    type="text"
+                                    placeholder="Search by Order ID or Customer name..."
+                                    value={orderSearch}
+                                    onChange={(e) => setOrderSearch(e.target.value)}
+                                    className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                />
+                            </div>
+                            <select
+                                value={orderFilter}
+                                onChange={(e) => setOrderFilter(e.target.value)}
+                                className="px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+                            >
+                                <option value="all">All Orders</option>
+                                <option value="pending">Pending</option>
+                                <option value="processing">Processing</option>
+                                <option value="shipped">Shipped</option>
+                                <option value="delivered">Delivered</option>
+                                <option value="cancelled">Cancelled</option>
+                                <option value="returned">Returned</option>
+                            </select>
+                            <div className="text-sm text-slate-600 font-medium whitespace-nowrap">
+                                {orders.filter(o => {
+                                    const matchesSearch = o._id.includes(orderSearch) || 
+                                        (o.customer?.name || '').toLowerCase().includes(orderSearch.toLowerCase())
+                                    const matchesFilter = orderFilter === 'all' || o.status === orderFilter
+                                    return matchesSearch && matchesFilter
+                                }).length} of {orders.length} orders
+                            </div>
+                        </div>
+                    </div>
+
+                    <table className="w-full">
+                        <thead className="bg-slate-50 border-b border-slate-200">
+                            <tr>
+                                <th className="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Order ID</th>
+                                <th className="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Date</th>
+                                <th className="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Customer</th>
+                                <th className="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Amount</th>
+                                <th className="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100">
+                            {orders.filter(o => {
+                                const matchesSearch = o._id.includes(orderSearch) || 
+                                    (o.customer?.name || '').toLowerCase().includes(orderSearch.toLowerCase())
+                                const matchesFilter = orderFilter === 'all' || o.status === orderFilter
+                                return matchesSearch && matchesFilter
+                            }).map(o => (
+                                <tr key={o._id} className="hover:bg-slate-50">
+                                    <td className="px-6 py-4 font-mono text-sm font-bold">#{o._id.slice(-6)}</td>
+                                    <td className="px-6 py-4 text-sm text-slate-600">{new Date(o.createdAt).toLocaleDateString()}</td>
+                                    <td className="px-6 py-4 text-sm">{o.customer?.name || 'N/A'}</td>
+                                    <td className="px-6 py-4 font-bold">₹{o.totalAmount}</td>
+                                    <td className="px-6 py-4">
+                                        <span className={`px-2 py-1 rounded-lg text-[10px] font-bold uppercase ${
+                                            o.status === 'delivered' ? 'bg-emerald-50 text-emerald-600' :
+                                            o.status === 'cancelled' || o.status === 'returned' ? 'bg-rose-50 text-rose-600' :
+                                            o.status === 'shipped' ? 'bg-blue-50 text-blue-600' :
+                                            'bg-amber-50 text-amber-600'
+                                        }`}>{o.status}</span>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                    {orders.filter(o => {
+                        const matchesSearch = o._id.includes(orderSearch) || 
+                            (o.customer?.name || '').toLowerCase().includes(orderSearch.toLowerCase())
+                        const matchesFilter = orderFilter === 'all' || o.status === orderFilter
+                        return matchesSearch && matchesFilter
+                    }).length === 0 && (
+                        <div className="text-center py-12">
+                            <FiSearch className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+                            <p className="text-slate-500">No orders found matching your criteria</p>
+                        </div>
+                    )}
+                </div>
+            )}
+
+            {activeTab === 'reviews' && (
+                <div className="grid grid-cols-2 gap-6">
+                    {reviews.map(r => (
+                        <div key={r._id} className="bg-white p-6 rounded-2xl border border-slate-200">
+                            <div className="flex items-center justify-between mb-4">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center font-bold">{r.customer?.name?.[0]}</div>
+                                    <div>
+                                        <p className="font-bold text-slate-900">{r.customer?.name}</p>
+                                        <p className="text-xs text-slate-400">{new Date(r.createdAt).toLocaleDateString()}</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-1 text-amber-500"><FiStar className="fill-current" /> {r.rating}</div>
+                            </div>
+                            <p className="text-slate-600 text-sm italic">"{r.comment}"</p>
+                        </div>
+                    ))}
+                </div>
+            )}
+
+            {activeTab === 'documents' && (
+                <div className="space-y-6">
+                    <div className="bg-white p-6 rounded-2xl border border-slate-200">
+                        <h3 className="text-lg font-bold mb-4 flex items-center gap-2"><FiShield className="text-indigo-600" /> Verification Documents</h3>
+                        <div className="grid grid-cols-4 gap-4">
+                            <DocCard label="PAN Card" url={seller.documents?.panCard} />
+                            <DocCard label="GST Certificate" url={seller.documents?.gstCertificate} />
+                            <DocCard label="ID Proof" url={seller.documents?.idProof} />
+                            <DocCard label="Trade License" url={seller.documents?.tradeLicense} />
+                        </div>
+                    </div>
+                    {seller.documents?.requestedDocuments?.length > 0 && (
+                        <div className="bg-amber-50 p-6 rounded-2xl border border-amber-200">
+                            <h3 className="text-lg font-bold mb-4 text-amber-900">Requested Documents</h3>
+                            <div className="grid grid-cols-2 gap-4">
+                                {seller.documents.requestedDocuments.map(req => (
+                                    <div key={req._id} className="bg-white p-4 rounded-xl border border-amber-200">
+                                        <div className="flex justify-between items-start mb-2">
+                                            <h4 className="font-bold">{req.title}</h4>
+                                            <span className="px-2 py-0.5 bg-amber-100 text-amber-700 rounded text-[9px] font-bold uppercase">{req.status}</span>
+                                        </div>
+                                        <p className="text-xs text-slate-500 mb-3">{req.description}</p>
+                                        {req.url && <a href={req.url} target="_blank" className="text-xs text-indigo-600 font-bold">View Document →</a>}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            )}
+
+            {activeTab === 'financials' && (
+                <div className="space-y-6">
+                    {/* Financial Overview Cards */}
+                    <div className="grid grid-cols-4 gap-4">
+                        <div className="bg-gradient-to-br from-indigo-500 to-indigo-600 p-6 rounded-2xl text-white">
+                            <FiDollarSign className="w-8 h-8 mb-3 opacity-80" />
+                            <p className="text-3xl font-bold">₹{(stats?.totalRevenue || 0).toLocaleString()}</p>
+                            <p className="text-sm opacity-90 mt-1">Total Revenue</p>
+                        </div>
+                        <div className="bg-gradient-to-br from-emerald-500 to-emerald-600 p-6 rounded-2xl text-white">
+                            <FiTrendingUp className="w-8 h-8 mb-3 opacity-80" />
+                            <p className="text-3xl font-bold">₹{stats?.orderCount ? Math.round(stats.totalRevenue / stats.orderCount) : 0}</p>
+                            <p className="text-sm opacity-90 mt-1">Avg Order Value</p>
+                        </div>
+                        <div className="bg-gradient-to-br from-amber-500 to-amber-600 p-6 rounded-2xl text-white">
+                            <FiPercent className="w-8 h-8 mb-3 opacity-80" />
+                            <p className="text-3xl font-bold">{seller.commissionRate || 5}%</p>
+                            <p className="text-sm opacity-90 mt-1">Commission Rate</p>
+                        </div>
+                        <div className="bg-gradient-to-br from-rose-500 to-rose-600 p-6 rounded-2xl text-white">
+                            <FiCreditCard className="w-8 h-8 mb-3 opacity-80" />
+                            <p className="text-3xl font-bold">₹{Math.round((stats?.totalRevenue || 0) * ((seller.commissionRate || 5) / 100)).toLocaleString()}</p>
+                            <p className="text-sm opacity-90 mt-1">Total Commission</p>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-6">
+                        {/* Bank Details */}
+                        <div className="bg-white p-6 rounded-2xl border border-slate-200">
+                            <h3 className="text-lg font-bold mb-4 flex items-center gap-2"><FiCreditCard className="text-indigo-600" /> Bank Details</h3>
+                            <div className="space-y-4">
+                                <InfoItem label="Bank Name" value={seller.bankDetails?.bankName} />
+                                <InfoItem label="Account Number" value={seller.bankDetails?.accountNumber} />
+                                <InfoItem label="IFSC Code" value={seller.bankDetails?.ifscCode} />
+                                <InfoItem label="Account Holder" value={seller.bankDetails?.accountHolderName} />
+                                <InfoItem label="Account Type" value={seller.bankDetails?.accountType?.toUpperCase()} />
+                                {seller.bankDetails?.upiId && <InfoItem label="UPI ID" value={seller.bankDetails.upiId} />}
+                            </div>
+                        </div>
+
+                        {/* Commission Breakdown */}
+                        <div className="bg-white p-6 rounded-2xl border border-slate-200">
+                            <h3 className="text-lg font-bold mb-4 flex items-center gap-2"><FiPercent className="text-emerald-600" /> Commission Breakdown</h3>
+                            <div className="space-y-4">
+                                <div className="p-4 bg-slate-50 rounded-xl">
+                                    <div className="flex justify-between items-center mb-2">
+                                        <span className="text-sm text-slate-600">Gross Revenue</span>
+                                        <span className="font-bold text-slate-900">₹{(stats?.totalRevenue || 0).toLocaleString()}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center mb-2">
+                                        <span className="text-sm text-slate-600">Platform Commission ({seller.commissionRate || 5}%)</span>
+                                        <span className="font-bold text-rose-600">- ₹{Math.round((stats?.totalRevenue || 0) * ((seller.commissionRate || 5) / 100)).toLocaleString()}</span>
+                                    </div>
+                                    <div className="border-t border-slate-200 pt-2 mt-2">
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-sm font-bold text-slate-700">Net Earnings</span>
+                                            <span className="font-bold text-lg text-emerald-600">₹{Math.round((stats?.totalRevenue || 0) * (1 - (seller.commissionRate || 5) / 100)).toLocaleString()}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-2 gap-3">
+                                    <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg text-center">
+                                        <p className="text-xs text-blue-600 font-medium mb-1">Per Order Commission</p>
+                                        <p className="text-lg font-bold text-blue-700">₹{stats?.orderCount ? Math.round((stats.totalRevenue * ((seller.commissionRate || 5) / 100)) / stats.orderCount) : 0}</p>
+                                    </div>
+                                    <div className="p-3 bg-purple-50 border border-purple-200 rounded-lg text-center">
+                                        <p className="text-xs text-purple-600 font-medium mb-1">Per Order Net</p>
+                                        <p className="text-lg font-bold text-purple-700">₹{stats?.orderCount ? Math.round((stats.totalRevenue * (1 - (seller.commissionRate || 5) / 100)) / stats.orderCount) : 0}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Pending Payouts & Transaction History */}
+                    <div className="grid grid-cols-2 gap-6">
+                        <div className="bg-white p-6 rounded-2xl border border-slate-200">
+                            <h3 className="text-lg font-bold mb-4 flex items-center gap-2"><FiClock className="text-amber-600" /> Pending Payouts</h3>
+                            <div className="space-y-3">
+                                <div className="p-4 bg-amber-50 border-2 border-amber-200 rounded-xl">
+                                    <div className="flex items-center justify-between mb-2">
+                                        <span className="text-sm font-bold text-amber-700">Current Cycle</span>
+                                        <span className="text-xs bg-amber-200 text-amber-800 px-2 py-1 rounded-full font-bold">PENDING</span>
+                                    </div>
+                                    <p className="text-2xl font-bold text-amber-900">₹0</p>
+                                    <p className="text-xs text-amber-600 mt-1">Next payout: End of month</p>
+                                </div>
+                                <div className="text-center py-6 text-slate-400 text-sm">
+                                    <FiAlertCircle className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                                    <p>No pending transactions</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="bg-white p-6 rounded-2xl border border-slate-200">
+                            <h3 className="text-lg font-bold mb-4 flex items-center gap-2"><FiBarChart2 className="text-blue-600" /> Financial Summary</h3>
+                            <div className="space-y-3">
+                                <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
+                                    <span className="text-sm text-slate-600">Total Orders</span>
+                                    <span className="font-bold text-slate-900">{stats?.orderCount || 0}</span>
+                                </div>
+                                <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
+                                    <span className="text-sm text-slate-600">Completed Orders</span>
+                                    <span className="font-bold text-emerald-600">{orders.filter(o => o.status === 'delivered').length}</span>
+                                </div>
+                                <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
+                                    <span className="text-sm text-slate-600">Refunded Orders</span>
+                                    <span className="font-bold text-rose-600">{orders.filter(o => o.status === 'refunded' || o.status === 'returned').length}</span>
+                                </div>
+                                <div className="flex justify-between items-center p-3 bg-indigo-50 rounded-lg border border-indigo-200">
+                                    <span className="text-sm font-bold text-indigo-700">Success Rate</span>
+                                    <span className="font-bold text-indigo-700">{orders.length > 0 ? Math.round((orders.filter(o => o.status === 'delivered').length / orders.length) * 100) : 0}%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Subscription Info */}
+                    {seller.subscriptionPlan && seller.subscriptionPlan !== 'free' && (
+                        <div className="bg-gradient-to-r from-purple-500 to-indigo-600 p-6 rounded-2xl text-white">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <h3 className="text-lg font-bold mb-2 flex items-center gap-2">
+                                        <FiShield className="w-5 h-5" /> Subscription Plan
+                                    </h3>
+                                    <p className="text-3xl font-bold capitalize mb-1">{seller.subscriptionPlan} Plan</p>
+                                    {seller.subscriptionExpiry && (
+                                        <p className="text-sm opacity-90">Expires: {new Date(seller.subscriptionExpiry).toLocaleDateString()}</p>
+                                    )}
+                                </div>
+                                <div className="text-right">
+                                    <p className="text-sm opacity-90 mb-1">Reduced Commission</p>
+                                    <p className="text-2xl font-bold">{seller.commissionRate}%</p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            )}
+
+            {activeTab === 'compliance' && (
+                <div className="space-y-6">
+                    {/* Compliance Score Overview */}
+                    <div className="grid grid-cols-4 gap-4">
+                        <div className="bg-white p-6 rounded-2xl border-2 border-emerald-200">
+                            <div className="flex items-center justify-between mb-3">
+                                <FiCheckCircle className="w-8 h-8 text-emerald-600" />
+                                <span className="text-3xl font-bold text-emerald-600">{Math.max(0, 100 - (orders.filter(o => o.status === 'cancelled' || o.status === 'returned').length * 5))}</span>
+                            </div>
+                            <p className="text-sm font-bold text-slate-700">Compliance Score</p>
+                            <p className="text-xs text-slate-500 mt-1">Out of 100</p>
+                        </div>
+                        <div className="bg-white p-6 rounded-2xl border border-slate-200">
+                            <div className="flex items-center justify-between mb-3">
+                                <FiXCircle className="w-8 h-8 text-rose-600" />
+                                <span className="text-3xl font-bold text-slate-900">0</span>
+                            </div>
+                            <p className="text-sm font-bold text-slate-700">Policy Violations</p>
+                            <p className="text-xs text-slate-500 mt-1">Last 30 days</p>
+                        </div>
+                        <div className="bg-white p-6 rounded-2xl border border-slate-200">
+                            <div className="flex items-center justify-between mb-3">
+                                <FiClock className="w-8 h-8 text-amber-600" />
+                                <span className="text-3xl font-bold text-slate-900">{orders.filter(o => o.status === 'pending' || o.status === 'processing').length}</span>
+                            </div>
+                            <p className="text-sm font-bold text-slate-700">Late Shipments</p>
+                            <p className="text-xs text-slate-500 mt-1">Last 30 days</p>
+                        </div>
+                        <div className="bg-white p-6 rounded-2xl border border-slate-200">
+                            <div className="flex items-center justify-between mb-3">
+                                <FiAlertCircle className="w-8 h-8 text-blue-600" />
+                                <span className="text-3xl font-bold text-slate-900">0</span>
+                            </div>
+                            <p className="text-sm font-bold text-slate-700">Customer Complaints</p>
+                            <p className="text-xs text-slate-500 mt-1">Last 30 days</p>
+                        </div>
+                    </div>
+
+                    {/* Performance Metrics */}
+                    <div className="grid grid-cols-2 gap-6">
+                        <div className="bg-white p-6 rounded-2xl border border-slate-200">
+                            <h3 className="text-lg font-bold mb-4 flex items-center gap-2"><FiTrendingUp className="text-indigo-600" /> Performance Metrics</h3>
+                            <div className="space-y-4">
+                                <div className="space-y-2">
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-sm text-slate-600">Order Fulfillment Rate</span>
+                                        <span className="text-sm font-bold text-slate-900">{fulfillmentRate}%</span>
+                                    </div>
+                                    <div className="w-full bg-slate-200 rounded-full h-2">
+                                        <div className="bg-emerald-500 h-2 rounded-full" style={{width: `${fulfillmentRate}%`}}></div>
+                                    </div>
+                                </div>
+                                <div className="space-y-2">
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-sm text-slate-600">On-Time Delivery Rate</span>
+                                        <span className="text-sm font-bold text-slate-900">{Math.max(0, 100 - returnRate)}%</span>
+                                    </div>
+                                    <div className="w-full bg-slate-200 rounded-full h-2">
+                                        <div className="bg-blue-500 h-2 rounded-full" style={{width: `${Math.max(0, 100 - returnRate)}%`}}></div>
+                                    </div>
+                                </div>
+                                <div className="space-y-2">
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-sm text-slate-600">Customer Satisfaction</span>
+                                        <span className="text-sm font-bold text-slate-900">{Math.round((seller.ratings?.average || 0) * 20)}%</span>
+                                    </div>
+                                    <div className="w-full bg-slate-200 rounded-full h-2">
+                                        <div className="bg-amber-500 h-2 rounded-full" style={{width: `${Math.round((seller.ratings?.average || 0) * 20)}%`}}></div>
+                                    </div>
+                                </div>
+                                <div className="space-y-2">
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-sm text-slate-600">Return Rate (Lower is Better)</span>
+                                        <span className="text-sm font-bold text-rose-600">{returnRate}%</span>
+                                    </div>
+                                    <div className="w-full bg-slate-200 rounded-full h-2">
+                                        <div className="bg-rose-500 h-2 rounded-full" style={{width: `${returnRate}%`}}></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="bg-white p-6 rounded-2xl border border-slate-200">
+                            <h3 className="text-lg font-bold mb-4 flex items-center gap-2"><FiShield className="text-emerald-600" /> Compliance Status</h3>
+                            <div className="space-y-3">
+                                <div className="flex items-center justify-between p-3 bg-emerald-50 border border-emerald-200 rounded-lg">
+                                    <div className="flex items-center gap-2">
+                                        <FiCheckCircle className="text-emerald-600" />
+                                        <span className="text-sm font-medium text-slate-700">Documents Verified</span>
+                                    </div>
+                                    <span className="text-xs font-bold text-emerald-700">COMPLIANT</span>
+                                </div>
+                                <div className="flex items-center justify-between p-3 bg-emerald-50 border border-emerald-200 rounded-lg">
+                                    <div className="flex items-center gap-2">
+                                        <FiCheckCircle className="text-emerald-600" />
+                                        <span className="text-sm font-medium text-slate-700">Tax Compliance</span>
+                                    </div>
+                                    <span className="text-xs font-bold text-emerald-700">COMPLIANT</span>
+                                </div>
+                                <div className="flex items-center justify-between p-3 bg-emerald-50 border border-emerald-200 rounded-lg">
+                                    <div className="flex items-center gap-2">
+                                        <FiCheckCircle className="text-emerald-600" />
+                                        <span className="text-sm font-medium text-slate-700">Product Listings</span>
+                                    </div>
+                                    <span className="text-xs font-bold text-emerald-700">COMPLIANT</span>
+                                </div>
+                                <div className="flex items-center justify-between p-3 bg-emerald-50 border border-emerald-200 rounded-lg">
+                                    <div className="flex items-center gap-2">
+                                        <FiCheckCircle className="text-emerald-600" />
+                                        <span className="text-sm font-medium text-slate-700">Customer Service</span>
+                                    </div>
+                                    <span className="text-xs font-bold text-emerald-700">COMPLIANT</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Policy Violations & Complaints */}
+                    <div className="grid grid-cols-2 gap-6">
+                        <div className="bg-white p-6 rounded-2xl border border-slate-200">
+                            <h3 className="text-lg font-bold mb-4 flex items-center gap-2"><FiXCircle className="text-rose-600" /> Policy Violations</h3>
+                            <div className="text-center py-12">
+                                <FiCheckCircle className="w-16 h-16 text-emerald-500 mx-auto mb-3" />
+                                <p className="text-lg font-bold text-emerald-700">No Violations</p>
+                                <p className="text-sm text-slate-500 mt-2">This seller has a clean record</p>
+                            </div>
+                        </div>
+
+                        <div className="bg-white p-6 rounded-2xl border border-slate-200">
+                            <h3 className="text-lg font-bold mb-4 flex items-center gap-2"><FiAlertCircle className="text-amber-600" /> Customer Complaints</h3>
+                            <div className="text-center py-12">
+                                <FiCheckCircle className="w-16 h-16 text-emerald-500 mx-auto mb-3" />
+                                <p className="text-lg font-bold text-emerald-700">No Complaints</p>
+                                <p className="text-sm text-slate-500 mt-2">Excellent customer service record</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Recommendations */}
+                    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 p-6 rounded-2xl">
+                        <h3 className="text-lg font-bold mb-3 flex items-center gap-2 text-blue-900">
+                            <FiTrendingUp className="text-blue-600" /> Performance Recommendations
+                        </h3>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="bg-white p-4 rounded-xl border border-blue-200">
+                                <div className="flex items-start gap-3">
+                                    <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center flex-shrink-0">
+                                        <FiCheckCircle className="w-4 h-4 text-emerald-600" />
+                                    </div>
+                                    <div>
+                                        <p className="font-bold text-sm text-slate-900 mb-1">Maintain Quality</p>
+                                        <p className="text-xs text-slate-600">Continue providing excellent service to maintain high ratings</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="bg-white p-4 rounded-xl border border-blue-200">
+                                <div className="flex items-start gap-3">
+                                    <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+                                        <FiTrendingUp className="w-4 h-4 text-blue-600" />
+                                    </div>
+                                    <div>
+                                        <p className="font-bold text-sm text-slate-900 mb-1">Improve Response Time</p>
+                                        <p className="text-xs text-slate-600">Respond to customer queries within 12 hours for better satisfaction</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {activeTab === 'settings' && (
+                <div className="bg-white p-6 rounded-2xl border border-slate-200">
+                    <h3 className="text-lg font-bold mb-6">Account Settings</h3>
+                    <div className="space-y-4">
+                        <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
+                            <div>
+                                <p className="font-bold text-slate-900">Account Status</p>
+                                <p className="text-sm text-slate-500">Current status: {seller.isActive ? 'Active' : 'Suspended'}</p>
+                            </div>
+                            <button onClick={() => handleAction(seller.isActive ? 'suspend' : 'activate')} className={`px-4 py-2 rounded-lg font-bold text-sm ${seller.isActive ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'}`}>
+                                {seller.isActive ? 'Suspend Account' : 'Activate Account'}
+                            </button>
+                        </div>
+                        <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
+                            <div>
+                                <p className="font-bold text-slate-900">Verification Status</p>
+                                <p className="text-sm text-slate-500">Current: {seller.verificationStatus}</p>
+                            </div>
+                            {seller.verificationStatus === 'pending' && (
+                                <div className="flex gap-2">
+                                    <button onClick={() => handleAction('verify')} className="px-4 py-2 bg-emerald-600 text-white rounded-lg font-bold text-sm">Verify</button>
+                                    <button onClick={() => handleAction('reject')} className="px-4 py-2 bg-rose-100 text-rose-700 rounded-lg font-bold text-sm">Reject</button>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {activeTab === 'activity-log' && (
+                <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+                    <div className="p-6 border-b border-slate-200">
+                        <h3 className="text-lg font-bold flex items-center gap-2"><FiClock className="text-indigo-600" /> Activity Log</h3>
+                        <p className="text-sm text-slate-500 mt-1">Chronological record of all seller and admin actions</p>
+                    </div>
+                    <div className="p-6">
+                        {activityLogs.length > 0 ? (
+                            <div className="space-y-4">
+                                {activityLogs.map((log, idx) => (
+                                    <div key={idx} className="flex gap-4 p-4 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors">
+                                        <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
+                                            log.type === 'admin' ? 'bg-indigo-100 text-indigo-600' : 
+                                            log.type === 'seller' ? 'bg-emerald-100 text-emerald-600' : 
+                                            'bg-slate-200 text-slate-600'
+                                        }`}>
+                                            {log.type === 'admin' ? <FiShield className="w-5 h-5" /> : 
+                                             log.type === 'seller' ? <FiUser className="w-5 h-5" /> : 
+                                             <FiActivity className="w-5 h-5" />}
+                                        </div>
+                                        <div className="flex-1">
+                                            <div className="flex items-start justify-between">
+                                                <div>
+                                                    <p className="font-bold text-slate-900">{log.action}</p>
+                                                    <p className="text-sm text-slate-600 mt-1">{log.description}</p>
+                                                </div>
+                                                <span className="text-xs text-slate-400 whitespace-nowrap ml-4">
+                                                    {new Date(log.timestamp).toLocaleString()}
+                                                </span>
+                                            </div>
+                                            {log.details && (
+                                                <div className="mt-2 text-xs text-slate-500 bg-white p-2 rounded border border-slate-200">
+                                                    {log.details}
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="text-center py-12">
+                                <FiClock className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+                                <p className="text-slate-500">No activity logs available</p>
+                                <p className="text-xs text-slate-400 mt-1">Activity will be tracked automatically</p>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            )}
+
+            {activeTab === 'communications' && (
+                <div className="grid grid-cols-2 gap-6">
+                    {/* Internal Notes */}
+                    <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+                        <div className="p-6 border-b border-slate-200 flex items-center justify-between">
+                            <div>
+                                <h3 className="text-lg font-bold flex items-center gap-2"><FiMessageSquare className="text-indigo-600" /> Internal Notes</h3>
+                                <p className="text-sm text-slate-500 mt-1">Private admin notes about this seller</p>
+                            </div>
+                            <button onClick={() => setShowNoteModal(true)} className="px-4 py-2 bg-indigo-600 text-white rounded-lg font-bold text-sm flex items-center gap-2">
+                                <FiPlus className="w-4 h-4" /> Add Note
+                            </button>
+                        </div>
+                        <div className="p-6 max-h-[600px] overflow-y-auto">
+                            {notes.length > 0 ? (
+                                <div className="space-y-4">
+                                    {notes.map((note, idx) => (
+                                        <div key={idx} className="p-4 bg-amber-50 border border-amber-200 rounded-xl">
+                                            <div className="flex items-start justify-between mb-2">
+                                                <span className="text-xs font-bold text-amber-700 uppercase">Admin Note</span>
+                                                <span className="text-xs text-slate-400">
+                                                    {new Date(note.createdAt).toLocaleString()}
+                                                </span>
+                                            </div>
+                                            <p className="text-sm text-slate-700">{note.note}</p>
+                                            {note.createdBy && (
+                                                <p className="text-xs text-slate-500 mt-2">By: {note.createdBy.name || note.createdBy.email}</p>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="text-center py-12">
+                                    <FiMessageSquare className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+                                    <p className="text-slate-500">No notes yet</p>
+                                    <p className="text-xs text-slate-400 mt-1">Add internal notes to track important information</p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Communication History */}
+                    <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+                        <div className="p-6 border-b border-slate-200">
+                            <h3 className="text-lg font-bold flex items-center gap-2"><FiMail className="text-emerald-600" /> Communication History</h3>
+                            <p className="text-sm text-slate-500 mt-1">Email and message exchanges with seller</p>
+                        </div>
+                        <div className="p-6 max-h-[600px] overflow-y-auto">
+                            <div className="space-y-4">
+                                {/* Document Requests */}
+                                {seller.documents?.requestedDocuments?.length > 0 && (
+                                    <>
+                                        <h4 className="text-sm font-bold text-slate-700 uppercase tracking-wide">Document Requests</h4>
+                                        {seller.documents.requestedDocuments.map((req, idx) => (
+                                            <div key={idx} className="p-4 bg-blue-50 border border-blue-200 rounded-xl">
+                                                <div className="flex items-start justify-between mb-2">
+                                                    <span className="text-xs font-bold text-blue-700 uppercase">{req.status}</span>
+                                                    <span className="text-xs text-slate-400">
+                                                        {new Date(req.requestedAt).toLocaleDateString()}
+                                                    </span>
+                                                </div>
+                                                <p className="font-bold text-slate-900">{req.title}</p>
+                                                <p className="text-sm text-slate-600 mt-1">{req.description}</p>
+                                                {req.url && (
+                                                    <div className="mt-2 flex items-center gap-2 text-xs text-emerald-600">
+                                                        <FiCheckCircle /> Document submitted
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </>
+                                )}
+
+                                {/* Placeholder for future email/message integration */}
+                                <div className="text-center py-8 border-2 border-dashed border-slate-200 rounded-xl">
+                                    <FiMail className="w-10 h-10 text-slate-300 mx-auto mb-2" />
+                                    <p className="text-sm text-slate-500">Email integration coming soon</p>
+                                    <p className="text-xs text-slate-400 mt-1">Direct messaging with sellers will appear here</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Modal */}
+            {showRequestModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                    <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={() => setShowRequestModal(false)}></div>
+                    <form onSubmit={handleRequestDocument} className="relative bg-white w-full max-w-md rounded-2xl p-8 space-y-6">
+                        <h3 className="text-xl font-bold">Request Document</h3>
+                        <input placeholder="Title" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" required value={requestData.title} onChange={e => setRequestData({ ...requestData, title: e.target.value })} />
+                        <textarea placeholder="Description" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl h-32 resize-none" required value={requestData.description} onChange={e => setRequestData({ ...requestData, description: e.target.value })} />
+                        <div className="flex gap-4">
+                            <button type="button" onClick={() => setShowRequestModal(false)} className="flex-1 py-3 text-slate-500 font-bold">Cancel</button>
+                            <button type="submit" className="flex-1 py-3 bg-indigo-600 text-white rounded-xl font-bold">Send Request</button>
+                        </div>
+                    </form>
+                </div>
+            )}
+
+            {/* Note Modal */}
+            {showNoteModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                    <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={() => setShowNoteModal(false)}></div>
+                    <form onSubmit={handleAddNote} className="relative bg-white w-full max-w-md rounded-2xl p-8 space-y-6">
+                        <h3 className="text-xl font-bold">Add Internal Note</h3>
+                        <p className="text-sm text-slate-500">This note will only be visible to admin team members</p>
+                        <textarea 
+                            placeholder="Enter your note here..." 
+                            className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl h-32 resize-none" 
+                            required 
+                            value={noteText} 
+                            onChange={e => setNoteText(e.target.value)} 
+                        />
+                        <div className="flex gap-4">
+                            <button type="button" onClick={() => setShowNoteModal(false)} className="flex-1 py-3 text-slate-500 font-bold">Cancel</button>
+                            <button type="submit" className="flex-1 py-3 bg-indigo-600 text-white rounded-xl font-bold">Add Note</button>
+                        </div>
+                    </form>
+                </div>
+            )}
         </div>
-      </div>
-    </div>
-  )
+    )
+}
+
+function InfoItem({ label, value, icon: Icon }) {
+    return (
+        <div>
+            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 flex items-center gap-1">{Icon && <Icon className="w-3 h-3" />} {label}</p>
+            <p className="text-sm font-medium text-slate-900">{value || 'N/A'}</p>
+        </div>
+    )
+}
+
+function DocCard({ label, url: urlProp }) {
+    const url = typeof urlProp === 'object' ? urlProp?.url : urlProp
+    if (!url) return <div className="bg-slate-50 p-4 rounded-xl text-center"><p className="text-xs text-slate-400">{label} - Not Uploaded</p></div>
+    return (
+        <a href={url} target="_blank" className="bg-slate-50 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-300 p-4 rounded-xl text-center transition-all group">
+            <FiFileText className="w-8 h-8 mx-auto text-slate-400 group-hover:text-indigo-600 mb-2" />
+            <p className="text-xs font-bold text-slate-700 group-hover:text-indigo-600">{label}</p>
+        </a>
+    )
 }

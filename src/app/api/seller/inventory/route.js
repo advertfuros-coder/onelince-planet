@@ -96,6 +96,33 @@ export async function POST(request) {
     const { productId, warehouseId, type, quantity, reason } =
       await request.json();
 
+    // Validate required fields
+    if (!productId || !warehouseId || !type || !quantity) {
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "Missing required fields: productId, warehouseId, type, and quantity are required",
+        },
+        { status: 400 }
+      );
+    }
+
+    // Validate ObjectId format
+    const mongoose = await import("mongoose");
+    if (
+      !mongoose.default.Types.ObjectId.isValid(productId) ||
+      !mongoose.default.Types.ObjectId.isValid(warehouseId)
+    ) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Invalid product ID or warehouse ID format",
+        },
+        { status: 400 }
+      );
+    }
+
     const product = await Product.findById(productId);
     const warehouse = await Warehouse.findById(warehouseId);
 

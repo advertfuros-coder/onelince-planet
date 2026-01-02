@@ -1,7 +1,7 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { FiCheck, FiArrowRight, FiArrowLeft } from 'react-icons/fi'
+import { FiCheck, FiArrowRight, FiArrowLeft, FiAlertTriangle, FiRefreshCw } from 'react-icons/fi'
 import Step1GetStarted from '@/components/seller/onboarding/Step1GetStarted'
 import Step2PersonalDetails from '@/components/seller/onboarding/Step2PersonalDetails'
 import Step3BusinessInfo from '@/components/seller/onboarding/Step3BusinessInfo'
@@ -96,6 +96,41 @@ export default function SellerOnboardingPage() {
     })
 
     const [errors, setErrors] = useState({})
+    const [showResumePrompt, setShowResumePrompt] = useState(false)
+    const [bannedSeller, setBannedSeller] = useState(null)
+
+    // Navigation Guard
+    useEffect(() => {
+        const handleBeforeUnload = (e) => {
+            if (currentStep > 1 && currentStep < STEPS.length) {
+                e.preventDefault()
+                e.returnValue = ''
+            }
+        }
+        window.addEventListener('beforeunload', handleBeforeUnload)
+        return () => window.removeEventListener('beforeunload', handleBeforeUnload)
+    }, [currentStep])
+
+    // Load Draft
+    useEffect(() => {
+        const savedDraft = localStorage.getItem('sellerOnboardingDraft')
+        if (savedDraft) {
+            setShowResumePrompt(true)
+        }
+    }, [])
+
+    const resumeDraft = () => {
+        const savedDraft = localStorage.getItem('sellerOnboardingDraft')
+        if (savedDraft) {
+            try {
+                const parsed = JSON.parse(savedDraft)
+                setFormData(prev => ({ ...prev, ...parsed }))
+                setShowResumePrompt(false)
+            } catch (e) {
+                console.error('Error parsing draft:', e)
+            }
+        }
+    }
 
     const updateFormData = (stepData) => {
         setFormData(prev => ({ ...prev, ...stepData }))
@@ -103,7 +138,7 @@ export default function SellerOnboardingPage() {
         localStorage.setItem('sellerOnboardingDraft', JSON.stringify({ ...formData, ...stepData }))
     }
 
-    const validateStep = (step) => {
+    const validateStep = async (step) => {
         const newErrors = {}
 
         switch (step) {
@@ -123,6 +158,32 @@ export default function SellerOnboardingPage() {
                 if (!formData.businessName) newErrors.businessName = 'Business name is required'
                 if (!formData.gstin) newErrors.gstin = 'GST/TRN is required'
                 if (!formData.businessCategory) newErrors.businessCategory = 'Business category is required'
+                
+                // If base validation passes, check if seller is banned/registered
+                if (Object.keys(newErrors).length === 0) {
+                    try {
+                        const res = await fetch('/api/seller/onboarding/check-business', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ gstin: formData.gstin, pan: formData.pan })
+                        })
+                        const checkData = await res.json()
+                        if (checkData.success && checkData.isRegistered) {
+                            if (checkData.isBanned) {
+                                setBannedSeller({
+                                    reason: checkData.banReason,
+                                    storeName: checkData.storeName
+                                })
+                                return false
+                            } else {
+                                alert(`Business "${checkData.storeName}" is already registered. Please log in instead.`)
+                                return false
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Check business error:', error)
+                    }
+                }
                 break
             case 4:
                 if (!formData.bankDetails.accountNumber) newErrors.accountNumber = 'Account number is required'
@@ -145,8 +206,8 @@ export default function SellerOnboardingPage() {
         return Object.keys(newErrors).length === 0
     }
 
-    const handleNext = () => {
-        if (validateStep(currentStep)) {
+    const handleNext = async () => {
+        if (await validateStep(currentStep)) {
             if (currentStep < STEPS.length) {
                 setCurrentStep(currentStep + 1)
                 window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -162,7 +223,7 @@ export default function SellerOnboardingPage() {
     }
 
     const handleSubmit = async () => {
-        if (!validateStep(currentStep)) return
+        if (!await validateStep(currentStep)) return
 
         setIsSubmitting(true)
         try {
@@ -234,9 +295,23 @@ export default function SellerOnboardingPage() {
             case 6:
                 return <Step6Documents formData={formData} updateFormData={updateFormData} errors={errors} />
             case 7:
-                return <Step7Review formData={formData} />
+                return <Step7Review formData={formData} onEdit={setCurrentStep} />
             default:
                 return null
+        }
+    }
+
+    const handleStepClick = async (stepId) => {
+        // If jumping forward, validate current step
+        if (stepId > currentStep) {
+            if (await validateStep(currentStep)) {
+                setCurrentStep(stepId)
+                window.scrollTo({ top: 0, behavior: 'smooth' })
+            }
+        } else {
+            // Jumping back is always allowed
+            setCurrentStep(stepId)
+            window.scrollTo({ top: 0, behavior: 'smooth' })
         }
     }
 
@@ -244,24 +319,78 @@ export default function SellerOnboardingPage() {
         <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 py-12">
             <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Progress Bar */}
+                {/* Resume Prompt */}
+                {showResumePrompt && (
+                    <div className="mb-8 bg-blue-600 text-white p-4 rounded-2xl flex items-center justify-between animate-in fade-in slide-in-from-top-4 duration-500">
+                        <div className="flex items-center gap-3">
+                            <FiRefreshCw className="w-6 h-6 animate-spin-slow" />
+                            <div>
+                                <p className="font-bold">Resume Previous Session?</p>
+                                <p className="text-sm text-blue-100">We found an unfinished application. Would you like to continue from where you left off?</p>
+                            </div>
+                        </div>
+                        <div className="flex gap-2">
+                            <button 
+                                onClick={() => setShowResumePrompt(false)}
+                                className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-sm font-bold transition-colors"
+                            >
+                                Dismiss
+                            </button>
+                            <button 
+                                onClick={resumeDraft}
+                                className="px-4 py-2 bg-white text-blue-600 hover:bg-blue-50 rounded-lg text-sm font-bold transition-colors"
+                            >
+                                Continue
+                            </button>
+                        </div>
+                    </div>
+                )}
+
+                {/* Banned Seller Overlay */}
+                {bannedSeller && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+                        <div className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl animate-in zoom-in duration-300">
+                            <div className="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <FiAlertTriangle className="w-8 h-8" />
+                            </div>
+                            <h3 className="text-2xl font-black text-center text-gray-900 mb-2">Registration Blocked</h3>
+                            <p className="text-center text-gray-600 mb-6 font-medium">
+                                The business <span className="text-gray-900 font-bold">"{bannedSeller.storeName}"</span> has been suspended or rejected.
+                            </p>
+                            <div className="bg-red-50 border border-red-100 rounded-2xl p-4 mb-8">
+                                <p className="text-xs font-bold text-red-400 uppercase tracking-widest mb-1">Reason</p>
+                                <p className="text-sm text-red-900 font-medium">{bannedSeller.reason}</p>
+                            </div>
+                            <button 
+                                onClick={() => setBannedSeller(null)}
+                                className="w-full py-4 bg-gray-900 text-white rounded-2xl font-bold hover:bg-gray-800 transition-all shadow-lg"
+                            >
+                                I Understand
+                            </button>
+                        </div>
+                    </div>
+                )}
+
                 <div className="mb-12">
                     <div className="flex items-center justify-between mb-4">
                         {STEPS.map((step, index) => (
                             <div key={step.id} className="flex-1 relative">
                                 <div className="flex items-center">
                                     {/* Step Circle */}
-                                    <div className={`
+                                    <button 
+                                        onClick={() => handleStepClick(step.id)}
+                                        className={`
                     relative z-10 w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm
-                    transition-all duration-300
+                    transition-all duration-300 hover:scale-110 active:scale-95
                     ${currentStep > step.id
                                             ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white'
                                             : currentStep === step.id
                                                 ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white ring-4 ring-blue-200'
-                                                : 'bg-gray-200 text-gray-500'
+                                                : 'bg-gray-200 text-gray-500 outline-none'
                                         }
-                  `}>
+                                    `}>
                                         {currentStep > step.id ? <FiCheck className="w-5 h-5" /> : step.id}
-                                    </div>
+                                    </button>
 
                                     {/* Connector Line */}
                                     {index < STEPS.length - 1 && (
@@ -273,13 +402,15 @@ export default function SellerOnboardingPage() {
                                 </div>
 
                                 {/* Step Title */}
-                                <div className={`
-                  absolute top-12 left-1/2 transform -translate-x-1/2 text-xs font-semibold whitespace-nowrap
-                  ${currentStep === step.id ? 'text-blue-600' : 'text-gray-500'}
+                                <button 
+                                    onClick={() => handleStepClick(step.id)}
+                                    className={`
+                  absolute top-12 left-1/2 transform -translate-x-1/2 text-xs font-bold whitespace-nowrap transition-colors
+                  ${currentStep === step.id ? 'text-blue-600' : 'text-gray-500 hover:text-blue-400'}
                 `}>
                                     <span className="hidden sm:inline">{step.title}</span>
                                     <span className="sm:hidden">{step.shortTitle}</span>
-                                </div>
+                                </button>
                             </div>
                         ))}
                     </div>

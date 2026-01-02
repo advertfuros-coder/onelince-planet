@@ -142,7 +142,7 @@ const ProductSchema = new mongoose.Schema(
     keywords: [String], // Backend search terms
     highlights: [String], // Key feature bullet points
     hsnCode: String, // For tax/compliance
- 
+
     isActive: {
       type: Boolean,
       default: true,
@@ -164,6 +164,19 @@ const ProductSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+
+    // Integration Fields
+    shopifyProductId: String,
+    shopifyVariantId: String,
+    wooCommerceProductId: String,
+    amazonASIN: String,
+    amazonSKU: String,
+    importedFrom: {
+      type: String,
+      enum: ["manual", "shopify", "woocommerce", "amazon", "csv", "api"],
+      default: "manual",
+    },
+    lastSyncedAt: Date,
   },
   {
     timestamps: true,

@@ -1,165 +1,126 @@
 'use client'
-import { FiUser, FiBriefcase, FiDollarSign, FiShoppingBag, FiFileText, FiEdit2 } from 'react-icons/fi'
+import { FiEdit2, FiCheckCircle, FiUser, FiInfo, FiBriefcase, FiHome } from 'react-icons/fi'
 
-export default function Step7Review({ formData }) {
-    const sections = [
-        {
-            title: 'Personal Information',
-            icon: FiUser,
-            items: [
-                { label: 'Full Name', value: formData.fullName },
-                { label: 'Email', value: formData.email },
-                { label: 'Phone', value: formData.phone },
-                { label: 'Date of Birth', value: formData.dateOfBirth },
-                {
-                    label: 'Address',
-                    value: `${formData.residentialAddress.addressLine1}, ${formData.residentialAddress.city}, ${formData.residentialAddress.pincode}`
-                }
-            ]
-        },
-        {
-            title: 'Business Information',
-            icon: FiBriefcase,
-            items: [
-                { label: 'Business Name', value: formData.businessName },
-                { label: 'Business Type', value: formData.businessType?.replace('_', ' ').toUpperCase() },
-                { label: 'GST/TRN', value: formData.gstin },
-                { label: 'PAN', value: formData.pan || 'N/A' },
-                { label: 'Category', value: formData.businessCategory },
-                { label: 'Established Year', value: formData.establishedYear || 'N/A' }
-            ]
-        },
-        {
-            title: 'Bank Details',
-            icon: FiDollarSign,
-            items: [
-                { label: 'Account Holder', value: formData.bankDetails.accountHolderName },
-                { label: 'Bank Name', value: formData.bankDetails.bankName },
-                { label: 'Account Number', value: `****${formData.bankDetails.accountNumber.slice(-4)}` },
-                { label: 'IFSC/IBAN', value: formData.bankDetails.ifscCode },
-                { label: 'Account Type', value: formData.bankDetails.accountType?.toUpperCase() }
-            ]
-        },
-        {
-            title: 'Store Information',
-            icon: FiShoppingBag,
-            items: [
-                { label: 'Store Name', value: formData.storeInfo.storeName },
-                { label: 'Description', value: formData.storeInfo.storeDescription?.substring(0, 100) + '...' },
-                { label: 'Categories', value: formData.storeInfo.storeCategories?.length + ' categories selected' },
-                { label: 'Website', value: formData.storeInfo.website || 'N/A' },
-                { label: 'Support Email', value: formData.storeInfo.customerSupportEmail || 'N/A' }
-            ]
-        }
-    ]
-
-    const documentCount = Object.values(formData.documents).filter(doc => doc !== null).length
-
-    return (
-        <div className="space-y-8">
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-6">
-                <h3 className="text-lg font-bold text-blue-900 mb-2">Review Your Application</h3>
-                <p className="text-sm text-blue-700">
-                    Please review all the information below carefully before submitting. You can go back to any step to make changes.
-                </p>
-            </div>
-
-            {/* Information Sections */}
-            {sections.map((section, index) => (
-                <div key={index} className="bg-white border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-all">
-                    <div className="flex items-center justify-between mb-6">
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center">
-                                <section.icon className="w-5 h-5 text-white" />
-                            </div>
-                            <h3 className="text-xl font-bold text-gray-900">{section.title}</h3>
-                        </div>
-                        <button className="text-blue-600 hover:text-blue-700 font-semibold text-sm flex items-center gap-1">
-                            <FiEdit2 className="w-4 h-4" />
-                            Edit
-                        </button>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {section.items.map((item, idx) => (
-                            <div key={idx} className="bg-gray-50 rounded-xl p-4">
-                                <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
-                                    {item.label}
-                                </div>
-                                <div className="text-sm font-medium text-gray-900">
-                                    {item.value || 'Not provided'}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+export default function Step7Review({ formData, onEdit }) {
+    const SectionHeader = ({ title, icon: Icon, onEditClick }) => (
+        <div className="flex items-center justify-between pb-4 border-b border-gray-100 mb-6">
+            <div className="flex items-center gap-3">
+                <div className="p-2 bg-blue-100 rounded-lg text-blue-600">
+                    <Icon className="w-5 h-5" />
                 </div>
-            ))}
+                <h3 className="text-xl font-bold text-gray-900">{title}</h3>
+            </div>
+            {onEditClick && (
+                <button
+                    onClick={onEditClick}
+                    className="flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors"
+                >
+                    <FiEdit2 className="w-4 h-4" />
+                    Edit
+                </button>
+            )}
+        </div>
+    )
 
-            {/* Documents Summary */}
-            <div className="bg-white border border-gray-200 rounded-2xl p-6">
-                <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-gradient-to-br from-green-600 to-emerald-600 rounded-xl flex items-center justify-center">
-                            <FiFileText className="w-5 h-5 text-white" />
-                        </div>
-                        <h3 className="text-xl font-bold text-gray-900">Documents</h3>
-                    </div>
-                    <span className="text-sm font-semibold text-green-600">
-                        {documentCount} documents uploaded
+    const InfoGrid = ({ items }) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
+            {items.map((item, index) => (
+                <div key={index} className="flex flex-col">
+                    <span className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">
+                        {item.label}
+                    </span>
+                    <span className="text-gray-900 font-medium break-words">
+                        {item.value || <span className="text-gray-400 italic">Not provided</span>}
                     </span>
                 </div>
+            ))}
+        </div>
+    )
 
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                    {Object.entries(formData.documents).map(([key, file]) => (
-                        <div
-                            key={key}
-                            className={`p-3 rounded-xl border-2 ${file ? 'border-green-200 bg-green-50' : 'border-gray-200 bg-gray-50'
-                                }`}
-                        >
-                            <div className="text-xs font-semibold text-gray-700 capitalize">
-                                {key.replace(/([A-Z])/g, ' $1').trim()}
-                            </div>
-                            <div className="text-xs text-gray-500 mt-1">
-                                {file ? '✓ Uploaded' : '- Not uploaded'}
-                            </div>
-                        </div>
-                    ))}
+    return (
+        <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 text-white">
+                <div className="flex items-center gap-4 mb-4">
+                    <div className="p-3 bg-white/20 rounded-full">
+                        <FiCheckCircle className="w-8 h-8" />
+                    </div>
+                    <div>
+                        <h2 className="text-2xl font-bold">Review Your Application</h2>
+                        <p className="text-blue-100">Please review all details before final submission.</p>
+                    </div>
                 </div>
             </div>
 
-            {/* Final Check */}
-            <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-2xl p-6">
-                <h3 className="text-lg font-bold text-green-900 mb-2">Ready to Submit?</h3>
-                <ul className="space-y-2 text-sm text-green-800">
-                    <li className="flex items-center gap-2">
-                        <div className="w-5 h-5 bg-green-600 rounded-full flex items-center justify-center flex-shrink-0">
-                            <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                            </svg>
-                        </div>
-                        <span>All required information has been provided</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                        <div className="w-5 h-5 bg-green-600 rounded-full flex items-center justify-center flex-shrink-0">
-                            <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                            </svg>
-                        </div>
-                        <span>Documents have been uploaded</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                        <div className="w-5 h-5 bg-green-600 rounded-full flex items-center justify-center flex-shrink-0">
-                            <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                            </svg>
-                        </div>
-                        <span>Terms and conditions have been accepted</span>
-                    </li>
-                </ul>
+            {/* Section 1: Basic Info */}
+            <section className="bg-white rounded-2xl border border-gray-100 p-8 shadow-sm">
+                <SectionHeader
+                    title="Basic Information"
+                    icon={FiUser}
+                    onEditClick={() => onEdit(1)}
+                />
+                <InfoGrid items={[
+                    { label: 'Email Address', value: formData.email },
+                    { label: 'Phone Number', value: formData.phone },
+                    { label: 'Business Type', value: formData.businessType }
+                ]} />
+            </section>
 
-                <p className="mt-4 text-sm text-green-800">
-                    Click "Submit Application" below to send your registration for review. You'll receive an email within 24-48 hours.
-                </p>
+            {/* Section 2: Personal Details */}
+            <section className="bg-white rounded-2xl border border-gray-100 p-8 shadow-sm">
+                <SectionHeader
+                    title="Personal Details"
+                    icon={FiInfo}
+                    onEditClick={() => onEdit(2)}
+                />
+                <InfoGrid items={[
+                    { label: 'Full Name', value: formData.fullName },
+                    { label: 'Date of Birth', value: formData.dateOfBirth },
+                    { label: 'Address', value: `${formData.residentialAddress.addressLine1}, ${formData.residentialAddress.city}, ${formData.residentialAddress.pincode}` }
+                ]} />
+            </section>
+
+            {/* Section 3: Business Information */}
+            <section className="bg-white rounded-2xl border border-gray-100 p-8 shadow-sm">
+                <SectionHeader
+                    title="Business Details"
+                    icon={FiBriefcase}
+                    onEditClick={() => onEdit(3)}
+                />
+                <InfoGrid items={[
+                    { label: 'Business Name', value: formData.businessName },
+                    { label: 'GSTIN/TRN', value: formData.gstin },
+                    { label: 'PAN', value: formData.pan },
+                    { label: 'Business Category', value: formData.businessCategory }
+                ]} />
+            </section>
+
+            {/* Section 4: Bank Details */}
+            <section className="bg-white rounded-2xl border border-gray-100 p-8 shadow-sm">
+                <SectionHeader
+                    title="Bank Account"
+                    icon={FiHome}
+                    onEditClick={() => onEdit(4)}
+                />
+                <InfoGrid items={[
+                    { label: 'Account Holder', value: formData.bankDetails.accountHolderName },
+                    { label: 'Bank Name', value: formData.bankDetails.bankName },
+                    { label: 'Account Number', value: formData.bankDetails.accountNumber },
+                    { label: 'IFSC/IBAN', value: formData.bankDetails.ifscCode }
+                ]} />
+            </section>
+
+            <div className="bg-orange-50 border border-orange-200 rounded-2xl p-6">
+                <div className="flex gap-4">
+                    <div className="p-2 bg-orange-100 rounded-lg text-orange-600 h-fit">
+                        <FiInfo className="w-5 h-5" />
+                    </div>
+                    <div>
+                        <h4 className="font-bold text-orange-900 mb-1">Final Declaration</h4>
+                        <p className="text-sm text-orange-800 leading-relaxed">
+                            By clicking the submit button, you agree that all given information is correct to the best of your knowledge. Any false information may lead to rejection of your application.
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
     )

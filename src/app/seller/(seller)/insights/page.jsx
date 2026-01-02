@@ -85,7 +85,7 @@ export default function SellerInsightsPage() {
             }
         } catch (error) {
             console.error('Error fetching data:', error)
-            toast.error('Failed to sync performance metrics')
+            toast.error('Failed to load performance data')
         } finally {
             setLoading(false)
         }
@@ -102,11 +102,11 @@ export default function SellerInsightsPage() {
 
             if (aiRes.data.success) {
                 setAiAnalysis(aiRes.data.analysis || aiRes.data)
-                toast.success('Neural mapping complete')
+                toast.success('AI analysis complete')
             }
         } catch (error) {
             console.error('AI Analysis Error:', error)
-            toast.error('Neural uplink failed')
+            toast.error('AI analysis failed')
         } finally {
             setAnalyzing(false)
         }
@@ -118,7 +118,7 @@ export default function SellerInsightsPage() {
         return (
             <div className="flex flex-col items-center justify-center min-h-[80vh] bg-transparent">
                 <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-                <p className="mt-4 text-gray-400 font-bold animate-pulse uppercase tracking-widest text-[10px]">Synchronizing Intelligence Stats...</p>
+                <p className="mt-4 text-gray-400 font-bold animate-pulse uppercase tracking-widest text-[10px]">Loading Your Business Data...</p>
             </div>
         )
     }
@@ -134,11 +134,11 @@ export default function SellerInsightsPage() {
                             <div className="w-10 h-10 rounded-2xl bg-blue-600 flex items-center justify-center text-white shadow-xl shadow-blue-500/20">
                                 <BrainCircuit size={22} />
                             </div>
-                            <span className="text-[10px] font-black text-blue-600 uppercase tracking-widest bg-blue-50 px-4 py-1.5 rounded-full border border-blue-100">Intelligence Terminal</span>
+                            <span className="text-[10px] font-black text-blue-600 uppercase tracking-widest bg-blue-50 px-4 py-1.5 rounded-full border border-blue-100">Business Insights</span>
                         </div>
-                        <h1 className="text-5xl font-black text-gray-900 tracking-tighter leading-none uppercase">Business Ecosystem Insights</h1>
+                        <h1 className="text-5xl font-black text-gray-900 tracking-tighter leading-none uppercase">Your Store Performance</h1>
                         <p className="text-gray-500 font-bold uppercase tracking-widest text-[11px] mt-3 flex items-center gap-2">
-                            <Activity size={14} className="text-blue-500" /> System Uptime: 99.98% — Analysis Matrix Alpha
+                            <Activity size={14} className="text-blue-500" /> Real-time data updated daily
                         </p>
                     </div>
 
@@ -178,13 +178,13 @@ export default function SellerInsightsPage() {
                             <div className="space-y-8 text-center lg:text-left">
                                 <div className="inline-flex items-center gap-3 px-4 py-2 bg-blue-500/10 rounded-full border border-blue-500/20 text-blue-400">
                                     <Sparkles size={16} />
-                                    <span className="text-[10px] font-black uppercase tracking-[0.2em]">Neural Engine v4.0</span>
+                                    <span className="text-[10px] font-black uppercase tracking-[0.2em]">AI Assistant</span>
                                 </div>
                                 <h2 className="text-4xl lg:text-6xl font-black tracking-tight leading-none uppercase">
-                                    Request Neural <br /> <span className="text-blue-500">Business Analysis</span>
+                                    Get AI <br /> <span className="text-blue-500">Business Advice</span>
                                 </h2>
                                 <p className="text-white/40 font-bold uppercase tracking-widest text-[11px] leading-relaxed max-w-md mx-auto lg:mx-0">
-                                    Our AI clusters will synchronize with your sales ledger, customer sentiment, and market velocity to generate a high-bandwidth growth protocol.
+                                    Our AI will analyze your sales data, customer reviews, and market trends to give you personalized tips to grow your business.
                                 </p>
                                 <button
                                     onClick={runNeuralAnalysis}
@@ -196,7 +196,7 @@ export default function SellerInsightsPage() {
                                     ) : (
                                         <>
                                             <Zap size={20} className="fill-current" />
-                                            <span>Initiate Analysis</span>
+                                            <span>Get AI Advice</span>
                                         </>
                                     )}
                                     <div className="absolute inset-0 bg-white/10 translate-x-[-100%] group-hover/btn:translate-x-[100%] transition-transform duration-700" />
@@ -207,13 +207,13 @@ export default function SellerInsightsPage() {
                                 {analyzing ? (
                                     <div className="flex flex-col items-center justify-center p-20 space-y-6">
                                         <Binary size={48} className="text-blue-500 animate-pulse" />
-                                        <p className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-400">Processing Subconscious Store Data...</p>
+                                        <p className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-400">Analyzing Your Store Data...</p>
                                     </div>
                                 ) : aiAnalysis ? (
                                     <div className="w-full space-y-8">
                                         <div className="flex items-center justify-between border-b border-white/5 pb-6">
                                             <div>
-                                                <p className="text-[10px] font-black text-white/40 uppercase tracking-widest mb-1">Integrity Score</p>
+                                                <p className="text-[10px] font-black text-white/40 uppercase tracking-widest mb-1">Overall Score</p>
                                                 <p className="text-5xl font-black text-white tracking-tighter">{aiAnalysis.overallScore || 85}%</p>
                                             </div>
                                             <div className="w-16 h-16 rounded-2xl bg-blue-600 flex items-center justify-center text-white shadow-xl">
@@ -230,12 +230,12 @@ export default function SellerInsightsPage() {
                                                 <p className="text-xl font-black text-white">{aiAnalysis.weaknesses?.length || 0}</p>
                                             </div>
                                         </div>
-                                        <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest text-center">Protocol Validated for Next 12 Cycles</p>
+                                        <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest text-center">Recommendations Valid for Next 12 Months</p>
                                     </div>
                                 ) : (
                                     <div className="flex flex-col items-center justify-center py-20 text-center space-y-6">
                                         <Cpu size={56} className="text-white/10" />
-                                        <p className="text-[11px] font-black uppercase tracking-widest text-white/30 max-w-[200px]">Neural core standby. Request initiation to receive store intelligence.</p>
+                                        <p className="text-[11px] font-black uppercase tracking-widest text-white/30 max-w-[200px]">AI ready. Click the button above to get personalized business advice.</p>
                                     </div>
                                 )}
                             </div>
@@ -246,9 +246,9 @@ export default function SellerInsightsPage() {
                 {/* Performance Matrix */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     <IntelligenceCard label="Total Revenue" value={formatCurrency(performance?.summary?.totalRevenue)} trend="+12.5%" icon={DollarSign} color="blue" />
-                    <IntelligenceCard label="Conversion Efficiency" value="3.8%" trend="+0.4%" icon={Target} color="emerald" />
-                    <IntelligenceCard label="Active Nodes" value={performance?.summary?.totalProducts || 0} trend="Optimal" icon={Layers} color="purple" />
-                    <IntelligenceCard label="Trust Quotient" value={(performance?.summary?.averageRating || 0).toFixed(1)} trend="Verified" icon={Award} color="amber" />
+                    <IntelligenceCard label="Sales Success Rate" value="3.8%" trend="+0.4%" icon={Target} color="emerald" />
+                    <IntelligenceCard label="Total Products" value={performance?.summary?.totalProducts || 0} trend="Optimal" icon={Layers} color="purple" />
+                    <IntelligenceCard label="Customer Rating" value={(performance?.summary?.averageRating || 0).toFixed(1)} trend="Verified" icon={Award} color="amber" />
                 </div>
 
                 <AnimatePresence>
@@ -263,10 +263,10 @@ export default function SellerInsightsPage() {
                                 <div className="bg-white rounded-[3rem] p-10 shadow-sm border border-gray-100/50">
                                     <div className="flex items-center justify-between mb-10">
                                         <div>
-                                            <h3 className="text-xl font-black text-gray-900 tracking-tight uppercase">High-Bandwidth Actions</h3>
-                                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1">Recommended Growth Vectors</p>
+                                            <h3 className="text-xl font-black text-gray-900 tracking-tight uppercase">Action Items</h3>
+                                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1">Steps to Grow Your Business</p>
                                         </div>
-                                        <div className="px-4 py-2 bg-blue-50 text-blue-600 rounded-xl text-[10px] font-black uppercase tracking-widest">Protocol Defined</div>
+                                        <div className="px-4 py-2 bg-blue-50 text-blue-600 rounded-xl text-[10px] font-black uppercase tracking-widest">AI Recommended</div>
                                     </div>
 
                                     <div className="space-y-4">
@@ -299,11 +299,11 @@ export default function SellerInsightsPage() {
                                     <div className="absolute top-0 right-0 p-10 opacity-[0.03] pointer-events-none">
                                         <Trophy size={200} />
                                     </div>
-                                    <h3 className="text-xl font-black text-gray-900 tracking-tight uppercase mb-8">Competitive Edge Index</h3>
+                                    <h3 className="text-xl font-black text-gray-900 tracking-tight uppercase mb-8">Your Competitive Advantage</h3>
                                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
                                         <div className="space-y-4">
                                             <div className="flex items-center justify-between">
-                                                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Market ROI</span>
+                                                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Return on Investment</span>
                                                 <TrendingUp size={14} className="text-emerald-500" />
                                             </div>
                                             <p className="text-3xl font-black text-gray-900">4.2x</p>
@@ -313,7 +313,7 @@ export default function SellerInsightsPage() {
                                         </div>
                                         <div className="space-y-4">
                                             <div className="flex items-center justify-between">
-                                                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Retention Beta</span>
+                                                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Customer Retention</span>
                                                 <Workflow size={14} className="text-blue-500" />
                                             </div>
                                             <p className="text-3xl font-black text-gray-900">68%</p>
@@ -323,7 +323,7 @@ export default function SellerInsightsPage() {
                                         </div>
                                         <div className="space-y-4">
                                             <div className="flex items-center justify-between">
-                                                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Acquisition Alpha</span>
+                                                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">New Customer Growth</span>
                                                 <TrendingUp size={14} className="text-purple-500" />
                                             </div>
                                             <p className="text-3xl font-black text-gray-900">12%</p>
@@ -339,7 +339,7 @@ export default function SellerInsightsPage() {
                             <div className="space-y-6">
                                 <div className="bg-white rounded-[3rem] p-10 shadow-sm border border-gray-100/50">
                                     <h4 className="text-[10px] font-black text-gray-900 uppercase tracking-widest mb-8 flex items-center gap-2">
-                                        <ShieldAlert size={16} className="text-blue-600" /> Integrity Matrix
+                                        <ShieldAlert size={16} className="text-blue-600" /> Business Health Check
                                     </h4>
                                     <div className="space-y-8">
                                         <MatrixBlock label="Strengths" items={aiAnalysis.strengths} color="emerald" />
@@ -365,8 +365,8 @@ export default function SellerInsightsPage() {
                     <div className="lg:col-span-2 bg-white rounded-[3rem] p-10 shadow-sm border border-gray-100/50">
                         <div className="flex items-center justify-between mb-10">
                             <div>
-                                <h3 className="text-xl font-black text-gray-900 tracking-tight uppercase">Performance Trajectory</h3>
-                                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1">Growth correlation across all nodes</p>
+                                <h3 className="text-xl font-black text-gray-900 tracking-tight uppercase">Sales Growth</h3>
+                                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1">How your sales are growing over time</p>
                             </div>
                             <select className="bg-gray-50 border-none rounded-xl px-4 py-2 text-[10px] font-black uppercase tracking-widest outline-none focus:ring-2 focus:ring-blue-100">
                                 <option>Volume vs Revenue</option>
@@ -395,7 +395,7 @@ export default function SellerInsightsPage() {
 
                     <div className="space-y-8">
                         <div className="bg-white rounded-[3rem] p-10 shadow-sm border border-gray-100/50">
-                            <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest mb-8">Category Signals</h3>
+                            <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest mb-8">Category Performance</h3>
                             <div className="h-[250px] w-full">
                                 <ResponsiveContainer width="100%" height="100%">
                                     <RadarChart cx="50%" cy="50%" outerRadius="80%" data={performance?.categoryPerformance?.map(c => ({ subject: c.category, A: c.revenue, fullMark: performance.summary.totalRevenue })) || performanceRadarMock}>
@@ -407,7 +407,7 @@ export default function SellerInsightsPage() {
                             </div>
                             <div className="mt-8 p-6 bg-blue-50/50 rounded-3xl border border-blue-100 flex items-center justify-between">
                                 <div>
-                                    <p className="text-[9px] font-black text-blue-400 uppercase tracking-widest leading-none mb-2">Primary Engine</p>
+                                    <p className="text-[9px] font-black text-blue-400 uppercase tracking-widest leading-none mb-2">Top Category</p>
                                     <p className="text-sm font-black text-blue-900 uppercase">{performance?.categoryPerformance?.[0]?.category || 'ELECTRONICS'}</p>
                                 </div>
                                 <Layers size={24} className="text-blue-500" />
@@ -415,7 +415,7 @@ export default function SellerInsightsPage() {
                         </div>
 
                         <div className="bg-white rounded-[3rem] p-10 shadow-sm border border-gray-100/50 group overflow-hidden relative">
-                            <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest mb-6">Market Visibility</h3>
+                            <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest mb-6">Product Views</h3>
                             <div className="flex items-center gap-6">
                                 <div className="text-center">
                                     <p className="text-3xl font-black text-gray-900 tracking-tighter">12.4K</p>
@@ -424,7 +424,7 @@ export default function SellerInsightsPage() {
                                 <div className="w-[1px] h-10 bg-gray-100" />
                                 <div className="text-center">
                                     <p className="text-3xl font-black text-gray-900 tracking-tighter">2.1K</p>
-                                    <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Unique Nodes</p>
+                                    <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Unique Visitors</p>
                                 </div>
                             </div>
                             <div className="mt-8 h-1.5 w-full bg-gray-50 rounded-full overflow-hidden">
@@ -434,7 +434,7 @@ export default function SellerInsightsPage() {
                                     className="h-full bg-blue-600 rounded-full"
                                 />
                             </div>
-                            <p className="text-[9px] font-black text-blue-500 mt-3 uppercase tracking-widest">+15% vs previous cycle</p>
+                            <p className="text-[9px] font-black text-blue-500 mt-3 uppercase tracking-widest">+15% vs last month</p>
                         </div>
                     </div>
                 </div>

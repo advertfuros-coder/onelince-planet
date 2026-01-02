@@ -450,6 +450,15 @@ export default function Header() {
                         <span className="text-sm font-medium">Wishlist ({wishlistCount})</span>
                       </Link>
                       <hr className="my-2" />
+                      {(user.role === 'seller' || user.role === 'admin') && (
+                        <Link
+                          href={user.role === 'admin' ? '/admin/dashboard' : '/seller/dashboard'}
+                          className="flex items-center gap-3 px-4 py-2.5 hover:bg-blue-50 text-blue-600 transition-colors"
+                        >
+                          <FiZap className="w-4 h-4" />
+                          <span className="text-sm font-medium">Dashboard</span>
+                        </Link>
+                      )}
                       <button
                         onClick={logout}
                         className="w-full flex items-center gap-3 px-4 py-2.5 text-red-600 hover:bg-red-50 transition-colors"

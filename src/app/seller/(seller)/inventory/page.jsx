@@ -69,7 +69,7 @@ export default function InventoryMasterPage() {
                 setWarehouses(res.data.warehouses)
             }
         } catch (error) {
-            toast.error('Failed to sync inventory telemetry')
+            toast.error('Failed to load inventory data')
         } finally {
             setLoading(false)
         }
@@ -104,7 +104,7 @@ export default function InventoryMasterPage() {
         return (
             <div className="flex flex-col items-center justify-center min-h-screen space-y-4">
                 <div className="w-12 h-12 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin" />
-                <p className="text-gray-400 font-black uppercase tracking-widest text-[10px]">Accessing Inventory Grid...</p>
+                <p className="text-gray-400 font-black uppercase tracking-widest text-[10px]">Loading Inventory...</p>
             </div>
         )
     }
@@ -120,32 +120,32 @@ export default function InventoryMasterPage() {
                             <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center text-white shadow-lg shadow-emerald-500/20">
                                 <Database size={18} />
                             </div>
-                            <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest bg-emerald-50 px-3 py-1 rounded-full border border-emerald-100">Logistics Master</span>
+                            <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest bg-emerald-50 px-3 py-1 rounded-full border border-emerald-100">Stock Management</span>
                         </div>
-                        <h1 className="text-4xl font-black text-gray-900 tracking-tighter">Inventory Core <span className="text-emerald-600">.</span></h1>
-                        <p className="text-gray-500 font-medium mt-1 uppercase text-[10px] tracking-widest">Real-time supply chain telemetry & stock orchestration</p>
+                        <h1 className="text-4xl font-black text-gray-900 tracking-tighter">Inventory Manager <span className="text-emerald-600">.</span></h1>
+                        <p className="text-gray-500 font-medium mt-1 uppercase text-[10px] tracking-widest">Track and manage your stock levels across all warehouses</p>
                     </div>
 
                     <div className="flex items-center gap-4">
                         <button className="hidden md:flex items-center gap-2 px-6 py-4 bg-white border border-gray-100 rounded-[1.5rem] font-black uppercase tracking-widest text-[11px] text-gray-600 hover:bg-gray-50 transition-all">
                             <Download size={18} />
-                            Export Manifest
+                            Export Report
                         </button>
                         <button
                             className="px-8 py-4 bg-emerald-600 text-white rounded-[1.5rem] font-black uppercase text-[11px] tracking-widest shadow-2xl shadow-emerald-500/20 hover:bg-emerald-700 transition-all active:scale-95 flex items-center justify-center gap-2"
                         >
                             <Plus size={18} />
-                            Ingest Stock
+                            Add Stock
                         </button>
                     </div>
                 </div>
 
                 {/* Performance Metrics */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <InvStatCard label="Total Physical Assets" value={stats.totalUnits.toLocaleString()} trend="+12.4%" icon={Package} color="emerald" />
-                    <InvStatCard label="At-Risk Units" value={stats.lowStockItems} trend={`${((stats.lowStockItems / inventory.length) * 100).toFixed(0)}% of total`} icon={AlertTriangle} color="orange" alert={stats.lowStockItems > 0} />
-                    <InvStatCard label="Terminal Outages" value={stats.outOfStock} trend="Requires Action" icon={Box} color="rose" alert={stats.outOfStock > 0} />
-                    <InvStatCard label="Gross Assset Value" value={stats.stockValue} trend="Market Value" icon={TrendingUp} color="blue" />
+                    <InvStatCard label="Total Stock" value={stats.totalUnits.toLocaleString()} trend="+12.4%" icon={Package} color="emerald" />
+                    <InvStatCard label="Low Stock Items" value={stats.lowStockItems} trend={`${((stats.lowStockItems / inventory.length) * 100).toFixed(0)}% of total`} icon={AlertTriangle} color="orange" alert={stats.lowStockItems > 0} />
+                    <InvStatCard label="Out of Stock" value={stats.outOfStock} trend="Requires Action" icon={Box} color="rose" alert={stats.outOfStock > 0} />
+                    <InvStatCard label="Total Stock Value" value={stats.stockValue} trend="Market Value" icon={TrendingUp} color="blue" />
                 </div>
 
                 <div className="grid grid-cols-1 xl:grid-cols-4 gap-8">
@@ -172,7 +172,7 @@ export default function InventoryMasterPage() {
                                     onChange={(e) => setSelectedWarehouse(e.target.value)}
                                     className="flex-1 lg:w-56 px-4 py-3.5 bg-gray-50 border-none rounded-2xl text-[10px] font-black uppercase tracking-widest focus:ring-2 focus:ring-emerald-100"
                                 >
-                                    <option value="all">Cross-Terminal View</option>
+                                    <option value="all">All Warehouses</option>
                                     {warehouses.map(wh => (
                                         <option key={wh._id} value={wh._id}>{wh.name}</option>
                                     ))}
@@ -192,11 +192,11 @@ export default function InventoryMasterPage() {
                                 <table className="w-full">
                                     <thead>
                                         <tr className="border-b border-gray-50 bg-gray-50/30">
-                                            <th className="px-8 py-5 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">Asset Details</th>
-                                            <th className="px-6 py-5 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">Global SKU</th>
-                                            <th className="px-6 py-5 text-center text-[10px] font-black text-gray-400 uppercase tracking-widest">Total Connectivity</th>
-                                            <th className="px-6 py-5 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">Terminal Distribution</th>
-                                            <th className="px-8 py-5 text-right text-[10px] font-black text-gray-400 uppercase tracking-widest">Control</th>
+                                            <th className="px-8 py-5 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">Product Details</th>
+                                            <th className="px-6 py-5 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">SKU</th>
+                                            <th className="px-6 py-5 text-center text-[10px] font-black text-gray-400 uppercase tracking-widest">Total Stock</th>
+                                            <th className="px-6 py-5 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">Warehouse Locations</th>
+                                            <th className="px-8 py-5 text-right text-[10px] font-black text-gray-400 uppercase tracking-widest">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-gray-50">
@@ -300,12 +300,12 @@ export default function InventoryMasterPage() {
                         <div className="bg-[#1E3A8A] rounded-[2.5rem] p-8 text-white relative overflow-hidden group">
                             <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 blur-3xl -mr-16 -mt-16 group-hover:scale-125 transition-transform duration-700" />
                             <Zap className="text-amber-400 mb-4" />
-                            <h4 className="text-lg font-black tracking-tight leading-tight">Supply Health AI</h4>
+                            <h4 className="text-lg font-black tracking-tight leading-tight">Smart Stock Alerts</h4>
                             <p className="text-blue-100/60 text-xs font-medium mt-2 leading-relaxed">
                                 Demand for "Spectral Entity X1" is up 40%. Recommend increasing buffer stock at Bangalore Hub by 200 units.
                             </p>
                             <button className="w-full mt-6 py-4 bg-white/10 hover:bg-white text-white hover:text-indigo-900 rounded-2xl text-[10px] font-black uppercase tracking-widest border border-white/20 hover:border-white transition-all">
-                                Execute Auto-Restock
+                                Restock Automatically
                             </button>
                         </div>
                     </div>
@@ -394,11 +394,11 @@ function TransferModal({ item, warehouses, onClose, onSuccess }) {
                 headers: { Authorization: `Bearer ${token}` }
             })
             if (res.data.success) {
-                toast.success('Stock Logistics Synchronized')
+                toast.success('Stock transferred successfully')
                 onSuccess()
             }
         } catch (error) {
-            toast.error(error.response?.data?.message || 'Sync failure')
+            toast.error(error.response?.data?.message || 'Transfer failed')
         } finally {
             setLoading(false)
         }
@@ -416,8 +416,8 @@ function TransferModal({ item, warehouses, onClose, onSuccess }) {
             >
                 <div className="p-10 bg-indigo-50/50 border-b border-gray-100 flex items-center justify-between">
                     <div>
-                        <h2 className="text-2xl font-black text-gray-900 tracking-tight">Inter-Hub Transfer</h2>
-                        <p className="text-[10px] font-black text-indigo-400 uppercase tracking-widest mt-1">Geographical Stock Rerouting</p>
+                        <h2 className="text-2xl font-black text-gray-900 tracking-tight">Transfer Stock</h2>
+                        <p className="text-[10px] font-black text-indigo-400 uppercase tracking-widest mt-1">Move stock between warehouses</p>
                     </div>
                     <button onClick={onClose} className="w-10 h-10 bg-white border border-gray-100 rounded-full flex items-center justify-center text-gray-400 hover:text-rose-500 transition-colors">
                         <Plus size={20} className="rotate-45" />
@@ -429,13 +429,13 @@ function TransferModal({ item, warehouses, onClose, onSuccess }) {
                         <img src={item.image} className="w-12 h-12 object-cover rounded-lg" alt="" />
                         <div>
                             <p className="text-[11px] font-black text-gray-900 uppercase leading-none">{item.name}</p>
-                            <p className="text-[9px] font-bold text-indigo-600 mt-1">Global Assets: {item.totalStock} Units</p>
+                            <p className="text-[9px] font-bold text-indigo-600 mt-1">Total Stock: {item.totalStock} Units</p>
                         </div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Source Node</label>
+                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">From Warehouse</label>
                             <select
                                 value={formData.fromWarehouseId}
                                 onChange={(e) => setFormData({ ...formData, fromWarehouseId: e.target.value })}
@@ -445,10 +445,10 @@ function TransferModal({ item, warehouses, onClose, onSuccess }) {
                                     <option key={wh._id} value={wh._id}>{wh.name}</option>
                                 ))}
                             </select>
-                            <p className="text-[8px] font-black text-indigo-600 uppercase ml-1">Current Stored: {maxAvailable} Units</p>
+                            <p className="text-[8px] font-black text-indigo-600 uppercase ml-1">Available: {maxAvailable} Units</p>
                         </div>
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Destination Node</label>
+                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">To Warehouse</label>
                             <select
                                 value={formData.toWarehouseId}
                                 onChange={(e) => setFormData({ ...formData, toWarehouseId: e.target.value })}
@@ -462,7 +462,7 @@ function TransferModal({ item, warehouses, onClose, onSuccess }) {
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Relocation Quantity</label>
+                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Transfer Quantity</label>
                         <input
                             type="number"
                             required
@@ -472,11 +472,11 @@ function TransferModal({ item, warehouses, onClose, onSuccess }) {
                             className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-lg font-black focus:ring-2 focus:ring-indigo-100 transition-all"
                             placeholder="0"
                         />
-                        <p className="text-[8px] font-bold text-gray-400 ml-1">Units will migrate from Source to Destination node.</p>
+                        <p className="text-[8px] font-bold text-gray-400 ml-1">Units will be moved from source to destination warehouse.</p>
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Logistics Reason</label>
+                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Transfer Reason</label>
                         <input
                             type="text"
                             required
@@ -500,7 +500,7 @@ function TransferModal({ item, warehouses, onClose, onSuccess }) {
                             disabled={loading || formData.quantity <= 0 || formData.quantity > maxAvailable}
                             className="flex-1 px-8 py-5 bg-indigo-600 text-white rounded-3xl text-[11px] font-black uppercase tracking-widest hover:bg-indigo-700 shadow-xl shadow-indigo-500/20 disabled:opacity-50 transition-all"
                         >
-                            {loading ? 'Rerouting...' : 'Authorize Relocation'}
+                            {loading ? 'Transferring...' : 'Transfer Stock'}
                         </button>
                     </div>
                 </form>
@@ -514,7 +514,7 @@ function AdjustmentModal({ item, warehouses, onClose, onSuccess }) {
     const [loading, setLoading] = useState(false)
     const [formData, setFormData] = useState({
         productId: item._id,
-        warehouseId: warehouses[0]?._id || '',
+        warehouseId: '', // Force user to select
         type: 'addition',
         quantity: 0,
         reason: ''
@@ -522,7 +522,15 @@ function AdjustmentModal({ item, warehouses, onClose, onSuccess }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        if (formData.quantity <= 0) return toast.error('Quantity must be greater than zero')
+        
+        // Validate warehouse selection
+        if (!formData.warehouseId) {
+            return toast.error('Please select a warehouse')
+        }
+        
+        if (formData.quantity <= 0) {
+            return toast.error('Quantity must be greater than zero')
+        }
 
         try {
             setLoading(true)
@@ -530,11 +538,12 @@ function AdjustmentModal({ item, warehouses, onClose, onSuccess }) {
                 headers: { Authorization: `Bearer ${token}` }
             })
             if (res.data.success) {
-                toast.success('Inventory Matrix Adjusted')
+                toast.success('Stock adjusted successfully')
                 onSuccess()
             }
         } catch (error) {
-            toast.error('Sync failure')
+            const errorMessage = error.response?.data?.message || 'Adjustment failed'
+            toast.error(errorMessage)
         } finally {
             setLoading(false)
         }
@@ -550,7 +559,7 @@ function AdjustmentModal({ item, warehouses, onClose, onSuccess }) {
                 <div className="p-10 bg-gray-50/50 border-b border-gray-100 flex items-center justify-between">
                     <div>
                         <h2 className="text-2xl font-black text-gray-900 tracking-tight">Stock Adjustment</h2>
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1">Manual Inventory Override</p>
+                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1">Update Stock Levels</p>
                     </div>
                     <button onClick={onClose} className="w-10 h-10 bg-white border border-gray-100 rounded-full flex items-center justify-center text-gray-400 hover:text-rose-500 transition-colors">
                         <Plus size={20} className="rotate-45" />
@@ -568,12 +577,14 @@ function AdjustmentModal({ item, warehouses, onClose, onSuccess }) {
 
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Terminal Node</label>
+                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Warehouse</label>
                             <select
                                 value={formData.warehouseId}
                                 onChange={(e) => setFormData({ ...formData, warehouseId: e.target.value })}
                                 className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-xs font-bold focus:ring-2 focus:ring-emerald-100 transition-all"
+                                required
                             >
+                                <option value="">Select Warehouse</option>
                                 {warehouses.map(wh => (
                                     <option key={wh._id} value={wh._id}>{wh.name}</option>
                                 ))}
@@ -594,7 +605,7 @@ function AdjustmentModal({ item, warehouses, onClose, onSuccess }) {
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Quantity Manifest</label>
+                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Quantity</label>
                         <input
                             type="number"
                             required
@@ -630,7 +641,7 @@ function AdjustmentModal({ item, warehouses, onClose, onSuccess }) {
                             disabled={loading || formData.quantity <= 0}
                             className="flex-1 px-8 py-5 bg-emerald-600 text-white rounded-3xl text-[11px] font-black uppercase tracking-widest hover:bg-emerald-700 shadow-xl shadow-emerald-500/20 disabled:opacity-50 transition-all"
                         >
-                            {loading ? 'Processing...' : 'Sync Changes'}
+                            {loading ? 'Processing...' : 'Update Stock'}
                         </button>
                     </div>
                 </form>
