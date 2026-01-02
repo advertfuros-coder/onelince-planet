@@ -1,4 +1,5 @@
 'use client'
+import { Suspense } from 'react'
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import axios from 'axios'
@@ -7,7 +8,7 @@ import ProductGrid from '@/components/customer/ProductGrid'
 import { FiChevronRight } from 'react-icons/fi'
 import Link from 'next/link'
 
-export default function ProductsPage() {
+function ProductsContent() {
     const searchParams = useSearchParams()
     const [products, setProducts] = useState([])
     const [loading, setLoading] = useState(true)
@@ -137,3 +138,19 @@ export default function ProductsPage() {
         </div>
     )
 }
+
+export default function ProductsPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-white flex items-center justify-center">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-600 border-t-transparent mx-auto mb-4"></div>
+                    <p className="text-gray-600">Loading products...</p>
+                </div>
+            </div>
+        }>
+            <ProductsContent />
+        </Suspense>
+    )
+}
+

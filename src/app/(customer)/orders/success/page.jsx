@@ -1,21 +1,22 @@
 'use client'
+import { Suspense } from 'react'
 import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
-import { 
-  FiCheckCircle, 
-  FiPackage, 
-  FiTruck, 
+import {
+  FiCheckCircle,
+  FiPackage,
+  FiTruck,
   FiHome,
   FiShoppingBag,
   FiArrowRight
 } from 'react-icons/fi'
 import { BiLeaf } from 'react-icons/bi'
-import Button from '@/components/ui/Button'
+import Button from '@/components/ui/Button.jsx'
 import Confetti from 'react-confetti'
 
-export default function OrderSuccessPage() {
+function OrderSuccessContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [showConfetti, setShowConfetti] = useState(true)
@@ -189,8 +190,8 @@ export default function OrderSuccessPage() {
                       {product.badge}
                     </div>
                   )}
-                  <img 
-                    src={product.image} 
+                  <img
+                    src={product.image}
                     alt={product.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
@@ -214,5 +215,20 @@ export default function OrderSuccessPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function OrderSuccessPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-600 border-t-transparent mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading order details...</p>
+        </div>
+      </div>
+    }>
+      <OrderSuccessContent />
+    </Suspense>
   )
 }
