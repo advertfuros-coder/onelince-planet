@@ -109,7 +109,7 @@ export default function HeroBanner() {
               {/* Left Text Content */}
               <div className={`z-10 max-w-md ${currentBanner.textColor} space-y-4 md:space-y-6`}>
                 <div className="space-y-2">
-                  <h2 className="text-3xl md:text-5xl font-black tracking-tight leading-tight">
+                  <h2 className="text-3xl md:text-xl font-black tracking-tight leading-tight">
                     {currentBanner.title}
                   </h2>
                   <p className="text-2xl md:text-4xl font-bold opacity-90">
@@ -141,35 +141,9 @@ export default function HeroBanner() {
               </div>
             </div>
 
-            {/* Navigation Arrows */}
-            <div className="absolute bottom-6 left-8 flex items-center gap-3 z-20">
-              <button
-                onClick={prevSlide}
-                className={`w-10 h-10 rounded-full ${currentBanner.textColor === 'text-white' ? 'bg-white/20 hover:bg-white/30' : 'bg-black/20 hover:bg-black/30'} backdrop-blur-md flex items-center justify-center transition-all duration-300 hover:scale-110`}
-              >
-                <FiChevronLeft className={`w-5 h-5 ${currentBanner.textColor}`} />
-              </button>
-              <button
-                onClick={nextSlide}
-                className={`w-10 h-10 rounded-full ${currentBanner.textColor === 'text-white' ? 'bg-white/20 hover:bg-white/30' : 'bg-black/20 hover:bg-black/30'} backdrop-blur-md flex items-center justify-center transition-all duration-300 hover:scale-110`}
-              >
-                <FiChevronRight className={`w-5 h-5 ${currentBanner.textColor}`} />
-              </button>
-            </div>
+        
 
-            {/* Slide Indicators */}
-            <div className="absolute bottom-6 right-8 flex items-center gap-2 z-20">
-              {bannerImages.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentSlide(index)}
-                  className={`h-1.5 rounded-full transition-all duration-300 ${index === currentSlide
-                    ? `w-8 ${currentBanner.textColor === 'text-white' ? 'bg-white' : 'bg-gray-900'}`
-                    : `w-1.5 ${currentBanner.textColor === 'text-white' ? 'bg-white/40' : 'bg-gray-900/40'}`
-                    }`}
-                />
-              ))}
-            </div>
+          
           </div>
 
           {/* Right Card - 1/3 width - Sale/Promo Card */}

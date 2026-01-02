@@ -1,6 +1,9 @@
 // app/page.jsx - Completely Revamped Modern E-commerce Homepage
 import HeroBanner from '@/components/customer/HeroBanner'
 import CategoryCircles from '@/components/customer/CategoryCircles'
+import TodaysBestDeals from '@/components/customer/TodaysBestDeals'
+import SpecialOfferBanner from '@/components/customer/SpecialOfferBanner'
+import FlashDealsSection from '@/components/customer/FlashDealsSection'
 import FlashSales from '@/components/customer/FlashSales'
 import TrendingProducts from '@/components/customer/TrendingProducts'
 import BestSellers from '@/components/customer/BestSellers'
@@ -56,53 +59,21 @@ export default async function HomePage() {
       {/* Categories - Horizontal scrollable with icons */}
       <CategoryCircles />
 
-      {/* Flash Sales - Time-sensitive deals with countdown */}
-      <FlashSales />
+      {/* Today's Best Deals - Featured products */}
+      <TodaysBestDeals />
 
-      {/* Deal of the Day - Single hero product */}
-      <DealOfTheDay products={products.slice(0, 1)} />
+      {/* Special Offer Banner - Countdown timer with featured deals */}
+      <SpecialOfferBanner />
 
-      {/* Shop by Price - Budget-friendly options */}
-      <ShopByPrice />
-
-      {/* Featured Collections - Curated product groups */}
-      <FeaturedCollections products={products.slice(0, 8)} />
-
-      {/* Why Choose Us - Trust indicators & benefits */}
-      <WhyChooseUs />
-
-      {/* Trending Products - Social proof & popular items */}
-      <TrendingProducts products={products.slice(0, 8)} />
-
-      {/* Promotional Banner - Mid-page CTA */}
-      <PromotionalBanner />
-
-      {/* Best Sellers - Top performing products */}
-      <BestSellers products={products.slice(0, 6)} />
-
-      {/* New Arrivals - Latest products */}
-      <NewArrivals products={products.slice(4, 10)} />
-
-      {/* Top Brands - Partner showcase */}
+      {/* Flash Deals - Horizontal scroll with vertical label */}
+      <FlashDealsSection />
+      
       <TopBrands />
-
-      {/* Features Section - Service highlights */}
-      <FeaturesSection />
-
-      {/* Statistics - Social proof numbers */}
       <StatisticsSection />
 
-      {/* Testimonials - Customer reviews */}
-      <TestimonialSection />
-
-      {/* App Download Banner - Mobile app promotion */}
-      {/* <AppDownloadBanner /> */}
-
-      {/* Newsletter - Lead capture */}
-      <Newsletter />
 
       {/* Footer - Complete site map */}
       <Footer />
     </div>
   )
-}
+} 

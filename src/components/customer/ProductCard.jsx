@@ -53,7 +53,7 @@ export default function ProductCard({
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden group hover:shadow-xl hover:border-blue-100 transition-all duration-500 flex flex-col h-full ring-1 ring-black/5">
       {/* Product Image Section */}
-      <div className="relative aspect-square overflow-hidden bg-[#F8F9FA] p-4">
+      <div className="relative aspect-square overflow-hidden bg-[#F8F9FA] p -4">
         <Link href={createProductUrl(product)}>
           {product.images?.[0]?.url ? (
             <img
@@ -71,7 +71,7 @@ export default function ProductCard({
         </Link>
 
         {/* Floating Badges */}
-        <div className="absolute top-4 left-4 flex flex-col gap-2 z-10">
+        <div className="absolute top-2 left-2 flex flex-col gap-2 z-10">
           {badge && (
             <span className={`${badge.color} text-white px-3 py-1 rounded-full text-[10px] font-black tracking-widest shadow-md transform -translate-x-1 group-hover:translate-x-0 transition-transform duration-300`}>
               {badge.text}
@@ -101,7 +101,7 @@ export default function ProductCard({
       </div>
 
       {/* Product Info Section */}
-      <div className="p-5 flex flex-col flex-1 bg-white">
+      <div className="p-3 flex flex-col flex-1 bg-white">
         {/* Rating */}
         <div className="flex items-center gap-1.5 mb-2.5">
           <div className="flex text-[#FF9900]">
