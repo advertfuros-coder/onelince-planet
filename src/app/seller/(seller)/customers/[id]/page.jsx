@@ -2,7 +2,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { 
+import {
   FiMail,
   FiPhone,
   FiMapPin,
@@ -12,8 +12,8 @@ import {
   FiTrendingUp,
   FiMessageCircle
 } from 'react-icons/fi'
-import Button from '../../../../components/ui/Button'
-import { formatPrice } from '../../../../lib/utils'
+import Button from '@/components/ui/Button.jsx'
+import { formatPrice } from '@/lib/utils'
 import { toast } from 'react-hot-toast'
 
 export default function CustomerDetail() {
@@ -206,11 +206,10 @@ export default function CustomerDetail() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                  activeTab === tab.id
+                className={`py-4 px-1 border-b-2 font-medium text-sm ${activeTab === tab.id
                     ? 'border-blue-500 text-blue-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700'
-                }`}
+                  }`}
               >
                 {tab.name}
               </button>
@@ -281,9 +280,8 @@ export default function CustomerDetail() {
                   </div>
                   <div className="text-sm">
                     <span className="text-gray-600">Account Status:</span>
-                    <span className={`ml-1 px-2 py-1 rounded-full text-xs ${
-                      customer.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-                    }`}>
+                    <span className={`ml-1 px-2 py-1 rounded-full text-xs ${customer.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                      }`}>
                       {customer.status}
                     </span>
                   </div>
@@ -318,11 +316,10 @@ export default function CustomerDetail() {
                       </div>
                       <div className="text-right">
                         <p className="font-medium text-gray-900">{formatPrice(order.total)}</p>
-                        <span className={`px-2 py-1 text-xs rounded-full ${
-                          order.status === 'delivered' ? 'bg-green-100 text-green-800' :
-                          order.status === 'shipped' ? 'bg-blue-100 text-blue-800' :
-                          'bg-yellow-100 text-yellow-800'
-                        }`}>
+                        <span className={`px-2 py-1 text-xs rounded-full ${order.status === 'delivered' ? 'bg-green-100 text-green-800' :
+                            order.status === 'shipped' ? 'bg-blue-100 text-blue-800' :
+                              'bg-yellow-100 text-yellow-800'
+                          }`}>
                           {order.status}
                         </span>
                       </div>
@@ -355,9 +352,8 @@ export default function CustomerDetail() {
                           {Array.from({ length: 5 }, (_, i) => (
                             <FiStar
                               key={i}
-                              className={`w-4 h-4 ${
-                                i < review.rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
-                              }`}
+                              className={`w-4 h-4 ${i < review.rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
+                                }`}
                             />
                           ))}
                         </div>

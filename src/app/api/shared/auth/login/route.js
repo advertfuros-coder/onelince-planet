@@ -1,14 +1,14 @@
 // app/api/shared/auth/login/route.js
-import { NextResponse } from 'next/server';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import dbConnect from '../../../../../lib/db/connection';
-import { User } from '../../../../../lib/db/models';
+import { NextResponse } from "next/server";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import dbConnect from "../../../../../lib/db/connection";
+import { User } from "../../../../../lib/db/models";
 
 export async function POST(request) {
   try {
     await dbConnect();
-    
+
     const body = await request.json();
     const { email, password } = body;
 
@@ -16,7 +16,7 @@ export async function POST(request) {
     const user = await User.findOne({ email });
     if (!user) {
       return NextResponse.json(
-        { success: false, message: 'Invalid credentials' },
+        { success: false, message: "Invalid credentials" },
         { status: 400 }
       );
     }
@@ -25,46 +25,45 @@ export async function POST(request) {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return NextResponse.json(
-        { success: false, message: 'Invalid credentials' },
+        { success: false, message: "Invalid credentials" },
         { status: 400 }
       );
     }
 
     // Check if account is active
-    if (user.status !== 'active') {
+    if (user.status !== "active") {
       return NextResponse.json(
-        { success: false, message: 'Account is suspended' },
+        { success: false, message: "Account is suspended" },
         { status: 403 }
       );
     }
 
     // Generate JWT token
     const token = jwt.sign(
-      { 
-        userId: user._id, 
-        email: user.email, 
-        role: user.role 
+      {
+        userId: user._id,
+        email: user.email,
+        role: user.role,
       },
       process.env.JWT_SECRET,
-      { expiresIn: '30d' }
+      { expiresIn: "30d" }
     );
 
     return NextResponse.json({
       success: true,
-      message: 'Login successful',
+      message: "Login successful",
       user: {
         id: user._id,
         name: user.name,
         email: user.email,
-        role: user.role
+        role: user.role,
       },
-      token
+      token,
     });
-
   } catch (error) {
-    console.error('Login error:', error);
+    console.error("Login error:", error);
     return NextResponse.json(
-      { success: false, message: 'Server error' },
+      { success: false, message: "Server error" },
       { status: 500 }
     );
   }

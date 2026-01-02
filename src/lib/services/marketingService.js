@@ -1,31 +1,39 @@
 // lib/services/marketingService.js
-import msg91Service from './msg91';
-import emailService from './emailService';
+import msg91Service from "./msg91";
+import emailService from "./emailService";
 
 class MarketingService {
-  
   /**
    * Send abandoned cart reminder
    */
   async sendAbandonedCartEmail(user, cart, hoursAfter = 1) {
-    const subject = hoursAfter === 1 
-      ? '🛒 You left something in your cart!'
-      : hoursAfter === 24
-      ? '⏰ Your cart is waiting - Complete your purchase!'
-      : '🎁 Last chance! Your cart items are waiting';
+    const subject =
+      hoursAfter === 1
+        ? "🛒 You left something in your cart!"
+        : hoursAfter === 24
+        ? "⏰ Your cart is waiting - Complete your purchase!"
+        : "🎁 Last chance! Your cart items are waiting";
 
-    const items Html = cart.items.map(item => `
+    const itemsHtml = cart.items
+      .map(
+        (item) => `
       <div style="border: 1px solid #eee; padding: 15px; margin: 10px 0; border-radius: 8px;">
         <div style="display: flex; gap: 15px;">
-          <img src="${item.image || '/placeholder.png'}" alt="${item.name}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 4px;">
+          <img src="${item.image || "/placeholder.png"}" alt="${
+          item.name
+        }" style="width: 80px; height: 80px; object-fit: cover; border-radius: 4px;">
           <div>
             <h3 style="margin: 0 0 5px 0;">${item.name}</h3>
             <p style="margin: 0; color: #666;">Quantity: ${item.quantity}</p>
-            <p style="margin: 5px 0 0 0; font-weight: bold; color: #667eea;">₹${item.price}</p>
+            <p style="margin: 5px 0 0 0; font-weight: bold; color: #667eea;">₹${
+              item.price
+            }</p>
           </div>
         </div>
       </div>
-    `).join('');
+    `
+      )
+      .join("");
 
     const html = `
       <!DOCTYPE html>
@@ -63,12 +71,16 @@ class MarketingService {
               </a>
             </center>
             
-            ${hoursAfter === 72 ? `
+            ${
+              hoursAfter === 72
+                ? `
               <p style="margin-top: 20px; padding: 15px; background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 4px;">
                 <strong>⚠️ Last Chance!</strong><br>
                 Your cart will expire soon. Don't miss out on these items!
               </p>
-            ` : ''}
+            `
+                : ""
+            }
           </div>
         </div>
       </body>
@@ -78,7 +90,7 @@ class MarketingService {
     return await emailService.sendEmail({
       to: user.email,
       subject,
-      html
+      html,
     });
   }
 
@@ -87,7 +99,7 @@ class MarketingService {
    */
   async sendAbandonedCartSMS(user, cart) {
     const message = `Hi ${user.name}! You have ${cart.items.length} item(s) worth ₹${cart.total} in your cart. Complete your purchase: ${process.env.NEXT_PUBLIC_APP_URL}/cart`;
-    
+
     return await msg91Service.sendSMS(user.phone, message);
   }
 
@@ -153,8 +165,8 @@ class MarketingService {
 
     return await emailService.sendEmail({
       to: user.email,
-      subject: '🎉 Welcome to Online Planet - Get 10% OFF!',
-      html
+      subject: "🎉 Welcome to Online Planet - Get 10% OFF!",
+      html,
     });
   }
 
@@ -162,15 +174,25 @@ class MarketingService {
    * Send review request email
    */
   async sendReviewRequestEmail(user, order) {
-    const itemsHtml = order.items.map(item => `
+    const itemsHtml = order.items
+      .map(
+        (item) => `
       <div style="text-align: center; padding: 15px; border: 1px solid #eee; border-radius: 8px; margin: 10px;">
-        <img src="${item.images?.[0] || '/placeholder.png'}" alt="${item.name}" style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px; margin-bottom: 10px;">
+        <img src="${item.images?.[0] || "/placeholder.png"}" alt="${
+          item.name
+        }" style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px; margin-bottom: 10px;">
         <h4 style="margin: 10px 0;">${item.name}</h4>
-        <a href="${process.env.NEXT_PUBLIC_APP_URL}/orders/${order._id}/review?product=${item.productId}" style="display: inline-block; padding: 10px 20px; background: #667eea; color: white; text-decoration: none; border-radius: 5px; margin-top: 10px;">
+        <a href="${process.env.NEXT_PUBLIC_APP_URL}/orders/${
+          order._id
+        }/review?product=${
+          item.productId
+        }" style="display: inline-block; padding: 10px 20px; background: #667eea; color: white; text-decoration: none; border-radius: 5px; margin-top: 10px;">
           Rate This Product
         </a>
       </div>
-    `).join('');
+    `
+      )
+      .join("");
 
     const html = `
       <!DOCTYPE html>
@@ -209,16 +231,18 @@ class MarketingService {
 
     return await emailService.sendEmail({
       to: user.email,
-      subject: '⭐ Rate Your Recent Purchase - Help Others Shop Better!',
-      html
+      subject: "⭐ Rate Your Recent Purchase - Help Others Shop Better!",
+      html,
     });
   }
 
   /**
    * Send win-back campaign
    */
-  async sendWinBackEmail(user, lastOrder Date) {
-    const daysSince = Math.floor((new Date() - new Date(lastOrderDate)) / (1000 * 60 * 60 * 24));
+  async sendWinBackEmail(user, lastOrderDate) {
+    const daysSince = Math.floor(
+      (new Date() - new Date(lastOrderDate)) / (1000 * 60 * 60 * 24)
+    );
 
     const html = `
       <!DOCTYPE html>
@@ -266,7 +290,7 @@ class MarketingService {
     return await emailService.sendEmail({
       to: user.email,
       subject: `We Miss You! Get 20% OFF Your Next Order 🎁`,
-      html
+      html,
     });
   }
 
