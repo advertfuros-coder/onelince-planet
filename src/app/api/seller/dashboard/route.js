@@ -345,7 +345,7 @@ export async function GET(request) {
 
       // Seller Info
       sellerInfo: {
-        businessName: seller.businessName,
+        businessName: seller.businessInfo?.businessName,
         storeName: seller.storeInfo?.storeName,
         rating: seller.ratings?.average || 0,
         totalReviews: seller.ratings?.totalReviews || 0,

@@ -116,7 +116,7 @@ export async function POST(request) {
       storeBanner: await saveFile(formData.get("storeBanner"), "banner"),
     };
 
-    // Create user if doesn't exist
+    // Create user if doesn't exist, or update if exists
     let userId;
     if (!existingUser) {
       const hashedPassword = await bcrypt.hash(phone.slice(-6), 10); // Temporary password
@@ -134,18 +134,51 @@ export async function POST(request) {
 
       userId = newUser._id;
     } else {
+      // Update existing user with latest information
+      existingUser.name = fullName;
+      existingUser.phone = phone;
+      existingUser.dateOfBirth = dateOfBirth;
+      existingUser.address = residentialAddress;
+
+      // Only update role if not already set
+      if (!existingUser.role || existingUser.role === "customer") {
+        existingUser.role = "seller";
+      }
+
+      await existingUser.save();
       userId = existingUser._id;
     }
 
-    // Create seller profile
+    // Create seller profile with organized structure
     const seller = await Seller.create({
       userId,
-      businessName,
-      gstin,
-      pan,
-      businessType,
-      businessCategory,
-      establishedYear: establishedYear ? parseInt(establishedYear) : undefined,
+
+      // Personal Details (grouped together)
+      personalDetails: {
+        fullName,
+        email,
+        phone,
+        dateOfBirth,
+        residentialAddress: {
+          addressLine1: residentialAddress.addressLine1,
+          addressLine2: residentialAddress.addressLine2,
+          landmark: residentialAddress.landmark,
+          city: residentialAddress.city,
+          state: residentialAddress.state,
+          pincode: residentialAddress.pincode,
+          country: residentialAddress.country || "IN",
+        },
+      },
+
+      // Business Information (grouped together)
+      businessInfo: {
+        businessName,
+        gstin,
+        pan,
+        businessType,
+        businessCategory,
+        establishedYear: establishedYear ? parseInt(establishedYear) : undefined,
+      },
 
       bankDetails: {
         accountNumber: bankDetails.accountNumber,
@@ -163,7 +196,7 @@ export async function POST(request) {
         city: residentialAddress.city,
         state: residentialAddress.state,
         pincode: residentialAddress.pincode,
-        country: residentialAddress.country || "AE",
+        country: residentialAddress.country || "IN",
       },
 
       storeInfo: {

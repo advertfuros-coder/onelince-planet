@@ -42,7 +42,7 @@ export async function POST(request, { params }) {
       scheduled: false,
       pickedUp: false,
       address: {
-        name: seller.storeInfo?.storeName || seller.businessName,
+        name: seller.storeInfo?.storeName || seller.businessInfo?.businessName,
         phone: seller.phone,
         addressLine1: seller.pickupAddress?.addressLine1 || '',
         addressLine2: seller.pickupAddress?.addressLine2 || '',

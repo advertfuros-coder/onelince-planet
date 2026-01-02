@@ -82,7 +82,7 @@ export async function GET(request) {
           $lookup: {
             from: "sellers",
             localField: "sellerId",
-            foreignField: "userId", // In this schema, sellerId refs User but Seller links via userId
+            foreignField: "_id",
             as: "seller_info",
           },
         },
@@ -109,7 +109,24 @@ export async function GET(request) {
     pipeline.push({ $limit: limit });
 
     // Execute query
-    const products = await Product.aggregate(pipeline);
+    let products = await Product.aggregate(pipeline);
+
+    // Populate sellerId field from the lookup results or fetch them manually for the results
+    // Since aggregate doesn't use Mongoose populate, we'll manually fetch seller info for the current page
+    const sellerIds = [...new Set(products.map(p => p.sellerId))];
+    const sellers = await (await import("@/lib/db/models/Seller")).default.find({
+      _id: { $in: sellerIds }
+    }).select("businessInfo storeInfo personalDetails isVerified ratings").lean();
+
+    const sellerMap = sellers.reduce((acc, s) => {
+      acc[s._id.toString()] = s;
+      return acc;
+    }, {});
+
+    products = products.map(p => ({
+      ...p,
+      sellerId: sellerMap[p.sellerId?.toString()] || null
+    }));
 
     return NextResponse.json({
       success: true,

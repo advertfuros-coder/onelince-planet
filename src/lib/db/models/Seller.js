@@ -12,57 +12,89 @@ const SellerSchema = new mongoose.Schema(
       unique: true,
     },
 
-    // Business Information
-    businessName: {
-      type: String,
-      required: true,
-      trim: true,
+    // Personal Details (All personal information grouped together)
+    personalDetails: {
+      fullName: {
+        type: String,
+        required: true,
+        trim: true,
+      },
+      email: {
+        type: String,
+        required: true,
+        lowercase: true,
+        trim: true,
+      },
+      phone: {
+        type: String,
+        required: true,
+        trim: true,
+      },
+      dateOfBirth: {
+        type: Date,
+      },
+      residentialAddress: {
+        addressLine1: String,
+        addressLine2: String,
+        landmark: String,
+        city: String,
+        state: String,
+        pincode: String,
+        country: { type: String, default: "IN" },
+      },
     },
-    gstin: {
-      type: String,
-      required: true,
-      // unique: true creates index automatically - no need for separate index below
-      unique: true,
-      uppercase: true,
-    },
-    pan: {
-      type: String,
-      required: false, // Changed from true to prevent validation errors on older profiles
-      uppercase: true,
-    },
-    businessType: {
-      type: String,
-      enum: [
-        "individual",
-        "proprietorship",
-        "partnership",
-        "pvt_ltd",
-        "public_ltd",
-        "llp",
-      ],
-      default: "individual",
-    },
-    businessCategory: {
-      type: String,
-      // Expanded enum to include common product categories to prevent crashes
-      enum: [
-        "manufacturer",
-        "wholesaler",
-        "retailer",
-        "reseller",
-        "brand",
-        "electronics",
-        "fashion",
-        "home",
-        "beauty",
-        "others",
-      ],
-      default: "retailer",
-    },
-    establishedYear: {
-      type: Number,
-      min: 1900,
-      max: new Date().getFullYear(),
+
+    // Business Information (All business-related information grouped together)
+    businessInfo: {
+      businessName: {
+        type: String,
+        required: true,
+        trim: true,
+      },
+      gstin: {
+        type: String,
+        required: true,
+        unique: true,
+        uppercase: true,
+      },
+      pan: {
+        type: String,
+        required: false,
+        uppercase: true,
+      },
+      businessType: {
+        type: String,
+        enum: [
+          "individual",
+          "proprietorship",
+          "partnership",
+          "pvt_ltd",
+          "public_ltd",
+          "llp",
+        ],
+        default: "individual",
+      },
+      businessCategory: {
+        type: String,
+        enum: [
+          "manufacturer",
+          "wholesaler",
+          "retailer",
+          "reseller",
+          "brand",
+          "electronics",
+          "fashion",
+          "home",
+          "beauty",
+          "others",
+        ],
+        default: "retailer",
+      },
+      establishedYear: {
+        type: Number,
+        min: 1900,
+        max: new Date().getFullYear(),
+      },
     },
 
     // Bank Details
@@ -88,7 +120,7 @@ const SellerSchema = new mongoose.Schema(
       city: { type: String, required: true },
       state: { type: String, required: true },
       pincode: { type: String, required: true },
-      country: { type: String, default: "India" },
+      country: { type: String, default: "IN" },
       latitude: Number,
       longitude: Number,
       isDefault: { type: Boolean, default: true },
@@ -285,24 +317,24 @@ const SellerSchema = new mongoose.Schema(
       {
         type: {
           type: String,
-          enum: ['admin', 'seller', 'system'],
-          required: true
+          enum: ["admin", "seller", "system"],
+          required: true,
         },
         action: {
           type: String,
-          required: true
+          required: true,
         },
         description: String,
         details: String,
         timestamp: {
           type: Date,
-          default: Date.now
+          default: Date.now,
         },
         performedBy: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: 'User'
-        }
-      }
+          ref: "User",
+        },
+      },
     ],
 
     // Admin Notes
@@ -310,24 +342,24 @@ const SellerSchema = new mongoose.Schema(
       {
         note: {
           type: String,
-          required: true
+          required: true,
         },
         createdBy: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: 'User',
-          required: true
+          ref: "User",
+          required: true,
         },
         createdAt: {
           type: Date,
-          default: Date.now
-        }
-      }
+          default: Date.now,
+        },
+      },
     ],
 
     // Average Response Time (for customer queries)
     avgResponseTime: {
       type: String,
-      default: '< 24h'
+      default: "< 24h",
     },
   },
   {
@@ -335,9 +367,17 @@ const SellerSchema = new mongoose.Schema(
   }
 );
 
-// Indexes (userId and gstin already have indexes from unique: true)
+// Indexes for better search performance
 SellerSchema.index({ verificationStatus: 1 });
 SellerSchema.index({ isActive: 1 });
+SellerSchema.index({ "personalDetails.email": 1 });
+SellerSchema.index({ "personalDetails.phone": 1 });
+// Compound text index for searching both name and business name
+SellerSchema.index({
+  "personalDetails.fullName": "text",
+  "businessInfo.businessName": "text",
+});
+// Note: businessInfo.gstin already has an index from unique: true
 
 // Generate store slug before saving
 SellerSchema.pre("save", function (next) {

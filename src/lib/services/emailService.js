@@ -432,7 +432,7 @@ class EmailService {
             <h1>🎉 New Order Received!</h1>
           </div>
           <div class="content">
-            <p>Hi ${seller.businessName || seller.name},</p>
+            <p>Hi ${seller.businessInfo?.businessName || seller.name},</p>
             
             <h2>Order #${order.orderNumber}</h2>
             <p><strong>Order Date:</strong> ${new Date(

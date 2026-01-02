@@ -45,7 +45,7 @@ export async function PATCH(request, { params }) {
 
     if (allVerified) {
       seller.isVerified = true;
-      seller.verificationStatus = "verified";
+      seller.verificationStatus = "approved";
     }
 
     await seller.save();

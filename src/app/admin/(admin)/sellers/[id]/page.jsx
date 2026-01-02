@@ -33,7 +33,7 @@ export default function SellerDetailsPage({ params }) {
     const [requestData, setRequestData] = useState({ title: '', description: '' })
     const [showNoteModal, setShowNoteModal] = useState(false)
     const [noteText, setNoteText] = useState('')
-    
+
     // Search and Filter states
     const [productSearch, setProductSearch] = useState('')
     const [productFilter, setProductFilter] = useState('all') // all, active, inactive
@@ -67,7 +67,7 @@ export default function SellerDetailsPage({ params }) {
 
     const handleAction = async (type) => {
         let body = {}
-        if (type === 'verify') body = { isVerified: true, verificationStatus: 'verified', isActive: true }
+        if (type === 'verify') body = { isVerified: true, verificationStatus: 'approved', isActive: true }
         else if (type === 'reject') {
             const reason = prompt("Rejection reason:")
             if (!reason) return
@@ -115,30 +115,30 @@ export default function SellerDetailsPage({ params }) {
     const calculateHealthScore = () => {
         let score = 0
         // Verification status (30 points)
-        if (seller.verificationStatus === 'verified') score += 30
+        if (seller.verificationStatus === 'approved' || seller.verificationStatus === 'verified') score += 30
         else if (seller.verificationStatus === 'pending') score += 15
-        
+
         // Active status (10 points)
         if (seller.isActive) score += 10
-        
+
         // Rating (20 points)
         const avgRating = seller.ratings?.average || 0
         score += (avgRating / 5) * 20
-        
+
         // Order count (20 points)
         const orderCount = stats?.orderCount || 0
         if (orderCount > 100) score += 20
         else if (orderCount > 50) score += 15
         else if (orderCount > 10) score += 10
         else if (orderCount > 0) score += 5
-        
+
         // Revenue (20 points)
         const revenue = stats?.totalRevenue || 0
         if (revenue > 100000) score += 20
         else if (revenue > 50000) score += 15
         else if (revenue > 10000) score += 10
         else if (revenue > 0) score += 5
-        
+
         return Math.round(score)
     }
 
@@ -159,7 +159,7 @@ export default function SellerDetailsPage({ params }) {
     // Smart Alerts Detection
     const detectAlerts = () => {
         const alerts = []
-        
+
         // Low health score alert
         if (healthScore < 60) {
             alerts.push({
@@ -170,7 +170,7 @@ export default function SellerDetailsPage({ params }) {
                 action: 'Review seller performance'
             })
         }
-        
+
         // High return rate alert
         if (returnRate > 15) {
             alerts.push({
@@ -181,7 +181,7 @@ export default function SellerDetailsPage({ params }) {
                 action: 'Investigate product quality'
             })
         }
-        
+
         // Low rating alert
         if (seller.ratings?.average < 3.5 && seller.ratings?.count > 5) {
             alerts.push({
@@ -192,9 +192,9 @@ export default function SellerDetailsPage({ params }) {
                 action: 'Review customer feedback'
             })
         }
-        
+
         // Pending verification
-        if (seller.verificationStatus === 'pending') {
+        if (seller.verificationStatus === 'pending' || seller.verificationStatus === 'under_review') {
             alerts.push({
                 type: 'info',
                 icon: FiClock,
@@ -203,7 +203,7 @@ export default function SellerDetailsPage({ params }) {
                 action: 'Review documents'
             })
         }
-        
+
         // Document requests pending
         const pendingDocs = seller.documents?.requestedDocuments?.filter(d => d.status === 'pending').length || 0
         if (pendingDocs > 0) {
@@ -215,7 +215,7 @@ export default function SellerDetailsPage({ params }) {
                 action: 'Follow up with seller'
             })
         }
-        
+
         // Sudden sales drop (if last 7 days revenue is significantly lower)
         const recentRevenue = salesData.slice(-3).reduce((sum, d) => sum + d.amount, 0)
         const avgRevenue = (stats?.totalRevenue || 0) / Math.max(1, salesData.length)
@@ -228,9 +228,9 @@ export default function SellerDetailsPage({ params }) {
                 action: 'Check seller activity'
             })
         }
-        
+
         // No recent activity
-        const daysSinceLastOrder = orders.length > 0 
+        const daysSinceLastOrder = orders.length > 0
             ? Math.floor((new Date() - new Date(orders[0].createdAt)) / (1000 * 60 * 60 * 24))
             : 999
         if (daysSinceLastOrder > 30 && seller.isActive) {
@@ -242,7 +242,7 @@ export default function SellerDetailsPage({ params }) {
                 action: 'Check seller engagement'
             })
         }
-        
+
         // Opportunity: High performer
         if (healthScore >= 90 && stats?.orderCount >= 50) {
             alerts.push({
@@ -253,7 +253,7 @@ export default function SellerDetailsPage({ params }) {
                 action: 'Consider featured placement'
             })
         }
-        
+
         return alerts
     }
 
@@ -295,8 +295,8 @@ export default function SellerDetailsPage({ params }) {
                         </div>
                         <div>
                             <div className="flex items-center gap-3">
-                                <h1 className="text-2xl font-bold text-slate-900">{seller.storeInfo?.storeName || seller.businessName}</h1>
-                                <span className={`px-2 py-0.5 rounded-lg text-[10px] font-bold ${seller.verificationStatus === 'verified' ? 'bg-emerald-100 text-emerald-700' : seller.verificationStatus === 'pending' ? 'bg-amber-100 text-amber-700' : 'bg-rose-100 text-rose-700'}`}>
+                                <h1 className="text-2xl font-bold text-slate-900">{seller.storeInfo?.storeName || seller.businessInfo?.businessName}</h1>
+                                <span className={`px-2 py-0.5 rounded-lg text-[10px] font-bold ${(seller.verificationStatus === 'approved' || seller.verificationStatus === 'verified') ? 'bg-emerald-100 text-emerald-700' : (seller.verificationStatus === 'pending' || seller.verificationStatus === 'under_review') ? 'bg-amber-100 text-amber-700' : 'bg-rose-100 text-rose-700'}`}>
                                     {seller.verificationStatus}
                                 </span>
                             </div>
@@ -304,7 +304,7 @@ export default function SellerDetailsPage({ params }) {
                         </div>
                     </div>
                     <div className="flex gap-2">
-                        {seller.verificationStatus === 'pending' ? (
+                        {(seller.verificationStatus === 'pending' || seller.verificationStatus === 'under_review') ? (
                             <>
                                 <button onClick={() => handleAction('verify')} className="px-4 py-2 bg-emerald-600 text-white rounded-lg font-bold text-sm"><FiCheckCircle className="inline mr-1" /> Verify</button>
                                 <button onClick={() => handleAction('reject')} className="px-4 py-2 bg-rose-100 text-rose-700 rounded-lg font-bold text-sm">Reject</button>
@@ -336,7 +336,7 @@ export default function SellerDetailsPage({ params }) {
                             <div className="relative w-32 h-32">
                                 <svg className="transform -rotate-90 w-32 h-32">
                                     <circle cx="64" cy="64" r="56" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-slate-200" />
-                                    <circle cx="64" cy="64" r="56" stroke="currentColor" strokeWidth="8" fill="transparent" 
+                                    <circle cx="64" cy="64" r="56" stroke="currentColor" strokeWidth="8" fill="transparent"
                                         strokeDasharray={`${(healthScore / 100) * 351.86} 351.86`}
                                         className={healthColor.text}
                                         strokeLinecap="round" />
@@ -441,35 +441,31 @@ export default function SellerDetailsPage({ params }) {
                             </h3>
                             <div className="grid grid-cols-2 gap-4">
                                 {smartAlerts.map((alert, idx) => (
-                                    <div key={idx} className={`p-4 rounded-xl border-2 ${
-                                        alert.type === 'critical' ? 'bg-rose-50 border-rose-200' :
-                                        alert.type === 'warning' ? 'bg-amber-50 border-amber-200' :
-                                        alert.type === 'success' ? 'bg-emerald-50 border-emerald-200' :
-                                        'bg-blue-50 border-blue-200'
-                                    }`}>
+                                    <div key={idx} className={`p-4 rounded-xl border-2 ${alert.type === 'critical' ? 'bg-rose-50 border-rose-200' :
+                                            alert.type === 'warning' ? 'bg-amber-50 border-amber-200' :
+                                                alert.type === 'success' ? 'bg-emerald-50 border-emerald-200' :
+                                                    'bg-blue-50 border-blue-200'
+                                        }`}>
                                         <div className="flex items-start gap-3">
-                                            <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
-                                                alert.type === 'critical' ? 'bg-rose-100' :
-                                                alert.type === 'warning' ? 'bg-amber-100' :
-                                                alert.type === 'success' ? 'bg-emerald-100' :
-                                                'bg-blue-100'
-                                            }`}>
-                                                <alert.icon className={`w-5 h-5 ${
-                                                    alert.type === 'critical' ? 'text-rose-600' :
-                                                    alert.type === 'warning' ? 'text-amber-600' :
-                                                    alert.type === 'success' ? 'text-emerald-600' :
-                                                    'text-blue-600'
-                                                }`} />
+                                            <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${alert.type === 'critical' ? 'bg-rose-100' :
+                                                    alert.type === 'warning' ? 'bg-amber-100' :
+                                                        alert.type === 'success' ? 'bg-emerald-100' :
+                                                            'bg-blue-100'
+                                                }`}>
+                                                <alert.icon className={`w-5 h-5 ${alert.type === 'critical' ? 'text-rose-600' :
+                                                        alert.type === 'warning' ? 'text-amber-600' :
+                                                            alert.type === 'success' ? 'text-emerald-600' :
+                                                                'text-blue-600'
+                                                    }`} />
                                             </div>
                                             <div className="flex-1">
                                                 <h4 className="font-bold text-slate-900 mb-1">{alert.title}</h4>
                                                 <p className="text-sm text-slate-600 mb-2">{alert.message}</p>
-                                                <button className={`text-xs font-bold ${
-                                                    alert.type === 'critical' ? 'text-rose-700' :
-                                                    alert.type === 'warning' ? 'text-amber-700' :
-                                                    alert.type === 'success' ? 'text-emerald-700' :
-                                                    'text-blue-700'
-                                                } hover:underline`}>
+                                                <button className={`text-xs font-bold ${alert.type === 'critical' ? 'text-rose-700' :
+                                                        alert.type === 'warning' ? 'text-amber-700' :
+                                                            alert.type === 'success' ? 'text-emerald-700' :
+                                                                'text-blue-700'
+                                                    } hover:underline`}>
                                                     {alert.action} →
                                                 </button>
                                             </div>
@@ -501,11 +497,11 @@ export default function SellerDetailsPage({ params }) {
                                     </div>
                                 </div>
                                 <div className="relative h-2 bg-slate-200 rounded-full overflow-hidden">
-                                    <div className="absolute h-full bg-slate-400 rounded-full" style={{width: `${categoryBenchmarks.avgHealthScore}%`}}></div>
-                                    <div className={`absolute h-full ${healthScore > categoryBenchmarks.avgHealthScore ? 'bg-emerald-500' : 'bg-rose-500'} rounded-full`} style={{width: `${healthScore}%`}}></div>
+                                    <div className="absolute h-full bg-slate-400 rounded-full" style={{ width: `${categoryBenchmarks.avgHealthScore}%` }}></div>
+                                    <div className={`absolute h-full ${healthScore > categoryBenchmarks.avgHealthScore ? 'bg-emerald-500' : 'bg-rose-500'} rounded-full`} style={{ width: `${healthScore}%` }}></div>
                                 </div>
                                 <p className="text-xs text-slate-500">
-                                    {healthScore > categoryBenchmarks.avgHealthScore 
+                                    {healthScore > categoryBenchmarks.avgHealthScore
                                         ? `${healthScore - categoryBenchmarks.avgHealthScore} points above average`
                                         : `${categoryBenchmarks.avgHealthScore - healthScore} points below average`
                                     }
@@ -527,11 +523,11 @@ export default function SellerDetailsPage({ params }) {
                                     </div>
                                 </div>
                                 <div className="relative h-2 bg-slate-200 rounded-full overflow-hidden">
-                                    <div className="absolute h-full bg-slate-400 rounded-full" style={{width: `${categoryBenchmarks.avgFulfillmentRate}%`}}></div>
-                                    <div className={`absolute h-full ${fulfillmentRate > categoryBenchmarks.avgFulfillmentRate ? 'bg-emerald-500' : 'bg-rose-500'} rounded-full`} style={{width: `${fulfillmentRate}%`}}></div>
+                                    <div className="absolute h-full bg-slate-400 rounded-full" style={{ width: `${categoryBenchmarks.avgFulfillmentRate}%` }}></div>
+                                    <div className={`absolute h-full ${fulfillmentRate > categoryBenchmarks.avgFulfillmentRate ? 'bg-emerald-500' : 'bg-rose-500'} rounded-full`} style={{ width: `${fulfillmentRate}%` }}></div>
                                 </div>
                                 <p className="text-xs text-slate-500">
-                                    {fulfillmentRate > categoryBenchmarks.avgFulfillmentRate 
+                                    {fulfillmentRate > categoryBenchmarks.avgFulfillmentRate
                                         ? `${fulfillmentRate - categoryBenchmarks.avgFulfillmentRate}% above average`
                                         : `${categoryBenchmarks.avgFulfillmentRate - fulfillmentRate}% below average`
                                     }
@@ -553,11 +549,11 @@ export default function SellerDetailsPage({ params }) {
                                     </div>
                                 </div>
                                 <div className="relative h-2 bg-slate-200 rounded-full overflow-hidden">
-                                    <div className="absolute h-full bg-slate-400 rounded-full" style={{width: `${(categoryBenchmarks.avgRating / 5) * 100}%`}}></div>
-                                    <div className={`absolute h-full ${(seller.ratings?.average || 0) > categoryBenchmarks.avgRating ? 'bg-emerald-500' : 'bg-rose-500'} rounded-full`} style={{width: `${((seller.ratings?.average || 0) / 5) * 100}%`}}></div>
+                                    <div className="absolute h-full bg-slate-400 rounded-full" style={{ width: `${(categoryBenchmarks.avgRating / 5) * 100}%` }}></div>
+                                    <div className={`absolute h-full ${(seller.ratings?.average || 0) > categoryBenchmarks.avgRating ? 'bg-emerald-500' : 'bg-rose-500'} rounded-full`} style={{ width: `${((seller.ratings?.average || 0) / 5) * 100}%` }}></div>
                                 </div>
                                 <p className="text-xs text-slate-500">
-                                    {(seller.ratings?.average || 0) > categoryBenchmarks.avgRating 
+                                    {(seller.ratings?.average || 0) > categoryBenchmarks.avgRating
                                         ? `${((seller.ratings?.average || 0) - categoryBenchmarks.avgRating).toFixed(1)} stars above average`
                                         : `${(categoryBenchmarks.avgRating - (seller.ratings?.average || 0)).toFixed(1)} stars below average`
                                     }
@@ -577,8 +573,8 @@ export default function SellerDetailsPage({ params }) {
                                         {healthScore > categoryBenchmarks.avgHealthScore && fulfillmentRate > categoryBenchmarks.avgFulfillmentRate
                                             ? '🎉 This seller is outperforming the category average across multiple metrics!'
                                             : healthScore < categoryBenchmarks.avgHealthScore - 10
-                                            ? '⚠️ This seller needs support to improve performance metrics.'
-                                            : '📊 This seller is performing at par with category standards.'
+                                                ? '⚠️ This seller needs support to improve performance metrics.'
+                                                : '📊 This seller is performing at par with category standards.'
                                         }
                                     </p>
                                 </div>
@@ -592,7 +588,7 @@ export default function SellerDetailsPage({ params }) {
                         <div className="relative">
                             {/* Timeline Line */}
                             <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gradient-to-b from-indigo-500 via-emerald-500 to-slate-300"></div>
-                            
+
                             {/* Timeline Events */}
                             <div className="space-y-6 relative">
                                 {/* Registration */}
@@ -714,12 +710,12 @@ export default function SellerDetailsPage({ params }) {
                     <div className="bg-white p-6 rounded-2xl border border-slate-200 space-y-6">
                         <h3 className="text-lg font-bold flex items-center gap-2"><FiBriefcase className="text-indigo-600" /> Business Details</h3>
                         <div className="grid grid-cols-2 gap-4">
-                            <InfoItem label="Business Name" value={seller.businessName} />
-                            <InfoItem label="Business Type" value={seller.businessType} />
-                            <InfoItem label="GST/TRN" value={seller.gstin || seller.trn} />
-                            <InfoItem label="PAN" value={seller.pan} />
-                            <InfoItem label="Email" value={seller.email} icon={FiMail} />
-                            <InfoItem label="Phone" value={seller.phone} icon={FiPhone} />
+                            <InfoItem label="Business Name" value={seller.businessInfo?.businessName} />
+                            <InfoItem label="Business Type" value={seller.businessInfo?.businessType} />
+                            <InfoItem label="GST/TRN" value={seller.businessInfo?.gstin || seller.trn} />
+                            <InfoItem label="PAN" value={seller.businessInfo?.pan} />
+                            <InfoItem label="Email" value={seller.personalDetails?.email} icon={FiMail} />
+                            <InfoItem label="Phone" value={seller.personalDetails?.phone} icon={FiPhone} />
                         </div>
                     </div>
                     <div className="bg-white p-6 rounded-2xl border border-slate-200 space-y-6">
@@ -736,8 +732,8 @@ export default function SellerDetailsPage({ params }) {
                         <h3 className="text-lg font-bold flex items-center gap-2"><FiShoppingBag className="text-blue-600" /> Store Information</h3>
                         <div className="grid grid-cols-3 gap-4">
                             <InfoItem label="Store Name" value={seller.storeInfo?.storeName} />
-                            <InfoItem label="Store URL" value={seller.storeInfo?.storeUrl} icon={FiGlobe} />
-                            <InfoItem label="Description" value={seller.storeInfo?.description} />
+                            <InfoItem label="Store URL" value={seller.storeInfo?.website} icon={FiGlobe} />
+                            <InfoItem label="Description" value={seller.storeInfo?.storeDescription} />
                         </div>
                     </div>
                 </div>
@@ -770,7 +766,7 @@ export default function SellerDetailsPage({ params }) {
                             <div className="text-sm text-slate-600 font-medium whitespace-nowrap">
                                 {products.filter(p => {
                                     const matchesSearch = p.name.toLowerCase().includes(productSearch.toLowerCase())
-                                    const matchesFilter = productFilter === 'all' || 
+                                    const matchesFilter = productFilter === 'all' ||
                                         (productFilter === 'active' && p.isActive) ||
                                         (productFilter === 'inactive' && !p.isActive)
                                     return matchesSearch && matchesFilter
@@ -792,7 +788,7 @@ export default function SellerDetailsPage({ params }) {
                         <tbody className="divide-y divide-slate-100">
                             {products.filter(p => {
                                 const matchesSearch = p.name.toLowerCase().includes(productSearch.toLowerCase())
-                                const matchesFilter = productFilter === 'all' || 
+                                const matchesFilter = productFilter === 'all' ||
                                     (productFilter === 'active' && p.isActive) ||
                                     (productFilter === 'inactive' && !p.isActive)
                                 return matchesSearch && matchesFilter
@@ -814,16 +810,16 @@ export default function SellerDetailsPage({ params }) {
                     </table>
                     {products.filter(p => {
                         const matchesSearch = p.name.toLowerCase().includes(productSearch.toLowerCase())
-                        const matchesFilter = productFilter === 'all' || 
+                        const matchesFilter = productFilter === 'all' ||
                             (productFilter === 'active' && p.isActive) ||
                             (productFilter === 'inactive' && !p.isActive)
                         return matchesSearch && matchesFilter
                     }).length === 0 && (
-                        <div className="text-center py-12">
-                            <FiSearch className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-                            <p className="text-slate-500">No products found matching your criteria</p>
-                        </div>
-                    )}
+                            <div className="text-center py-12">
+                                <FiSearch className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+                                <p className="text-slate-500">No products found matching your criteria</p>
+                            </div>
+                        )}
                 </div>
             )}
 
@@ -857,7 +853,7 @@ export default function SellerDetailsPage({ params }) {
                             </select>
                             <div className="text-sm text-slate-600 font-medium whitespace-nowrap">
                                 {orders.filter(o => {
-                                    const matchesSearch = o._id.includes(orderSearch) || 
+                                    const matchesSearch = o._id.includes(orderSearch) ||
                                         (o.customer?.name || '').toLowerCase().includes(orderSearch.toLowerCase())
                                     const matchesFilter = orderFilter === 'all' || o.status === orderFilter
                                     return matchesSearch && matchesFilter
@@ -878,7 +874,7 @@ export default function SellerDetailsPage({ params }) {
                         </thead>
                         <tbody className="divide-y divide-slate-100">
                             {orders.filter(o => {
-                                const matchesSearch = o._id.includes(orderSearch) || 
+                                const matchesSearch = o._id.includes(orderSearch) ||
                                     (o.customer?.name || '').toLowerCase().includes(orderSearch.toLowerCase())
                                 const matchesFilter = orderFilter === 'all' || o.status === orderFilter
                                 return matchesSearch && matchesFilter
@@ -889,28 +885,27 @@ export default function SellerDetailsPage({ params }) {
                                     <td className="px-6 py-4 text-sm">{o.customer?.name || 'N/A'}</td>
                                     <td className="px-6 py-4 font-bold">₹{o.totalAmount}</td>
                                     <td className="px-6 py-4">
-                                        <span className={`px-2 py-1 rounded-lg text-[10px] font-bold uppercase ${
-                                            o.status === 'delivered' ? 'bg-emerald-50 text-emerald-600' :
-                                            o.status === 'cancelled' || o.status === 'returned' ? 'bg-rose-50 text-rose-600' :
-                                            o.status === 'shipped' ? 'bg-blue-50 text-blue-600' :
-                                            'bg-amber-50 text-amber-600'
-                                        }`}>{o.status}</span>
+                                        <span className={`px-2 py-1 rounded-lg text-[10px] font-bold uppercase ${o.status === 'delivered' ? 'bg-emerald-50 text-emerald-600' :
+                                                o.status === 'cancelled' || o.status === 'returned' ? 'bg-rose-50 text-rose-600' :
+                                                    o.status === 'shipped' ? 'bg-blue-50 text-blue-600' :
+                                                        'bg-amber-50 text-amber-600'
+                                            }`}>{o.status}</span>
                                     </td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
                     {orders.filter(o => {
-                        const matchesSearch = o._id.includes(orderSearch) || 
+                        const matchesSearch = o._id.includes(orderSearch) ||
                             (o.customer?.name || '').toLowerCase().includes(orderSearch.toLowerCase())
                         const matchesFilter = orderFilter === 'all' || o.status === orderFilter
                         return matchesSearch && matchesFilter
                     }).length === 0 && (
-                        <div className="text-center py-12">
-                            <FiSearch className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-                            <p className="text-slate-500">No orders found matching your criteria</p>
-                        </div>
-                    )}
+                            <div className="text-center py-12">
+                                <FiSearch className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+                                <p className="text-slate-500">No orders found matching your criteria</p>
+                            </div>
+                        )}
                 </div>
             )}
 
@@ -1154,7 +1149,7 @@ export default function SellerDetailsPage({ params }) {
                                         <span className="text-sm font-bold text-slate-900">{fulfillmentRate}%</span>
                                     </div>
                                     <div className="w-full bg-slate-200 rounded-full h-2">
-                                        <div className="bg-emerald-500 h-2 rounded-full" style={{width: `${fulfillmentRate}%`}}></div>
+                                        <div className="bg-emerald-500 h-2 rounded-full" style={{ width: `${fulfillmentRate}%` }}></div>
                                     </div>
                                 </div>
                                 <div className="space-y-2">
@@ -1163,7 +1158,7 @@ export default function SellerDetailsPage({ params }) {
                                         <span className="text-sm font-bold text-slate-900">{Math.max(0, 100 - returnRate)}%</span>
                                     </div>
                                     <div className="w-full bg-slate-200 rounded-full h-2">
-                                        <div className="bg-blue-500 h-2 rounded-full" style={{width: `${Math.max(0, 100 - returnRate)}%`}}></div>
+                                        <div className="bg-blue-500 h-2 rounded-full" style={{ width: `${Math.max(0, 100 - returnRate)}%` }}></div>
                                     </div>
                                 </div>
                                 <div className="space-y-2">
@@ -1172,7 +1167,7 @@ export default function SellerDetailsPage({ params }) {
                                         <span className="text-sm font-bold text-slate-900">{Math.round((seller.ratings?.average || 0) * 20)}%</span>
                                     </div>
                                     <div className="w-full bg-slate-200 rounded-full h-2">
-                                        <div className="bg-amber-500 h-2 rounded-full" style={{width: `${Math.round((seller.ratings?.average || 0) * 20)}%`}}></div>
+                                        <div className="bg-amber-500 h-2 rounded-full" style={{ width: `${Math.round((seller.ratings?.average || 0) * 20)}%` }}></div>
                                     </div>
                                 </div>
                                 <div className="space-y-2">
@@ -1181,7 +1176,7 @@ export default function SellerDetailsPage({ params }) {
                                         <span className="text-sm font-bold text-rose-600">{returnRate}%</span>
                                     </div>
                                     <div className="w-full bg-slate-200 rounded-full h-2">
-                                        <div className="bg-rose-500 h-2 rounded-full" style={{width: `${returnRate}%`}}></div>
+                                        <div className="bg-rose-500 h-2 rounded-full" style={{ width: `${returnRate}%` }}></div>
                                     </div>
                                 </div>
                             </div>
@@ -1316,14 +1311,13 @@ export default function SellerDetailsPage({ params }) {
                             <div className="space-y-4">
                                 {activityLogs.map((log, idx) => (
                                     <div key={idx} className="flex gap-4 p-4 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors">
-                                        <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
-                                            log.type === 'admin' ? 'bg-indigo-100 text-indigo-600' : 
-                                            log.type === 'seller' ? 'bg-emerald-100 text-emerald-600' : 
-                                            'bg-slate-200 text-slate-600'
-                                        }`}>
-                                            {log.type === 'admin' ? <FiShield className="w-5 h-5" /> : 
-                                             log.type === 'seller' ? <FiUser className="w-5 h-5" /> : 
-                                             <FiActivity className="w-5 h-5" />}
+                                        <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${log.type === 'admin' ? 'bg-indigo-100 text-indigo-600' :
+                                                log.type === 'seller' ? 'bg-emerald-100 text-emerald-600' :
+                                                    'bg-slate-200 text-slate-600'
+                                            }`}>
+                                            {log.type === 'admin' ? <FiShield className="w-5 h-5" /> :
+                                                log.type === 'seller' ? <FiUser className="w-5 h-5" /> :
+                                                    <FiActivity className="w-5 h-5" />}
                                         </div>
                                         <div className="flex-1">
                                             <div className="flex items-start justify-between">
@@ -1463,12 +1457,12 @@ export default function SellerDetailsPage({ params }) {
                     <form onSubmit={handleAddNote} className="relative bg-white w-full max-w-md rounded-2xl p-8 space-y-6">
                         <h3 className="text-xl font-bold">Add Internal Note</h3>
                         <p className="text-sm text-slate-500">This note will only be visible to admin team members</p>
-                        <textarea 
-                            placeholder="Enter your note here..." 
-                            className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl h-32 resize-none" 
-                            required 
-                            value={noteText} 
-                            onChange={e => setNoteText(e.target.value)} 
+                        <textarea
+                            placeholder="Enter your note here..."
+                            className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl h-32 resize-none"
+                            required
+                            value={noteText}
+                            onChange={e => setNoteText(e.target.value)}
                         />
                         <div className="flex gap-4">
                             <button type="button" onClick={() => setShowNoteModal(false)} className="flex-1 py-3 text-slate-500 font-bold">Cancel</button>

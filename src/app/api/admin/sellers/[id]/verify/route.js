@@ -23,7 +23,7 @@ export async function POST(request, { params }) {
     if (action === "approve") {
       updateData = {
         isVerified: true,
-        verificationStatus: "verified",
+        verificationStatus: "approved",
         verifiedAt: new Date(),
       };
     } else if (action === "reject") {

@@ -2,9 +2,13 @@
 import { NextResponse } from "next/server";
 import connectDB from "@/lib/db/mongodb";
 import Seller from "@/lib/db/models/Seller";
+import User from "@/lib/db/models/User";
 import Product from "@/lib/db/models/Product";
 import Order from "@/lib/db/models/Order";
 import { verifyToken, isAdmin } from "@/lib/utils/adminAuth";
+import bcrypt from "bcryptjs";
+import emailService from "@/lib/email/emailService";
+import { generateSellerApprovalEmail } from "@/lib/email/templates/sellerApproval";
 
 // Get single seller with details
 export async function GET(request, { params }) {
@@ -56,13 +60,52 @@ export async function PUT(request, { params }) {
     }
 
     const body = await request.json();
+
+    // Support both flat and nested incoming data structure
+    const fullNameValue =
+      body.fullName !== undefined
+        ? body.fullName
+        : body.personalDetails?.fullName;
+    const emailValue =
+      body.email !== undefined ? body.email : body.personalDetails?.email;
+    const phoneValue =
+      body.phone !== undefined ? body.phone : body.personalDetails?.phone;
+    const dobValue =
+      body.dateOfBirth !== undefined
+        ? body.dateOfBirth
+        : body.personalDetails?.dateOfBirth;
+    const resAddrValue =
+      body.residentialAddress !== undefined
+        ? body.residentialAddress
+        : body.personalDetails?.residentialAddress;
+
+    const bizNameValue =
+      body.businessName !== undefined
+        ? body.businessName
+        : body.businessInfo?.businessName;
+    const gstinValue =
+      body.gstin !== undefined ? body.gstin : body.businessInfo?.gstin;
+    const panValue = body.pan !== undefined ? body.pan : body.businessInfo?.pan;
+    const bizTypeValue =
+      body.businessType !== undefined
+        ? body.businessType
+        : body.businessInfo?.businessType;
+    const bizCatValue =
+      body.businessCategory !== undefined
+        ? body.businessCategory
+        : body.businessInfo?.businessCategory;
+    const estYearValue =
+      body.establishedYear !== undefined
+        ? body.establishedYear
+        : body.businessInfo?.establishedYear;
+
     const {
-      businessName,
       tier,
       isActive,
       isVerified,
       verificationStatus,
-      commission,
+      commission, // Mapped to commissionRate
+      commissionRate,
       bankDetails,
       pickupAddress,
       storeInfo,
@@ -100,16 +143,97 @@ export async function PUT(request, { params }) {
       seller.verificationStatus !== verificationStatus
     ) {
       changes.push(`Verification status changed to ${verificationStatus}`);
+
+      // Handle Approval Logic: Generate temporary password and send email
+      if (
+        verificationStatus === "approved" &&
+        seller.verificationStatus !== "approved"
+      ) {
+        try {
+          // Generate temporary password (random 8 characters)
+          const tempPassword = Math.random()
+            .toString(36)
+            .slice(-8)
+            .toUpperCase();
+
+          // Hash password for user update
+          const hashedPassword = await bcrypt.hash(tempPassword, 10);
+
+          // Find and update the associated user
+          const user = await User.findById(seller.userId);
+          if (user) {
+            user.password = hashedPassword;
+            user.requirePasswordChange = true;
+            user.isVerified = true;
+            await user.save();
+
+            // Send approval email
+            const emailHtml = generateSellerApprovalEmail({
+              sellerName: user.name,
+              email: user.email,
+              password: tempPassword,
+              businessName: seller.businessInfo?.businessName || "Your Store",
+              dashboardUrl: `${
+                process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3001"
+              }/seller/login`,
+            });
+
+            await emailService.sendEmail({
+              to: user.email,
+              subject:
+                "🎉 Your Seller Account is Approved - Start Selling Now!",
+              html: emailHtml,
+            });
+
+            changes.push(`Temporary password sent to ${user.email}`);
+          }
+        } catch (error) {
+          console.error("Approval logic error:", error);
+          // Don't fail the whole update if email fails, but log it
+        }
+      }
     }
 
-    // Update seller - only update fields that are provided
-    if (businessName !== undefined) seller.businessName = businessName;
+    // Initialize nested objects if they don't exist
+    if (!seller.personalDetails) seller.personalDetails = {};
+    if (!seller.businessInfo) seller.businessInfo = {};
+
+    // Update Personal Details
+    if (fullNameValue !== undefined)
+      seller.personalDetails.fullName = fullNameValue;
+    if (emailValue !== undefined) seller.personalDetails.email = emailValue;
+    if (phoneValue !== undefined) seller.personalDetails.phone = phoneValue;
+    if (dobValue !== undefined) seller.personalDetails.dateOfBirth = dobValue;
+    if (resAddrValue !== undefined) {
+      seller.personalDetails.residentialAddress = {
+        ...seller.personalDetails.residentialAddress,
+        ...resAddrValue,
+      };
+    }
+
+    // Update Business Info
+    if (bizNameValue !== undefined)
+      seller.businessInfo.businessName = bizNameValue;
+    if (gstinValue !== undefined) seller.businessInfo.gstin = gstinValue;
+    if (panValue !== undefined) seller.businessInfo.pan = panValue;
+    if (bizTypeValue !== undefined)
+      seller.businessInfo.businessType = bizTypeValue;
+    if (bizCatValue !== undefined)
+      seller.businessInfo.businessCategory = bizCatValue;
+    if (estYearValue !== undefined)
+      seller.businessInfo.establishedYear = estYearValue;
+
+    // Update Root Fields
     if (tier !== undefined) seller.tier = tier;
     if (isActive !== undefined) seller.isActive = isActive;
     if (isVerified !== undefined) seller.isVerified = isVerified;
     if (verificationStatus !== undefined)
       seller.verificationStatus = verificationStatus;
-    if (commission !== undefined) seller.commission = commission;
+
+    // Handle Commission (support both names)
+    if (commissionRate !== undefined) seller.commissionRate = commissionRate;
+    else if (commission !== undefined) seller.commissionRate = commission;
+
     if (bankDetails !== undefined) seller.bankDetails = bankDetails;
     if (pickupAddress !== undefined) seller.pickupAddress = pickupAddress;
     if (storeInfo !== undefined) seller.storeInfo = storeInfo;
@@ -132,7 +256,7 @@ export async function PUT(request, { params }) {
         action: "Seller Updated",
         description: changes.join(", "),
         timestamp: new Date(),
-        performedBy: decoded.userId,
+        performedBy: decoded.userId || decoded.id,
       });
     }
 

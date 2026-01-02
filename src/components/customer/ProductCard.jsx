@@ -161,7 +161,9 @@ export default function ProductCard({
           <div className="flex items-center gap-1">
             <span className="text-[11px] text-gray-400">Sold by</span>
             <span className="text-[11px] font-bold text-gray-600 truncate max-w-[80px]">
-              {product.sellerId?.storeInfo?.storeName || 'RetailNet'}
+              {product.sellerId?.storeInfo?.storeName ||
+                product.sellerId?.businessInfo?.businessName ||
+                ''}
             </span>
           </div>
 

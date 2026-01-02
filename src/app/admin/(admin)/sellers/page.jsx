@@ -150,7 +150,7 @@ export default function SellersPage() {
                     <tr key={seller._id} className="hover:bg-gray-50">
                       <td className="px-6 py-4">
                         <div>
-                          <p className="font-semibold text-gray-900">{seller.businessName}</p>
+                          <p className="font-semibold text-gray-900">{seller.businessInfo?.businessName}</p>
                           <p className="text-sm text-gray-600">{seller.email}</p>
                         </div>
                       </td>

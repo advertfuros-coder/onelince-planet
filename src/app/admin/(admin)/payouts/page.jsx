@@ -286,7 +286,7 @@ export default function AdminPayoutsPage() {
               <option value="">All Sellers</option>
               {sellers.map((seller) => (
                 <option key={seller._id} value={seller._id}>
-                  {seller.businessName}
+                  {seller.businessInfo?.businessName}
                 </option>
               ))}
             </select>
@@ -475,7 +475,7 @@ export default function AdminPayoutsPage() {
                     className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                   />
                   <div>
-                    <p className="font-medium text-gray-900">{seller.businessName}</p>
+                    <p className="font-medium text-gray-900">{seller.businessInfo?.businessName}</p>
                     <p className="text-sm text-gray-600">{seller.email}</p>
                   </div>
                 </label>

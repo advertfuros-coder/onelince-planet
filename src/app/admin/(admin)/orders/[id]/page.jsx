@@ -305,7 +305,7 @@ export default function AdminOrderDetailPage() {
                 <div className="space-y-3">
                   <div>
                     <p className="text-xs text-gray-500 mb-1">Business Name</p>
-                    <p className="font-semibold text-gray-900">{order.items[0].seller.businessName}</p>
+                    <p className="font-semibold text-gray-900">{order.items[0].seller.businessInfo?.businessName}</p>
                   </div>
                   {order.items[0].seller.storeInfo?.storeName && (
                     <div>

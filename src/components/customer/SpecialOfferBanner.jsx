@@ -1,8 +1,7 @@
 'use client'
 import { useState } from 'react'
-import Link from 'next/link'
-import { FiHeart, FiChevronLeft, FiChevronRight } from 'react-icons/fi'
-import { FaHeart, FaStar } from 'react-icons/fa'
+import { FiChevronLeft, FiChevronRight } from 'react-icons/fi'
+import ProductCard from './ProductCard'
 import { useRegion } from '@/context/RegionContext'
 
 export default function SpecialOfferBanner() {
@@ -14,42 +13,57 @@ export default function SpecialOfferBanner() {
         {
             _id: 'promo-1',
             name: 'Xiaomi Redmi 10A Ultra 128GB Storage',
-            image: '/products/xiaomi-phone.jpg',
-            rating: 4.5,
-            reviews: 12,
-            originalPrice: 299.00,
-            salePrice: 199.00,
-            badge: 'Sale'
+            images: [{ url: '/products/xiaomi-phone.jpg' }],
+            pricing: {
+                basePrice: 299.00,
+                salePrice: 199.00
+            },
+            ratings: {
+                average: 4.5,
+                totalReviews: 12
+            }
         },
         {
             _id: 'promo-2',
             name: 'Apple Watch Series 7 GPS 41mm',
-            image: '/products/apple-watch.jpg',
-            rating: 5.0,
-            reviews: 89,
-            originalPrice: 599.00,
-            salePrice: 399.00,
-            badge: 'Sale'
+            images: [{ url: '/products/apple-watch.jpg' }],
+            pricing: {
+                basePrice: 599.00,
+                salePrice: 399.00
+            },
+            ratings: {
+                average: 5.0,
+                totalReviews: 89
+            },
+            isTopRated: true
         },
         {
             _id: 'promo-3',
             name: 'Samsung Galaxy S23 FE 256GB',
-            image: '/products/samsung-s23.jpg',
-            rating: 4.8,
-            reviews: 156,
-            originalPrice: 899.00,
-            salePrice: 679.00,
-            badge: 'Sale'
+            images: [{ url: '/products/samsung-s23.jpg' }],
+            pricing: {
+                basePrice: 899.00,
+                salePrice: 679.00
+            },
+            ratings: {
+                average: 4.8,
+                totalReviews: 156
+            },
+            isBestSeller: true
         },
         {
             _id: 'promo-4',
             name: 'Oppo Reno8 Pro 5G 256GB',
-            image: '/products/oppo-reno.jpg',
-            rating: 4.6,
-            reviews: 78,
-            originalPrice: 549.00,
-            salePrice: 419.00,
-            badge: 'Sale'
+            images: [{ url: '/products/oppo-reno.jpg' }],
+            pricing: {
+                basePrice: 549.00,
+                salePrice: 419.00
+            },
+            ratings: {
+                average: 4.6,
+                totalReviews: 78
+            },
+            isNewArrival: true
         }
     ]
 
@@ -63,13 +77,6 @@ export default function SpecialOfferBanner() {
             }
             return newSet
         })
-    }
-
-    const formatPrice = (price) => {
-        return new Intl.NumberFormat('en-US', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        }).format(price)
     }
 
     const scroll = (direction) => {
@@ -114,110 +121,35 @@ export default function SpecialOfferBanner() {
                             WebkitOverflowScrolling: 'touch'
                         }}
                     >
-                        {/* Promotional Box - Exact Match */}
-                        <div className="flex-shrink-0 w-[280px] h-[320px] bg-[#2B4ECC] rounded-2xl p-6 flex flex-col justify-between items-center shadow-lg">
-                            {/* Top Section */}
-                            <div className="w-full text-center pt-4">
-                                <p className="text-white text-[11px] font-semibold mb-3 tracking-wider opacity-90">SAVE UP TO</p>
-                                <div className="flex items-center justify-center gap-1">
-                                    <span className="text-white text-[28px] font-black">↓</span>
-                                    <h3 className="text-white text-[72px] font-black leading-none tracking-tight">80%</h3>
-                                </div>
-                            </div>
+                        {/* Promotional Box */}
+                        <div className="flex-shrink-0 w-[280px] bg-green-700 rounded-2xl p-8 flex flex-col justify-center items-center text-center shadow-lg relative overflow-hidden">
+                            {/* Decorative circles */}
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-green-600 rounded-full opacity-30 -mr-16 -mt-16"></div>
+                            <div className="absolute bottom-0 left-0 w-24 h-24 bg-green-800 rounded-full opacity-30 -ml-12 -mb-12"></div>
 
-                            {/* Bottom Section - Date Box */}
-                            <div className="w-full mb-4">
-                                <div className="bg-white rounded-xl py-5 px-6 shadow-md">
-                                    <p className="text-[#2B4ECC] text-[56px] font-black leading-none tracking-tight">12.12</p>
+                            <div className="relative z-10">
+                                <p className="text-white text-xs font-medium mb-1 opacity-90 tracking-wide">SAVE UP TO</p>
+                                <h3 className="text-white text-7xl font-black mb-1 leading-none">
+                                    <span className="text-5xl align-top">↓</span>80%
+                                </h3>
+                                <p className="text-white text-xs mb-8 opacity-75 tracking-wide">On selected items</p>
+
+                                <div className="bg-white rounded-xl px-8 py-4 shadow-lg">
+                                    <p className="text-green-700 text-5xl font-black tracking-tight leading-none">12.12</p>
                                 </div>
                             </div>
                         </div>
 
                         {/* Product Cards */}
-                        {featuredProducts.map((product) => {
-                            const isInWishlist = wishlist.has(product._id)
-                            const discount = Math.round(((product.originalPrice - product.salePrice) / product.originalPrice) * 100)
-
-                            return (
-                                <div
-                                    key={product._id}
-                                    className="flex-shrink-0 w-[220px] bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-300"
-                                >
-                                    {/* Product Image */}
-                                    <div className="relative aspect-square bg-gray-50 p-4">
-                                        <Link href={`/products/${product._id}`}>
-                                            <img
-                                                src={product.image}
-                                                alt={product.name}
-                                                className="w-full h-full object-contain"
-                                                onError={(e) => {
-                                                    e.target.src = '/placeholder-product.png'
-                                                }}
-                                            />
-                                        </Link>
-
-                                        {/* Badge */}
-                                        {product.badge && (
-                                            <span className="absolute top-3 left-3 bg-red-500 text-white text-[10px] font-black px-2 py-1 rounded">
-                                                {product.badge}
-                                            </span>
-                                        )}
-
-                                        {/* Wishlist */}
-                                        <button
-                                            onClick={() => toggleWishlist(product._id)}
-                                            className="absolute top-3 right-3 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-md hover:bg-white transition-all"
-                                        >
-                                            {isInWishlist ? (
-                                                <FaHeart className="w-4 h-4 text-red-500" />
-                                            ) : (
-                                                <FiHeart className="w-4 h-4 text-gray-600" />
-                                            )}
-                                        </button>
-                                    </div>
-
-                                    {/* Product Info */}
-                                    <div className="p-4">
-                                        <Link href={`/products/${product._id}`}>
-                                            <h4 className="font-semibold text-gray-900 text-sm mb-2 line-clamp-2 hover:text-blue-600 transition-colors min-h-[40px]">
-                                                {product.name}
-                                            </h4>
-                                        </Link>
-
-                                        {/* Rating */}
-                                        <div className="flex items-center gap-1 mb-3">
-                                            <div className="flex text-yellow-400">
-                                                {[...Array(5)].map((_, i) => (
-                                                    i < Math.floor(product.rating) ? (
-                                                        <FaStar key={i} className="w-3 h-3" />
-                                                    ) : (
-                                                        <FaStar key={i} className="w-3 h-3 text-gray-300" />
-                                                    )
-                                                ))}
-                                            </div>
-                                            <span className="text-[10px] text-gray-500">({product.reviews})</span>
-                                        </div>
-
-                                        {/* Price */}
-                                        <div className="space-y-1">
-                                            <div className="flex items-baseline gap-2">
-                                                <span className="text-blue-600 text-lg font-black">
-                                                    ${formatPrice(product.salePrice)}
-                                                </span>
-                                                <span className="text-gray-400 text-xs line-through">
-                                                    ${formatPrice(product.originalPrice)}
-                                                </span>
-                                            </div>
-                                            {discount > 0 && (
-                                                <p className="text-red-500 text-xs font-semibold">
-                                                    Save {discount}%
-                                                </p>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-                            )
-                        })}
+                        {featuredProducts.map((product) => (
+                            <div key={product._id} className="flex-shrink-0 w-[280px]">
+                                <ProductCard
+                                    product={product}
+                                    isWishlisted={wishlist.has(product._id)}
+                                    onToggleWishlist={toggleWishlist}
+                                />
+                            </div>
+                        ))}
                     </div>
                 </div>
             </div>

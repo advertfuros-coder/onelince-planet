@@ -121,7 +121,7 @@ export default function CategoryCircles() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="flex items-center justify-between mb-10">
-          <h2 className="text-base md:text-xl font-black text-gray-900">
+          <h2 className="text-xl md:text-2xl font-black text-gray-900">
             Explore Popular Categories
           </h2>
           <Link

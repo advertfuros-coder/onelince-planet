@@ -1,6 +1,6 @@
 'use client'
 import Link from 'next/link'
-import { FiArrowUpRight, FiMinus } from 'react-icons/fi'
+import { FiArrowRight, FiChevronRight } from 'react-icons/fi'
 
 const topBrands = [
   {
@@ -9,7 +9,8 @@ const topBrands = [
     domain: 'samsung.com',
     category: 'Electronics',
     productsCount: '1.2k+',
-    href: '/products?brand=samsung'
+    href: '/products?brand=samsung',
+    color: 'from-blue-500 to-blue-600'
   },
   {
     id: 2,
@@ -17,7 +18,8 @@ const topBrands = [
     domain: 'nike.com',
     category: 'Fashion',
     productsCount: '850+',
-    href: '/products?brand=nike'
+    href: '/products?brand=nike',
+    color: 'from-orange-500 to-orange-600'
   },
   {
     id: 3,
@@ -25,7 +27,8 @@ const topBrands = [
     domain: 'apple.com',
     category: 'Electronics',
     productsCount: '450+',
-    href: '/products?brand=apple'
+    href: '/products?brand=apple',
+    color: 'from-gray-700 to-gray-900'
   },
   {
     id: 4,
@@ -33,7 +36,8 @@ const topBrands = [
     domain: 'adidas.com',
     category: 'Sportswear',
     productsCount: '700+',
-    href: '/products?brand=adidas'
+    href: '/products?brand=adidas',
+    color: 'from-indigo-500 to-indigo-600'
   },
   {
     id: 5,
@@ -41,7 +45,8 @@ const topBrands = [
     domain: 'sony.com',
     category: 'Electronics',
     productsCount: '600+',
-    href: '/products?brand=sony'
+    href: '/products?brand=sony',
+    color: 'from-purple-500 to-purple-600'
   },
   {
     id: 6,
@@ -49,7 +54,8 @@ const topBrands = [
     domain: 'mi.com',
     category: 'Mobiles',
     productsCount: '800+',
-    href: '/products?brand=xiaomi'
+    href: '/products?brand=xiaomi',
+    color: 'from-red-500 to-orange-500'
   },
   {
     id: 7,
@@ -57,7 +63,8 @@ const topBrands = [
     domain: 'puma.com',
     category: 'Fashion',
     productsCount: '400+',
-    href: '/products?brand=puma'
+    href: '/products?brand=puma',
+    color: 'from-yellow-500 to-orange-500'
   },
   {
     id: 8,
@@ -65,7 +72,8 @@ const topBrands = [
     domain: 'zara.com',
     category: 'Fashion',
     productsCount: '650+',
-    href: '/products?brand=zara'
+    href: '/products?brand=zara',
+    color: 'from-pink-500 to-rose-600'
   },
   {
     id: 9,
@@ -73,7 +81,8 @@ const topBrands = [
     domain: 'lg.com',
     category: 'Electronics',
     productsCount: '550+',
-    href: '/products?brand=lg'
+    href: '/products?brand=lg',
+    color: 'from-red-600 to-pink-600'
   },
   {
     id: 10,
@@ -81,7 +90,8 @@ const topBrands = [
     domain: 'levi.com',
     category: 'Apparel',
     productsCount: '500+',
-    href: '/products?brand=levis'
+    href: '/products?brand=levis',
+    color: 'from-blue-600 to-indigo-700'
   },
   {
     id: 11,
@@ -89,7 +99,8 @@ const topBrands = [
     domain: 'hm.com',
     category: 'Fashion',
     productsCount: '900+',
-    href: '/products?brand=hm'
+    href: '/products?brand=hm',
+    color: 'from-green-500 to-emerald-600'
   },
   {
     id: 12,
@@ -97,79 +108,96 @@ const topBrands = [
     domain: 'boat-lifestyle.com',
     category: 'Audio',
     productsCount: '300+',
-    href: '/products?brand=boat'
+    href: '/products?brand=boat',
+    color: 'from-cyan-500 to-blue-600'
   }
 ]
 
 export default function TopBrands() {
   return (
-    <section className="py-24 bg-white border-y border-gray-100">
-      <div className="max-w-[1400px] mx-auto px-4 md:px-6">
-        {/* Editorial Header */}
-        <div className="flex flex-col md:flex-row items-baseline justify-between mb-16 gap-6">
-          <div className="max-w-xl">
-            <div className="flex items-center gap-2 mb-4">
-              <FiMinus className="text-blue-600 w-8" />
-              <span className="text-blue-600 font-bold text-[10px] uppercase tracking-[0.3em]">Partner Network</span>
-            </div>
-            <h2 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tighter leading-none mb-4">
-              Featured <br /> Brands
+    <section className="py-12 bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h2 className="text-2xl md:text-3xl font-black text-gray-900 mb-2">
+              Shop by Top Brands
             </h2>
-            <p className="text-gray-500 text-sm md:text-base font-medium">
-              Collaborating with the world's most innovative labels to bring you excellence.
+            <p className="text-gray-600 text-sm md:text-base">
+              Explore products from your favorite brands
             </p>
           </div>
           <Link
             href="/brands"
-            className="group flex items-center gap-3 text-gray-900 font-black text-sm uppercase tracking-widest border-b-2 border-gray-900 pb-1 hover:text-blue-600 hover:border-blue-600 transition-all"
+            className="hidden md:flex items-center gap-2 text-blue-600 hover:text-blue-700 font-semibold text-sm transition-colors group"
           >
-            All Partnerships
-            <FiArrowUpRight className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+            View All
+            <FiChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
 
         {/* Brand Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-px bg-gray-100 border border-gray-100">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
           {topBrands.map((brand) => (
             <Link
               key={brand.id}
               href={brand.href}
-              className="group relative bg-white aspect-square flex flex-col items-center justify-center p-8 transition-all duration-500 hover:z-10 hover:shadow-2xl"
+              className="group relative bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-xl hover:border-blue-100 transition-all duration-300 overflow-hidden"
             >
-              <div className="relative w-24 h-24 mb-6 flex items-center justify-center gra yscale group-hover:grayscale-0 transition-all duration-700">
-                <img
-                  src={`https://www.google.com/s2/favicons?domain=${brand.domain}&sz=128`}
-                  alt={brand.name}
-                  className="max-w-[70%] max-h-[70%] object-contain transform group-hover:scale-110 transition-transform duration-500"
-                  onError={(e) => {
-                    // Try second CDN if primary fails
-                    if (!e.target.src.includes('duckduckgo')) {
-                      e.target.src = `https://icons.duckduckgo.com/ip3/${brand.domain}.ico`
-                    } else {
-                      // Ultimate fallback
-                      e.target.src = `https://ui-avatars.com/api/?name=${brand.name}&background=f3f4f6&color=1f2937&bold=true&size=128`
-                    }
-                  }}
-                />
-              </div>
+              {/* Gradient Background on Hover */}
+              <div className={`absolute inset-0 bg-gradient-to-br ${brand.color} opacity-0 group-hover:opacity-5 transition-opacity duration-300`}></div>
 
-              <div className="absolute inset-0 bg-gray-900 opacity-0 group-hover:opacity-[0.02] transition-opacity duration-500"></div>
+              {/* Content */}
+              <div className="relative z-10 flex flex-col items-center text-center">
+                {/* Brand Logo */}
+                <div className="w-16 h-16 mb-4 flex items-center justify-center bg-gray-50 rounded-xl group-hover:bg-white transition-colors">
+                  <img
+                    src={`https://www.google.com/s2/favicons?domain=${brand.domain}&sz=128`}
+                    alt={brand.name}
+                    className="max-w-[60%] max-h-[60%] object-contain transform group-hover:scale-110 transition-transform duration-300"
+                    onError={(e) => {
+                      if (!e.target.src.includes('duckduckgo')) {
+                        e.target.src = `https://icons.duckduckgo.com/ip3/${brand.domain}.ico`
+                      } else {
+                        e.target.src = `https://ui-avatars.com/api/?name=${brand.name}&background=f3f4f6&color=1f2937&bold=true&size=128`
+                      }
+                    }}
+                  />
+                </div>
 
-              <div className="text-center opacity-0 transform translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">
-                <h3 className="font-black text-xs uppercase tracking-widest text-gray-900 mb-1">
+                {/* Brand Name */}
+                <h3 className="font-bold text-gray-900 text-sm mb-1 group-hover:text-blue-600 transition-colors">
                   {brand.name}
                 </h3>
-                <p className="text-[10px] text-blue-600 font-bold">
-                  {brand.productsCount} Items
+
+                {/* Category */}
+                <p className="text-xs text-gray-500 mb-2">
+                  {brand.category}
                 </p>
+
+                {/* Products Count */}
+                <div className="inline-flex items-center gap-1 px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-xs font-semibold">
+                  {brand.productsCount} items
+                </div>
               </div>
 
-              {/* Decorative Corner */}
-              <div className="absolute top-4 right-4 text-gray-200 opacity-0 group-hover:opacity-100 transition-opacity">
-                <FiArrowUpRight className="w-4 h-4" />
+              {/* Arrow Icon */}
+              <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                <FiArrowRight className="w-4 h-4 text-blue-600" />
               </div>
             </Link>
           ))}
+        </div>
+
+        {/* Mobile View All Button */}
+        <div className="md:hidden mt-6 text-center">
+          <Link
+            href="/brands"
+            className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-semibold text-sm transition-colors"
+          >
+            View All Brands
+            <FiChevronRight className="w-5 h-5" />
+          </Link>
         </div>
       </div>
     </section>

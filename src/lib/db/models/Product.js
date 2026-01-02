@@ -4,9 +4,8 @@ import mongoose from "mongoose";
 const ProductSchema = new mongoose.Schema(
   {
     sellerId: {
-      // Changed from 'seller' to 'sellerId'
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "Seller",
       required: true,
     },
 

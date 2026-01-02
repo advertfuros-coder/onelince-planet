@@ -74,9 +74,12 @@ class EmailService {
           tls: {
             rejectUnauthorized: false, // Accept self-signed certificates (use with caution in production)
           },
-          connectionTimeout: 10000, // 10 seconds
-          greetingTimeout: 10000,
-          socketTimeout: 10000,
+          connectionTimeout: 30000, // 30 seconds (increased from 10s)
+          greetingTimeout: 30000, // 30 seconds
+          socketTimeout: 30000, // 30 seconds
+          pool: true, // Use connection pooling
+          maxConnections: 5,
+          maxMessages: 100,
         });
 
         console.log(
@@ -101,7 +104,7 @@ class EmailService {
     return this.transporter;
   }
 
-  async sendEmail({ to, subject, html, text }) {
+  async sendEmail({ to, subject, html, text }, retries = 3) {
     try {
       const nodemailer = await this.loadNodemailer();
       await this.initialize();
@@ -122,21 +125,45 @@ class EmailService {
         text: text || this.stripHtml(html),
       };
 
-      const info = await this.transporter.sendMail(mailOptions);
+      let lastError;
+      for (let attempt = 1; attempt <= retries; attempt++) {
+        try {
+          console.log(`📧 Sending email (attempt ${attempt}/${retries})...`);
+          const info = await this.transporter.sendMail(mailOptions);
 
-      console.log("✅ Email sent:", info.messageId);
+          console.log("✅ Email sent:", info.messageId);
 
-      // Log preview URL for Ethereal
-      const previewUrl = nodemailer.getTestMessageUrl(info);
-      if (previewUrl) {
-        console.log("📧 Preview URL:", previewUrl);
+          // Log preview URL for Ethereal
+          const previewUrl = nodemailer.getTestMessageUrl(info);
+          if (previewUrl) {
+            console.log("📧 Preview URL:", previewUrl);
+          }
+
+          return {
+            success: true,
+            messageId: info.messageId,
+            previewUrl,
+          };
+        } catch (error) {
+          lastError = error;
+          console.error(`❌ Email attempt ${attempt} failed:`, error.message);
+          
+          // If this is a timeout error and we have retries left, wait and try again
+          if (attempt < retries && (error.code === 'ETIMEDOUT' || error.code === 'ECONNECTION')) {
+            const delay = Math.min(1000 * Math.pow(2, attempt), 10000); // Exponential backoff, max 10s
+            console.log(`⏳ Retrying in ${delay}ms...`);
+            await new Promise(resolve => setTimeout(resolve, delay));
+            // Reinitialize transporter for next attempt
+            this.transporter = null;
+            await this.initialize();
+          } else {
+            break;
+          }
+        }
       }
 
-      return {
-        success: true,
-        messageId: info.messageId,
-        previewUrl,
-      };
+      // All retries failed
+      throw lastError;
     } catch (error) {
       console.error("❌ Email sending error:", error);
       return {

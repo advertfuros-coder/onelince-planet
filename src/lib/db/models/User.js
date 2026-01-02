@@ -35,6 +35,10 @@ const UserSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    requirePasswordChange: {
+      type: Boolean,
+      default: false,
+    },
     wishlist: [
       {
         type: mongoose.Schema.Types.ObjectId,

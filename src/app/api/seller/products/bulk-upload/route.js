@@ -2,6 +2,7 @@
 import { NextResponse } from "next/server";
 import connectDB from "@/lib/db/mongodb";
 import Product from "@/lib/db/models/Product";
+import Seller from "@/lib/db/models/Seller";
 import { verifyToken } from "@/lib/utils/auth";
 
 // POST - Bulk upload products from CSV
@@ -22,6 +23,15 @@ export async function POST(request) {
       return NextResponse.json(
         { success: false, message: "Seller access required" },
         { status: 403 }
+      );
+    }
+
+    // Find seller profile to get internal seller ID
+    const seller = await Seller.findOne({ userId: decoded.userId });
+    if (!seller) {
+      return NextResponse.json(
+        { success: false, message: "Seller profile not found" },
+        { status: 404 }
       );
     }
 
@@ -58,10 +68,10 @@ export async function POST(request) {
           continue;
         }
 
-        // Create product with seller ID
+        // Create product with internal seller ID
         const product = await Product.create({
           ...productData,
-          sellerId: decoded.userId,
+          sellerId: seller._id,
           pricing: {
             basePrice: parseFloat(productData.basePrice) || 0,
             salePrice:
@@ -127,8 +137,8 @@ export async function POST(request) {
 export async function GET(request) {
   try {
     const csvTemplate = `name,category,brand,sku,description,basePrice,salePrice,costPrice,stock,lowStockThreshold,warehouse,images,tags,specifications
-"Sample Product","Electronics","BrandName","SKU-001","Product description here",1000,899,500,100,10,"Main Warehouse","https://example.com/image1.jpg","tag1,tag2,tag3","Display:6.1 inch|RAM:8GB|Storage:128GB"
-"Another Product","Fashion","BrandName","SKU-002","Another description",500,449,200,50,5,"Warehouse 2","https://example.com/image2.jpg","fashion,trending","Size:M|Color:Blue|Material:Cotton"`;
+"Modern Smartwatch","Electronics","FitTrack","FT-100-BLK","High-performance smartwatch with heart rate monitoring and 7-day battery life.",4999,3999,2500,50,5,"Primary","https://images.unsplash.com/photo-1546868871-70c122467d8b|https://images.unsplash.com/photo-1579586337278-3befd40fd17a","smartwatch,tech,fitness","Color:Deep Black|Battery:300mAh|Water Resistance:IP68"
+"Cotton Slim Fit Shirt","Fashion","UrbanStyle","US-SH-01-NAVY","Premium cotton slim fit shirt, perfect for formal and semi-formal occasions.",1999,1499,800,100,20,"Regional","https://images.unsplash.com/photo-1596755094514-f87e34085b2c","shirt,cotton,navy","Size:L|Color:Navy Blue|Fabric:100% Cotton"`;
 
     return new NextResponse(csvTemplate, {
       headers: {

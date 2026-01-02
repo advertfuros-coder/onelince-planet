@@ -18,7 +18,7 @@ export async function GET(request, { params }) {
 
     // Fetch product with seller details
     const product = await Product.findById(id)
-      .populate("sellerId", "storeInfo businessName ratings")
+      .populate("sellerId", "businessInfo storeInfo personalDetails ratings")
       .lean();
 
     if (!product) {
@@ -57,6 +57,13 @@ export async function GET(request, { params }) {
       .select("name images pricing ratings")
       .lean();
 
+    // Calculate actual product count for this seller
+    const sellerProductCount = await Product.countDocuments({
+      sellerId: product.sellerId?._id || product.sellerId,
+      isActive: true,
+      isApproved: true,
+    });
+
     return NextResponse.json({
       success: true,
       product: {
@@ -64,6 +71,7 @@ export async function GET(request, { params }) {
         reviews,
         ratingDistribution,
         relatedProducts,
+        sellerProductCount,
       },
     });
   } catch (error) {

@@ -44,7 +44,11 @@ export default function BulkUploadModal({ onClose, onSuccess }) {
                         return { key: key?.trim(), value: val?.trim() }
                     })
                 } else if (header === 'images' && value) {
-                    product[header] = value.split('|').map(img => img.trim())
+                    product[header] = value.split('|').map((img, idx) => ({
+                        url: img.trim(),
+                        alt: `${product.name || 'Product'} image ${idx + 1}`,
+                        isPrimary: idx === 0
+                    }))
                 } else if (['basePrice', 'salePrice', 'costPrice'].includes(header)) {
                     product[header] = parseFloat(value) || 0
                 } else if (['stock', 'lowStockThreshold'].includes(header)) {

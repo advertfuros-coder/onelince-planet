@@ -22,6 +22,7 @@ import {
   FiBarChart2,
   FiActivity,
   FiAward,
+  FiAlertCircle,
 } from 'react-icons/fi'
 import { toast } from 'react-hot-toast'
 import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'

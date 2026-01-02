@@ -56,7 +56,7 @@ export async function PATCH(request, { params }) {
           sellerName: seller.userId.name,
           email: seller.userId.email,
           password: tempPassword,
-          businessName: seller.businessName,
+          businessName: seller.businessInfo?.businessName,
           dashboardUrl: `${
             process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3001"
           }/seller/dashboard`,

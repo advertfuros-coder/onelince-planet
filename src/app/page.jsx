@@ -4,6 +4,10 @@ import CategoryCircles from '@/components/customer/CategoryCircles'
 import TodaysBestDeals from '@/components/customer/TodaysBestDeals'
 import SpecialOfferBanner from '@/components/customer/SpecialOfferBanner'
 import FlashDealsSection from '@/components/customer/FlashDealsSection'
+import PromotionalBanners from '@/components/customer/PromotionalBanners'
+import CountdownBanner from '@/components/customer/CountdownBanner'
+import BecomeSellerSection from '@/components/customer/BecomeSellerSection'
+import FeaturesBar from '@/components/customer/FeaturesBar'
 import FlashSales from '@/components/customer/FlashSales'
 import TrendingProducts from '@/components/customer/TrendingProducts'
 import BestSellers from '@/components/customer/BestSellers'
@@ -59,18 +63,50 @@ export default async function HomePage() {
       {/* Categories - Horizontal scrollable with icons */}
       <CategoryCircles />
 
+      {/* Shop by Price - Price range filters */}
+      <ShopByPrice />
+
       {/* Today's Best Deals - Featured products */}
       <TodaysBestDeals />
+
+      {/* New Arrivals - Latest products */}
+      <NewArrivals />
 
       {/* Special Offer Banner - Countdown timer with featured deals */}
       <SpecialOfferBanner />
 
+      {/* Promotional Banners - Two colorful promotional sections */}
+      <PromotionalBanners />
+
+      {/* Best Sellers - Popular products */}
+      <BestSellers />
+
       {/* Flash Deals - Horizontal scroll with vertical label */}
       <FlashDealsSection />
-      
+
+      {/* Trending Products - Hot items */}
+      <TrendingProducts />
+
+      {/* Countdown Banner - Flash sale timer */}
+      <CountdownBanner />
+
+      {/* Features Bar - Key benefits */}
+      <FeaturesBar />
+
+      {/* Why Choose Us - Trust indicators */}
+      <WhyChooseUs />
+
+      {/* Top Brands - Brand showcase */}
       <TopBrands />
+
+      {/* Newsletter - Email subscription */}
+      <Newsletter />
+
+      {/* Statistics Section - Company stats */}
       <StatisticsSection />
 
+      {/* Testimonials - Customer reviews */}
+      <TestimonialSection />
 
       {/* Footer - Complete site map */}
       <Footer />

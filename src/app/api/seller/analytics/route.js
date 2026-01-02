@@ -288,7 +288,7 @@ async function generateSellerPredictions(analyticsData, seller, products) {
   try {
     const prompt = `You are a business consultant for an e-commerce seller. Analyze their performance and provide actionable insights.
 
-Seller: ${seller.businessName || "Online Seller"}
+Seller: ${seller.businessInfo?.businessName || "Online Seller"}
 
 Performance Metrics:
 - Total Revenue: ₹${analyticsData.overview.totalRevenue.toFixed(2)}

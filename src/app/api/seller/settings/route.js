@@ -44,11 +44,11 @@ export async function GET(request) {
         avatar: null, // Implement if image upload exists
       },
       store: {
-        storeName: seller.storeInfo?.storeName || seller.businessName,
+        storeName: seller.storeInfo?.storeName || seller.businessInfo?.businessName,
         storeDescription: seller.storeInfo?.storeDescription || "",
         storeAddress: seller.pickupAddress?.addressLine1 || "",
-        gstin: seller.gstin,
-        pan: seller.pan,
+        gstin: seller.businessInfo?.gstin,
+        pan: seller.businessInfo?.pan,
       },
       notifications: {
         // Mock notifications as they aren't in schema yet
@@ -116,8 +116,8 @@ export async function PUT(request) {
         seller.pickupAddress.addressLine1 = data.storeAddress;
 
       // Allow updating GSTIN and PAN if they are provided
-      if (data.gstin) seller.gstin = data.gstin.toUpperCase();
-      if (data.pan) seller.pan = data.pan.toUpperCase();
+      if (data.gstin) seller.businessInfo.gstin = data.gstin.toUpperCase();
+      if (data.pan) seller.businessInfo.pan = data.pan.toUpperCase();
 
       await seller.save();
     } else if (section === "banking") {
@@ -130,8 +130,8 @@ export async function PUT(request) {
         seller.bankDetails.accountHolderName = data.accountHolderName;
 
       // Also allow tax details in banking for convenience
-      if (data.gstin) seller.gstin = data.gstin.toUpperCase();
-      if (data.pan) seller.pan = data.pan.toUpperCase();
+      if (data.gstin) seller.businessInfo.gstin = data.gstin.toUpperCase();
+      if (data.pan) seller.businessInfo.pan = data.pan.toUpperCase();
 
       await seller.save();
     }

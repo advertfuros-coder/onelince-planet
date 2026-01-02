@@ -89,9 +89,9 @@ export async function GET(request) {
       ...sellers.map((seller) => ({
         id: seller._id.toString(),
         type: "seller",
-        title: seller.businessName,
+        title: seller.businessInfo?.businessName,
         subtitle: `${seller.storeInfo?.storeName || "Store"} - ${
-          seller.businessType
+          seller.businessInfo?.businessType
         }`,
         url: `/admin/sellers/${seller._id}`,
         icon: "🏪",

@@ -114,7 +114,7 @@ export async function POST(request) {
 
     const sellerData = {
       sellerId: seller._id,
-      businessName: seller.businessName,
+      businessName: seller.businessInfo?.businessName,
       totalProducts,
       totalOrders,
       totalRevenue,

@@ -32,7 +32,8 @@ export async function GET(request) {
       success: true,
       seller: {
         _id: seller._id,
-        businessName: seller.businessName,
+        personalDetails: seller.personalDetails,
+        businessInfo: seller.businessInfo,
         storeInfo: seller.storeInfo,
         isActive: seller.isActive,
         isVerified: seller.isVerified,

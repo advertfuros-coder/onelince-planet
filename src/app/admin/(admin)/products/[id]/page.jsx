@@ -326,7 +326,7 @@ export default function AdminProductDetailPage({ params }) {
                 <span>Seller Information</span>
               </h3>
               <div className="space-y-3">
-                <InfoRow label="Business Name" value={product.seller.businessName} />
+                <InfoRow label="Business Name" value={product.seller.businessInfo?.businessName} />
                 <InfoRow label="Email" value={product.seller.email} />
                 <InfoRow label="Phone" value={product.seller.userId?.phone || 'N/A'} />
                 <div className="pt-3">

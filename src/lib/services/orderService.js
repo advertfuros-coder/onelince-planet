@@ -504,7 +504,7 @@ class OrderService {
     return {
       invoiceNumber: `INV-${order.orderNumber}`,
       invoiceDate: new Date().toLocaleDateString("en-IN"),
-      sellerGSTIN: seller.gstin || "",
+      sellerGSTIN: seller.businessInfo?.gstin || "",
       buyerName: order.shippingAddress.name,
       buyerAddress: order.shippingAddress,
       items: order.items.map((item) => ({
