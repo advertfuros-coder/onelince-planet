@@ -4,6 +4,8 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { FiHeart, FiShoppingCart, FiChevronLeft, FiChevronRight } from 'react-icons/fi'
 import WishlistButton from '@/components/customer/WishlistButton'
+import { useRegion } from '@/context/RegionContext'
+import { formatPrice } from '@/lib/utils'
 
 const tabs = [
   { id: 'new', label: 'New Products', color: 'bg-yellow-400 text-gray-900' },
@@ -13,6 +15,7 @@ const tabs = [
 
 export default function TrendingProducts({ products = [] }) {
   const [activeTab, setActiveTab] = useState('new')
+  const { region } = useRegion()
 
   // Sample products if none provided
   const sampleProducts = [
@@ -128,9 +131,9 @@ export default function TrendingProducts({ products = [] }) {
               {/* Product Image */}
               <div className="relative aspect-square bg-gray-50 p-4">
                 {/* Discount Badge */}
-                {product.badge && (
+                {(product.badge || product.discount > 0) && (
                   <div className="absolute top-3 left-3 bg-yellow-400 text-gray-900 text-xs font-bold px-2 py-1 rounded-md z-10">
-                    {product.badge}
+                    {product.badge || `-${product.discount}%`}
                   </div>
                 )}
 
@@ -165,14 +168,14 @@ export default function TrendingProducts({ products = [] }) {
                   {[...Array(5)].map((_, i) => (
                     <svg
                       key={i}
-                      className={`w-3 h-3 ${i < product.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'
+                      className={`w-3 h-3 ${i < (product.rating || product.ratings?.average || 0) ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'
                         }`}
                       viewBox="0 0 20 20"
                     >
                       <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
                     </svg>
                   ))}
-                  <span className="text-xs text-gray-500 ml-1">({product.reviews})</span>
+                  <span className="text-xs text-gray-500 ml-1">({product.reviews || product.ratings?.totalReviews || 0})</span>
                 </div>
 
                 {/* Product Name */}
@@ -183,13 +186,13 @@ export default function TrendingProducts({ products = [] }) {
                 </Link>
 
                 {/* Price */}
-                <div className="flex items-center gap-2">
+                <div className="flex flex-col">
                   <span className="text-lg font-bold text-gray-900">
-                    ${(product.price || product.pricing?.salePrice || product.pricing?.basePrice || 0).toFixed(2)}
+                    {formatPrice(product.price || product.pricing?.salePrice || product.pricing?.basePrice || 0, region)}
                   </span>
-                  {product.mrp && product.mrp > product.price && (
-                    <span className="text-sm text-gray-400 line-through">
-                      ${product.mrp?.toFixed(2)}
+                  {(product.mrp || product.pricing?.basePrice) > (product.price || product.pricing?.salePrice) && (
+                    <span className="text-xs text-gray-400 line-through">
+                      {formatPrice(product.mrp || product.pricing?.basePrice, region)}
                     </span>
                   )}
                 </div>

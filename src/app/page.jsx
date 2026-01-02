@@ -17,13 +17,14 @@ import WhyChooseUs from '@/components/customer/WhyChooseUs'
 import FeaturedCollections from '@/components/customer/FeaturedCollections'
 import DealOfTheDay from '@/components/customer/DealOfTheDay'
 import ShopByPrice from '@/components/customer/ShopByPrice'
-import AppDownloadBanner from '@/components/customer/AppDownloadBanner'
+
+import { cookies } from 'next/headers'
 
 // Fetch products on server side
-async function getProducts() {
+async function getProducts(country = 'AE') {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
-    const res = await fetch(`${baseUrl}/api/products?limit=20`, {
+    const res = await fetch(`${baseUrl}/api/products?limit=20&country=${country}`, {
       cache: 'no-store' // Disable cache for fresh data
     })
 
@@ -40,7 +41,9 @@ async function getProducts() {
 }
 
 export default async function HomePage() {
-  const { products } = await getProducts()
+  const cookieStore = await cookies()
+  const country = (await cookieStore.get('op-region'))?.value || 'AE'
+  const { products } = await getProducts(country)
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -93,7 +96,7 @@ export default async function HomePage() {
       <TestimonialSection />
 
       {/* App Download Banner - Mobile app promotion */}
-      <AppDownloadBanner />
+      {/* <AppDownloadBanner /> */}
 
       {/* Newsletter - Lead capture */}
       <Newsletter />

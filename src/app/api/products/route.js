@@ -21,6 +21,7 @@ export async function GET(request) {
     const sortBy = searchParams.get("sortBy") || "createdAt";
     const order = searchParams.get("order") || "desc";
     const ids = searchParams.get("ids"); // Comma-separated product IDs
+    const country = searchParams.get("country"); // IN or AE
 
     // Build query
     const query = { isActive: true, isDraft: { $ne: true } };
@@ -70,15 +71,45 @@ export async function GET(request) {
       query["inventory.stock"] = { $gte: 10 };
     }
 
-    // Count total documents
-    const total = await Product.countDocuments(query);
+    // Aggregation pipeline for cross-model filtering
+    let pipeline = [{ $match: query }];
 
-    // Execute query with pagination
-    const products = await Product.find(query)
-      .sort({ [sortBy]: order === "desc" ? -1 : 1 })
-      .limit(limit)
-      .skip((page - 1) * limit)
-      .lean();
+    // Region/Country filtering
+    if (country) {
+      const countryName = country === "IN" ? "India" : "United Arab Emirates";
+      pipeline.push(
+        {
+          $lookup: {
+            from: "sellers",
+            localField: "sellerId",
+            foreignField: "userId", // In this schema, sellerId refs User but Seller links via userId
+            as: "seller_info",
+          },
+        },
+        { $unwind: "$seller_info" },
+        {
+          $match: {
+            "seller_info.pickupAddress.country": {
+              $regex: countryName,
+              $options: "i",
+            },
+          },
+        }
+      );
+    }
+
+    // Total count calculation (for pagination)
+    const countPipeline = [...pipeline, { $count: "total" }];
+    const countResult = await Product.aggregate(countPipeline);
+    const total = countResult[0]?.total || 0;
+
+    // Add sorting, skip, and limit to pipeline
+    pipeline.push({ $sort: { [sortBy]: order === "desc" ? -1 : 1 } });
+    pipeline.push({ $skip: (page - 1) * limit });
+    pipeline.push({ $limit: limit });
+
+    // Execute query
+    const products = await Product.aggregate(pipeline);
 
     return NextResponse.json({
       success: true,
