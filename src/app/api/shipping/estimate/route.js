@@ -5,6 +5,89 @@ import Seller from "@/lib/db/models/Seller";
 import shiprocketService from "@/lib/services/shiprocketService";
 import ekartService from "@/lib/services/ekartService";
 
+// Helper function to calculate delivery days based on distance
+async function calculateDeliveryDays(pickupPincode, deliveryPincode) {
+  try {
+    // Fetch location details for both pincodes
+    const [pickupResponse, deliveryResponse] = await Promise.all([
+      fetch(`https://api.postalpincode.in/pincode/${pickupPincode}`),
+      fetch(`https://api.postalpincode.in/pincode/${deliveryPincode}`),
+    ]);
+
+    const pickupData = await pickupResponse.json();
+    const deliveryData = await deliveryResponse.json();
+
+    if (
+      pickupData[0]?.Status === "Success" &&
+      deliveryData[0]?.Status === "Success"
+    ) {
+      const pickupLocation = pickupData[0].PostOffice[0];
+      const deliveryLocation = deliveryData[0].PostOffice[0];
+
+      const pickupCity = pickupLocation.District;
+      const pickupState = pickupLocation.State;
+      const deliveryCity = deliveryLocation.District;
+      const deliveryState = deliveryLocation.State;
+
+      // Same city delivery
+      if (pickupCity === deliveryCity) {
+        return {
+          standard: 2,
+          express: 1,
+          location: `${deliveryCity}, ${deliveryState}`,
+        };
+      }
+
+      // Same state delivery
+      if (pickupState === deliveryState) {
+        return {
+          standard: 3,
+          express: 2,
+          location: `${deliveryCity}, ${deliveryState}`,
+        };
+      }
+
+      // Metro to metro (major cities)
+      const metroCities = [
+        "Delhi",
+        "Mumbai",
+        "Bangalore",
+        "Kolkata",
+        "Chennai",
+        "Hyderabad",
+        "Pune",
+        "Ahmedabad",
+      ];
+      const isMetroToMetro =
+        metroCities.includes(pickupCity) && metroCities.includes(deliveryCity);
+
+      if (isMetroToMetro) {
+        return {
+          standard: 3,
+          express: 2,
+          location: `${deliveryCity}, ${deliveryState}`,
+        };
+      }
+
+      // Interstate delivery
+      return {
+        standard: 5,
+        express: 3,
+        location: `${deliveryCity}, ${deliveryState}`,
+      };
+    }
+  } catch (error) {
+    console.error("Failed to calculate delivery days:", error);
+  }
+
+  // Default fallback
+  return {
+    standard: 4,
+    express: 2,
+    location: null,
+  };
+}
+
 export async function POST(request) {
   try {
     await connectDB();
@@ -62,6 +145,7 @@ export async function POST(request) {
           courier: bestCourier.courier_name,
           etd: bestCourier.etd,
           estimated_days: bestCourier.estimated_delivery_days,
+          express_days: Math.max(1, bestCourier.estimated_delivery_days - 2),
           available: true,
         });
       }
@@ -80,17 +164,24 @@ export async function POST(request) {
           ekartResult.status === true ||
           ekartResult.is_serviceable)
       ) {
-        // Ekart usually takes 3-5 days for standard
+        // Calculate realistic delivery days based on distance
+        const deliveryDays = await calculateDeliveryDays(
+          pickupPincode,
+          deliveryPincode
+        );
+
         const today = new Date();
-        const edd = new Date(today);
-        edd.setDate(today.getDate() + 4); // Average 4 days
+        const standardEdd = new Date(today);
+        standardEdd.setDate(today.getDate() + deliveryDays.standard);
 
         estimates.push({
           source: "Ekart",
           courier: "Ekart Logistics",
-          etd: edd.toISOString(),
-          estimated_days: 4,
+          etd: standardEdd.toISOString(),
+          estimated_days: deliveryDays.standard,
+          express_days: deliveryDays.express,
           available: true,
+          location: deliveryDays.location,
         });
       }
     } catch (err) {

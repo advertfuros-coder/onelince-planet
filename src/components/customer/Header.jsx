@@ -82,6 +82,17 @@ export default function Header() {
       // Default based on location or IP detection could be added here
       setCountry('AE') // Default to UAE
     }
+
+    // Listen for location updates from product page
+    const handleLocationUpdate = () => {
+      const updatedLocation = localStorage.getItem('userLocation')
+      const updatedPincode = localStorage.getItem('userPincode')
+      if (updatedLocation) setLocation(updatedLocation)
+      if (updatedPincode) setPincode(updatedPincode)
+    }
+
+    window.addEventListener('locationUpdated', handleLocationUpdate)
+    return () => window.removeEventListener('locationUpdated', handleLocationUpdate)
   }, [])
 
   // Fetch location based on pincode
