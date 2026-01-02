@@ -1,5 +1,6 @@
 // app/(customer)/cart/page.jsx
 'use client'
+import { useState, useEffect } from 'react'
 import { useCart } from '@/lib/context/CartContext'
 import Link from 'next/link'
 import {
@@ -18,13 +19,53 @@ import {
 } from 'react-icons/fi'
 import { BiTagAlt } from 'react-icons/bi'
 import Button from '@/components/ui/Button'
+import Price, { StrikePrice } from '@/components/ui/Price'
+import { useCurrency } from '@/lib/context/CurrencyContext'
 
 export default function CartPage() {
   const { items, removeFromCart, updateQuantity, getCartTotal, getCartCount, isLoaded } = useCart()
+  const { formatPrice } = useCurrency()
+  const [deliveryEstimates, setDeliveryEstimates] = useState({})
+  const [loadingEstimates, setLoadingEstimates] = useState(false)
 
-  // Mock data for UI elements not yet in backend
-  const EXCHANGE_RATE_AED = 0.044 // Approx INR to AED
-  const DELIVERY_DATE = "Tue, 24 Oct"
+  // Fetch delivery estimates for all items
+  useEffect(() => {
+    const fetchDeliveryEstimates = async () => {
+      const savedPincode = localStorage.getItem('userPincode')
+      if (!savedPincode || items.length === 0) return
+
+      setLoadingEstimates(true)
+      const estimates = {}
+
+      for (const item of items) {
+        try {
+          const response = await fetch('/api/shipping/estimate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              productId: item.productId,
+              deliveryPincode: savedPincode
+            })
+          })
+          const data = await response.json()
+
+          console.log(data)
+          if (data.success) {
+            estimates[item.productId] = data.estimate
+          }
+        } catch (error) {
+          console.error('Failed to fetch delivery estimate:', error)
+        }
+      }
+
+      setDeliveryEstimates(estimates)
+      setLoadingEstimates(false)
+    }
+
+    if (isLoaded) {
+      fetchDeliveryEstimates()
+    }
+  }, [items, isLoaded])
 
   // Show loading state
   if (!isLoaded) {
@@ -37,10 +78,13 @@ export default function CartPage() {
 
   const cartCount = getCartCount()
   const cartTotal = getCartTotal()
-  const discount = 3000 // Mock discount
-  const deliveryCharges = 0
-  const tax = Math.round(cartTotal * 0.18) // Mock GST
-  const finalTotal = cartTotal + tax - discount
+
+  // Discount only applies when coupon is used (handled in checkout)
+  const discount = 0
+
+  const deliveryCharges = 0 // Free delivery
+  const tax = 0 // Tax calculated at checkout
+  const finalTotal = cartTotal - discount + deliveryCharges
 
   if (items.length === 0) {
     return (
@@ -73,15 +117,21 @@ export default function CartPage() {
         </nav>
 
         {/* Page Title */}
-        <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900 mb-8">
-          Shopping Cart ({cartCount} {cartCount === 1 ? 'item' : 'items'})
-        </h1>
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900">
+            Shopping Cart ({cartCount} {cartCount === 1 ? 'item' : 'items'})
+          </h1>
+        
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 
           {/* Left Column: Cart Items */}
           <div className="lg:col-span-8 space-y-4">
             {items.map((item) => {
+              console.log('Cart item:', item);
+              console.log('Item image:', item.image);
+
               const price = item.price || 0
               const itemTotal = price * item.quantity
               const originalPrice = Math.round(price * 1.25) // Mock original price (25% markup)
@@ -94,9 +144,12 @@ export default function CartPage() {
                     <Link href={`/products/${item.productId}`} className="flex-shrink-0">
                       <div className="w-full sm:w-32 h-32 bg-gray-50 rounded-xl overflow-hidden relative border border-gray-100">
                         <img
-                          src={item.image || '/images/placeholder-product.jpg'}
+                          src={item.image?.startsWith('http') ? item.image : item.image || '/placeholder-product.png'}
                           alt={item.name}
                           className="w-full h-full object-contain p-2 mix-blend-multiply"
+                          onError={(e) => {
+                            e.target.src = '/placeholder-product.png'
+                          }}
                         />
                       </div>
                     </Link>
@@ -116,10 +169,12 @@ export default function CartPage() {
                           {item.variant && Object.entries(item.variant).map(([key, value]) => (
                             <span key={key} className="capitalize">{key}: {value} •</span>
                           ))}
-                          <Link href="#" className="flex items-center gap-1 text-blue-600 text-xs font-semibold hover:underline">
-                            <FiShoppingBag className="w-3 h-3" />
-                            Sold by Global Gadgets
-                          </Link>
+                          {item.seller && (
+                            <Link href="#" className="flex items-center gap-1 text-blue-600 text-xs font-semibold hover:underline">
+                              <FiShoppingBag className="w-3 h-3" />
+                              Sold by {item.seller}
+                            </Link>
+                          )}
                         </div>
                       </div>
 
@@ -160,11 +215,10 @@ export default function CartPage() {
                         {/* Price Block */}
                         <div className="text-right">
                           <div className="flex items-center justify-end gap-2 mb-1">
-                            <span className="text-xs text-gray-400 line-through">₹{originalPrice.toLocaleString()}</span>
+                            <StrikePrice amount={originalPrice} className="text-xs text-gray-400" />
                             <span className="bg-blue-50 text-blue-700 text-[10px] font-bold px-1.5 py-0.5 rounded">-20%</span>
                           </div>
-                          <div className="text-xl font-bold text-gray-900">₹{price.toLocaleString()}</div>
-                          <div className="text-[10px] text-gray-400 font-medium">(AED {(price * EXCHANGE_RATE_AED).toFixed(0)})</div>
+                          <Price amount={price} className="text-xl font-bold text-gray-900" />
                         </div>
                       </div>
                     </div>
@@ -177,12 +231,19 @@ export default function CartPage() {
                         <FiClock className="w-4 h-4" />
                         <span>Low Stock - Order soon!</span>
                       </div>
-                    ) : (
+                    ) : deliveryEstimates[item.productId] ? (
                       <div className="flex items-center gap-2 text-emerald-600 font-medium">
                         <FiTruck className="w-4 h-4" />
-                        <span>Free Delivery by {DELIVERY_DATE}</span>
+                        <span>
+                          Free Delivery by {new Date(deliveryEstimates[item.productId].etd).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                        </span>
                       </div>
-                    )}
+                    ) : loadingEstimates ? (
+                      <div className="flex items-center gap-2 text-gray-400 font-medium">
+                        <FiClock className="w-4 h-4 animate-spin" />
+                        <span>Checking delivery...</span>
+                      </div>
+                    ) : null}
                   </div>
                 </div>
               )
@@ -218,11 +279,11 @@ export default function CartPage() {
               <div className="space-y-3 mb-6 pb-6 border-b border-gray-100 text-sm">
                 <div className="flex justify-between text-gray-600">
                   <span>Subtotal ({cartCount} items)</span>
-                  <span className="font-medium text-gray-900">₹{cartTotal.toLocaleString()}</span>
+                  <Price amount={cartTotal} className="font-medium text-gray-900" />
                 </div>
                 <div className="flex justify-between text-emerald-600">
                   <span>Discount</span>
-                  <span className="font-medium">- ₹{discount.toLocaleString()}</span>
+                  <span className="font-medium">- <Price amount={discount} /></span>
                 </div>
                 <div className="flex justify-between text-emerald-600">
                   <span>Delivery Charges</span>
@@ -238,8 +299,8 @@ export default function CartPage() {
               <div className="flex justify-between items-end mb-8">
                 <span className="text-lg font-bold text-gray-900">Total Amount</span>
                 <div className="text-right">
-                  <div className="text-2xl font-bold text-gray-900">₹{finalTotal.toLocaleString()}</div>
-                  <div className="text-xs text-gray-500 font-medium">Approx. AED {(finalTotal * EXCHANGE_RATE_AED).toFixed(0)}</div>
+                  <Price amount={Math.round(finalTotal)} className="text-2xl font-bold text-gray-900" />
+                  <div className="text-xs text-gray-500 font-medium">Inclusive of all taxes</div>
                 </div>
               </div>
 

@@ -4,33 +4,35 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import axios from 'axios'
-import { 
-  FiShoppingBag, 
-  FiSearch, 
-  FiUser, 
+import {
+  FiShoppingBag,
+  FiSearch,
+  FiUser,
   FiMapPin,
   FiChevronRight,
   FiClock
 } from 'react-icons/fi'
 import { useAuth } from '@/lib/context/AuthContext'
 import { useCart } from '@/lib/context/CartContext'
+import { useCurrency } from '@/lib/context/CurrencyContext'
 
 export default function HomePage() {
   const { user } = useAuth()
   const { cart } = useCart()
+  const { country } = useCurrency()
   const [categories, setCategories] = useState([])
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     fetchData()
-  }, [])
+  }, [country]) // Re-fetch when country changes
 
   const fetchData = async () => {
     try {
       const [categoriesRes, productsRes] = await Promise.all([
         axios.get('/api/categories'),
-        axios.get('/api/products?limit=20')
+        axios.get(`/api/products?limit=20&country=${country}`)
       ])
       setCategories(categoriesRes.data.categories || [])
       setProducts(productsRes.data.products || [])
@@ -188,7 +190,7 @@ export default function HomePage() {
 
 function ProductCard({ product }) {
   const { addToCart } = useCart()
-  
+
   return (
     <Link href={`/products/${product._id}`} className="group">
       <div className="bg-white border rounded-xl p-3 hover:shadow-lg transition-shadow">

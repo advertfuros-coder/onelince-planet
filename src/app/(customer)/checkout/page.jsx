@@ -26,7 +26,8 @@ import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
 import { useCart } from '@/lib/context/CartContext'
 import { useAuth } from '@/lib/context/AuthContext'
-import { formatPrice } from '@/lib/utils'
+import { useCurrency } from '@/lib/context/CurrencyContext'
+import Price from '@/components/ui/Price'
 import { toast } from 'react-hot-toast'
 import axios from 'axios'
 
@@ -34,6 +35,7 @@ export default function CheckoutPage() {
   const router = useRouter()
   const { items, subtotal, shipping, total, clearCart } = useCart()
   const { user } = useAuth()
+  const { formatPrice } = useCurrency()
   const [loading, setLoading] = useState(false)
 
   // Steps: 1=Address, 2=Delivery, 3=Payment
@@ -553,11 +555,13 @@ export default function CheckoutPage() {
                   {items.map(item => (
                     <div key={item.productId} className="flex gap-4 group">
                       <div className="w-20 h-20 bg-gray-50 rounded-xl overflow-hidden border border-gray-100 relative">
-                        <Image
-                          src={item.image || '/images/placeholder-product.jpg'}
+                        <img
+                          src={item.image?.startsWith('http') ? item.image : item.image || '/placeholder-product.png'}
                           alt={item.name}
-                          fill
-                          className="object-contain p-2 mix-blend-multiply group-hover:scale-105 transition-transform duration-300"
+                          className="w-full h-full object-contain p-2 mix-blend-multiply group-hover:scale-105 transition-transform duration-300"
+                          onError={(e) => {
+                            e.target.src = '/placeholder-product.png'
+                          }}
                         />
                       </div>
                       <div className="flex-1 py-1">
@@ -565,7 +569,7 @@ export default function CheckoutPage() {
                         <p className="text-xs text-gray-500 mb-2">Variant: {Object.values(item.variant || {}).join(', ') || 'Standard'}</p>
                         <div className="flex justify-between items-end">
                           <span className="text-xs font-semibold px-2 py-0.5 bg-gray-100 rounded text-gray-600">x{item.quantity}</span>
-                          <span className="font-bold text-gray-900">{formatPrice(item.price * item.quantity)}</span>
+                          <Price amount={item.price * item.quantity} className="font-bold text-gray-900" />
                         </div>
                       </div>
                     </div>
@@ -661,29 +665,29 @@ export default function CheckoutPage() {
                 <div className="space-y-3 py-6 border-t border-dashed border-gray-200 text-sm">
                   <div className="flex justify-between text-gray-600">
                     <span>Subtotal</span>
-                    <span className="font-semibold text-gray-900">{formatPrice(subtotal)}</span>
+                    <Price amount={subtotal} className="font-semibold text-gray-900" />
                   </div>
                   <div className="flex justify-between text-gray-600">
                     <span className="flex items-center gap-1">Shipping <FiInfo className="w-3 h-3 text-gray-400" /></span>
                     <span className={`font-semibold ${deliveryCost === 0 ? 'text-green-600' : 'text-gray-900'}`}>
-                      {deliveryCost === 0 ? 'Free' : formatPrice(deliveryCost)}
+                      {deliveryCost === 0 ? 'Free' : <Price amount={deliveryCost} />}
                     </span>
                   </div>
                   {discount > 0 && (
                     <div className="flex justify-between text-green-600">
                       <span>Discount</span>
-                      <span className="font-bold">-{formatPrice(discount)}</span>
+                      <span className="font-bold">-<Price amount={discount} /></span>
                     </div>
                   )}
                   {isDonationChecked && (
                     <div className="flex justify-between text-green-700">
                       <span className="flex items-center gap-1"><BiLeaf className="w-3 h-3" /> Green Donation</span>
-                      <span className="font-bold">{formatPrice(DONATION_AMOUNT)}</span>
+                      <Price amount={DONATION_AMOUNT} className="font-bold" />
                     </div>
                   )}
                   <div className="flex justify-between text-gray-600">
                     <span>Estimated Tax</span>
-                    <span className="font-semibold text-gray-900">{formatPrice(tax)}</span>
+                    <Price amount={tax} className="font-semibold text-gray-900" />
                   </div>
                 </div>
 
@@ -693,7 +697,7 @@ export default function CheckoutPage() {
                     <span className="text-sm font-medium text-gray-500">Total Amount</span>
                     <span className="text-xs text-gray-400">Including Taxes</span>
                   </div>
-                  <span className="text-3xl font-extrabold text-blue-600 tracking-tight">{formatPrice(finalTotal)}</span>
+                  <Price amount={finalTotal} className="text-3xl font-extrabold text-blue-600 tracking-tight" />
                 </div>
 
                 {/* Main Action Button */}

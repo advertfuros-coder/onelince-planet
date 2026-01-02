@@ -8,10 +8,10 @@ import {
   FiStar
 } from 'react-icons/fi'
 import { FaHeart, FaStar } from 'react-icons/fa'
-import { formatPrice } from '../../lib/utils'
 import { createProductUrl } from '../../lib/utils/productUrl'
 import { useCart } from '../../lib/context/CartContext'
-import { useRegion } from '@/context/RegionContext'
+import { useCurrency } from '../../lib/context/CurrencyContext'
+import Price, { StrikePrice } from '../ui/Price'
 
 export default function ProductCard({
   product,
@@ -20,7 +20,7 @@ export default function ProductCard({
 }) {
   const router = useRouter()
   const { addToCart } = useCart()
-  const { region } = useRegion()
+  const { formatPrice } = useCurrency()
 
   const discount = product.pricing?.basePrice && product.pricing?.salePrice ?
     Math.round(((product.pricing.basePrice - product.pricing.salePrice) / product.pricing.basePrice) * 100) : 0
@@ -127,13 +127,15 @@ export default function ProductCard({
 
         {/* Price Section */}
         <div className="flex items-baseline gap-2 mb-4">
-          <span className="text-[20px] font-black text-[#1a1a1b]">
-            {formatPrice(finalPrice, region)}
-          </span>
+          <Price
+            amount={finalPrice}
+            className="text-[20px] font-black text-[#1a1a1b]"
+          />
           {product.pricing?.basePrice && product.pricing?.salePrice && (
-            <span className="text-[13px] text-gray-400 line-through font-medium">
-              {formatPrice(product.pricing.basePrice, region)}
-            </span>
+            <StrikePrice
+              amount={product.pricing.basePrice}
+              className="text-[13px] text-gray-400 font-medium"
+            />
           )}
         </div>
 

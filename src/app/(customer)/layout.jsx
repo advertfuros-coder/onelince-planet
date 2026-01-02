@@ -1,6 +1,7 @@
 // app/(customer)/layout.jsx
 import Header from '@/components/customer/Header'
 import Footer from '@/components/customer/Footer'
+import LocationPermissionModal from '@/components/customer/LocationPermissionModal'
 
 export default function CustomerLayout({ children }) {
   return (
@@ -10,6 +11,7 @@ export default function CustomerLayout({ children }) {
         {children}
       </main>
       <Footer />
+      <LocationPermissionModal />
     </div>
   )
 }

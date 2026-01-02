@@ -5,11 +5,13 @@ import { useSearchParams } from 'next/navigation'
 import axios from 'axios'
 import ProductFilters from '@/components/customer/ProductFilters'
 import ProductGrid from '@/components/customer/ProductGrid'
+import { useCurrency } from '@/lib/context/CurrencyContext'
 import { FiChevronRight } from 'react-icons/fi'
 import Link from 'next/link'
 
 function ProductsContent() {
     const searchParams = useSearchParams()
+    const { country } = useCurrency()
     const [products, setProducts] = useState([])
     const [loading, setLoading] = useState(true)
     const [totalPages, setTotalPages] = useState(0)
@@ -30,7 +32,7 @@ function ProductsContent() {
 
     useEffect(() => {
         fetchProducts()
-    }, [filters, currentPage])
+    }, [filters, currentPage, country]) // Re-fetch when country changes
 
     const fetchProducts = async () => {
         try {
@@ -41,6 +43,8 @@ function ProductsContent() {
                 if (value) params.append(key, value)
             })
 
+            // Add country filter
+            params.append('country', country)
             params.append('page', currentPage)
             params.append('limit', 20)
 

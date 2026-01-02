@@ -95,6 +95,12 @@ const SellerSchema = new mongoose.Schema(
         min: 1900,
         max: new Date().getFullYear(),
       },
+      country: {
+        type: String,
+        enum: ["IN", "AE"],
+        default: "IN",
+        required: true,
+      },
     },
 
     // Bank Details

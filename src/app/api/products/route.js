@@ -74,9 +74,8 @@ export async function GET(request) {
     // Aggregation pipeline for cross-model filtering
     let pipeline = [{ $match: query }];
 
-    // Region/Country filtering
+    // Region/Country filtering - Filter by seller's business country
     if (country) {
-      const countryName = country === "IN" ? "India" : "United Arab Emirates";
       pipeline.push(
         {
           $lookup: {
@@ -89,10 +88,7 @@ export async function GET(request) {
         { $unwind: "$seller_info" },
         {
           $match: {
-            "seller_info.pickupAddress.country": {
-              $regex: countryName,
-              $options: "i",
-            },
+            "seller_info.businessInfo.country": country, // Direct match on country code (IN or AE)
           },
         }
       );
@@ -113,19 +109,24 @@ export async function GET(request) {
 
     // Populate sellerId field from the lookup results or fetch them manually for the results
     // Since aggregate doesn't use Mongoose populate, we'll manually fetch seller info for the current page
-    const sellerIds = [...new Set(products.map(p => p.sellerId))];
-    const sellers = await (await import("@/lib/db/models/Seller")).default.find({
-      _id: { $in: sellerIds }
-    }).select("businessInfo storeInfo personalDetails isVerified ratings").lean();
+    const sellerIds = [...new Set(products.map((p) => p.sellerId))];
+    const sellers = await (
+      await import("@/lib/db/models/Seller")
+    ).default
+      .find({
+        _id: { $in: sellerIds },
+      })
+      .select("businessInfo storeInfo personalDetails isVerified ratings")
+      .lean();
 
     const sellerMap = sellers.reduce((acc, s) => {
       acc[s._id.toString()] = s;
       return acc;
     }, {});
 
-    products = products.map(p => ({
+    products = products.map((p) => ({
       ...p,
-      sellerId: sellerMap[p.sellerId?.toString()] || null
+      sellerId: sellerMap[p.sellerId?.toString()] || null,
     }));
 
     return NextResponse.json({

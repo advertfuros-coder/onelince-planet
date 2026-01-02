@@ -17,6 +17,7 @@ import {
 } from 'react-icons/fi'
 import { useAuth } from '../../lib/context/AuthContext'
 import { useCart } from '../../lib/context/CartContext'
+import { useCurrency } from '../../lib/context/CurrencyContext'
 import { useWishlist } from '../../lib/hooks/useWishlist'
 
 const categories = [
@@ -37,7 +38,6 @@ export default function Header() {
   const [isCountryMenuOpen, setIsCountryMenuOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [location, setLocation] = useState('Dubai')
-  const [country, setCountry] = useState('AE') // IN or AE
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false)
   const [pincode, setPincode] = useState('')
   const [loadingLocation, setLoadingLocation] = useState(false)
@@ -46,6 +46,7 @@ export default function Header() {
   const { user, logout } = useAuth()
   const { items } = useCart()
   const { wishlist } = useWishlist()
+  const { country, changeCountry, currencyConfig } = useCurrency()
   const router = useRouter()
   const userMenuRef = useRef(null)
   const categoriesRef = useRef(null)
@@ -73,15 +74,9 @@ export default function Header() {
   useEffect(() => {
     const savedLocation = localStorage.getItem('userLocation')
     const savedPincode = localStorage.getItem('userPincode')
-    const savedCountry = localStorage.getItem('userCountry')
 
     if (savedLocation) setLocation(savedLocation)
     if (savedPincode) setPincode(savedPincode)
-    if (savedCountry) setCountry(savedCountry)
-    else {
-      // Default based on location or IP detection could be added here
-      setCountry('AE') // Default to UAE
-    }
 
     // Listen for location updates from product page
     const handleLocationUpdate = () => {
@@ -145,10 +140,9 @@ export default function Header() {
 
       // Save to state and localStorage
       setLocation(locationName)
-      setCountry(detectedCountry)
+      changeCountry(detectedCountry)
       localStorage.setItem('userLocation', locationName)
       localStorage.setItem('userPincode', code)
-      localStorage.setItem('userCountry', detectedCountry)
       setIsLocationModalOpen(false)
       setPincode(code)
     } catch (error) {
@@ -166,10 +160,9 @@ export default function Header() {
   }
 
   const handleCountryChange = (countryCode) => {
-    setCountry(countryCode)
+    changeCountry(countryCode)
     setLocation(countries[countryCode].defaultCity)
     setPincode('')
-    localStorage.setItem('userCountry', countryCode)
     localStorage.setItem('userLocation', countries[countryCode].defaultCity)
     localStorage.removeItem('userPincode')
     setIsCountryMenuOpen(false)

@@ -36,34 +36,43 @@ export function CartProvider({ children }) {
   const addToCart = (product, quantity = 1, variant = null) => {
     setItems(prevItems => {
       const existingItem = prevItems.find(
-        item => item.productId === product._id && 
-        JSON.stringify(item.variant) === JSON.stringify(variant)
+        item => item.productId === product._id &&
+          JSON.stringify(item.variant) === JSON.stringify(variant)
       )
 
       if (existingItem) {
         setTimeout(() => toast.success('Updated cart quantity'), 0)
         return prevItems.map(item =>
-          item.productId === product._id && 
-          JSON.stringify(item.variant) === JSON.stringify(variant)
+          item.productId === product._id &&
+            JSON.stringify(item.variant) === JSON.stringify(variant)
             ? { ...item, quantity: item.quantity + quantity }
             : item
         )
       }
 
       setTimeout(() => toast.success('Added to cart'), 0)
-      
+
       const itemPrice = variant?.price || product.pricing?.salePrice || product.pricing?.basePrice;
-      const itemImage = (variant?.imageIndex !== undefined && product.images?.[variant.imageIndex]?.url) 
+      const itemImage = (variant?.imageIndex !== undefined && product.images?.[variant.imageIndex]?.url)
         || product.images?.[0]?.url;
+      const originalPrice = product.pricing?.basePrice || itemPrice * 1.25;
+      const sellerName = product.sellerId?.storeInfo?.storeName ||
+        product.sellerId?.businessInfo?.businessName ||
+        product.sellerId?.personalDetails?.fullName;
+
+      console.log('Adding to cart - Image URL:', itemImage);
+      console.log('Product images:', product.images);
 
       return [...prevItems, {
         productId: product._id,
         name: product.name,
         price: itemPrice,
+        originalPrice: originalPrice,
         image: itemImage,
         quantity,
         variant,
-        stock: variant?.stock ?? product.inventory?.stock
+        stock: variant?.stock ?? product.inventory?.stock,
+        seller: sellerName
       }]
     })
   }
@@ -71,8 +80,8 @@ export function CartProvider({ children }) {
   const removeFromCart = (productId, variant = null) => {
     setItems(prevItems => {
       const newItems = prevItems.filter(
-        item => !(item.productId === productId && 
-        JSON.stringify(item.variant) === JSON.stringify(variant))
+        item => !(item.productId === productId &&
+          JSON.stringify(item.variant) === JSON.stringify(variant))
       )
       setTimeout(() => toast.success('Removed from cart'), 0)
       return newItems
@@ -87,8 +96,8 @@ export function CartProvider({ children }) {
 
     setItems(prevItems =>
       prevItems.map(item =>
-        item.productId === productId && 
-        JSON.stringify(item.variant) === JSON.stringify(variant)
+        item.productId === productId &&
+          JSON.stringify(item.variant) === JSON.stringify(variant)
           ? { ...item, quantity }
           : item
       )
