@@ -21,14 +21,14 @@ import { useCurrency } from '../../lib/context/CurrencyContext'
 import { useWishlist } from '../../lib/hooks/useWishlist'
 
 const categories = [
-  { name: 'Electronics', href: '/products?category=electronics' },
-  { name: 'Fashion', href: '/products?category=fashion' },
-  { name: 'Women\'s', href: '/products?category=womens' },
-  { name: 'Kids\' Fashion', href: '/products?category=kids' },
-  { name: 'Health & Beauty', href: '/products?category=beauty' },
-  { name: 'Pharmacy', href: '/products?category=pharmacy' },
-  { name: 'Groceries', href: '/products?category=groceries' },
-  { name: 'Luxury Item', href: '/products?category=luxury' }
+  { name: 'Electronics', href: '/category/electronics' },
+  { name: 'Fashion', href: '/category/fashion' },
+  { name: 'Home & Decor', href: '/category/home' },
+  { name: 'Beauty & Skin', href: '/category/beauty' },
+  { name: 'Books', href: '/category/books' },
+  { name: 'Health & Fitness', href: '/category/health' },
+  { name: 'Groceries', href: '/category/groceries' },
+  { name: 'Gifts', href: '/category/gifts' }
 ]
 
 export default function Header() {
@@ -42,6 +42,8 @@ export default function Header() {
   const [pincode, setPincode] = useState('')
   const [loadingLocation, setLoadingLocation] = useState(false)
   const [locationError, setLocationError] = useState('')
+  const [showSecondaryHeader, setShowSecondaryHeader] = useState(true)
+  const [lastScrollY, setLastScrollY] = useState(0)
 
   const { user, logout } = useAuth()
   const { items } = useCart()
@@ -89,6 +91,38 @@ export default function Header() {
     window.addEventListener('locationUpdated', handleLocationUpdate)
     return () => window.removeEventListener('locationUpdated', handleLocationUpdate)
   }, [])
+
+  // Scroll handler to hide/show secondary header with threshold to prevent flickering
+  useEffect(() => {
+    let ticking = false;
+    let lastScroll = window.scrollY;
+
+    const updateHeader = () => {
+      const currentScroll = window.scrollY;
+      const delta = currentScroll - lastScroll;
+
+      // Only trigger if we've scrolled more than 10px to avoid jitter
+      if (Math.abs(delta) > 10) {
+        if (currentScroll > lastScroll && currentScroll > 100) {
+          setShowSecondaryHeader(false);
+        } else if (currentScroll < lastScroll) {
+          setShowSecondaryHeader(true);
+        }
+        lastScroll = currentScroll;
+      }
+      ticking = false;
+    };
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateHeader);
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Fetch location based on pincode
   const fetchLocationFromPincode = async (code) => {
@@ -375,7 +409,7 @@ export default function Header() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search emox"
+              placeholder="Search products"
               className="w-full pl-14 pr-12 py-2.5 bg-[#F0F2F5] rounded-full text-sm border-none focus:ring-1 focus:ring-blue-500 placeholder:text-gray-500 font-medium"
             />
             <button
@@ -387,27 +421,29 @@ export default function Header() {
           </form>
 
           {/* Row 3: Categories Horizontal Scroll */}
-          <div className="flex items-center gap-3 overflow-x-auto no-scrollbar whitespace-nowrap py-1">
-            <div className="flex items-center gap-2 shrink-0">
-              <span className="text-sm font-bold text-gray-900">Categories</span>
-              <div className="w-px h-4 bg-gray-300"></div>
+          <div className={`overflow-hidden transition-all duration-300 ease-in-out ${showSecondaryHeader ? 'max-h-12 opacity-100 py-1 mb-2' : 'max-h-0 opacity-0 py-0 mb-0'}`}>
+            <div className="flex items-center gap-3 overflow-x-auto no-scrollbar whitespace-nowrap">
+              <div className="flex items-center gap-2 shrink-0">
+                <span className="text-sm font-bold text-gray-900">Categories</span>
+                <div className="w-px h-4 bg-gray-300"></div>
+              </div>
+              {categories.map((category) => (
+                <Link
+                  key={category.name}
+                  href={category.href}
+                  className="text-sm font-semibold text-gray-500 hover:text-blue-600 transition-colors px-1"
+                >
+                  {category.name}
+                </Link>
+              ))}
             </div>
-            {categories.map((category) => (
-              <Link
-                key={category.name}
-                href={category.href}
-                className="text-sm font-semibold text-gray-500 hover:text-blue-600 transition-colors px-1"
-              >
-                {category.name}
-              </Link>
-            ))}
           </div>
         </div>
       </div>
 
 
       {/* Navigation Bar */}
-      <div className="hidden lg:block bg-gray-50 border-b border-gray-200">
+      <div className={`hidden lg:block bg-gray-50 border-b border-gray-200 overflow-hidden transition-all duration-300 ${showSecondaryHeader ? 'max-h-12 opacity-100' : 'max-h-0 opacity-0'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-12">
             {/* Categories */}

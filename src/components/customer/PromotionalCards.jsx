@@ -11,19 +11,19 @@ export default function PromotionalCards() {
         {
             id: 1,
             image: '/dummy/home/image.png',
-            link: '/products?category=vegetables',
+            link: '/category/groceries',
             title: 'Fresh Vegetables'
         },
         {
             id: 2,
             image: '/dummy/home/image copy.png',
-            link: '/products/samsung-s24-fe',
+            link: '/category/electronics',
             title: 'Samsung Galaxy S24 FE'
         },
         {
             id: 3,
             image: '/dummy/home/image copy 2.png',
-            link: '/products?category=grocery',
+            link: '/category/groceries',
             title: 'Daily Essentials'
         }
     ]
@@ -45,7 +45,7 @@ export default function PromotionalCards() {
     return (
         <section className="py-8 md:py-12 bg-white overflow-hidden">
             <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8">
-                
+
                 {/* Desktop Grid Layout (Hidden on Mobile) */}
                 <div className="hidden md:grid grid-cols-3 gap-6">
                     {banners.map((banner) => (
@@ -54,7 +54,7 @@ export default function PromotionalCards() {
                 </div>
 
                 {/* Mobile Slider Layout - Smooth Ribbon Approach */}
-                <div 
+                <div
                     className="md:hidden relative"
                     onMouseEnter={() => setIsPaused(true)}
                     onMouseLeave={() => setIsPaused(false)}
@@ -70,7 +70,7 @@ export default function PromotionalCards() {
                             onDragEnd={(e, { offset, velocity }) => {
                                 const swipeThreshold = 50;
                                 const velocityThreshold = 500;
-                                
+
                                 if (offset.x < -swipeThreshold || velocity.x < -velocityThreshold) {
                                     nextSlide();
                                 } else if (offset.x > swipeThreshold || velocity.x > velocityThreshold) {
@@ -102,9 +102,8 @@ export default function PromotionalCards() {
                                     setIsPaused(true);
                                     setTimeout(() => setIsPaused(false), 5000);
                                 }}
-                                className={`h-1.5 transition-all duration-500 rounded-full shadow-lg ${
-                                    currentSlide === idx ? 'w-8 bg-white' : 'w-2 bg-white/40 hover:bg-white/70'
-                                }`}
+                                className={`h-1.5 transition-all duration-500 rounded-full shadow-lg ${currentSlide === idx ? 'w-8 bg-white' : 'w-2 bg-white/40 hover:bg-white/70'
+                                    }`}
                                 aria-label={`Go to slide ${idx + 1}`}
                             />
                         ))}

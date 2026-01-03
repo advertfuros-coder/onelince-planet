@@ -7,56 +7,56 @@ const defaultCategories = [
     id: 'electronics',
     name: 'Electronics',
     icon: '/category-icons/electronics.png',
-    link: '/products?category=electronics',
+    link: '/category/electronics',
     color: 'from-blue-500 to-indigo-600'
   },
   {
     id: 'fashion',
     name: 'Fashion',
     icon: '/category-icons/fashion.png',
-    link: '/products?category=fashion',
+    link: '/category/fashion',
     color: 'from-pink-500 to-rose-600'
   },
   {
     id: 'home',
     name: 'Home & Decor',
     icon: '/category-icons/home.png',
-    link: '/products?category=home',
+    link: '/category/home',
     color: 'from-green-500 to-emerald-600'
   },
   {
     id: 'beauty',
     name: 'Beauty & Skin',
     icon: '/category-icons/beauty.png',
-    link: '/products?category=beauty',
+    link: '/category/beauty',
     color: 'from-purple-500 to-violet-600'
   },
   {
     id: 'books',
     name: 'Books',
     icon: '/category-icons/books.png',
-    link: '/products?category=books',
+    link: '/category/books',
     color: 'from-orange-500 to-amber-600'
   },
   {
     id: 'sports',
     name: 'Health & Fitness',
-    icon: '/category-icons/sports.png',
-    link: '/products?category=health',
+    icon: '/category-icons/health',
+    link: '/category/health',
     color: 'from-cyan-500 to-teal-600'
   },
   {
     id: 'groceries',
     name: 'Groceries',
     emoji: '🛒',
-    link: '/products?category=groceries',
+    link: '/category/groceries',
     color: 'from-lime-500 to-green-600'
   },
   {
     id: 'gifts',
     name: 'Gifts',
     emoji: '🎁',
-    link: '/products?category=gifts',
+    link: '/category/gifts',
     color: 'from-red-500 to-pink-600'
   }
 ]
@@ -82,7 +82,7 @@ export default function CategoryCircles() {
               name: cat.name,
               icon: cat.icon || defaultCat?.icon,
               emoji: cat.emoji || defaultCat?.emoji,
-              link: `/products?category=${cat.slug || cat.name.toLowerCase()}`,
+              link: `/category/${cat.slug || cat.name.toLowerCase()}`,
               color: cat.color || defaultCat?.color || 'from-gray-500 to-gray-600'
             }
           })
