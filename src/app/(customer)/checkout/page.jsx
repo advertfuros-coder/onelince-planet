@@ -64,7 +64,13 @@ export default function CheckoutPage() {
 
   // Donation
   const [isDonationChecked, setIsDonationChecked] = useState(false)
-  const DONATION_AMOUNT = 20 // 20 INR / 2 AED
+  const DONATION_AMOUNT = 20 // Base amount in INR
+
+  // Delivery dates
+  const [deliveryDates, setDeliveryDates] = useState({
+    standard: '5-7 business days',
+    express: '2-3 business days'
+  })
 
   // Payment Gateway
   const [razorpayLoaded, setRazorpayLoaded] = useState(false)
@@ -72,8 +78,56 @@ export default function CheckoutPage() {
   useEffect(() => {
     if (items.length === 0) {
       router.push('/cart')
+    } else {
+      // Fetch delivery estimates for the first item
+      fetchDeliveryEstimates()
     }
   }, [items, router])
+
+  const fetchDeliveryEstimates = async () => {
+    const pincode = localStorage.getItem('userPincode')
+    console.log('Fetching delivery estimates:', { pincode, itemsLength: items.length })
+
+    if (!pincode || items.length === 0) {
+      console.log('Missing pincode or no items')
+      return
+    }
+
+    try {
+      const productId = items[0].productId || items[0]._id || items[0].id
+      console.log('Using productId:', productId)
+
+      const response = await axios.post('/api/shipping/estimate', {
+        productId: productId,
+        deliveryPincode: pincode
+      })
+
+      console.log('Delivery estimate response:', response.data)
+
+      if (response.data.success && response.data.estimate) {
+        const { etd, express_days } = response.data.estimate
+
+        // Calculate standard delivery date
+        const edd = new Date(etd)
+        const standardDate = edd.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+
+        // Calculate express delivery date
+        const today = new Date()
+        const expressEdd = new Date(today)
+        expressEdd.setDate(today.getDate() + (express_days || 2))
+        const expressDate = expressEdd.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+
+        console.log('Setting delivery dates:', { standard: `By ${standardDate}`, express: `By ${expressDate}` })
+
+        setDeliveryDates({
+          standard: `By ${standardDate}`,
+          express: `By ${expressDate}`
+        })
+      }
+    } catch (error) {
+      console.error('Failed to fetch delivery estimates:', error)
+    }
+  }
 
   const validateShipping = () => {
     const required = ['name', 'phone', 'addressLine1', 'city', 'country']
@@ -96,7 +150,8 @@ export default function CheckoutPage() {
     }
   }
 
-  const deliveryCost = deliveryMethod === 'express' ? 15.00 : 0
+  // Delivery cost in INR (will be converted by Price component)
+  const deliveryCost = deliveryMethod === 'express' ? 99 : 0 // 99 INR for express
   const donationTotal = isDonationChecked ? DONATION_AMOUNT : 0
   const finalTotal = subtotal + deliveryCost - discount + donationTotal
   const tax = subtotal * 0.05
@@ -395,8 +450,8 @@ export default function CheckoutPage() {
                   <div className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {[
-                        { id: 'standard', title: 'Standard Delivery', price: 'Free', sub: 'Get it by Wed, 24 Jan', icon: FiTruck, color: 'blue' },
-                        { id: 'express', title: 'Express Delivery', price: '$15.00', sub: 'Get it by Tomorrow', icon: FiZap, color: 'orange' }
+                        { id: 'standard', title: 'Standard Delivery', price: 'Free', sub: deliveryDates.standard, icon: FiTruck, color: 'blue' },
+                        { id: 'express', title: 'Express Delivery', price: formatPrice(99), sub: deliveryDates.express, icon: FiZap, color: 'orange' }
                       ].map((opt) => (
                         <div
                           key={opt.id}
@@ -449,99 +504,132 @@ export default function CheckoutPage() {
                 completed={false}
                 onClick={() => { }}
               >
-                <div>
-                  {/* Payment Tabs */}
-                  <div className="flex items-center gap-2 mb-6 p-1 bg-gray-100/80 rounded-xl overflow-x-auto no-scrollbar">
-                    {[
-                      { id: 'online', label: 'Online Payment', icon: FiCreditCard },
-                      { id: 'upi', label: 'UPI / QR', icon: FiSmartphone },
-                      { id: 'cod', label: 'Cash on Delivery', icon: FaRegMoneyBillAlt },
-                    ].map((tab) => (
-                      <button
-                        key={tab.id}
-                        onClick={() => setPaymentMethod(tab.id)}
-                        className={`flex-1 py-3 px-4 text-sm font-bold flex items-center justify-center gap-2 rounded-lg transition-all whitespace-nowrap ${paymentMethod === tab.id
-                          ? 'bg-white text-blue-600 shadow-sm ring-1 ring-gray-200'
-                          : 'text-gray-500 hover:bg-gray-200/50 hover:text-gray-700'
+                {currentStep === 3 ? (
+                  <div className="space-y-6">
+                    {/* Payment Method Cards */}
+                    <div className="grid grid-cols-1 gap-4">
+                      {[
+                        {
+                          id: 'online',
+                          title: 'Online Payment',
+                          subtitle: 'Credit/Debit Cards, NetBanking, Wallets',
+                          icon: FiCreditCard,
+                          color: 'blue',
+                          badge: 'Recommended'
+                        },
+                        {
+                          id: 'upi',
+                          title: 'UPI / QR Code',
+                          subtitle: 'Google Pay, PhonePe, Paytm, BHIM',
+                          icon: FiSmartphone,
+                          color: 'green',
+                          badge: 'Instant'
+                        },
+                        {
+                          id: 'cod',
+                          title: 'Cash on Delivery',
+                          subtitle: 'Pay when you receive',
+                          icon: FaRegMoneyBillAlt,
+                          color: 'gray',
+                          badge: null
+                        }
+                      ].map((method) => (
+                        <div
+                          key={method.id}
+                          onClick={() => setPaymentMethod(method.id)}
+                          className={`relative p-5 rounded-xl border-2 cursor-pointer transition-all duration-200 ${
+                            paymentMethod === method.id
+                              ? `border-${method.color}-500 bg-${method.color}-50/30 ring-1 ring-${method.color}-500`
+                              : 'border-gray-100 hover:border-gray-300 hover:bg-gray-50'
                           }`}
-                      >
-                        <tab.icon className={paymentMethod === tab.id ? 'animate-pulse' : ''} />
-                        {tab.label}
-                      </button>
-                    ))}
-                  </div>
+                        >
+                          {/* Selected Checkmark */}
+                          {paymentMethod === method.id && (
+                            <div className={`absolute top-0 right-0 p-1.5 bg-${method.color}-500 rounded-bl-xl text-white`}>
+                              <FiCheck className="w-4 h-4" />
+                            </div>
+                          )}
 
-                  {/* Online Payment (Card / Netbanking) */}
-                  {paymentMethod === 'online' && (
-                    <div className="space-y-4 animate-fadeIn">
-                      <div className="bg-gradient-to-br from-indigo-50 to-blue-50 p-6 rounded-2xl border border-indigo-100 relative overflow-hidden">
-                        <div className="flex gap-4 relative z-10 items-start">
-                          <div className="w-12 h-12 bg-white rounded-full shadow-sm flex items-center justify-center text-indigo-600 shrink-0">
-                            <FiCreditCard className="w-6 h-6" />
-                          </div>
-                          <div>
-                            <h4 className="font-bold text-gray-900 mb-1">Pay Online Securely</h4>
-                            <p className="text-sm text-gray-600 leading-relaxed mb-4">
-                              You will be redirected to our secure payment gateway (Razorpay) where you can pay using:
-                            </p>
-                            <div className="flex flex-wrap gap-2 mb-2">
-                              {['Credit/Debit Cards', 'NetBanking', 'Wallets'].map(type => (
-                                <span key={type} className="px-2 py-1 bg-white/60 border border-white rounded-md text-xs font-semibold text-indigo-800">{type}</span>
-                              ))}
+                          <div className="flex items-start gap-4">
+                            {/* Icon */}
+                            <div className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 ${
+                              paymentMethod === method.id
+                                ? `bg-${method.color}-100 text-${method.color}-600`
+                                : 'bg-gray-100 text-gray-400'
+                            }`}>
+                              <method.icon className="w-6 h-6" />
+                            </div>
+
+                            {/* Content */}
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2 mb-1">
+                                <h4 className="font-bold text-gray-900">{method.title}</h4>
+                                {method.badge && (
+                                  <span className={`px-2 py-0.5 text-[10px] font-bold rounded-full ${
+                                    method.color === 'blue' ? 'bg-blue-100 text-blue-700' : 'bg-green-100 text-green-700'
+                                  }`}>
+                                    {method.badge}
+                                  </span>
+                                )}
+                              </div>
+                              <p className="text-sm text-gray-600">{method.subtitle}</p>
+                            </div>
+
+                            {/* Radio Button */}
+                            <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${
+                              paymentMethod === method.id
+                                ? `border-${method.color}-500 bg-${method.color}-500`
+                                : 'border-gray-300'
+                            }`}>
+                              {paymentMethod === method.id && (
+                                <div className="w-2 h-2 bg-white rounded-full"></div>
+                              )}
                             </div>
                           </div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
 
-                  {/* UPI Payment */}
-                  {paymentMethod === 'upi' && (
-                    <div className="space-y-4 animate-fadeIn">
-                      <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-6 rounded-2xl border border-green-100 relative overflow-hidden">
-                        <div className="flex gap-4 relative z-10 items-start">
-                          <div className="w-12 h-12 bg-white rounded-full shadow-sm flex items-center justify-center text-green-600 shrink-0">
-                            <BiBarcodeReader className="w-6 h-6" />
-                          </div>
-                          <div>
-                            <h4 className="font-bold text-gray-900 mb-1">Pay via UPI / QR</h4>
-                            <p className="text-sm text-gray-600 leading-relaxed mb-4">
-                              Pay instantly using any UPI app. Scan QR code or enter your UPI ID on the next screen.
-                            </p>
-                            <div className="flex flex-wrap gap-2">
-                              {['Google Pay', 'PhonePe', 'Paytm', 'BHIM'].map(type => (
-                                <span key={type} className="px-2 py-1 bg-white/60 border border-white rounded-md text-xs font-semibold text-green-800">{type}</span>
-                              ))}
+                          {/* Expanded Details */}
+                          {paymentMethod === method.id && (
+                            <div className="mt-4 pt-4 border-t border-gray-200">
+                              {method.id === 'online' && (
+                                <div className="flex flex-wrap gap-2">
+                                  {['Credit/Debit Cards', 'NetBanking', 'Wallets'].map(type => (
+                                    <span key={type} className="px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-xs font-semibold text-gray-700">
+                                      {type}
+                                    </span>
+                                  ))}
+                                </div>
+                              )}
+                              {method.id === 'upi' && (
+                                <div className="flex flex-wrap gap-2">
+                                  {['Google Pay', 'PhonePe', 'Paytm', 'BHIM'].map(type => (
+                                    <span key={type} className="px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-xs font-semibold text-gray-700">
+                                      {type}
+                                    </span>
+                                  ))}
+                                </div>
+                              )}
+                              {method.id === 'cod' && (
+                                <p className="text-sm text-gray-600">
+                                  <span className="font-medium text-gray-800">Note:</span> Please keep exact change handy.
+                                </p>
+                              )}
                             </div>
-                          </div>
+                          )}
                         </div>
-                      </div>
+                      ))}
                     </div>
-                  )}
 
-                  {/* COD Info */}
-                  {paymentMethod === 'cod' && (
-                    <div className="p-6 bg-gradient-to-br from-gray-50 to-white rounded-2xl border border-gray-200 relative overflow-hidden animate-fadeIn">
-                      <div className="flex gap-4 relative z-10">
-                        <div className="w-12 h-12 bg-white rounded-full shadow-sm flex items-center justify-center text-gray-600 mb-2 shrink-0">
-                          <FiPackage className="w-6 h-6" />
-                        </div>
-                        <div>
-                          <h4 className="font-bold text-gray-900 mb-1">Pay on Delivery</h4>
-                          <p className="text-sm text-gray-600 leading-relaxed">
-                            You can pay via Cash or UPI when the delivery agent arrives at your doorstep.
-                            <span className="block mt-1 font-medium text-gray-800">Note: Please keep exact change handy.</span>
-                          </p>
-                        </div>
-                      </div>
+                    {/* Security Badge */}
+                    <div className="flex items-center justify-center gap-2 p-3 bg-gray-50 rounded-xl border border-gray-100 text-xs text-gray-500">
+                      <FiShield className="text-green-500" />
+                      <span>Payments processed securely by Razorpay. We do not store your card details.</span>
                     </div>
-                  )}
-
-                  <div className="mt-8 flex items-center justify-center gap-2 p-3 bg-gray-50 rounded-xl border border-gray-100 text-xs text-gray-500">
-                    <FiShield className="text-green-500" />
-                    <span>Payments processed securely by Razorpay. We do not store your card details.</span>
                   </div>
-                </div>
+                ) : (
+                  <div className="text-sm text-gray-500">
+                    Complete previous steps to select payment method
+                  </div>
+                )}
               </StepIndicator>
 
             </div>
@@ -622,13 +710,10 @@ export default function CheckoutPage() {
                         Your small contribution helps plant trees and support verified green initiatives.
                       </p>
 
-                      {/* Price Badges */}
+                      {/* Price Badge */}
                       <div className="flex gap-3 mb-4">
                         <div className="px-6 py-2 bg-green-700 text-white rounded-full font-bold text-base shadow-sm">
-                          ₹20
-                        </div>
-                        <div className="px-6 py-2 bg-white border-2 border-gray-300 text-gray-700 rounded-full font-bold text-base">
-                          2 AED
+                          <Price amount={DONATION_AMOUNT} />
                         </div>
                       </div>
 
