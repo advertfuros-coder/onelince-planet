@@ -98,56 +98,72 @@ export default function HeroBanner() {
         {/* Main Grid - 2/3 and 1/3 split */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
 
-          {/* Left Card - 2/3 width - Main Product Banner */}
-          <div className="md:col-span-2 relative rounded-3xl overflow-hidden group h-[300px] md:h-[350px]">
+          {/* Left Card - Main Product Banner */}
+          <div className="md:col-span-2 relative rounded-3xl overflow-hidden group h-[280px] md:h-[400px]">
             {/* Animated Background Gradient */}
             <div className={`absolute inset-0 bg-gradient-to-br ${currentBanner.bgColor} transition-all duration-1000`}></div>
 
-            {/* Content Container */}
-            <div className="relative h-full flex items-center justify-between px-8 md:px-16">
+            {/* Product Image as Background - Right Aligned */}
+            <div
+              className="absolute inset-0 transition-transform duration-700 group-hover:scale-105"
+              style={{
+                backgroundImage: `url('${currentBanner.productImage}')`,
+                backgroundSize: 'contain',
+                backgroundPosition: 'right center',
+                backgroundRepeat: 'no-repeat',
+                filter: 'drop-shadow(0 25px 50px rgba(0, 0, 0, 0.3))'
+              }}
+            >
+            </div>
 
-              {/* Left Text Content */}
-              <div className={`z-10 max-w-md ${currentBanner.textColor} space-y-4 md:space-y-6`}>
-                <div className="space-y-2">
-                  <h2 className="text-3xl md:text-xl font-black tracking-tight leading-tight">
+            {/* Content Container */}
+            <div className="relative h-full flex items-center px-6 md:px-16">
+
+              {/* Text Content - Full Width */}
+              <div className={`z-10 w-full md:max-w-xl ${currentBanner.textColor} space-y-3 md:space-y-6`}>
+                <div className="space-y-1 md:space-y-2">
+                  <h2 className="text-2xl md:w-full w-60 md:text-4xl font-semibold tracking-tight opacity-90">
                     {currentBanner.title}
                   </h2>
-                  <p className="text-2xl md:text-4xl font-bold opacity-90">
+                  <p className="text-xl md:text-3xl font-semibold leading-tight">
                     {currentBanner.subtitle}
                   </p>
                 </div>
 
-                <p className="text-sm md:text-base opacity-80 max-w-xs leading-relaxed">
+                <p className="text-[10px] md:text-base opacity-80 max-w-[180px] md:max-w-xs leading-tight md:leading-relaxed line-clamp-2 md:line-clamp-none">
                   {currentBanner.description}
                 </p>
 
-                <Link
-                  href={currentBanner.buttonLink}
-                  className={`inline-block px-8 py-3 ${currentBanner.textColor === 'text-white' ? 'bg-white text-gray-900' : 'bg-gray-900 text-white'} rounded-full font-bold text-sm hover:scale-105 transition-transform duration-300 shadow-lg`}
-                >
-                  {currentBanner.buttonText}
-                </Link>
+                <div className="pt-2 md:pt-4">
+                  <Link
+                    href={currentBanner.buttonLink}
+                    className={`inline-block px-6 md:px-10 py-2 md:py-4 ${currentBanner.textColor === 'text-white' ? 'bg-white text-gray-900' : 'bg-gray-900 text-white'} rounded-full font-bold text-xs md:text-base hover:scale-105 transition-all duration-300 shadow-xl`}
+                  >
+                    {currentBanner.buttonText}
+                  </Link>
+                </div>
 
-                <p className="text-xs opacity-60 pt-2">*Incl. All Offers</p>
+                <p className="hidden md:block text-xs opacity-60 pt-2">*Incl. All Offers</p>
               </div>
 
-              {/* Right Product Image */}
-              <div className="hidden md:block relative w-[45%] h-full">
-                <img
-                  src={currentBanner.productImage}
-                  alt={currentBanner.title}
-                  className="absolute right-0 top-1/2 -translate-y-1/2 h-[90%] w-auto object-contain drop-shadow-2xl group-hover:scale-105 transition-transform duration-700"
-                />
-              </div>
+              {/* Navigation Arrows (Desktop Only) */}
+              <button
+                onClick={prevSlide}
+                className="hidden md:flex absolute left-4 w-10 h-10 items-center justify-center bg-white/20 hover:bg-white/40 rounded-full text-white transition-all backdrop-blur-sm"
+              >
+                <FiChevronLeft size={24} />
+              </button>
+              <button
+                onClick={nextSlide}
+                className="hidden md:flex absolute right-4 w-10 h-10 items-center justify-center bg-white/20 hover:bg-white/40 rounded-full text-white transition-all backdrop-blur-sm"
+              >
+                <FiChevronRight size={24} />
+              </button>
             </div>
-
-        
-
-          
           </div>
 
-          {/* Right Card - 1/3 width - Sale/Promo Card */}
-          <div className="relative rounded-3xl overflow-hidden group h-[300px] md:h-[350px]">
+          {/* Right Card - 1/3 width - Sale/Promo Card (Hidden on Mobile) */}
+          <div className="hidden md:block relative rounded-3xl overflow-hidden group h-[400px]">
             {/* Gradient Background */}
             <div className={`absolute inset-0 bg-gradient-to-br ${currentSale.bgColor} transition-all duration-1000`}></div>
 
@@ -188,6 +204,17 @@ export default function HeroBanner() {
             </div>
           </div>
 
+        </div>
+
+        {/* Pagination Dots */}
+        <div className="flex justify-center gap-2 mt-4 md:mt-6">
+          {bannerImages.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setCurrentSlide(idx)}
+              className={`h-2 transition-all duration-300 rounded-full ${currentSlide === idx ? 'w-8 bg-blue-600' : 'w-2 bg-gray-300'}`}
+            />
+          ))}
         </div>
       </div>
     </section>

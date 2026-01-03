@@ -199,8 +199,8 @@ export default function Header() {
 
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50">
-      {/* Main Header */}
-      <div className="border-b border-gray-100">
+      {/* Desktop Main Header */}
+      <div className="hidden lg:block border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 gap-4">
             {/* Logo */}
@@ -213,7 +213,7 @@ export default function Header() {
             </Link>
 
             {/* Search Bar - Center */}
-            <form onSubmit={handleSearch} className="hidden md:flex flex-1 max-w-2xl mx-8">
+            <form onSubmit={handleSearch} className="flex flex-1 max-w-2xl mx-8">
               <div className="relative w-full">
                 <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
                   <FiSearch className="w-4 h-4 text-gray-400" />
@@ -234,13 +234,11 @@ export default function Header() {
               </div>
             </form>
 
-            {/* Right Side Actions */}
             <div className="flex items-center gap-4">
-              {/* Location */}
               <div className="relative">
                 <button
                   onClick={() => setIsLocationModalOpen(!isLocationModalOpen)}
-                  className="hidden lg:flex items-center gap-2 text-xs hover:text-blue-600 transition-colors"
+                  className="flex items-center gap-2 text-xs hover:text-blue-600 transition-colors"
                 >
                   <FiMapPin className="w-4 h-4" />
                   <div className="text-left">
@@ -248,33 +246,13 @@ export default function Header() {
                     <div className="font-semibold text-gray-900">Update Location</div>
                   </div>
                 </button>
-
-                {/* Location Dropdown */}
                 {isLocationModalOpen && (
                   <>
-                    {/* Backdrop */}
-                    <div
-                      className="fixed inset-0 z-40"
-                      onClick={() => {
-                        setIsLocationModalOpen(false)
-                        setLocationError('')
-                      }}
-                    />
-
-                    {/* Dropdown Panel */}
+                    <div className="fixed inset-0 z-40" onClick={() => setIsLocationModalOpen(false)} />
                     <div className="absolute top-full right-0 mt-2 z-50 bg-white rounded-2xl shadow-2xl w-96 p-6 border border-gray-100">
-                      {/* Close Button */}
-                      <button
-                        onClick={() => {
-                          setIsLocationModalOpen(false)
-                          setLocationError('')
-                        }}
-                        className="absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-full transition-colors"
-                      >
+                      <button onClick={() => setIsLocationModalOpen(false)} className="absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-full transition-colors">
                         <FiX className="w-4 h-4" />
                       </button>
-
-                      {/* Modal Header */}
                       <div className="mb-5">
                         <div className="flex items-center gap-3 mb-2">
                           <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
@@ -286,210 +264,143 @@ export default function Header() {
                           </div>
                         </div>
                       </div>
-
-
-
-                      {/* Pincode Form */}
                       <form onSubmit={handleLocationSubmit} className="space-y-4">
-                        <div>
-                          <label className="block text-sm font-semibold text-gray-700 mb-2">
-                            Pincode / Postal Code
-                          </label>
-                          <input
-                            type="text"
-                            value={pincode}
-                            onChange={(e) => {
-                              setPincode(e.target.value.toUpperCase())
-                              setLocationError('')
-                            }}
-                            placeholder="e.g., 110001 or DXB123"
-                            className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none transition-colors text-sm font-mono"
-                            maxLength={6}
-                          />
-
-                        </div>
-
-                        {/* Error Message */}
-                        {locationError && (
-                          <div className="p-3 bg-red-50 border border-red-100 rounded-xl">
-                            <p className="text-xs text-red-600">{locationError}</p>
-                          </div>
-                        )}
-
-                        {/* Submit Button */}
-                        <button
-                          type="submit"
-                          disabled={loadingLocation || !pincode.trim()}
-                          className="w-full py-2.5 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2 text-sm"
-                        >
-                          {loadingLocation ? (
-                            <>
-                              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                              <span>Detecting...</span>
-                            </>
-                          ) : (
-                            <>
-                              <FiMapPin className="w-4 h-4" />
-                              <span>Update Location</span>
-                            </>
-                          )}
+                        <input
+                          type="text"
+                          value={pincode}
+                          onChange={(e) => setPincode(e.target.value.toUpperCase())}
+                          placeholder="e.g., 110001 or DXB123"
+                          className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none transition-colors text-sm font-mono"
+                          maxLength={6}
+                        />
+                        <button type="submit" disabled={loadingLocation} className="w-full py-2.5 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 disabled:bg-gray-300 transition-colors text-sm">
+                          {loadingLocation ? 'Detecting...' : 'Update Location'}
                         </button>
                       </form>
-
-
                     </div>
                   </>
                 )}
               </div>
 
-              {/* Country Selector */}
               <div className="relative" ref={countryMenuRef}>
-                <button
-                  onClick={() => setIsCountryMenuOpen(!isCountryMenuOpen)}
-                  className="hidden lg:flex items-center gap-1.5 px-2 py-1 hover:bg-gray-50 rounded transition-colors"
-                >
+                <button onClick={() => setIsCountryMenuOpen(!isCountryMenuOpen)} className="flex items-center gap-1.5 px-2 py-1 hover:bg-gray-50 rounded transition-colors">
                   <span className="text-xl">{countries[country].flag}</span>
                   <span className="text-sm font-semibold">{country}</span>
                   <FiChevronDown className="w-3 h-3" />
                 </button>
-
-                {/* Country Dropdown */}
                 {isCountryMenuOpen && (
-                  <>
-                    {/* Backdrop */}
-                    <div
-                      className="fixed inset-0 z-40"
-                      onClick={() => setIsCountryMenuOpen(false)}
-                    />
-
-                    {/* Dropdown Panel */}
-                    <div className="absolute top-full right-0 mt-2 z-50 bg-white rounded-xl shadow-2xl w-80 border border-gray-100 overflow-hidden">
-                      <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-gray-100">
-                        <h3 className="text-sm font-bold text-gray-900 mb-1">Choose your country</h3>
-                        <p className="text-xs text-gray-600">Product availability and pricing may vary</p>
-                      </div>
-
-                      <div className="p-2">
-                        {Object.values(countries).map((c) => (
-                          <button
-                            key={c.code}
-                            onClick={() => handleCountryChange(c.code)}
-                            className={`w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors ${country === c.code ? 'bg-blue-50 border border-blue-200' : ''
-                              }`}
-                          >
-                            <div className="flex items-center gap-3">
-                              <span className="text-2xl">{c.flag}</span>
-                              <div className="text-left">
-                                <div className="font-semibold text-sm text-gray-900">{c.name}</div>
-                                <div className="text-xs text-gray-500">Currency: {c.currency}</div>
-                              </div>
-                            </div>
-                            {country === c.code && (
-                              <div className="flex items-center gap-1 text-blue-600">
-                                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                </svg>
-                              </div>
-                            )}
-                          </button>
-                        ))}
-                      </div>
-
-                      <div className="p-3 bg-gray-50 border-t border-gray-100">
-                        <p className="text-xs text-gray-600 text-center">
-                          🌍 Shipping to {countries[country].name}
-                        </p>
-                      </div>
+                  <div className="absolute top-full right-0 mt-2 z-50 bg-white rounded-xl shadow-2xl w-80 border border-gray-100 overflow-hidden">
+                    <div className="p-4 bg-gray-50 border-b border-gray-100">
+                      <h3 className="text-sm font-bold text-gray-900">Choose country</h3>
                     </div>
-                  </>
+                    <div className="p-2">
+                      {Object.values(countries).map((c) => (
+                        <button key={c.code} onClick={() => handleCountryChange(c.code)} className={`w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 ${country === c.code ? 'bg-blue-50' : ''}`}>
+                          <span className="text-2xl">{c.flag}</span>
+                          <span className="font-semibold text-sm">{c.name}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
                 )}
               </div>
 
-              {/* Want to Sell Button */}
-              <Link
-                href="/become-a-seller"
-                className="hidden lg:flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg font-semibold text-sm"
-              >
+              <Link href="/become-a-seller" className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 transition-all font-semibold text-sm">
                 <FiShoppingBag className="w-4 h-4" />
                 <span>Want to Sell?</span>
               </Link>
 
-              {/* Cart */}
-              <Link
-                href="/cart"
-                className="relative p-2 hover:bg-gray-50 rounded-lg transition-colors"
-              >
+              <Link href="/cart" className="relative p-2 hover:bg-gray-50 rounded-lg">
                 <FiShoppingCart className="w-5 h-5" />
-                {cartCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                    {cartCount}
-                  </span>
-                )}
+                {cartCount > 0 && <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">{cartCount}</span>}
               </Link>
 
-              {/* Sign In / User Menu */}
               {user ? (
                 <div className="relative" ref={userMenuRef}>
-                  <button
-                    onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                    className="flex items-center gap-2 px-3 py-2 hover:bg-gray-50 rounded-lg transition-colors"
-                  >
+                  <button onClick={() => setIsUserMenuOpen(!isUserMenuOpen)} className="flex items-center gap-2 px-3 py-2 hover:bg-gray-50 rounded-lg">
                     <FiUser className="w-5 h-5" />
-                    <span className="hidden lg:inline text-sm font-semibold">{user.name}</span>
+                    <span className="text-sm font-semibold">{user.name}</span>
                     <FiChevronDown className="w-3 h-3" />
                   </button>
-
                   {isUserMenuOpen && (
                     <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-100 py-2">
-                      <Link href="/profile" className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors">
-                        <FiUser className="w-4 h-4" />
-                        <span className="text-sm font-medium">My Profile</span>
-                      </Link>
-                      <Link href="/orders" className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors">
-                        <FiGift className="w-4 h-4" />
-                        <span className="text-sm font-medium">My Orders</span>
-                      </Link>
-                      <Link href="/wishlist" className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors">
-                        <FiHeart className="w-4 h-4" />
-                        <span className="text-sm font-medium">Wishlist ({wishlistCount})</span>
-                      </Link>
-                      <hr className="my-2" />
-                      {(user.role === 'seller' || user.role === 'admin') && (
-                        <Link
-                          href={user.role === 'admin' ? '/admin/dashboard' : '/seller/dashboard'}
-                          className="flex items-center gap-3 px-4 py-2.5 hover:bg-blue-50 text-blue-600 transition-colors"
-                        >
-                          <FiZap className="w-4 h-4" />
-                          <span className="text-sm font-medium">Dashboard</span>
-                        </Link>
-                      )}
-                      <button
-                        onClick={logout}
-                        className="w-full flex items-center gap-3 px-4 py-2.5 text-red-600 hover:bg-red-50 transition-colors"
-                      >
-                        <span className="text-sm font-medium">Sign Out</span>
-                      </button>
+                      <Link href="/profile" className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 text-sm">My Profile</Link>
+                      <Link href="/orders" className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 text-sm">My Orders</Link>
+                      <button onClick={logout} className="w-full text-left px-4 py-2.5 text-red-600 hover:bg-red-50 text-sm">Sign Out</button>
                     </div>
                   )}
                 </div>
               ) : (
-                <Link
-                  href="/login"
-                  className="flex items-center gap-2 px-4 py-2 hover:bg-gray-50 rounded-lg transition-colors"
-                >
-                  <FiUser className="w-5 h-5" />
-                  <span className="hidden lg:inline text-sm font-semibold">Sign In</span>
-                </Link>
+                <Link href="/login" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-50 rounded-lg text-sm font-semibold">Sign In</Link>
               )}
+            </div>
+          </div>
+        </div>
+      </div>
 
-              {/* Mobile Menu Toggle */}
-              <button
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="lg:hidden p-2 hover:bg-gray-50 rounded-lg transition-colors"
-              >
-                {isMenuOpen ? <FiX className="w-5 h-5" /> : <FiMenu className="w-5 h-5" />}
+      {/* NEW Mobile Main Header */}
+      <div className="lg:hidden bg-white border-b border-gray-100">
+        <div className="px-4 py-3">
+          {/* Row 1: Logo and Icons */}
+          <div className="flex items-center justify-between mb-4">
+            <Link href="/" className="flex items-center">
+              <img src="/logo.png" alt="Logo" className="h-8 w-auto object-contain" />
+            </Link>
+            <div className="flex items-center gap-5">
+              <Link href="/profile" className="flex items-center justify-center w-9 h-9 rounded-full border border-gray-200">
+                <FiUser className="w-5 h-5 text-gray-700" />
+              </Link>
+              <Link href="/cart" className="relative">
+                <FiShoppingCart className="w-6 h-6 text-gray-700" />
+                {cartCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                    {cartCount}
+                  </span>
+                )}
+              </Link>
+              <button onClick={() => setIsMenuOpen(!isMenuOpen)}>
+                <FiMenu className="w-7 h-7 text-gray-700" />
               </button>
             </div>
+          </div>
+
+          {/* Row 2: Search Bar */}
+          <form onSubmit={handleSearch} className="relative mb-4">
+            <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center gap-1.5 opacity-60">
+              <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+              <div className="w-1.5 h-1.5 rounded-full bg-yellow-500"></div>
+              <div className="w-1.5 h-1.5 rounded-full bg-red-500"></div>
+            </div>
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search emox"
+              className="w-full pl-14 pr-12 py-2.5 bg-[#F0F2F5] rounded-full text-sm border-none focus:ring-1 focus:ring-blue-500 placeholder:text-gray-500 font-medium"
+            />
+            <button
+              type="submit"
+              className="absolute right-1 top-1/2 -translate-y-1/2 w-9 h-9 bg-[#003399] rounded-full flex items-center justify-center shadow-sm"
+            >
+              <FiSearch className="w-5 h-5 text-white" />
+            </button>
+          </form>
+
+          {/* Row 3: Categories Horizontal Scroll */}
+          <div className="flex items-center gap-3 overflow-x-auto no-scrollbar whitespace-nowrap py-1">
+            <div className="flex items-center gap-2 shrink-0">
+              <span className="text-sm font-bold text-gray-900">Categories</span>
+              <div className="w-px h-4 bg-gray-300"></div>
+            </div>
+            {categories.map((category) => (
+              <Link
+                key={category.name}
+                href={category.href}
+                className="text-sm font-semibold text-gray-500 hover:text-blue-600 transition-colors px-1"
+              >
+                {category.name}
+              </Link>
+            ))}
           </div>
         </div>
       </div>
@@ -600,6 +511,15 @@ export default function Header() {
           </div>
         </div>
       )}
+      <style jsx global>{`
+        .no-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .no-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
     </header>
   )
 }

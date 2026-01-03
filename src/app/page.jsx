@@ -24,6 +24,11 @@ import WhyChooseUs from '@/components/customer/WhyChooseUs'
 import FeaturedCollections from '@/components/customer/FeaturedCollections'
 import DealOfTheDay from '@/components/customer/DealOfTheDay'
 import ShopByPrice from '@/components/customer/ShopByPrice'
+import StealDeals from '@/components/customer/StealDeals'
+import CouponBanner from '@/components/customer/CouponBanner'
+import PocketFriendlyBargain from '@/components/customer/PocketFriendlyBargain'
+import DealsOfTheDay from '@/components/customer/DealsOfTheDay'
+import PromotionalCards from '@/components/customer/PromotionalCards'
 
 import { cookies } from 'next/headers'
 
@@ -60,14 +65,25 @@ export default async function HomePage() {
       {/* Hero Section - Full-width immersive banner */}
       <HeroBanner />
 
+      {/* Interactive Coupon Banner - High conversion driver */}
+      <CouponBanner />
+
       {/* Categories - Horizontal scrollable with icons */}
       <CategoryCircles />
 
-      {/* Shop by Price - Price range filters */}
-      <ShopByPrice />
-
+      {/* Pocket Friendly Bargain! - Category-based price filters */}
+      <PocketFriendlyBargain />
       {/* Today's Best Deals - Featured products */}
       <TodaysBestDeals />
+
+      {/* Steal Deals - Claimable low-price offers */}
+      <StealDeals />
+
+      {/* Deals of the Day - Price drop alerts with extra discounts */}
+      <DealsOfTheDay />
+
+      {/* Promotional Cards - Visual marketing banners */}
+      <PromotionalCards />
 
       {/* New Arrivals - Latest products */}
       <NewArrivals />
@@ -81,8 +97,7 @@ export default async function HomePage() {
       {/* Best Sellers - Popular products */}
       <BestSellers />
 
-      {/* Flash Deals - Horizontal scroll with vertical label */}
-      <FlashDealsSection />
+
 
       {/* Trending Products - Hot items */}
       <TrendingProducts />

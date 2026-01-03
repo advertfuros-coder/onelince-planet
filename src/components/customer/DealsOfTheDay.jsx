@@ -89,7 +89,7 @@ export default function TodaysBestDeals() {
 
     if (loading) {
         return (
-            <section className="py-8 bg-white overflow-hidden">
+            <section className="py-8  bg-white overflow-hidden">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="animate-pulse space-y-6">
                         <div className="h-6 bg-gray-200 rounded w-48"></div>
@@ -105,58 +105,97 @@ export default function TodaysBestDeals() {
     }
 
     return (
-        <section className="py-8 bg-white">
+        <section className="py-8 bg-gradient-to-b from-white to-red-200/40 overflow-hidden">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Header - 100% Replication of Promotional Style */}
-                <div className="flex flex-col items-center justify-center text-center mb-6">
-                    {/* Top Pill - Yellow Badge */}
-                    <div className="z-10 bg-[#FFD66B] px-5 py-1.5 rounded-full shadow-[0_2px_10px_rgba(0,0,0,0.08)] -mb-4">
-                        <span className="text-[13px] text-[#FFD66B] font-extrabold md:text-[16px]   text-black uppercase tracking-widest whitespace-nowrap">
-                            TODAY'S BEST
-                        </span>
-                    </div>
-
-                    {/* Main Title - Purple DEALS with Glow/Outline */}
-                    <div className="relative">
-                        <h2 
-                            className="text-6xl md:text-[110px] font-[1000] text-[#9281FF] uppercase tracking-tighter leading-none"
-                            style={{ 
-                                textShadow: '0 0 20px rgba(146, 129, 255, 0.2)',
-                                WebkitTextStroke: '2px #FFFFFF'
-                            }}
-                        >
-                            DEALS
-                        </h2>
+                {/* <div className="flex flex-col md:flex-row items-center justify-between mb-10 gap-8">
+                     <div className="flex items-center gap-4">
+                        <div className="relative leading-tight">
+                            <h2 
+                                className="text-4xl md:text-6xl font-[#1000] font-black italic tracking-tighter text-white"
+                                style={{ 
+                                    WebkitTextStroke: '2px #1e293b',
+                                    textShadow: `
+                                        3px 3px 0px #7c3aed,
+                                        4px 4px 0px #7c3aed,
+                                        5px 5px 0px #7c3aed
+                                    `
+                                }}
+                            >
+                                DEALS OF<br />THE DAY
+                            </h2>
+                        </div>
                         
-                        {/* Star Decorations (4-pointed) */}
-                        <div className="absolute top-2 -right-8 md:-right-16 animate-pulse">
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="#FFD66B">
-                                <path d="M12 0L13.5 10.5L24 12L13.5 13.5L12 24L10.5 13.5L0 12L10.5 10.5L12 0Z" />
-                            </svg>
-                        </div>
-                        <div className="absolute bottom-4 -left-8 md:-left-16 animate-bounce-slow opacity-80 scale-75">
-                            <svg width="28" height="28" viewBox="0 0 24 24" fill="#50E3C2">
-                                <path d="M12 0L13.5 10.5L24 12L13.5 13.5L12 24L10.5 13.5L0 12L10.5 10.5L12 0Z" />
-                            </svg>
+                         <div className="relative -rotate-12 transform hover:rotate-0 transition-transform duration-300">
+                              <div className="absolute top-0 right-0 w-3 h-3 bg-[#7c3aed] rounded-full z-10 -mr-1 -mt-1 shadow-sm"></div>
+                              <div className="bg-[#fbbf24] border-2 border-[#1e293b] rounded-lg px-2 py-1 shadow-[4px_4px_0px_#1e293b]">
+                                 <span className="text-3xl md:text-4xl font-black text-[#1e293b]">%</span>
+                             </div>
                         </div>
                     </div>
 
-                    {/* Subtitle with Chevron Circle */}
-                    <Link 
-                        href="/products"
-                        className="mt6 flex items-center gap-3 group transition-transform hover:scale-105"
-                    >
-                        <span className="text-xl md:text-[32px] font-extrabold text-[#1a1a1b] tracking-tight">
-                            For You!
-                        </span>
-                        <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-black flex items-center justify-center text-white shadow-lg transition-colors group-hover:bg-[#0066FF]">
-                            <FiChevronRight className="w-5 h-5 md:w-6 md:h-6" />
+                 
+                </div> */}
+
+                {/* Infinite Marquee Strips */}
+                <div className="relative py-4 overflow--hidden ">
+                    {/* Red Strip (20 deg) */}
+                    <div className="absolute top-1/2 left-1/2 w-[150%] -translate-x-1/2 -translate-y-1/2 rotate-[5deg] bg-[#ff0000] py-1 border-y-2 border-white/30 z-20 shadow-2xl">
+                        <div className="flex whitespace-nowrap animate-marquee">
+                            {[...Array(10)].map((_, i) => (
+                                <span key={i} className="text-white text-xl md:text-3xl font-black  uppercase tracking-tighter flex items-center shrink-0">
+                                    <span className="mx-4 italic text-sm md:text-xl font-bold">Price Drop Alert</span>
+                                    <span className="text-2xl md:text-4xl">⚠️</span>
+                                </span>
+                            ))}
+                            {[...Array(10)].map((_, i) => (
+                                <span key={i+10} className="text-white text-xl md:text-3xl font-black  uppercase tracking-tighter flex items-center shrink-0">
+                                    <span className="mx-4 italic text-sm md:text-xl font-bold">Price Drop Alert</span>
+                                    <span className="text-2xl md:text-4xl">⚠️</span>
+                                </span>
+                            ))}
                         </div>
-                    </Link>
+                    </div>
+
+                    {/* Black Strip (-20 deg) */}
+                    <div className="absolute top-1/2 left-1/2 w-[150%] -translate-x-1/2 -translate-y-1/2 -rotate-[8deg] bg-black py-1 border-y-2 border-white/10 z-10 shadow-xl opacity-90">
+                        <div className="flex whitespace-nowrap animate-marquee-reverse">
+                            {[...Array(10)].map((_, i) => (
+                                <span key={i} className="text-white text-xl md:text-3xl font-black  uppercase tracking-tighter flex items-center shrink-0">
+                                    <span className="mx-4 italic text-sm md:text-xl font-bold">Price Drop Alert</span>
+                                    <span className="text-2xl md:text-4xl">⚠️</span>
+                                </span>
+                            ))}
+                            {[...Array(10)].map((_, i) => (
+                                <span key={i+10} className="text-white text-xl md:text-3xl font-black   uppercase tracking-tighter flex items-center shrink-0">
+                                    <span className="mx-4 italic text-sm md:text-xl font-bold">Price Drop Alert</span>
+                                    <span className="text-2xl md:text-4xl">⚠️</span>
+                                </span>
+                            ))}
+                        </div>
+                    </div>
                 </div>
 
-                {/* Products Scrollable Row / Grid */}
-                <div className="flex md:grid md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-6 overflow-x-auto md:overflow-visible no-scrollbar snap-x snap-mandatory  px-4 md:mx-0 md:px-0">
+                <style jsx>{`
+                    @keyframes marquee {
+                        0% { transform: translateX(0); }
+                        100% { transform: translateX(-50%); }
+                    }
+                    @keyframes marquee-reverse {
+                        0% { transform: translateX(-50%); }
+                        100% { transform: translateX(0); }
+                    }
+                    .animate-marquee {
+                        animation: marquee 20s linear infinite;
+                    }
+                    .animate-marquee-reverse {
+                        animation: marquee-reverse 20s linear infinite;
+                    }
+                    .no-scrollbar::-webkit-scrollbar {
+                        display: none;
+                    }
+                `}</style>                {/* Products Scrollable Row / Grid */}
+                <div className="flex mt-16 md:grid md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-6 overflow-x-auto md:overflow-visible no-scrollbar snap-x snap-mandatory  px-4 md:mx-0 md:px-0">
                     {products.slice(0, 10).map((product) => (
                         <div
                             key={product._id}

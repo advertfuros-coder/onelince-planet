@@ -7,8 +7,12 @@ const OrderSchema = new mongoose.Schema(
     customer: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+      required: false, // Optional for guest orders
     },
+
+    // Guest order fields
+    isGuestOrder: { type: Boolean, default: false },
+    guestEmail: { type: String, required: false },
 
     items: [
       {

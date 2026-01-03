@@ -1,4 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100;300;400;500;600;700;800;900&display=swap");
 @import "tailwindcss";
 
 @layer base {
@@ -22,6 +21,10 @@
     --background-end-rgb: 255, 255, 255;
     --primary-accent: #000000;
     --secondary-accent: #e40000;
+  }
+
+  body {
+    @apply antialiased text-gray-900;
   }
 }
 
@@ -168,8 +171,13 @@
   .animate-spin-slow {
     animation: spin-slow 3s linear infinite;
   }
-}
 
-body {
-  font-family: "Poppins";
+  /* Utility to hide scrollbar but keep functionality */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
 }

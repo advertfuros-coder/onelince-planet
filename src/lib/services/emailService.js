@@ -147,9 +147,15 @@ class EmailService {
               </p>
 
               <center>
-                <a href="${process.env.NEXT_PUBLIC_APP_URL}/orders/${
-      order._id
-    }" class="button">
+                <a href="${
+                  order.isGuestOrder
+                    ? `${process.env.NEXT_PUBLIC_APP_URL}/track-order/${
+                        order.orderNumber
+                      }?email=${encodeURIComponent(
+                        customer.email || order.shippingAddress.email
+                      )}`
+                    : `${process.env.NEXT_PUBLIC_APP_URL}/orders/${order._id}`
+                }" class="button">
                   Track Your Order
                 </a>
               </center>
@@ -159,7 +165,11 @@ class EmailService {
               <strong>What's Next?</strong><br>
               • We'll process your order within 24 hours<br>
               • You'll receive shipping updates via WhatsApp & Email<br>
-              • Track your order anytime in your account
+              • Track your order anytime using the link above${
+                order.isGuestOrder
+                  ? "<br>• <strong>Create an account</strong> to manage all your orders easily"
+                  : ""
+              }
             </p>
 
             <p style="margin-top: 20px; color: #999; font-size: 12px;">
@@ -490,6 +500,133 @@ class EmailService {
     return await this.sendEmail({
       to: seller.email,
       subject: `🎉 New Order #${order.orderNumber} - Action Required`,
+      html,
+    });
+  }
+  /**
+   * Seller New Order Email (Alias for sendNewOrderNotificationToSeller)
+   */
+  async sendNewOrderNotificationToSeller(seller, order) {
+    return await this.sendSellerNewOrder(order, seller);
+  }
+
+  /**
+   * Admin New Order Notification
+   */
+  async notifyAdminNewOrder(order) {
+    const adminEmail = process.env.ADMIN_EMAIL || "admin@onlineplanet.com";
+
+    const itemsHtml = order.items
+      .map(
+        (item) => `
+      <tr>
+        <td style="padding: 10px; border-bottom: 1px solid #eee;">${
+          item.name
+        }</td>
+        <td style="padding: 10px; border-bottom: 1px solid #eee; text-align: center;">${
+          item.quantity
+        }</td>
+        <td style="padding: 10px; border-bottom: 1px solid #eee; text-align: right;">₹${(
+          item.price * item.quantity
+        ).toFixed(2)}</td>
+      </tr>
+    `
+      )
+      .join("");
+
+    const html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <style>
+          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { background: #dc3545; color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+          .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+          .table { width: 100%; border-collapse: collapse; }
+          .button { display: inline-block; padding: 12px 30px; background: #dc3545; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>🔔 New Order Alert!</h1>
+          </div>
+          <div class="content">
+            <h2>Order #${order.orderNumber}</h2>
+            <p><strong>Order Date:</strong> ${new Date(
+              order.createdAt
+            ).toLocaleDateString("en-IN", { dateStyle: "full" })}</p>
+            <p><strong>Customer:</strong> ${
+              order.customer?.name || order.shippingAddress.name
+            }</p>
+            <p><strong>Email:</strong> ${
+              order.customer?.email ||
+              order.guestEmail ||
+              order.shippingAddress.email
+            }</p>
+            <p><strong>Phone:</strong> ${order.shippingAddress.phone}</p>
+            <p><strong>Payment Method:</strong> ${order.payment.method.toUpperCase()}</p>
+            <p><strong>Payment Status:</strong> ${order.payment.status}</p>
+            ${
+              order.isGuestOrder
+                ? '<p style="background: #fff3cd; padding: 10px; border-radius: 5px;"><strong>⚠️ Guest Order</strong> - Customer not registered</p>'
+                : ""
+            }
+            
+            <table class="table" style="background: white; margin: 20px 0;">
+              <thead>
+                <tr style="background: #f8f9fa;">
+                  <th style="padding: 10px; text-align: left;">Product</th>
+                  <th style="padding: 10px; text-align: center;">Qty</th>
+                  <th style="padding: 10px; text-align: right;">Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${itemsHtml}
+                <tr style="font-weight: bold; background: #f8f9fa;">
+                  <td colspan="2" style="padding: 15px;">Total</td>
+                  <td style="padding: 15px; text-align: right;">₹${order.pricing.total.toFixed(
+                    2
+                  )}</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <h3>Shipping Address</h3>
+            <p>
+              ${order.shippingAddress.name}<br>
+              ${order.shippingAddress.phone}<br>
+              ${order.shippingAddress.addressLine1}<br>
+              ${
+                order.shippingAddress.addressLine2
+                  ? `${order.shippingAddress.addressLine2}<br>`
+                  : ""
+              }
+              ${order.shippingAddress.city}, ${order.shippingAddress.state} - ${
+      order.shippingAddress.pincode
+    }<br>
+              ${order.shippingAddress.country}
+            </p>
+
+            <center>
+              <a href="${process.env.NEXT_PUBLIC_APP_URL}/admin/orders/${
+      order._id
+    }" class="button">
+                View Order Details
+              </a>
+            </center>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    return await this.sendEmail({
+      to: adminEmail,
+      subject: `🔔 New Order #${
+        order.orderNumber
+      } - ${order.payment.method.toUpperCase()}`,
       html,
     });
   }

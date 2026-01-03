@@ -117,16 +117,16 @@ export default function CategoryCircles() {
   }
 
   return (
-    <section className="py-8 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="pt-8 pb-6 md:py-10 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-0">
         {/* Section Header */}
-        <div className="flex items-center justify-between mb-10">
-          <h2 className="text-xl md:text-2xl font-black text-gray-900">
+        <div className="flex items-center justify-between mb-5">
+          <h2 className="text-md md:text-2xl font-semibold text-gray-900">
             Explore Popular Categories
           </h2>
           <Link
             href="/products"
-            className="text-blue-600 hover:text-blue-700 font-bold text-sm flex items-center gap-1 transition-colors"
+            className="text-blue-600 hover:text-blue-700 font-semibold text-sm flex items-center gap-1 transition-colors"
           >
             View All
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -137,7 +137,7 @@ export default function CategoryCircles() {
 
         {/* Category Grid - Horizontal Scrollable */}
         <div className="relative">
-          <div className="flex gap-6 overflow-x-auto pb-4 scrollbar-hide snap-x snap-mandatory">
+          <div className="flex gap-3 overflow-x-auto pb-4 scrollbar-hide snap-x snap-mandatory">
             {categories.map((category, index) => (
               <Link
                 key={category.id}
@@ -145,7 +145,7 @@ export default function CategoryCircles() {
                 className="group flex flex-col items-center gap-3 flex-shrink-0 snap-start"
               >
                 {/* Icon Circle with Light Background */}
-                <div className="relative w-32 h-32 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden group-hover:shadow-xl transition-all duration-300 group-hover:scale-105">
+                <div className="relative w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden group-hover:shadow-xl transition-all duration-300 group-hover:scale-105">
                   {category.emoji ? (
                     <span className="text-5xl group-hover:scale-110 transition-transform duration-300">
                       {category.emoji}
@@ -164,7 +164,7 @@ export default function CategoryCircles() {
                 </div>
 
                 {/* Category Name */}
-                <span className="text-sm font-bold text-gray-900 text-center group-hover:text-blue-600 transition-colors duration-300 max-w-[130px]">
+                <span className="text-xs font-medium text-gray-900 text-center group-hover:text-blue-600 transition-colors duration-300 max-w-[130px]">
                   {category.name}
                 </span>
               </Link>
