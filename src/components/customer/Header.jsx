@@ -19,6 +19,7 @@ import { useAuth } from '../../lib/context/AuthContext'
 import { useCart } from '../../lib/context/CartContext'
 import { useCurrency } from '../../lib/context/CurrencyContext'
 import { useWishlist } from '../../lib/hooks/useWishlist'
+import SearchAutocomplete from './SearchAutocomplete'
 
 const categories = [
   { name: 'Electronics', href: '/category/electronics' },
@@ -253,26 +254,9 @@ export default function Header() {
             </Link>
 
             {/* Search Bar - Center */}
-            <form onSubmit={handleSearch} className="flex flex-1 max-w-2xl mx-8">
-              <div className="relative w-full">
-                <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-                  <FiSearch className="w-4 h-4 text-gray-400" />
-                </div>
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search for any product or brand"
-                  className="w-full pl-11 pr-12 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                />
-                <button
-                  type="submit"
-                  className="absolute inset-y-0 right-2 flex items-center justify-center w-8 h-8 my-auto bg-blue-600 rounded-md hover:bg-blue-700 transition-colors"
-                >
-                  <FiSearch className="w-4 h-4 text-white" />
-                </button>
-              </div>
-            </form>
+            <div className="flex flex-1 max-w-2xl mx-8">
+              <SearchAutocomplete />
+            </div>
 
             <div className="flex items-center gap-4">
               <div className="relative">
