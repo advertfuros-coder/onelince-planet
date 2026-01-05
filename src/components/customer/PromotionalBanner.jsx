@@ -53,10 +53,10 @@ export default function PromotionalBanner() {
                   <div className="w-10 h-10 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white">
                     {promo.icon}
                   </div>
-                  <span className="text-white/60 text-[10px] font-bold uppercase tracking-[0.2em]">{promo.subtitle}</span>
+                  <span className="text-white/60 text-[10px] font-semibold uppercase tracking-[0.2em]">{promo.subtitle}</span>
                 </div>
 
-                <h3 className="text-3xl md:text-4xl font-black text-white mb-4 tracking-tighter leading-none">
+                <h3 className="text-3xl md:text-4xl font-semibold text-white mb-4 tracking-tighter leading-none">
                   {promo.title}
                 </h3>
                 <p className="text-white/60 text-sm max-w-sm mb-8 leading-relaxed">
@@ -65,7 +65,7 @@ export default function PromotionalBanner() {
 
                 <Link
                   href={promo.ctaLink}
-                  className="inline-flex items-center gap-3 bg-white text-gray-900 px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all duration-500 transform group-hover:translate-x-2"
+                  className="inline-flex items-center gap-3 bg-white text-gray-900 px-8 py-4 rounded-2xl font-semibold text-xs uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all duration-500 transform group-hover:translate-x-2"
                 >
                   <span>{promo.ctaText}</span>
                   <FiArrowRight className="w-4 h-4" />

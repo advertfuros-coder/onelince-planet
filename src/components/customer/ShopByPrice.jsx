@@ -133,10 +133,10 @@ export default function ShopByPrice() {
                 <div className="text-center mb-16 space-y-4">
                     <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 border border-purple-100 rounded-full shadow-sm">
                         <FiPercent className="w-4 h-4 text-purple-600 animate-pulse" />
-                        <span className="text-sm font-bold text-purple-900 tracking-wide">PRICE MATCH GUARANTEE</span>
+                        <span className="text-sm font-semibold text-purple-900 tracking-wide">PRICE MATCH GUARANTEE</span>
                     </div>
                     
-                    <h2 className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tight">
+                    <h2 className="text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tight">
                         <span className="block text-gray-900">Find Your</span>
                         <span className="block text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600">
                             Perfect Price
@@ -173,7 +173,7 @@ export default function ShopByPrice() {
                                             <div className={`p-4 rounded-2xl bg-gradient-to-br ${range.accent} shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-500`}>
                                                 <IconComponent className="w-7 h-7 text-white" />
                                             </div>
-                                            <div className={`px-3 py-1.5 rounded-full bg-gradient-to-r ${range.accent} text-white text-xs font-bold shadow-md`}>
+                                            <div className={`px-3 py-1.5 rounded-full bg-gradient-to-r ${range.accent} text-white text-xs font-semibold shadow-md`}>
                                                 {range.savings}
                                             </div>
                                         </div>
@@ -181,10 +181,10 @@ export default function ShopByPrice() {
                                         {/* Price Display */}
                                         <div className="space-y-2">
                                             <div className="flex items-baseline gap-2">
-                                                <span className={`text-2xl font-black ${range.text}`}>{range.currency}</span>
-                                                <span className="text-4xl font-black text-gray-900 tracking-tight">{range.title}</span>
+                                                <span className={`text-2xl font-semibold ${range.text}`}>{range.currency}</span>
+                                                <span className="text-4xl font-semibold text-gray-900 tracking-tight">{range.title}</span>
                                             </div>
-                                            <p className="text-lg font-bold text-gray-700">{range.label}</p>
+                                            <p className="text-lg font-semibold text-gray-700">{range.label}</p>
                                         </div>
 
                                         {/* Stats */}
@@ -197,7 +197,7 @@ export default function ShopByPrice() {
 
                                         {/* CTA Button */}
                                         <div className={`flex items-center justify-between p-4 rounded-2xl bg-gradient-to-r ${range.accent} text-white shadow-lg group-hover:shadow-xl transition-all duration-300`}>
-                                            <span className="font-bold text-sm tracking-wide">SHOP NOW</span>
+                                            <span className="font-semibold text-sm tracking-wide">SHOP NOW</span>
                                             <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center group-hover:bg-white/30 group-hover:translate-x-1 transition-all">
                                                 <FiChevronRight className="w-4 h-4" />
                                             </div>
@@ -211,7 +211,7 @@ export default function ShopByPrice() {
 
                                 {/* Floating Badge */}
                                 <div className="absolute -top-3 -right-3 opacity-0 group-hover:opacity-100 transition-all duration-500 group-hover:scale-110">
-                                    <div className={`px-4 py-2 rounded-full bg-gradient-to-r ${range.accent} text-white text-xs font-black shadow-xl border-4 border-white`}>
+                                    <div className={`px-4 py-2 rounded-full bg-gradient-to-r ${range.accent} text-white text-xs font-semibold shadow-xl border-4 border-white`}>
                                         HOT 🔥
                                     </div>
                                 </div>
@@ -233,7 +233,7 @@ export default function ShopByPrice() {
                                 </svg>
                             </div>
                             <div className="text-left">
-                                <p className="text-sm font-bold text-gray-900">Free Shipping</p>
+                                <p className="text-sm font-semibold text-gray-900">Free Shipping</p>
                                 <p className="text-xs text-gray-600">On orders over {region.code === 'AE' ? 'AED 100' : '₹1000'}</p>
                             </div>
                         </div>
@@ -247,7 +247,7 @@ export default function ShopByPrice() {
                                 </svg>
                             </div>
                             <div className="text-left">
-                                <p className="text-sm font-bold text-gray-900">Secure Payment</p>
+                                <p className="text-sm font-semibold text-gray-900">Secure Payment</p>
                                 <p className="text-xs text-gray-600">100% protected</p>
                             </div>
                         </div>
@@ -261,7 +261,7 @@ export default function ShopByPrice() {
                                 </svg>
                             </div>
                             <div className="text-left">
-                                <p className="text-sm font-bold text-gray-900">Easy Returns</p>
+                                <p className="text-sm font-semibold text-gray-900">Easy Returns</p>
                                 <p className="text-xs text-gray-600">30-day guarantee</p>
                             </div>
                         </div>
@@ -269,7 +269,7 @@ export default function ShopByPrice() {
 
                     <Link 
                         href="/products" 
-                        className="inline-flex items-center gap-2 text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 transition-all group"
+                        className="inline-flex items-center gap-2 text-lg font-semibold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 transition-all group"
                     >
                         View All Products
                         <FiChevronRight className="w-5 h-5 text-purple-600 group-hover:translate-x-1 transition-transform" />

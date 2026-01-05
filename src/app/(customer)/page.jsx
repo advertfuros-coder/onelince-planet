@@ -54,7 +54,7 @@ export default function HomePage() {
               <div className="w-10 h-10 bg-yellow-400 rounded-lg flex items-center justify-center">
                 <FiShoppingBag className="w-6 h-6 text-gray-900" />
               </div>
-              <span className="text-2xl font-bold">Online Planet</span>
+              <span className="text-2xl font-semibold">Online Planet</span>
             </Link>
 
             {/* Delivery Location */}
@@ -95,7 +95,7 @@ export default function HomePage() {
               <Link href="/cart" className="relative p-3 bg-green-600 hover:bg-green-700 rounded-lg">
                 <FiShoppingBag className="w-6 h-6 text-white" />
                 {cart.length > 0 && (
-                  <span className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center">
+                  <span className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white text-xs font-semibold rounded-full flex items-center justify-center">
                     {cart.length}
                   </span>
                 )}
@@ -110,11 +110,11 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div>
-              <h1 className="text-5xl font-bold mb-4">
+              <h1 className="text-5xl font-semibold mb-4">
                 India's last minute app
               </h1>
               <p className="text-xl text-gray-700 mb-6">
-                Get everything delivered in <span className="font-bold text-green-600">10 minutes</span>
+                Get everything delivered in <span className="font-semibold text-green-600">10 minutes</span>
               </p>
               <div className="flex items-center space-x-4">
                 <div className="flex items-center space-x-2 px-4 py-3 bg-white rounded-lg shadow-sm">
@@ -170,7 +170,7 @@ export default function HomePage() {
       <section className="py-8">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold">Shop by category</h2>
+            <h2 className="text-2xl font-semibold">Shop by category</h2>
             <Link href="/products" className="text-green-600 font-semibold flex items-center space-x-1">
               <span>See all</span>
               <FiChevronRight />
@@ -206,7 +206,7 @@ function ProductCard({ product }) {
         <p className="text-xs text-gray-600 mb-2">{product.weight || '1 unit'}</p>
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-lg font-bold">₹{product.price}</p>
+            <p className="text-lg font-semibold">₹{product.price}</p>
             {product.mrp && (
               <p className="text-xs text-gray-500 line-through">₹{product.mrp}</p>
             )}

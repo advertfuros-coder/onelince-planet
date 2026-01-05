@@ -136,14 +136,14 @@ export default function FlashSales() {
                   <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" />
                 </svg>
               </div>
-              <h2 className="text-3xl md:text-4xl font-black text-gray-900">
+              <h2 className="text-3xl md:text-4xl font-semibold text-gray-900">
                 Flash Deals
               </h2>
             </div>
 
             {/* Countdown Timer */}
             <div className="flex items-center gap-2 bg-gray-100 px-4 py-2 rounded-xl">
-              <span className="text-sm font-bold text-gray-500 uppercase">Ends in:</span>
+              <span className="text-sm font-semibold text-gray-500 uppercase">Ends in:</span>
               <div className="flex items-center gap-1">
                 {[
                   { value: timeLeft.hours, label: 'h' },
@@ -151,10 +151,10 @@ export default function FlashSales() {
                   { value: timeLeft.seconds, label: 's' }
                 ].map((item, index) => (
                   <div key={index} className="flex items-center gap-1">
-                    <span className="bg-white text-gray-900 px-2 py-1 rounded text-lg font-bold shadow-sm min-w-[35px] text-center">
+                    <span className="bg-white text-gray-900 px-2 py-1 rounded text-lg font-semibold shadow-sm min-w-[35px] text-center">
                       {String(item.value).padStart(2, '0')}
                     </span>
-                    <span className="text-sm font-bold text-gray-400">{item.label}</span>
+                    <span className="text-sm font-semibold text-gray-400">{item.label}</span>
                   </div>
                 ))}
               </div>
@@ -231,7 +231,7 @@ export default function FlashSales() {
 
                   {/* Price */}
                   <div className="flex items-baseline gap-2">
-                    <span className="text-lg font-bold text-gray-900">
+                    <span className="text-lg font-semibold text-gray-900">
                       {formatPrice(deal.price, region)}
                     </span>
                     {deal.originalPrice && (

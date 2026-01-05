@@ -16,7 +16,7 @@ export default function Step2PersonalDetails({ formData, updateFormData, errors 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Full Name */}
                 <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
                         Full Name <span className="text-red-500">*</span>
                     </label>
                     <div className="relative">
@@ -36,7 +36,7 @@ export default function Step2PersonalDetails({ formData, updateFormData, errors 
 
                 {/* Date of Birth */}
                 <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
                         Date of Birth <span className="text-red-500">*</span>
                     </label>
                     <div className="relative">
@@ -56,7 +56,7 @@ export default function Step2PersonalDetails({ formData, updateFormData, errors 
 
             {/* Address */}
             <div className="space-y-4">
-                <label className="block text-sm font-bold text-gray-700">
+                <label className="block text-sm font-semibold text-gray-700">
                     Residential Address <span className="text-red-500">*</span>
                 </label>
 
@@ -98,7 +98,7 @@ export default function Step2PersonalDetails({ formData, updateFormData, errors 
 
             {/* Government ID Type */}
             <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Government ID Type <span className="text-red-500">*</span>
                 </label>
                 <select

@@ -264,7 +264,7 @@ export default function CategorySelector({
         return (
             <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                    <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">
+                    <label className="text-[11px] font-semibold uppercase tracking-widest text-slate-500">
                         {title}
                         {required && level === 1 && <span className="text-rose-500 ml-1">*</span>}
                     </label>
@@ -272,7 +272,7 @@ export default function CategorySelector({
                         <button
                             type="button"
                             onClick={() => handleSelect(level, null)}
-                            className="text-[9px] font-bold text-blue-600 hover:text-blue-700 uppercase tracking-wider"
+                            className="text-[9px] font-semibold text-blue-600 hover:text-blue-700 uppercase tracking-wider"
                         >
                             Clear
                         </button>
@@ -297,7 +297,7 @@ export default function CategorySelector({
                             }}
                             placeholder={isDisabled ? 'Select previous level first' : placeholder}
                             disabled={isDisabled}
-                            className={`w-full bg-slate-50/50 border border-slate-200 rounded-2xl px-5 py-3.5 pr-12 text-sm font-bold text-slate-700 placeholder-slate-300 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 outline-none transition-all ${currentSelection ? 'bg-blue-50 border-blue-200' : ''
+                            className={`w-full bg-slate-50/50 border border-slate-200 rounded-2xl px-5 py-3.5 pr-12 text-sm font-semibold text-slate-700 placeholder-slate-300 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 outline-none transition-all ${currentSelection ? 'bg-blue-50 border-blue-200' : ''
                                 }`}
                             readOnly={!!currentSelection}
                         />
@@ -319,13 +319,13 @@ export default function CategorySelector({
                                         handleSelect(level, category)
                                         setSearchTerm(prev => ({ ...prev, [levelKey]: '' }))
                                     }}
-                                    className={`w-full text-left px-5 py-3 text-sm font-bold text-slate-700 hover:bg-blue-50 transition-colors ${idx === 0 ? 'rounded-t-2xl' : ''
+                                    className={`w-full text-left px-5 py-3 text-sm font-semibold text-slate-700 hover:bg-blue-50 transition-colors ${idx === 0 ? 'rounded-t-2xl' : ''
                                         } ${idx === filteredCategories.length - 1 ? 'rounded-b-2xl' : ''} border-b last:border-b-0 border-slate-100`}
                                 >
                                     <div className="flex items-center justify-between">
                                         <span>{category.name}</span>
                                         {category.requiresApproval && (
-                                            <span className="text-[8px] font-black uppercase tracking-widest px-2 py-0.5 bg-amber-100 text-amber-700 rounded-full">
+                                            <span className="text-[8px] font-semibold uppercase tracking-widest px-2 py-0.5 bg-amber-100 text-amber-700 rounded-full">
                                                 Approval Needed
                                             </span>
                                         )}
@@ -352,7 +352,7 @@ export default function CategorySelector({
                 <div className="bg-rose-50 border border-rose-200 rounded-2xl p-4 flex items-start gap-3">
                     <Info size={20} className="text-rose-600 shrink-0 mt-0.5" />
                     <div>
-                        <p className="text-[11px] font-black uppercase tracking-widest text-rose-900 mb-1">Error Loading Categories</p>
+                        <p className="text-[11px] font-semibold uppercase tracking-widest text-rose-900 mb-1">Error Loading Categories</p>
                         <p className="text-xs text-rose-700">{error}</p>
                     </div>
                 </div>
@@ -365,8 +365,8 @@ export default function CategorySelector({
                             <ChevronRight size={20} className="text-white" />
                         </div>
                         <div>
-                            <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest">Product Category</h3>
-                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">
+                            <h3 className="text-sm font-semibold text-slate-900 uppercase tracking-widest">Product Category</h3>
+                            <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest mt-0.5">
                                 Select the most specific category for better discoverability
                             </p>
                         </div>
@@ -378,7 +378,7 @@ export default function CategorySelector({
                             type="button"
                             onClick={fetchAiSuggestions}
                             disabled={aiLoading}
-                            className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:from-purple-700 hover:to-blue-700 transition-all shadow-lg shadow-purple-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-2xl text-[10px] font-semibold uppercase tracking-widest hover:from-purple-700 hover:to-blue-700 transition-all shadow-lg shadow-purple-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             {aiLoading ? (
                                 <>
@@ -402,11 +402,11 @@ export default function CategorySelector({
                 {/* Selected Path Preview */}
                 {(selected.level1 || selected.level2 || selected.level3) && (
                     <div className="pt-6 border-t border-slate-100">
-                        <p className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-2">Selected Path:</p>
+                        <p className="text-[9px] font-semibold uppercase tracking-widest text-slate-400 mb-2">Selected Path:</p>
                         <div className="flex items-center gap-2 flex-wrap">
                             {selected.level1 && (
                                 <>
-                                    <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-lg text-xs font-bold">
+                                    <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-lg text-xs font-semibold">
                                         {selected.level1.name}
                                     </span>
                                     {selected.level2 && <ChevronRight size={14} className="text-slate-300" />}
@@ -414,21 +414,21 @@ export default function CategorySelector({
                             )}
                             {selected.level2 && (
                                 <>
-                                    <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-lg text-xs font-bold">
+                                    <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-lg text-xs font-semibold">
                                         {selected.level2.name}
                                     </span>
                                     {selected.level3 && <ChevronRight size={14} className="text-slate-300" />}
                                 </>
                             )}
                             {selected.level3 && (
-                                <span className="px-3 py-1 bg-blue-600 text-white rounded-lg text-xs font-bold shadow-sm">
+                                <span className="px-3 py-1 bg-blue-600 text-white rounded-lg text-xs font-semibold shadow-sm">
                                     {selected.level3.name} ✓
                                 </span>
                             )}
                         </div>
                         {(selected.level3 || selected.level2 || selected.level1)?.requiresApproval && (
                             <div className="mt-3 bg-amber-50 border border-amber-200 rounded-xl p-3">
-                                <p className="text-[10px] font-bold text-amber-900 uppercase tracking-wider">
+                                <p className="text-[10px] font-semibold text-amber-900 uppercase tracking-wider">
                                     ⚠️ This category requires admin approval before your product goes live.
                                 </p>
                             </div>
@@ -449,8 +449,8 @@ export default function CategorySelector({
                                         <Sparkles size={24} className="text-white" />
                                     </div>
                                     <div>
-                                        <h3 className="text-lg font-black text-slate-900 uppercase tracking-widest">AI Category Suggestions</h3>
-                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">
+                                        <h3 className="text-lg font-semibold text-slate-900 uppercase tracking-widest">AI Category Suggestions</h3>
+                                        <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest mt-0.5">
                                             Powered by Gemini 2.0 Flash
                                         </p>
                                     </div>
@@ -465,8 +465,8 @@ export default function CategorySelector({
 
                             {/* Product Being Analyzed */}
                             <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4">
-                                <p className="text-[10px] font-black uppercase tracking-widest text-blue-900 mb-2">Analyzing Product:</p>
-                                <p className="text-sm font-bold text-blue-800">{productDetails?.name}</p>
+                                <p className="text-[10px] font-semibold uppercase tracking-widest text-blue-900 mb-2">Analyzing Product:</p>
+                                <p className="text-sm font-semibold text-blue-800">{productDetails?.name}</p>
                                 {productDetails?.description && (
                                     <p className="text-xs text-blue-600 mt-1">{productDetails.description.substring(0, 100)}...</p>
                                 )}
@@ -481,7 +481,7 @@ export default function CategorySelector({
                                     >
                                         <div className="flex items-start justify-between mb-4">
                                             <div className="flex items-center gap-3">
-                                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-white ${
+                                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-semibold text-white ${
                                                     idx === 0 ? 'bg-gradient-to-br from-green-500 to-emerald-600' :
                                                     idx === 1 ? 'bg-gradient-to-br from-blue-500 to-indigo-600' :
                                                     'bg-gradient-to-br from-purple-500 to-pink-600'
@@ -489,7 +489,7 @@ export default function CategorySelector({
                                                     #{idx + 1}
                                                 </div>
                                                 <div>
-                                                    <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Confidence Score</p>
+                                                    <p className="text-[9px] font-semibold uppercase tracking-widest text-slate-400">Confidence Score</p>
                                                     <div className="flex items-center gap-2 mt-1">
                                                         <div className="w-24 h-2 bg-slate-200 rounded-full overflow-hidden">
                                                             <div 
@@ -501,14 +501,14 @@ export default function CategorySelector({
                                                                 style={{ width: `${suggestion.confidence}%` }}
                                                             />
                                                         </div>
-                                                        <span className="text-xs font-black text-slate-700">{suggestion.confidence}%</span>
+                                                        <span className="text-xs font-semibold text-slate-700">{suggestion.confidence}%</span>
                                                     </div>
                                                 </div>
                                             </div>
 
                                             <button
                                                 onClick={() => applySuggestion(suggestion)}
-                                                className="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:from-blue-700 hover:to-purple-700 transition-all shadow-md group-hover:scale-105"
+                                                className="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl text-[10px] font-semibold uppercase tracking-widest hover:from-blue-700 hover:to-purple-700 transition-all shadow-md group-hover:scale-105"
                                             >
                                                 <Check size={12} className="inline mr-1" />
                                                 Apply
@@ -520,7 +520,7 @@ export default function CategorySelector({
                                             <div className="flex items-center gap-2 flex-wrap">
                                                 {suggestion.hierarchy.level1 && (
                                                     <>
-                                                        <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-lg text-xs font-bold">
+                                                        <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-lg text-xs font-semibold">
                                                             {suggestion.hierarchy.level1}
                                                         </span>
                                                         {suggestion.hierarchy.level2 && <ChevronRight size={14} className="text-slate-300" />}
@@ -528,14 +528,14 @@ export default function CategorySelector({
                                                 )}
                                                 {suggestion.hierarchy.level2 && (
                                                     <>
-                                                        <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-lg text-xs font-bold">
+                                                        <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-lg text-xs font-semibold">
                                                             {suggestion.hierarchy.level2}
                                                         </span>
                                                         {suggestion.hierarchy.level3 && <ChevronRight size={14} className="text-slate-300" />}
                                                     </>
                                                 )}
                                                 {suggestion.hierarchy.level3 && (
-                                                    <span className="px-3 py-1 bg-blue-600 text-white rounded-lg text-xs font-bold">
+                                                    <span className="px-3 py-1 bg-blue-600 text-white rounded-lg text-xs font-semibold">
                                                         {suggestion.hierarchy.level3}
                                                     </span>
                                                 )}
@@ -544,7 +544,7 @@ export default function CategorySelector({
 
                                         {/* Reasoning */}
                                         <div className="bg-white/50 rounded-xl p-3 border border-slate-100">
-                                            <p className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">AI Reasoning:</p>
+                                            <p className="text-[9px] font-semibold uppercase tracking-widest text-slate-400 mb-1">AI Reasoning:</p>
                                             <p className="text-xs text-slate-600 leading-relaxed">{suggestion.reason}</p>
                                         </div>
 
@@ -552,7 +552,7 @@ export default function CategorySelector({
                                         {suggestion.requiresApproval && (
                                             <div className="mt-3 bg-amber-50 border border-amber-200 rounded-xl p-2 flex items-center gap-2">
                                                 <Info size={14} className="text-amber-600 shrink-0" />
-                                                <p className="text-[9px] font-bold text-amber-900 uppercase tracking-wider">
+                                                <p className="text-[9px] font-semibold text-amber-900 uppercase tracking-wider">
                                                     Requires admin approval
                                                 </p>
                                             </div>
@@ -563,7 +563,7 @@ export default function CategorySelector({
 
                             {/* Footer */}
                             <div className="pt-6 border-t border-slate-100 text-center">
-                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                                <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">
                                     💡 Tip: More specific categories lead to better product discoverability
                                 </p>
                             </div>

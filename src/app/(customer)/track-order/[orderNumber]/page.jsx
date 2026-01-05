@@ -106,11 +106,11 @@ export default function TrackOrderDetailsPage() {
                     <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
                         <FiAlertCircle className="w-8 h-8 text-red-600" />
                     </div>
-                    <h2 className="text-2xl font-bold text-gray-900 mb-2">Order Not Found</h2>
+                    <h2 className="text-2xl font-semibold text-gray-900 mb-2">Order Not Found</h2>
                     <p className="text-gray-600 mb-6">{error}</p>
                     <button
                         onClick={() => router.push('/track-order')}
-                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition-all"
+                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition-all"
                     >
                         Try Again
                     </button>
@@ -140,7 +140,7 @@ export default function TrackOrderDetailsPage() {
                                 })}
                             </p>
                         </div>
-                        <div className={`px-4 py-2 rounded-full border-2 font-bold ${getStatusColor(order.status)}`}>
+                        <div className={`px-4 py-2 rounded-full border-2 font-semibold ${getStatusColor(order.status)}`}>
                             {order.status.toUpperCase().replace('_', ' ')}
                         </div>
                     </div>
@@ -148,7 +148,7 @@ export default function TrackOrderDetailsPage() {
 
                 {/* Order Timeline */}
                 <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
-                    <h2 className="text-xl font-bold text-gray-900 mb-6">Order Timeline</h2>
+                    <h2 className="text-xl font-semibold text-gray-900 mb-6">Order Timeline</h2>
                     <div className="space-y-4">
                         {order.timeline?.map((event, index) => (
                             <div key={index} className="flex items-start gap-4">
@@ -171,7 +171,7 @@ export default function TrackOrderDetailsPage() {
 
                 {/* Order Items */}
                 <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
-                    <h2 className="text-xl font-bold text-gray-900 mb-4">Order Items</h2>
+                    <h2 className="text-xl font-semibold text-gray-900 mb-4">Order Items</h2>
                     <div className="space-y-4">
                         {order.items?.map((item, index) => (
                             <div key={index} className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl">
@@ -183,7 +183,7 @@ export default function TrackOrderDetailsPage() {
                                     <p className="text-sm text-gray-600">Quantity: {item.quantity}</p>
                                 </div>
                                 <div className="text-right">
-                                    <Price amount={item.price * item.quantity} className="font-bold text-gray-900" />
+                                    <Price amount={item.price * item.quantity} className="font-semibold text-gray-900" />
                                 </div>
                             </div>
                         ))}
@@ -192,7 +192,7 @@ export default function TrackOrderDetailsPage() {
 
                 {/* Shipping Address */}
                 <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
-                    <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
                         <FiMapPin className="w-5 h-5" />
                         Shipping Address
                     </h2>
@@ -215,7 +215,7 @@ export default function TrackOrderDetailsPage() {
 
                 {/* Order Summary */}
                 <div className="bg-white rounded-2xl shadow-lg p-6">
-                    <h2 className="text-xl font-bold text-gray-900 mb-4">Order Summary</h2>
+                    <h2 className="text-xl font-semibold text-gray-900 mb-4">Order Summary</h2>
                     <div className="space-y-3">
                         <div className="flex justify-between text-gray-700">
                             <span>Subtotal</span>
@@ -235,7 +235,7 @@ export default function TrackOrderDetailsPage() {
                                 <span>-<Price amount={order.pricing.discount} /></span>
                             </div>
                         )}
-                        <div className="border-t-2 border-gray-200 pt-3 flex justify-between text-xl font-bold text-gray-900">
+                        <div className="border-t-2 border-gray-200 pt-3 flex justify-between text-xl font-semibold text-gray-900">
                             <span>Total</span>
                             <Price amount={order.pricing.total} />
                         </div>
@@ -254,13 +254,13 @@ export default function TrackOrderDetailsPage() {
                 <div className="mt-6 flex gap-4">
                     <button
                         onClick={() => router.push('/track-order')}
-                        className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 rounded-xl transition-all"
+                        className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-3 rounded-xl transition-all"
                     >
                         Track Another Order
                     </button>
                     <button
                         onClick={() => router.push('/')}
-                        className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition-all"
+                        className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition-all"
                     >
                         Continue Shopping
                     </button>

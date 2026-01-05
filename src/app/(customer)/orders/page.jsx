@@ -57,7 +57,7 @@ export default function OrdersPage() {
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center p-8 bg-white rounded-2xl shadow-lg max-w-md">
           <FiPackage className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Login Required</h2>
+          <h2 className="text-2xl font-semibold text-gray-900 mb-2">Login Required</h2>
           <p className="text-gray-600 mb-6">Please login to view your orders.</p>
           <Link href="/login">
             <button className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold">
@@ -100,7 +100,7 @@ export default function OrdersPage() {
             <div className="flex justify-between items-center p-6 border-b border-gray-200">
               <div>
                 <div className="text-sm text-gray-500">Order Number</div>
-                <div className="font-bold text-lg text-gray-900">{order.orderNumber || order._id.slice(-8).toUpperCase()}</div>
+                <div className="font-semibold text-lg text-gray-900">{order.orderNumber || order._id.slice(-8).toUpperCase()}</div>
               </div>
               <div className="hidden md:block">
                 <div className="text-sm text-gray-500">Order Date</div>
@@ -108,10 +108,10 @@ export default function OrdersPage() {
               </div>
               <div className="hidden md:block">
                 <div className="text-sm text-gray-500">Total</div>
-                <div className="font-bold text-gray-900">{formatPrice(order.pricing?.total)}</div>
+                <div className="font-semibold text-gray-900">{formatPrice(order.pricing?.total)}</div>
               </div>
               <div>
-                <span className={`flex items-center space-x-2 px-4 py-2 font-bold rounded-full border-2 capitalize ${getStatusColor(order.status)}`}>
+                <span className={`flex items-center space-x-2 px-4 py-2 font-semibold rounded-full border-2 capitalize ${getStatusColor(order.status)}`}>
                   {getStatusIcon(order.status)}
                   <span>{order.status}</span>
                 </span>

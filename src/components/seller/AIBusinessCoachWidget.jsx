@@ -80,7 +80,7 @@ export default function AIBusinessCoachWidget() {
                             <FiCpu className="w-6 h-6 text-white" />
                         </div>
                         <div>
-                            <h3 className="text-lg font-bold text-gray-900">AI Business Coach</h3>
+                            <h3 className="text-lg font-semibold text-gray-900">AI Business Coach</h3>
                             <p className="text-sm text-gray-600">Get personalized insights</p>
                         </div>
                     </div>
@@ -106,7 +106,7 @@ export default function AIBusinessCoachWidget() {
                         <FiAlertCircle className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                        <h3 className="text-lg font-bold text-gray-900">AI Setup Required</h3>
+                        <h3 className="text-lg font-semibold text-gray-900">AI Setup Required</h3>
                         <p className="text-sm text-gray-600">Configure your API key to enable AI features</p>
                     </div>
                 </div>
@@ -158,7 +158,7 @@ export default function AIBusinessCoachWidget() {
                         <FiCpu className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                        <h3 className="text-lg font-bold text-gray-900">AI Business Coach</h3>
+                        <h3 className="text-lg font-semibold text-gray-900">AI Business Coach</h3>
                         <p className="text-sm text-gray-600">Your personal AI advisor</p>
                     </div>
                 </div>

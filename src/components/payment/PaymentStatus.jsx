@@ -47,7 +47,7 @@ export default function PaymentStatus({ status, order, message }) {
                         <div className={`inline-flex items-center justify-center w-20 h-20 rounded-full ${config.bgColor} mb-4`}>
                             <span className="text-4xl">{config.icon}</span>
                         </div>
-                        <h2 className={`text-2xl font-bold ${config.textColor}`}>{config.title}</h2>
+                        <h2 className={`text-2xl font-semibold ${config.textColor}`}>{config.title}</h2>
                     </div>
 
                     {/* Message */}

@@ -178,7 +178,7 @@ export default function TodaysBestDeals() {
                         <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-gray-100 flex items-center justify-center">
                             <FiStar className="w-8 h-8 text-gray-400" />
                         </div>
-                        <h3 className="text-lg font-bold text-gray-900 mb-1">No Deals Available</h3>
+                        <h3 className="text-lg font-semibold text-gray-900 mb-1">No Deals Available</h3>
                         <p className="text-sm text-gray-600">Check back soon for amazing deals!</p>
                     </div>
                 )}

@@ -83,16 +83,16 @@ export default function SellerCustomers() {
               <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/20">
                 <Target size={18} />
               </div>
-              <span className="text-[10px] font-black text-blue-600 uppercase tracking-widest bg-blue-50 px-3 py-1 rounded-full">Retention Hub</span>
+              <span className="text-[10px] font-semibold text-blue-600 uppercase tracking-widest bg-blue-50 px-3 py-1 rounded-full">Retention Hub</span>
             </div>
-            <h1 className="text-4xl font-black text-gray-900 tracking-tighter flex items-center gap-4">
+            <h1 className="text-4xl font-semibold text-gray-900 tracking-tighter flex items-center gap-4">
               Customer Intelligence
             </h1>
             <p className="text-gray-500 font-medium mt-1">Manage relationships and analyze customer lifetime value (LTV)</p>
           </div>
 
           <div className="flex items-center gap-3">
-            <button className="flex items-center gap-2 px-5 py-3 bg-white border border-gray-100 rounded-2xl font-black text-gray-700 hover:bg-gray-50 hover:shadow-md transition-all active:scale-95">
+            <button className="flex items-center gap-2 px-5 py-3 bg-white border border-gray-100 rounded-2xl font-semibold text-gray-700 hover:bg-gray-50 hover:shadow-md transition-all active:scale-95">
               <Download size={18} />
               <span>Export CRM</span>
             </button>
@@ -147,12 +147,12 @@ export default function SellerCustomers() {
               placeholder="Search by name, email or mobile..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-2 focus:ring-blue-100 transition-all"
+              className="w-full pl-12 pr-4 py-3 bg-gray-50 border-none rounded-2xl text-sm font-semibold focus:ring-2 focus:ring-blue-100 transition-all"
             />
           </div>
 
           <div className="flex items-center gap-2">
-            <button className="flex items-center gap-2 px-5 py-3 border border-gray-100 rounded-2xl font-black text-gray-600 hover:bg-gray-50 shadow-sm transition-all uppercase text-[10px] tracking-widest">
+            <button className="flex items-center gap-2 px-5 py-3 border border-gray-100 rounded-2xl font-semibold text-gray-600 hover:bg-gray-50 shadow-sm transition-all uppercase text-[10px] tracking-widest">
               <Filter size={16} />
               <span>Segments</span>
             </button>
@@ -163,14 +163,14 @@ export default function SellerCustomers() {
         {loading ? (
           <div className="flex flex-col items-center justify-center py-32 space-y-4">
             <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
-            <p className="text-gray-400 font-black uppercase tracking-widest text-[10px]">Filtering Audience...</p>
+            <p className="text-gray-400 font-semibold uppercase tracking-widest text-[10px]">Filtering Audience...</p>
           </div>
         ) : filteredCustomers.length === 0 ? (
           <div className="bg-white rounded-[2.5rem] p-32 text-center border border-gray-100/50 shadow-sm">
             <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-6">
               <User className="w-10 h-10 text-blue-300" />
             </div>
-            <h3 className="text-2xl font-black text-gray-900 tracking-tighter">No profiles detected</h3>
+            <h3 className="text-2xl font-semibold text-gray-900 tracking-tighter">No profiles detected</h3>
             <p className="text-gray-500 font-medium mt-2 max-w-sm mx-auto">Profiles will automatically populate as customers interact with your storefront.</p>
           </div>
         ) : (
@@ -207,10 +207,10 @@ function CustomerStatCard({ label, value, icon: Icon, color, delay, percent }) {
         </div>
         <div className="flex-1">
           <div className="flex items-center justify-between mb-1">
-            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">{label}</p>
-            {percent && <span className="text-[9px] font-black p-1 bg-emerald-50 text-emerald-600 rounded">{percent}</span>}
+            <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest leading-none">{label}</p>
+            {percent && <span className="text-[9px] font-semibold p-1 bg-emerald-50 text-emerald-600 rounded">{percent}</span>}
           </div>
-          <p className="text-2xl font-black text-gray-900 tracking-tight">{value || 0}</p>
+          <p className="text-2xl font-semibold text-gray-900 tracking-tight">{value || 0}</p>
         </div>
       </div>
     </motion.div>
@@ -229,12 +229,12 @@ function CustomerProfileCard({ customer, delay }) {
 
       <div className="flex items-start justify-between mb-8">
         <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-[1.5rem] bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white font-black text-xl shadow-lg shadow-blue-500/20 group-hover:rotate-6 transition-transform">
+          <div className="w-16 h-16 rounded-[1.5rem] bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white font-semibold text-xl shadow-lg shadow-blue-500/20 group-hover:rotate-6 transition-transform">
             {customer.name?.charAt(0).toUpperCase() || 'U'}
           </div>
           <div>
-            <h3 className="text-lg font-black text-gray-900 tracking-tight leading-none mb-2">{customer.name}</h3>
-            <div className={`inline-flex items-center px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-tight ${customer.status === 'active' ? 'bg-emerald-50 text-emerald-600' : 'bg-gray-100 text-gray-400'
+            <h3 className="text-lg font-semibold text-gray-900 tracking-tight leading-none mb-2">{customer.name}</h3>
+            <div className={`inline-flex items-center px-3 py-1 rounded-full text-[9px] font-semibold uppercase tracking-tight ${customer.status === 'active' ? 'bg-emerald-50 text-emerald-600' : 'bg-gray-100 text-gray-400'
               }`}>
               {customer.status || 'Active Portal'}
             </div>
@@ -246,15 +246,15 @@ function CustomerProfileCard({ customer, delay }) {
       </div>
 
       <div className="space-y-4 mb-8">
-        <div className="flex items-center gap-3 text-xs font-bold text-gray-500">
+        <div className="flex items-center gap-3 text-xs font-semibold text-gray-500">
           <div className="w-8 h-8 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400"><Mail size={14} /></div>
           <span className="truncate">{customer.email}</span>
         </div>
-        <div className="flex items-center gap-3 text-xs font-bold text-gray-500">
+        <div className="flex items-center gap-3 text-xs font-semibold text-gray-500">
           <div className="w-8 h-8 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400"><Phone size={14} /></div>
           <span>{customer.phone || 'No direct dial'}</span>
         </div>
-        <div className="flex items-center gap-3 text-xs font-bold text-gray-500">
+        <div className="flex items-center gap-3 text-xs font-semibold text-gray-500">
           <div className="w-8 h-8 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400"><MapPin size={14} /></div>
           <span className="truncate">{customer.location || 'Distributed Global'}</span>
         </div>
@@ -262,25 +262,25 @@ function CustomerProfileCard({ customer, delay }) {
 
       <div className="grid grid-cols-2 gap-4 border-t border-gray-50 pt-8 mt-2">
         <div>
-          <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
+          <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
             <ShoppingBag size={10} /> Volume
           </p>
-          <p className="text-xl font-black text-gray-900">{customer.totalOrders} <span className="text-[10px] text-gray-300 uppercase ml-1">Orders</span></p>
+          <p className="text-xl font-semibold text-gray-900">{customer.totalOrders} <span className="text-[10px] text-gray-300 uppercase ml-1">Orders</span></p>
         </div>
         <div className="text-right">
-          <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1.5 flex items-center justify-end gap-1.5">
+          <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-widest mb-1.5 flex items-center justify-end gap-1.5">
             Revenue <CreditCard size={10} />
           </p>
-          <p className="text-xl font-black text-blue-600 font-mono tracking-tighter">{formatPrice(customer.totalSpent)}</p>
+          <p className="text-xl font-semibold text-blue-600 font-mono tracking-tighter">{formatPrice(customer.totalSpent)}</p>
         </div>
       </div>
 
       <div className="mt-8 flex gap-3">
-        <button className="flex-1 py-3.5 bg-gray-50 text-gray-900 rounded-[1.2rem] text-[10px] font-black uppercase tracking-widest hover:bg-gray-100 transition-all flex items-center justify-center gap-2">
+        <button className="flex-1 py-3.5 bg-gray-50 text-gray-900 rounded-[1.2rem] text-[10px] font-semibold uppercase tracking-widest hover:bg-gray-100 transition-all flex items-center justify-center gap-2">
           <Mail size={14} />
           Briefing
         </button>
-        <button className="flex-1 py-3.5 bg-blue-600 text-white rounded-[1.2rem] text-[10px] font-black uppercase tracking-widest hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/10 active:scale-95 flex items-center justify-center gap-2">
+        <button className="flex-1 py-3.5 bg-blue-600 text-white rounded-[1.2rem] text-[10px] font-semibold uppercase tracking-widest hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/10 active:scale-95 flex items-center justify-center gap-2">
           Profiles
           <ChevronRight size={14} />
         </button>

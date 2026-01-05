@@ -112,7 +112,7 @@ export default function TodaysBestDeals() {
                      <div className="flex items-center gap-4">
                         <div className="relative leading-tight">
                             <h2 
-                                className="text-4xl md:text-6xl font-[#1000] font-black italic tracking-tighter text-white"
+                                className="text-4xl md:text-6xl font-[#1000] font-semibold italic tracking-tighter text-white"
                                 style={{ 
                                     WebkitTextStroke: '2px #1e293b',
                                     textShadow: `
@@ -129,7 +129,7 @@ export default function TodaysBestDeals() {
                          <div className="relative -rotate-12 transform hover:rotate-0 transition-transform duration-300">
                               <div className="absolute top-0 right-0 w-3 h-3 bg-[#7c3aed] rounded-full z-10 -mr-1 -mt-1 shadow-sm"></div>
                               <div className="bg-[#fbbf24] border-2 border-[#1e293b] rounded-lg px-2 py-1 shadow-[4px_4px_0px_#1e293b]">
-                                 <span className="text-3xl md:text-4xl font-black text-[#1e293b]">%</span>
+                                 <span className="text-3xl md:text-4xl font-semibold text-[#1e293b]">%</span>
                              </div>
                         </div>
                     </div>
@@ -143,14 +143,14 @@ export default function TodaysBestDeals() {
                     <div className="absolute top-1/2 left-1/2 w-[150%] -translate-x-1/2 -translate-y-1/2 rotate-[5deg] bg-[#ff0000] py-1 border-y-2 border-white/30 z-20 shadow-2xl">
                         <div className="flex whitespace-nowrap animate-marquee">
                             {[...Array(10)].map((_, i) => (
-                                <span key={i} className="text-white text-xl md:text-3xl font-black  uppercase tracking-tighter flex items-center shrink-0">
-                                    <span className="mx-4 italic text-sm md:text-xl font-bold">Price Drop Alert</span>
+                                <span key={i} className="text-white text-xl md:text-3xl font-semibold  uppercase tracking-tighter flex items-center shrink-0">
+                                    <span className="mx-4 italic text-sm md:text-xl font-semibold">Price Drop Alert</span>
                                     <span className="text-2xl md:text-4xl">⚠️</span>
                                 </span>
                             ))}
                             {[...Array(10)].map((_, i) => (
-                                <span key={i+10} className="text-white text-xl md:text-3xl font-black  uppercase tracking-tighter flex items-center shrink-0">
-                                    <span className="mx-4 italic text-sm md:text-xl font-bold">Price Drop Alert</span>
+                                <span key={i+10} className="text-white text-xl md:text-3xl font-semibold  uppercase tracking-tighter flex items-center shrink-0">
+                                    <span className="mx-4 italic text-sm md:text-xl font-semibold">Price Drop Alert</span>
                                     <span className="text-2xl md:text-4xl">⚠️</span>
                                 </span>
                             ))}
@@ -161,14 +161,14 @@ export default function TodaysBestDeals() {
                     <div className="absolute top-1/2 left-1/2 w-[150%] -translate-x-1/2 -translate-y-1/2 -rotate-[8deg] bg-black py-1 border-y-2 border-white/10 z-10 shadow-xl opacity-90">
                         <div className="flex whitespace-nowrap animate-marquee-reverse">
                             {[...Array(10)].map((_, i) => (
-                                <span key={i} className="text-white text-xl md:text-3xl font-black  uppercase tracking-tighter flex items-center shrink-0">
-                                    <span className="mx-4 italic text-sm md:text-xl font-bold">Price Drop Alert</span>
+                                <span key={i} className="text-white text-xl md:text-3xl font-semibold  uppercase tracking-tighter flex items-center shrink-0">
+                                    <span className="mx-4 italic text-sm md:text-xl font-semibold">Price Drop Alert</span>
                                     <span className="text-2xl md:text-4xl">⚠️</span>
                                 </span>
                             ))}
                             {[...Array(10)].map((_, i) => (
-                                <span key={i+10} className="text-white text-xl md:text-3xl font-black   uppercase tracking-tighter flex items-center shrink-0">
-                                    <span className="mx-4 italic text-sm md:text-xl font-bold">Price Drop Alert</span>
+                                <span key={i+10} className="text-white text-xl md:text-3xl font-semibold   uppercase tracking-tighter flex items-center shrink-0">
+                                    <span className="mx-4 italic text-sm md:text-xl font-semibold">Price Drop Alert</span>
                                     <span className="text-2xl md:text-4xl">⚠️</span>
                                 </span>
                             ))}
@@ -217,7 +217,7 @@ export default function TodaysBestDeals() {
                         <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-gray-100 flex items-center justify-center">
                             <FiStar className="w-8 h-8 text-gray-400" />
                         </div>
-                        <h3 className="text-lg font-bold text-gray-900 mb-1">No Deals Available</h3>
+                        <h3 className="text-lg font-semibold text-gray-900 mb-1">No Deals Available</h3>
                         <p className="text-sm text-gray-600">Check back soon for amazing deals!</p>
                     </div>
                 )}

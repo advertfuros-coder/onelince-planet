@@ -325,7 +325,7 @@ function ProductsContent() {
                             >
                                 {/* Header */}
                                 <div className="flex items-center justify-between p-4 border-b border-gray-200">
-                                    <h2 className="text-lg font-bold text-gray-900">Sort & Filter</h2>
+                                    <h2 className="text-lg font-semibold text-gray-900">Sort & Filter</h2>
                                     <button
                                         onClick={() => setShowMobileFilters(false)}
                                         className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
@@ -339,7 +339,7 @@ function ProductsContent() {
                                     {/* Left Column - Sort */}
                                     <div className="w-2/5 border-r border-gray-200 overflow-y-auto">
                                         <div className="p-4">
-                                            <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Sort By</h3>
+                                            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Sort By</h3>
                                             <div className="space-y-1">
                                                 {[
                                                     { label: 'Relevance', value: 'relevance:desc' },
@@ -373,7 +373,7 @@ function ProductsContent() {
                                     {/* Right Column - Filters */}
                                     <div className="flex-1 overflow-y-auto">
                                         <div className="p-4">
-                                            <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Filters</h3>
+                                            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Filters</h3>
                                             <ProductFilters filters={filters} onFiltersChange={setFilters} />
                                         </div>
                                     </div>

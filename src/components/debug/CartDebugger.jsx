@@ -27,7 +27,7 @@ export function CartDebugger() {
 
     return (
         <div className="fixed bottom-4 right-4 bg-white p-4 rounded-lg shadow-lg border-2 border-red-500 z-50">
-            <h3 className="font-bold text-red-600 mb-2">Debug Tools</h3>
+            <h3 className="font-semibold text-red-600 mb-2">Debug Tools</h3>
             <div className="flex flex-col gap-2">
                 <button
                     onClick={showCartData}

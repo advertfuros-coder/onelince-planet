@@ -106,7 +106,7 @@ export default function WarehouseDetailsPage() {
         return (
             <div className="flex flex-col items-center justify-center min-h-screen space-y-4">
                 <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin" />
-                <p className="text-gray-400 font-black uppercase tracking-widest text-[10px]">Synchronizing Terminal Data...</p>
+                <p className="text-gray-400 font-semibold uppercase tracking-widest text-[10px]">Synchronizing Terminal Data...</p>
             </div>
         )
     }
@@ -142,12 +142,12 @@ export default function WarehouseDetailsPage() {
                         </Link>
                         <div>
                             <div className="flex items-center gap-3 mb-1">
-                                <h1 className="text-3xl font-black text-gray-900 tracking-tighter uppercase">{warehouse.name}</h1>
-                                <span className="px-3 py-1 bg-indigo-50 text-indigo-600 rounded-lg text-[10px] font-black uppercase tracking-widest border border-indigo-100">
+                                <h1 className="text-3xl font-semibold text-gray-900 tracking-tighter uppercase">{warehouse.name}</h1>
+                                <span className="px-3 py-1 bg-indigo-50 text-indigo-600 rounded-lg text-[10px] font-semibold uppercase tracking-widest border border-indigo-100">
                                     {warehouse.code}
                                 </span>
                             </div>
-                            <div className="flex items-center gap-4 text-gray-500 text-xs font-bold">
+                            <div className="flex items-center gap-4 text-gray-500 text-xs font-semibold">
                                 <div className="flex items-center gap-1.5">
                                     <MapPin size={14} className="text-indigo-400" />
                                     {warehouse.address?.city}, {warehouse.address?.state}
@@ -165,13 +165,13 @@ export default function WarehouseDetailsPage() {
                             <>
                                 <button
                                     onClick={() => setIsEditing(false)}
-                                    className="px-6 py-3 border border-gray-200 text-gray-500 rounded-xl font-black uppercase text-[10px] tracking-widest hover:bg-gray-50 transition-all"
+                                    className="px-6 py-3 border border-gray-200 text-gray-500 rounded-xl font-semibold uppercase text-[10px] tracking-widest hover:bg-gray-50 transition-all"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     onClick={handleUpdate}
-                                    className="px-6 py-3 bg-emerald-500 text-white rounded-xl font-black uppercase text-[10px] tracking-widest hover:bg-emerald-600 shadow-lg shadow-emerald-500/20 transition-all flex items-center gap-2"
+                                    className="px-6 py-3 bg-emerald-500 text-white rounded-xl font-semibold uppercase text-[10px] tracking-widest hover:bg-emerald-600 shadow-lg shadow-emerald-500/20 transition-all flex items-center gap-2"
                                 >
                                     <Save size={16} /> Save Changes
                                 </button>
@@ -180,13 +180,13 @@ export default function WarehouseDetailsPage() {
                             <>
                                 <button
                                     onClick={() => handleDelete()}
-                                    className="px-5 py-3 bg-rose-50 text-rose-500 rounded-xl font-black uppercase text-[10px] tracking-widest hover:bg-rose-100 transition-all"
+                                    className="px-5 py-3 bg-rose-50 text-rose-500 rounded-xl font-semibold uppercase text-[10px] tracking-widest hover:bg-rose-100 transition-all"
                                 >
                                     <Trash2 size={18} />
                                 </button>
                                 <button
                                     onClick={() => setIsEditing(true)}
-                                    className="px-6 py-3 bg-white border border-gray-100 text-gray-600 rounded-xl font-black uppercase text-[10px] tracking-widest hover:text-indigo-600 hover:shadow-md transition-all flex items-center gap-2"
+                                    className="px-6 py-3 bg-white border border-gray-100 text-gray-600 rounded-xl font-semibold uppercase text-[10px] tracking-widest hover:text-indigo-600 hover:shadow-md transition-all flex items-center gap-2"
                                 >
                                     <Edit2 size={16} /> Edit Configuration
                                 </button>
@@ -204,7 +204,7 @@ export default function WarehouseDetailsPage() {
                             exit={{ opacity: 0, height: 0 }}
                             className="bg-white rounded-[2rem] p-8 border border-indigo-100 shadow-xl overflow-hidden"
                         >
-                            <h3 className="text-sm font-black text-indigo-900 uppercase tracking-widest mb-6">Terminal Calibration</h3>
+                            <h3 className="text-sm font-semibold text-indigo-900 uppercase tracking-widest mb-6">Terminal Calibration</h3>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 <FormInput label="Terminal Name" value={editedData.name} onChange={v => setEditedData({ ...editedData, name: v })} />
                                 <FormInput label="City Node" value={editedData.address?.city} onChange={v => setEditedData({ ...editedData, address: { ...editedData.address, city: v } })} />
@@ -220,7 +220,7 @@ export default function WarehouseDetailsPage() {
                     <div className="xl:col-span-1 space-y-6">
                         {/* Capacity Card */}
                         <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100/50 relative overflow-hidden">
-                            <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest mb-2">Storage Density</h3>
+                            <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-widest mb-2">Storage Density</h3>
                             <div className="h-[200px] relative">
                                 <ResponsiveContainer width="100%" height="100%">
                                     <PieChart>
@@ -242,18 +242,18 @@ export default function WarehouseDetailsPage() {
                                     </PieChart>
                                 </ResponsiveContainer>
                                 <div className="absolute inset-0 flex items-center justify-center flex-col pointer-events-none">
-                                    <span className="text-3xl font-black text-gray-900">{capacityPercent.toFixed(0)}%</span>
-                                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Occupied</span>
+                                    <span className="text-3xl font-semibold text-gray-900">{capacityPercent.toFixed(0)}%</span>
+                                    <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Occupied</span>
                                 </div>
                             </div>
                             <div className="grid grid-cols-2 gap-4 mt-4">
                                 <div className="text-center p-4 bg-indigo-50 rounded-2xl">
-                                    <p className="text-[10px] font-black text-indigo-400 uppercase tracking-widest">Total Units</p>
-                                    <p className="text-xl font-black text-indigo-900">{capacityUsed.toLocaleString()}</p>
+                                    <p className="text-[10px] font-semibold text-indigo-400 uppercase tracking-widest">Total Units</p>
+                                    <p className="text-xl font-semibold text-indigo-900">{capacityUsed.toLocaleString()}</p>
                                 </div>
                                 <div className="text-center p-4 bg-gray-50 rounded-2xl">
-                                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Available</p>
-                                    <p className="text-xl font-black text-gray-900">{(capacityTotal - capacityUsed).toLocaleString()}</p>
+                                    <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Available</p>
+                                    <p className="text-xl font-semibold text-gray-900">{(capacityTotal - capacityUsed).toLocaleString()}</p>
                                 </div>
                             </div>
                         </div>
@@ -261,14 +261,14 @@ export default function WarehouseDetailsPage() {
                         {/* Contact Info */}
                         <div className="bg-white rounded-[2rem] p-8 shadow-sm border border-gray-100/50 space-y-6">
                             <div>
-                                <h3 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">Node Coordinates</h3>
+                                <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-4">Node Coordinates</h3>
                                 <div className="space-y-4">
                                     <div className="flex gap-4">
                                         <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 shrink-0">
                                             <MapPin size={18} />
                                         </div>
                                         <div>
-                                            <p className="text-sm font-bold text-gray-900">{warehouse.address?.street || 'N/A'}</p>
+                                            <p className="text-sm font-semibold text-gray-900">{warehouse.address?.street || 'N/A'}</p>
                                             <p className="text-xs font-medium text-gray-500">{warehouse.address?.city}, {warehouse.address?.state} - {warehouse.address?.pincode}</p>
                                         </div>
                                     </div>
@@ -277,7 +277,7 @@ export default function WarehouseDetailsPage() {
                                             <Phone size={18} />
                                         </div>
                                         <div>
-                                            <p className="text-sm font-bold text-gray-900">{warehouse.contact?.phone || 'No Contact'}</p>
+                                            <p className="text-sm font-semibold text-gray-900">{warehouse.contact?.phone || 'No Contact'}</p>
                                             <p className="text-xs font-medium text-gray-500">Hub Manager</p>
                                         </div>
                                     </div>
@@ -291,8 +291,8 @@ export default function WarehouseDetailsPage() {
                         <div className="bg-white rounded-[2.5rem] shadow-sm border border-gray-100/50 overflow-hidden min-h-[600px] flex flex-col">
                             <div className="p-8 border-b border-gray-50 flex flex-col md:flex-row md:items-center justify-between gap-4">
                                 <div>
-                                    <h3 className="text-lg font-black text-gray-900 tracking-tight">Stored Assets</h3>
-                                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1">
+                                    <h3 className="text-lg font-semibold text-gray-900 tracking-tight">Stored Assets</h3>
+                                    <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mt-1">
                                         {filteredInventory.length} SKUs in containment
                                     </p>
                                 </div>
@@ -303,7 +303,7 @@ export default function WarehouseDetailsPage() {
                                         placeholder="SEARCH SKU / ASSET"
                                         value={inventorySearch}
                                         onChange={(e) => setInventorySearch(e.target.value)}
-                                        className="pl-12 pr-6 py-3 bg-gray-50 border-none rounded-2xl text-[10px] font-black uppercase tracking-widest min-w-[250px] focus:ring-2 focus:ring-indigo-50 outline-none transition-all"
+                                        className="pl-12 pr-6 py-3 bg-gray-50 border-none rounded-2xl text-[10px] font-semibold uppercase tracking-widest min-w-[250px] focus:ring-2 focus:ring-indigo-50 outline-none transition-all"
                                     />
                                 </div>
                             </div>
@@ -312,10 +312,10 @@ export default function WarehouseDetailsPage() {
                                 <table className="w-full">
                                     <thead>
                                         <tr className="bg-gray-50/50">
-                                            <th className="px-8 py-4 text-left text-[9px] font-black text-gray-400 uppercase tracking-widest">Asset Identity</th>
-                                            <th className="px-6 py-4 text-center text-[9px] font-black text-gray-400 uppercase tracking-widest">Stock Level</th>
-                                            <th className="px-6 py-4 text-center text-[9px] font-black text-gray-400 uppercase tracking-widest">Valuation</th>
-                                            <th className="px-6 py-4 text-right text-[9px] font-black text-gray-400 uppercase tracking-widest">Status</th>
+                                            <th className="px-8 py-4 text-left text-[9px] font-semibold text-gray-400 uppercase tracking-widest">Asset Identity</th>
+                                            <th className="px-6 py-4 text-center text-[9px] font-semibold text-gray-400 uppercase tracking-widest">Stock Level</th>
+                                            <th className="px-6 py-4 text-center text-[9px] font-semibold text-gray-400 uppercase tracking-widest">Valuation</th>
+                                            <th className="px-6 py-4 text-right text-[9px] font-semibold text-gray-400 uppercase tracking-widest">Status</th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-gray-50">
@@ -332,19 +332,19 @@ export default function WarehouseDetailsPage() {
                                                                 )}
                                                             </div>
                                                             <div>
-                                                                <p className="text-xs font-bold text-gray-900 group-hover:text-indigo-700 transition-colors">{item.productId?.name}</p>
-                                                                <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest bg-gray-50 px-2 py-0.5 rounded mt-1 inline-block">
+                                                                <p className="text-xs font-semibold text-gray-900 group-hover:text-indigo-700 transition-colors">{item.productId?.name}</p>
+                                                                <span className="text-[9px] font-semibold text-gray-400 uppercase tracking-widest bg-gray-50 px-2 py-0.5 rounded mt-1 inline-block">
                                                                     {item.productId?.sku}
                                                                 </span>
                                                             </div>
                                                         </div>
                                                     </td>
                                                     <td className="px-6 py-5 text-center">
-                                                        <span className="text-sm font-black text-gray-900">{item.quantity}</span>
-                                                        <p className="text-[9px] font-bold text-gray-400">Units</p>
+                                                        <span className="text-sm font-semibold text-gray-900">{item.quantity}</span>
+                                                        <p className="text-[9px] font-semibold text-gray-400">Units</p>
                                                     </td>
                                                     <td className="px-6 py-5 text-center">
-                                                        <span className="text-xs font-bold text-gray-900">₹{(item.productId?.pricing?.salePrice || 0).toLocaleString()}</span>
+                                                        <span className="text-xs font-semibold text-gray-900">₹{(item.productId?.pricing?.salePrice || 0).toLocaleString()}</span>
                                                     </td>
                                                     <td className="px-6 py-5 text-right">
                                                         <div className="flex justify-end">
@@ -359,7 +359,7 @@ export default function WarehouseDetailsPage() {
                                                     <div className="inline-flex w-16 h-16 bg-gray-50 rounded-full items-center justify-center text-gray-300 mb-4">
                                                         <Box size={30} />
                                                     </div>
-                                                    <p className="text-gray-400 text-xs font-bold uppercase tracking-widest">Containment Empty</p>
+                                                    <p className="text-gray-400 text-xs font-semibold uppercase tracking-widest">Containment Empty</p>
                                                 </td>
                                             </tr>
                                         )}
@@ -377,12 +377,12 @@ export default function WarehouseDetailsPage() {
 function FormInput({ label, value, onChange, type = "text" }) {
     return (
         <div className="space-y-2">
-            <label className="text-[10px] font-black text-indigo-300 uppercase tracking-widest ml-1">{label}</label>
+            <label className="text-[10px] font-semibold text-indigo-300 uppercase tracking-widest ml-1">{label}</label>
             <input
                 type={type}
                 value={value || ''}
                 onChange={(e) => onChange(e.target.value)}
-                className="w-full px-5 py-3 bg-indigo-50/50 border border-indigo-100 rounded-xl text-sm font-bold text-indigo-900 focus:bg-white focus:ring-2 focus:ring-indigo-100 transition-all outline-none"
+                className="w-full px-5 py-3 bg-indigo-50/50 border border-indigo-100 rounded-xl text-sm font-semibold text-indigo-900 focus:bg-white focus:ring-2 focus:ring-indigo-100 transition-all outline-none"
             />
         </div>
     )

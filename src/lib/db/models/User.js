@@ -39,6 +39,33 @@ const UserSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    profilePicture: {
+      type: String,
+      default: "",
+    },
+    gender: {
+      type: String,
+      enum: ["male", "female", "other", ""],
+      default: "",
+    },
+    addresses: [
+      {
+        name: String,
+        phone: String,
+        addressLine1: String,
+        addressLine2: String,
+        city: String,
+        state: String,
+        pincode: String,
+        country: { type: String, default: "India" },
+        isDefault: { type: Boolean, default: false },
+        label: {
+          type: String,
+          enum: ["home", "work", "other"],
+          default: "home",
+        },
+      },
+    ],
     wishlist: [
       {
         type: mongoose.Schema.Types.ObjectId,

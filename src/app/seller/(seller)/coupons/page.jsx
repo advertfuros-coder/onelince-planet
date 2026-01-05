@@ -77,7 +77,7 @@ export default function CouponsManagement() {
         return (
             <div className="flex flex-col items-center justify-center min-h-screen space-y-4">
                 <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin" />
-                <p className="text-gray-400 font-black uppercase tracking-widest text-[10px]">Encrypting Promotional Buffers...</p>
+                <p className="text-gray-400 font-semibold uppercase tracking-widest text-[10px]">Encrypting Promotional Buffers...</p>
             </div>
         )
     }
@@ -93,9 +93,9 @@ export default function CouponsManagement() {
                             <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white shadow-lg shadow-indigo-500/20">
                                 <Ticket size={18} />
                             </div>
-                            <span className="text-[10px] font-black text-indigo-600 uppercase tracking-widest bg-indigo-50 px-3 py-1 rounded-full">Yield Enhancement</span>
+                            <span className="text-[10px] font-semibold text-indigo-600 uppercase tracking-widest bg-indigo-50 px-3 py-1 rounded-full">Yield Enhancement</span>
                         </div>
-                        <h1 className="text-4xl font-black text-gray-900 tracking-tighter">Coupon Terminal</h1>
+                        <h1 className="text-4xl font-semibold text-gray-900 tracking-tighter">Coupon Terminal</h1>
                         <p className="text-gray-500 font-medium mt-1">Deploy promotional vouchers and incentive protocols</p>
                     </div>
 
@@ -107,7 +107,7 @@ export default function CouponsManagement() {
                                 placeholder="Search Protocol ID..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="pl-12 pr-6 py-4 bg-white border border-gray-100 rounded-[1.5rem] w-full lg:w-80 text-sm font-bold shadow-sm focus:ring-4 focus:ring-indigo-500/5 transition-all outline-none"
+                                className="pl-12 pr-6 py-4 bg-white border border-gray-100 rounded-[1.5rem] w-full lg:w-80 text-sm font-semibold shadow-sm focus:ring-4 focus:ring-indigo-500/5 transition-all outline-none"
                             />
                         </div>
                         <button
@@ -115,7 +115,7 @@ export default function CouponsManagement() {
                                 setEditingCoupon(null)
                                 setShowModal(true)
                             }}
-                            className="bg-gray-900 text-white px-8 py-4 rounded-[1.5rem] text-[10px] font-black uppercase tracking-widest shadow-xl shadow-gray-900/10 hover:bg-indigo-600 hover:-translate-y-1 transition-all active:scale-95 flex items-center gap-3"
+                            className="bg-gray-900 text-white px-8 py-4 rounded-[1.5rem] text-[10px] font-semibold uppercase tracking-widest shadow-xl shadow-gray-900/10 hover:bg-indigo-600 hover:-translate-y-1 transition-all active:scale-95 flex items-center gap-3"
                         >
                             <Plus size={18} />
                             Initialize Promotion
@@ -143,7 +143,7 @@ export default function CouponsManagement() {
                         <div className="w-20 h-20 bg-gray-50 rounded-3xl flex items-center justify-center text-gray-200 mx-auto mb-6">
                             <Ticket size={40} />
                         </div>
-                        <h3 className="text-xl font-black text-gray-900 mb-2 uppercase">No Promotional Signals</h3>
+                        <h3 className="text-xl font-semibold text-gray-900 mb-2 uppercase">No Promotional Signals</h3>
                         <p className="text-gray-400 text-sm font-medium">Your account is currently running at base yield protocols.</p>
                     </div>
                 )}
@@ -183,7 +183,7 @@ function CouponCard({ coupon, onEdit, onDelete }) {
                         <div className={`p-2 rounded-lg ${isActive ? 'bg-emerald-50 text-emerald-600' : 'bg-gray-50 text-gray-300'}`}>
                             <Zap size={16} />
                         </div>
-                        <span className={`text-[9px] font-black uppercase tracking-widest ${isActive ? 'text-emerald-600' : 'text-gray-400'}`}>
+                        <span className={`text-[9px] font-semibold uppercase tracking-widest ${isActive ? 'text-emerald-600' : 'text-gray-400'}`}>
                             {isActive ? 'Active Protocol' : 'Dormant'}
                         </span>
                     </div>
@@ -199,7 +199,7 @@ function CouponCard({ coupon, onEdit, onDelete }) {
 
                 <div>
                     <div className="flex items-center justify-between mb-2">
-                        <h3 className="text-2xl font-black text-gray-900 tracking-tighter uppercase">{coupon.code}</h3>
+                        <h3 className="text-2xl font-semibold text-gray-900 tracking-tighter uppercase">{coupon.code}</h3>
                         <button
                             onClick={() => {
                                 navigator.clipboard.writeText(coupon.code)
@@ -210,19 +210,19 @@ function CouponCard({ coupon, onEdit, onDelete }) {
                             <Copy size={12} />
                         </button>
                     </div>
-                    <p className="text-xs font-bold text-gray-400 italic">"{coupon.description || 'Standard promotional discount.'}"</p>
+                    <p className="text-xs font-semibold text-gray-400 italic">"{coupon.description || 'Standard promotional discount.'}"</p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-50">
                     <div>
-                        <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1">Benefit</p>
-                        <p className="text-lg font-black text-indigo-600 tracking-tighter">
+                        <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-widest mb-1">Benefit</p>
+                        <p className="text-lg font-semibold text-indigo-600 tracking-tighter">
                             {coupon.type === 'percentage' ? `${coupon.value}% OFF` : `₹${coupon.value} OFF`}
                         </p>
                     </div>
                     <div className="text-right">
-                        <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1">Consumption</p>
-                        <div className="flex items-center justify-end gap-1.5 font-black text-gray-900 tracking-tighter">
+                        <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-widest mb-1">Consumption</p>
+                        <div className="flex items-center justify-end gap-1.5 font-semibold text-gray-900 tracking-tighter">
                             <Users size={14} className="text-gray-300" />
                             <span>{coupon.usageCount?.total || 0}</span>
                             <span className="text-gray-300">/ {coupon.usageLimit?.total || '∞'}</span>
@@ -233,13 +233,13 @@ function CouponCard({ coupon, onEdit, onDelete }) {
                 <div className="flex items-center justify-between pt-4 bg-gray-50/50 rounded-2xl p-4">
                     <div className="flex items-center gap-2">
                         <Calendar size={14} className="text-gray-400" />
-                        <span className="text-[10px] font-black text-gray-500 uppercase tracking-tight">
+                        <span className="text-[10px] font-semibold text-gray-500 uppercase tracking-tight">
                             Ends {new Date(coupon.validUntil).toLocaleDateString()}
                         </span>
                     </div>
                     <div className="flex items-center gap-1">
                         <TrendingUp size={14} className="text-emerald-500" />
-                        <span className="text-[10px] font-black text-emerald-500 uppercase tracking-tight">+12% Yield</span>
+                        <span className="text-[10px] font-semibold text-emerald-500 uppercase tracking-tight">+12% Yield</span>
                     </div>
                 </div>
             </div>
@@ -303,10 +303,10 @@ function CouponModal({ coupon, onClose, onSuccess }) {
                 <div className="p-8 border-b border-gray-100 bg-gray-50/50 flex items-center justify-between">
                     <div>
                         <div className="flex items-center gap-3 mb-1">
-                            <span className="text-[10px] font-black text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded tracking-widest uppercase">Protocol Init</span>
-                            <h2 className="text-2xl font-black text-gray-900 tracking-tighter">{coupon ? 'Edit Promotion' : 'New Promotion'}</h2>
+                            <span className="text-[10px] font-semibold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded tracking-widest uppercase">Protocol Init</span>
+                            <h2 className="text-2xl font-semibold text-gray-900 tracking-tighter">{coupon ? 'Edit Promotion' : 'New Promotion'}</h2>
                         </div>
-                        <p className="text-gray-400 font-bold text-xs uppercase tracking-tight">Configure yield adjustment parameters</p>
+                        <p className="text-gray-400 font-semibold text-xs uppercase tracking-tight">Configure yield adjustment parameters</p>
                     </div>
                     <button onClick={onClose} className="w-12 h-12 flex items-center justify-center bg-white border border-gray-100 text-gray-400 hover:text-indigo-600 rounded-2xl transition-all">
                         <XCircle size={24} />
@@ -316,22 +316,22 @@ function CouponModal({ coupon, onClose, onSuccess }) {
                 <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-10 space-y-8">
                     <div className="grid grid-cols-2 gap-6">
                         <div className="space-y-2 col-span-2">
-                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-2">Protocol ID (Code)</label>
+                            <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest px-2">Protocol ID (Code)</label>
                             <input
                                 required
                                 value={formData.code}
                                 onChange={e => setFormData({ ...formData, code: e.target.value.toUpperCase() })}
-                                className="w-full px-6 py-4 bg-gray-50 border border-transparent rounded-[1.5rem] text-[13px] font-black placeholder:text-gray-300 focus:bg-white focus:border-indigo-100 transition-all outline-none"
+                                className="w-full px-6 py-4 bg-gray-50 border border-transparent rounded-[1.5rem] text-[13px] font-semibold placeholder:text-gray-300 focus:bg-white focus:border-indigo-100 transition-all outline-none"
                                 placeholder="E.G. SAVE30"
                             />
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-2">Discount Type</label>
+                            <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest px-2">Discount Type</label>
                             <select
                                 value={formData.type}
                                 onChange={e => setFormData({ ...formData, type: e.target.value })}
-                                className="w-full px-6 py-4 bg-gray-50 border border-transparent rounded-[1.5rem] text-[13px] font-black focus:bg-white focus:border-indigo-100 transition-all outline-none"
+                                className="w-full px-6 py-4 bg-gray-50 border border-transparent rounded-[1.5rem] text-[13px] font-semibold focus:bg-white focus:border-indigo-100 transition-all outline-none"
                             >
                                 <option value="percentage">Percentage (%)</option>
                                 <option value="fixed">Fixed Amount (₹)</option>
@@ -340,75 +340,75 @@ function CouponModal({ coupon, onClose, onSuccess }) {
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-2">Discount Value</label>
+                            <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest px-2">Discount Value</label>
                             <input
                                 type="number"
                                 required
                                 value={formData.value}
                                 onChange={e => setFormData({ ...formData, value: parseFloat(e.target.value) })}
-                                className="w-full px-6 py-4 bg-gray-50 border border-transparent rounded-[1.5rem] text-[13px] font-black focus:bg-white focus:border-indigo-100 transition-all outline-none"
+                                className="w-full px-6 py-4 bg-gray-50 border border-transparent rounded-[1.5rem] text-[13px] font-semibold focus:bg-white focus:border-indigo-100 transition-all outline-none"
                             />
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-2">Valid From</label>
+                            <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest px-2">Valid From</label>
                             <input
                                 type="date"
                                 required
                                 value={formData.validFrom?.split('T')[0]}
                                 onChange={e => setFormData({ ...formData, validFrom: e.target.value })}
-                                className="w-full px-6 py-4 bg-gray-50 border border-transparent rounded-[1.5rem] text-[13px] font-black focus:bg-white focus:border-indigo-100 transition-all outline-none"
+                                className="w-full px-6 py-4 bg-gray-50 border border-transparent rounded-[1.5rem] text-[13px] font-semibold focus:bg-white focus:border-indigo-100 transition-all outline-none"
                             />
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-2">Valid Until</label>
+                            <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest px-2">Valid Until</label>
                             <input
                                 type="date"
                                 required
                                 value={formData.validUntil?.split('T')[0]}
                                 onChange={e => setFormData({ ...formData, validUntil: e.target.value })}
-                                className="w-full px-6 py-4 bg-gray-50 border border-transparent rounded-[1.5rem] text-[13px] font-black focus:bg-white focus:border-indigo-100 transition-all outline-none"
+                                className="w-full px-6 py-4 bg-gray-50 border border-transparent rounded-[1.5rem] text-[13px] font-semibold focus:bg-white focus:border-indigo-100 transition-all outline-none"
                             />
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-2">Min Purchase (₹)</label>
+                            <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest px-2">Min Purchase (₹)</label>
                             <input
                                 type="number"
                                 value={formData.minimumPurchase}
                                 onChange={e => setFormData({ ...formData, minimumPurchase: parseFloat(e.target.value) })}
-                                className="w-full px-6 py-4 bg-gray-50 border border-transparent rounded-[1.5rem] text-[13px] font-black focus:bg-white focus:border-indigo-100 transition-all outline-none"
+                                className="w-full px-6 py-4 bg-gray-50 border border-transparent rounded-[1.5rem] text-[13px] font-semibold focus:bg-white focus:border-indigo-100 transition-all outline-none"
                             />
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-2">Max Discount (₹)</label>
+                            <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest px-2">Max Discount (₹)</label>
                             <input
                                 type="number"
                                 value={formData.maximumDiscount}
                                 onChange={e => setFormData({ ...formData, maximumDiscount: parseFloat(e.target.value) })}
-                                className="w-full px-6 py-4 bg-gray-50 border border-transparent rounded-[1.5rem] text-[13px] font-black focus:bg-white focus:border-indigo-100 transition-all outline-none"
+                                className="w-full px-6 py-4 bg-gray-50 border border-transparent rounded-[1.5rem] text-[13px] font-semibold focus:bg-white focus:border-indigo-100 transition-all outline-none"
                                 placeholder="Only for %"
                             />
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-2">Total Limit</label>
+                            <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest px-2">Total Limit</label>
                             <input
                                 type="number"
                                 value={formData.usageLimit?.total}
                                 onChange={e => setFormData({ ...formData, usageLimit: { ...formData.usageLimit, total: parseInt(e.target.value) } })}
-                                className="w-full px-6 py-4 bg-gray-50 border border-transparent rounded-[1.5rem] text-[13px] font-black focus:bg-white focus:border-indigo-100 transition-all outline-none"
+                                className="w-full px-6 py-4 bg-gray-50 border border-transparent rounded-[1.5rem] text-[13px] font-semibold focus:bg-white focus:border-indigo-100 transition-all outline-none"
                             />
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-2">Description</label>
+                            <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest px-2">Description</label>
                             <textarea
                                 value={formData.description}
                                 onChange={e => setFormData({ ...formData, description: e.target.value })}
-                                className="w-full px-6 py-4 bg-gray-50 border border-transparent rounded-[1.5rem] text-[12px] font-bold focus:bg-white focus:border-indigo-100 transition-all outline-none resize-none"
+                                className="w-full px-6 py-4 bg-gray-50 border border-transparent rounded-[1.5rem] text-[12px] font-semibold focus:bg-white focus:border-indigo-100 transition-all outline-none resize-none"
                                 placeholder="Public description of the offer..."
                                 rows={2}
                             />
@@ -419,12 +419,12 @@ function CouponModal({ coupon, onClose, onSuccess }) {
                 <div className="p-8 bg-gray-50/50 border-t border-gray-100 flex items-center justify-between">
                     <div className="flex items-center gap-2">
                         <Info size={16} className="text-gray-400" />
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Protocol validation active</p>
+                        <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Protocol validation active</p>
                     </div>
                     <button
                         onClick={handleSubmit}
                         disabled={loading}
-                        className="bg-gray-900 text-white px-12 py-5 rounded-[2rem] text-[11px] font-black uppercase tracking-widest shadow-2xl hover:bg-indigo-600 transition-all active:scale-95 disabled:opacity-50 flex items-center gap-3"
+                        className="bg-gray-900 text-white px-12 py-5 rounded-[2rem] text-[11px] font-semibold uppercase tracking-widest shadow-2xl hover:bg-indigo-600 transition-all active:scale-95 disabled:opacity-50 flex items-center gap-3"
                     >
                         {loading && <Zap size={18} className="animate-pulse" />}
                         {coupon ? 'Sync Protocol' : 'Deploy Protocol'}

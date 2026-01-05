@@ -46,14 +46,14 @@ const CATEGORIES = [
 
 const InputField = ({ label, name, icon: Icon, ...props }) => (
   <div className="group space-y-2">
-    <label className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-slate-500 group-focus-within:text-blue-600 transition-colors">
+    <label className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-widest text-slate-500 group-focus-within:text-blue-600 transition-colors">
       {Icon && <Icon size={12} />}
       {label}
     </label>
     <div className="relative">
       <input
         name={name}
-        className="w-full bg-slate-50/50 border border-slate-100 rounded-2xl px-5 py-3.5 text-sm font-bold text-slate-700 placeholder-slate-300 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 outline-none transition-all"
+        className="w-full bg-slate-50/50 border border-slate-100 rounded-2xl px-5 py-3.5 text-sm font-semibold text-slate-700 placeholder-slate-300 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 outline-none transition-all"
         {...props}
       />
     </div>
@@ -538,7 +538,7 @@ export default function EditProductPage() {
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
-          <p className="text-xs font-black uppercase tracking-[0.2em] text-slate-400">Fetching Manifest...</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Fetching Manifest...</p>
         </div>
       </div>
     )
@@ -558,24 +558,24 @@ export default function EditProductPage() {
             <div>
               <button
                 onClick={() => router.back()}
-                className="flex items-center gap-2 text-[10px] font-black uppercase tracking-tighter text-slate-400 hover:text-slate-900 transition-colors mb-2"
+                className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-tighter text-slate-400 hover:text-slate-900 transition-colors mb-2"
               >
                 <ChevronLeft size={14} /> Back to Nexus
               </button>
-              <h1 className="text-4xl font-black text-slate-900 tracking-tight">Edit Asset <span className="text-blue-600">.</span></h1>
-              <p className="text-slate-400 font-bold text-sm mt-1">Re-configuring supply parameters for the global grid.</p>
+              <h1 className="text-4xl font-semibold text-slate-900 tracking-tight">Edit Asset <span className="text-blue-600">.</span></h1>
+              <p className="text-slate-400 font-semibold text-sm mt-1">Re-configuring supply parameters for the global grid.</p>
             </div>
             <div className="flex gap-3">
               <button
                 type="button"
                 onClick={handleSaveDraft}
-                className="flex items-center gap-2 px-6 py-3 bg-slate-100 text-slate-600 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-200 transition-all"
+                className="flex items-center gap-2 px-6 py-3 bg-slate-100 text-slate-600 rounded-2xl text-[10px] font-semibold uppercase tracking-widest hover:bg-slate-200 transition-all"
               >
                 <Database size={14} /> Update Draft
               </button>
               <button
                 onClick={handleDelete}
-                className="flex items-center gap-2 px-6 py-3 bg-rose-50 text-rose-600 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-rose-600 hover:text-white transition-all shadow-sm"
+                className="flex items-center gap-2 px-6 py-3 bg-rose-50 text-rose-600 rounded-2xl text-[10px] font-semibold uppercase tracking-widest hover:bg-rose-600 hover:text-white transition-all shadow-sm"
               >
                 <Trash2 size={14} /> Purge Asset
               </button>
@@ -589,13 +589,13 @@ export default function EditProductPage() {
                   <Database size={20} />
                 </div>
                 <div>
-                  <p className="text-xs font-black uppercase tracking-widest">Local Session Found</p>
-                  <p className="text-[10px] font-bold text-blue-100 uppercase mt-0.5">We found unsaved local changes. Would you like to restore them?</p>
+                  <p className="text-xs font-semibold uppercase tracking-widest">Local Session Found</p>
+                  <p className="text-[10px] font-semibold text-blue-100 uppercase mt-0.5">We found unsaved local changes. Would you like to restore them?</p>
                 </div>
               </div>
               <div className="flex gap-2">
-                <button onClick={restoreDraft} className="px-6 py-2.5 bg-white text-blue-600 rounded-xl text-[10px] font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all">Restore</button>
-                <button onClick={discardDraft} className="px-6 py-2.5 bg-blue-700 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-800 transition-all">Discard</button>
+                <button onClick={restoreDraft} className="px-6 py-2.5 bg-white text-blue-600 rounded-xl text-[10px] font-semibold uppercase tracking-widest hover:scale-105 active:scale-95 transition-all">Restore</button>
+                <button onClick={discardDraft} className="px-6 py-2.5 bg-blue-700 text-white rounded-xl text-[10px] font-semibold uppercase tracking-widest hover:bg-blue-800 transition-all">Discard</button>
               </div>
             </div>
           )}
@@ -607,7 +607,7 @@ export default function EditProductPage() {
                 key={s.id}
                 type="button"
                 onClick={() => setActiveSection(s.id)}
-                className={`flex items-center gap-2 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all shrink-0 ${activeSection === s.id ? 'bg-slate-900 text-white shadow-xl translate-y-[-2px]' : 'text-slate-400 hover:text-slate-700'}`}
+                className={`flex items-center gap-2 px-6 py-3 rounded-2xl text-[10px] font-semibold uppercase tracking-widest transition-all shrink-0 ${activeSection === s.id ? 'bg-slate-900 text-white shadow-xl translate-y-[-2px]' : 'text-slate-400 hover:text-slate-700'}`}
               >
                 {s.icon}
                 {s.label}
@@ -627,7 +627,7 @@ export default function EditProductPage() {
                   className="space-y-8"
                 >
                   <div className="bg-white rounded-[2.5rem] border border-slate-100 p-10 shadow-xl shadow-slate-200/20 space-y-8">
-                    <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest">Basics</h3>
+                    <h3 className="text-sm font-semibold text-slate-900 uppercase tracking-widest">Basics</h3>
                     <div className="space-y-6">
                       <InputField
                         label="Product Name"
@@ -644,14 +644,14 @@ export default function EditProductPage() {
                       </div>
 
                       <div className="space-y-2">
-                        <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Category</label>
+                        <label className="text-[11px] font-semibold uppercase tracking-widest text-slate-500">Category</label>
                         <div className="grid grid-cols-3 gap-3">
                           {CATEGORIES.map(cat => (
                             <button
                               type="button"
                               key={cat.name}
                               onClick={() => setForm(f => ({ ...f, category: cat.name }))}
-                              className={`py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest border transition-all ${form.category === cat.name ? 'bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-500/20' : 'bg-slate-50 border-slate-100 text-slate-400 hover:border-blue-200'}`}
+                              className={`py-3 rounded-2xl text-[11px] font-semibold uppercase tracking-widest border transition-all ${form.category === cat.name ? 'bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-500/20' : 'bg-slate-50 border-slate-100 text-slate-400 hover:border-blue-200'}`}
                             >
                               {cat.name}
                             </button>
@@ -660,13 +660,13 @@ export default function EditProductPage() {
                       </div>
 
                       <div className="space-y-2">
-                        <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Description</label>
+                        <label className="text-[11px] font-semibold uppercase tracking-widest text-slate-500">Description</label>
                         <textarea
                           name="description"
                           value={form.description}
                           onChange={handleChange}
                           rows={4}
-                          className="w-full bg-slate-50/50 border border-slate-100 rounded-3xl px-6 py-5 text-sm font-bold text-slate-700 placeholder-slate-300 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 outline-none transition-all resize-none"
+                          className="w-full bg-slate-50/50 border border-slate-100 rounded-3xl px-6 py-5 text-sm font-semibold text-slate-700 placeholder-slate-300 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 outline-none transition-all resize-none"
                           placeholder="Tell customers about your product..."
                         />
                       </div>
@@ -674,8 +674,8 @@ export default function EditProductPage() {
                   </div>
 
                   <div className="bg-white rounded-[2.5rem] border border-slate-100 p-10 shadow-xl shadow-slate-200/20">
-                    <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest mb-2">Product Imagery</h3>
-                    <p className="text-[10px] font-bold text-slate-400 mb-6 uppercase tracking-wider">Upload high-quality photos. Drag to reorder. The first image is your cover.</p>
+                    <h3 className="text-sm font-semibold text-slate-900 uppercase tracking-widest mb-2">Product Imagery</h3>
+                    <p className="text-[10px] font-semibold text-slate-400 mb-6 uppercase tracking-wider">Upload high-quality photos. Drag to reorder. The first image is your cover.</p>
                     <ImageUpload
                       images={form.images}
                       token={token}
@@ -694,7 +694,7 @@ export default function EditProductPage() {
                   className="space-y-8"
                 >
                   <div className="bg-white rounded-[2.5rem] border border-slate-100 p-10 shadow-xl shadow-slate-200/20 space-y-8">
-                    <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest">Pricing</h3>
+                    <h3 className="text-sm font-semibold text-slate-900 uppercase tracking-widest">Pricing</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                       <InputField label="Base Price (AED)" name="basePrice" type="number" value={form.basePrice} onChange={handleChange} icon={DollarSign} required />
                       <InputField label="Selling Price (Discounted)" name="salePrice" type="number" value={form.salePrice} onChange={handleChange} icon={BadgePercent} />
@@ -702,7 +702,7 @@ export default function EditProductPage() {
                   </div>
 
                   <div className="bg-white rounded-[2.5rem] border border-slate-100 p-10 shadow-xl shadow-slate-200/20 space-y-8">
-                    <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest">Stock Management</h3>
+                    <h3 className="text-sm font-semibold text-slate-900 uppercase tracking-widest">Stock Management</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                       <InputField label="Current Stock Level" name="stock" type="number" value={form.stock} onChange={handleChange} icon={Box} required={form.variants.length === 0} disabled={form.variants.length > 0} placeholder={form.variants.length > 0 ? "Managed by Variations" : ""} />
                       <InputField label="Low Stock Alert" name="lowStockThreshold" type="number" value={form.lowStockThreshold} onChange={handleChange} icon={AlertCircle} />
@@ -712,8 +712,8 @@ export default function EditProductPage() {
                         <Zap size={20} className={form.trackInventory ? 'animate-pulse' : ''} />
                       </div>
                       <div className="flex-1">
-                        <p className="text-sm font-black text-slate-900 uppercase tracking-wide">Automatic Tracking</p>
-                        <p className="text-[10px] font-bold text-slate-400">Sync inventory across nodes automatically.</p>
+                        <p className="text-sm font-semibold text-slate-900 uppercase tracking-wide">Automatic Tracking</p>
+                        <p className="text-[10px] font-semibold text-slate-400">Sync inventory across nodes automatically.</p>
                       </div>
                       <input type="checkbox" name="trackInventory" checked={form.trackInventory} onChange={handleChange} className="hidden" />
                       <div className={`w-10 h-6 rounded-full relative transition-all ${form.trackInventory ? 'bg-blue-600' : 'bg-slate-300'}`}>
@@ -735,8 +735,8 @@ export default function EditProductPage() {
                   <div className="bg-white rounded-[2.5rem] border border-slate-100 p-10 shadow-xl shadow-slate-200/20 space-y-8">
                     <div className="flex items-center justify-between bg-slate-50 p-6 rounded-3xl border border-slate-100">
                       <div>
-                        <h4 className="text-xs font-black text-slate-900 uppercase tracking-widest">Does this have variations?</h4>
-                        <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1">Like multiple colors, sizes, or models.</p>
+                        <h4 className="text-xs font-semibold text-slate-900 uppercase tracking-widest">Does this have variations?</h4>
+                        <p className="text-[9px] font-semibold text-slate-400 uppercase tracking-widest mt-1">Like multiple colors, sizes, or models.</p>
                       </div>
                       <button
                         type="button"
@@ -751,8 +751,8 @@ export default function EditProductPage() {
                       <div className="space-y-8 pt-4">
                         <div className="space-y-6 border-b border-slate-100 pb-8">
                           <div className="flex items-center justify-between">
-                            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Setup Options</h3>
-                            <button type="button" onClick={() => generateVariants()} className="bg-blue-50 text-blue-600 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all border border-blue-100">
+                            <h3 className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">Setup Options</h3>
+                            <button type="button" onClick={() => generateVariants()} className="bg-blue-50 text-blue-600 px-4 py-2 rounded-xl text-[10px] font-semibold uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all border border-blue-100">
                               Sync Matrix
                             </button>
                           </div>
@@ -769,7 +769,7 @@ export default function EditProductPage() {
                             <button
                               type="button"
                               onClick={addOption}
-                              className="h-[52px] px-8 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-black transition-all"
+                              className="h-[52px] px-8 bg-slate-900 text-white rounded-2xl text-[10px] font-semibold uppercase tracking-widest hover:bg-black transition-all"
                             >
                               Add
                             </button>
@@ -779,19 +779,19 @@ export default function EditProductPage() {
                             {form.options.map((option, idx) => (
                               <div key={idx} className="bg-slate-50 rounded-2xl p-6 border border-slate-100">
                                 <div className="flex items-center justify-between mb-4">
-                                  <h4 className="font-black text-slate-900 uppercase tracking-widest text-xs">{option.name}</h4>
+                                  <h4 className="font-semibold text-slate-900 uppercase tracking-widest text-xs">{option.name}</h4>
                                   <button type="button" onClick={() => removeOption(idx)} className="text-rose-500 hover:text-rose-600"><X size={14} /></button>
                                 </div>
                                 <div className="flex flex-wrap gap-2">
                                   {option.values.map((val, vIdx) => (
-                                    <span key={vIdx} className="bg-white border border-slate-200 px-3 py-1 rounded-full text-[10px] font-bold text-slate-600 flex items-center gap-2 shadow-sm">
+                                    <span key={vIdx} className="bg-white border border-slate-200 px-3 py-1 rounded-full text-[10px] font-semibold text-slate-600 flex items-center gap-2 shadow-sm">
                                       {val}
                                       <button type="button" onClick={() => removeOptionValue(idx, vIdx)} className="hover:text-rose-500"><X size={10} /></button>
                                     </span>
                                   ))}
                                   <div className="flex items-center gap-2 min-w-[120px]">
                                     <input
-                                      className="bg-transparent border-b border-slate-300 px-2 py-1 text-xs font-bold focus:border-blue-500 outline-none w-20"
+                                      className="bg-transparent border-b border-slate-300 px-2 py-1 text-xs font-semibold focus:border-blue-500 outline-none w-20"
                                       placeholder="New value"
                                       value={activeOptionInputs[option.name] || ''}
                                       onChange={(e) => setActiveOptionInputs(prev => ({ ...prev, [option.name]: e.target.value }))}
@@ -817,22 +817,22 @@ export default function EditProductPage() {
                             <table className="w-full text-left min-w-[700px]">
                               <thead>
                                 <tr className="border-b border-slate-100">
-                                  <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Variation</th>
-                                  <th className="px-6 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest w-40">Price (AED)</th>
-                                  <th className="px-6 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest w-32">Stock</th>
-                                  <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest w-32 text-center">Asset</th>
+                                  <th className="px-8 py-5 text-[10px] font-semibold text-slate-400 uppercase tracking-widest">Variation</th>
+                                  <th className="px-6 py-5 text-[10px] font-semibold text-slate-400 uppercase tracking-widest w-40">Price (AED)</th>
+                                  <th className="px-6 py-5 text-[10px] font-semibold text-slate-400 uppercase tracking-widest w-32">Stock</th>
+                                  <th className="px-8 py-5 text-[10px] font-semibold text-slate-400 uppercase tracking-widest w-32 text-center">Asset</th>
                                 </tr>
                               </thead>
                               <tbody className="divide-y divide-slate-100">
                                 {form.variants.map((variant, idx) => (
                                   <tr key={idx} className="hover:bg-white transition-colors group">
                                     <td className="px-8 py-5">
-                                      <p className="text-xs font-black text-slate-900 truncate max-w-[200px]">{variant.name}</p>
-                                      <p className="text-[9px] font-bold text-slate-400 uppercase tracking-tighter mt-1">{variant.sku}</p>
+                                      <p className="text-xs font-semibold text-slate-900 truncate max-w-[200px]">{variant.name}</p>
+                                      <p className="text-[9px] font-semibold text-slate-400 uppercase tracking-tighter mt-1">{variant.sku}</p>
                                     </td>
                                     <td className="px-6 py-5">
                                       <div className="relative">
-                                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] font-black text-slate-400">AED</span>
+                                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] font-semibold text-slate-400">AED</span>
                                         <input
                                           type="number"
                                           value={variant.price}
@@ -841,7 +841,7 @@ export default function EditProductPage() {
                                             v[idx].price = Number(e.target.value);
                                             setForm({ ...form, variants: v });
                                           }}
-                                          className="w-full bg-white border border-slate-200 rounded-xl pl-10 pr-4 py-2 text-xs font-bold focus:border-blue-500 outline-none transition-all shadow-sm"
+                                          className="w-full bg-white border border-slate-200 rounded-xl pl-10 pr-4 py-2 text-xs font-semibold focus:border-blue-500 outline-none transition-all shadow-sm"
                                         />
                                       </div>
                                     </td>
@@ -854,7 +854,7 @@ export default function EditProductPage() {
                                           v[idx].stock = Number(e.target.value);
                                           setForm({ ...form, variants: v });
                                         }}
-                                        className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2 text-xs font-bold focus:border-blue-500 outline-none transition-all shadow-sm"
+                                        className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2 text-xs font-semibold focus:border-blue-500 outline-none transition-all shadow-sm"
                                       />
                                     </td>
                                     <td className="px-8 py-5">
@@ -886,7 +886,7 @@ export default function EditProductPage() {
                                           </label>
                                         )}
                                       </div>
-                                      <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mt-2">{variant.images?.length || 0}/7 Images</p>
+                                      <p className="text-[8px] font-semibold text-slate-400 uppercase tracking-widest mt-2">{variant.images?.length || 0}/7 Images</p>
                                     </td>
                                   </tr>
                                 ))}
@@ -903,8 +903,8 @@ export default function EditProductPage() {
                           <Layers size={40} />
                         </div>
                         <div className="space-y-2">
-                          <h4 className="text-base font-black text-slate-900 uppercase tracking-widest">Single Item Flow</h4>
-                          <p className="text-[10px] font-bold text-slate-400 max-w-xs mx-auto uppercase leading-relaxed tracking-widest">Perfect for simple products without multiple choices like size or color.</p>
+                          <h4 className="text-base font-semibold text-slate-900 uppercase tracking-widest">Single Item Flow</h4>
+                          <p className="text-[10px] font-semibold text-slate-400 max-w-xs mx-auto uppercase leading-relaxed tracking-widest">Perfect for simple products without multiple choices like size or color.</p>
                         </div>
                       </div>
                     )}
@@ -920,7 +920,7 @@ export default function EditProductPage() {
                   exit={{ opacity: 0, x: -20 }}
                   className="bg-white rounded-[2.5rem] border border-slate-100 p-10 shadow-xl shadow-slate-200/20 space-y-8"
                 >
-                  <h3 className="text-xs font-black text-slate-900 uppercase tracking-widest">Delivery Details</h3>
+                  <h3 className="text-xs font-semibold text-slate-900 uppercase tracking-widest">Delivery Details</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <InputField label="Weight (KG)" name="weight" type="number" value={form.weight} onChange={handleChange} icon={Truck} placeholder="e.g. 0.5" />
                     <InputField label="Shipping Fee (AED)" name="shippingFee" type="number" value={form.shippingFee} onChange={handleChange} icon={DollarSign} disabled={form.freeShipping} />
@@ -930,8 +930,8 @@ export default function EditProductPage() {
                       <Truck size={20} />
                     </div>
                     <div className="flex-1">
-                      <p className="text-sm font-black text-slate-900 uppercase tracking-wide">Free Shipping</p>
-                      <p className="text-[10px] font-bold text-slate-400">Offer this product with zero shipping cost.</p>
+                      <p className="text-sm font-semibold text-slate-900 uppercase tracking-wide">Free Shipping</p>
+                      <p className="text-[10px] font-semibold text-slate-400">Offer this product with zero shipping cost.</p>
                     </div>
                     <input type="checkbox" name="freeShipping" checked={form.freeShipping} onChange={handleChange} className="hidden" />
                     <div className={`w-10 h-6 rounded-full relative transition-all ${form.freeShipping ? 'bg-green-600' : 'bg-slate-300'}`}>
@@ -953,15 +953,15 @@ export default function EditProductPage() {
                   <div className="space-y-6">
                     <div className="flex items-center justify-between">
                       <div className="space-y-1">
-                        <h3 className="text-xs font-black text-slate-900 uppercase tracking-widest flex items-center gap-2">
+                        <h3 className="text-xs font-semibold text-slate-900 uppercase tracking-widest flex items-center gap-2">
                            <Target size={16} className="text-blue-600" /> Key Feature Highlights
                         </h3>
-                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-relaxed">Add high-impact bullet points to boost conversion</p>
+                        <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest leading-relaxed">Add high-impact bullet points to boost conversion</p>
                       </div>
                       <button 
                         type="button" 
                         onClick={() => setForm(prev => ({ ...prev, highlights: [...prev.highlights, ''] }))}
-                        className="px-6 py-2 bg-blue-50 text-blue-600 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all"
+                        className="px-6 py-2 bg-blue-50 text-blue-600 rounded-xl text-[10px] font-semibold uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all"
                       >
                          Add Point
                       </button>
@@ -977,7 +977,7 @@ export default function EditProductPage() {
                               setForm({ ...form, highlights: newH })
                             }}
                             placeholder="e.g. 48-hour Battery Life with Pro-charge Technology"
-                            className="flex-1 bg-slate-50/50 border border-slate-100 rounded-2xl px-6 py-4 text-xs font-bold focus:bg-white focus:border-blue-500 transition-all outline-none"
+                            className="flex-1 bg-slate-50/50 border border-slate-100 rounded-2xl px-6 py-4 text-xs font-semibold focus:bg-white focus:border-blue-500 transition-all outline-none"
                           />
                           <button 
                             type="button"
@@ -994,21 +994,21 @@ export default function EditProductPage() {
                   {/* Search Engine Optimization */}
                   <div className="space-y-6">
                     <div className="space-y-1">
-                      <h3 className="text-xs font-black text-slate-900 uppercase tracking-widest flex items-center gap-2">
+                      <h3 className="text-xs font-semibold text-slate-900 uppercase tracking-widest flex items-center gap-2">
                          <Search size={16} className="text-blue-600" /> Search Intelligence
                       </h3>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Hidden keywords to improve global discoverability</p>
+                      <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">Hidden keywords to improve global discoverability</p>
                     </div>
                     <div className="p-8 bg-slate-900 rounded-[2rem] space-y-4">
-                       <label className="text-[9px] font-black text-slate-500 uppercase tracking-[0.2em]">Backend Search Tags</label>
+                       <label className="text-[9px] font-semibold text-slate-500 uppercase tracking-[0.2em]">Backend Search Tags</label>
                        <textarea
                          value={form.keywords}
                          onChange={(e) => setForm({ ...form, keywords: e.target.value })}
                          placeholder="e.g. wireless, bluetooth, noise cancelling, audiophile, luxury"
                          rows={3}
-                         className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-xs font-bold text-white placeholder-slate-600 focus:bg-white/10 focus:border-blue-500 transition-all outline-none"
+                         className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-xs font-semibold text-white placeholder-slate-600 focus:bg-white/10 focus:border-blue-500 transition-all outline-none"
                        />
-                       <p className="text-[8px] font-black text-slate-600 uppercase tracking-widest">Separate with commas.</p>
+                       <p className="text-[8px] font-semibold text-slate-600 uppercase tracking-widest">Separate with commas.</p>
                     </div>
                   </div>
 
@@ -1016,15 +1016,15 @@ export default function EditProductPage() {
                   <div className="space-y-6">
                     <div className="flex items-center justify-between">
                       <div className="space-y-1">
-                        <h3 className="text-xs font-black text-slate-900 uppercase tracking-widest flex items-center gap-2">
+                        <h3 className="text-xs font-semibold text-slate-900 uppercase tracking-widest flex items-center gap-2">
                            <LayoutGrid size={16} className="text-blue-600" /> Technical Parameters
                         </h3>
-                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-relaxed">Detailed specifications index</p>
+                        <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest leading-relaxed">Detailed specifications index</p>
                       </div>
                       <button
                         type="button"
                         onClick={addSpecification}
-                        className="px-6 py-2 bg-slate-900 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-md-600 transition-all"
+                        className="px-6 py-2 bg-slate-900 text-white rounded-xl text-[10px] font-semibold uppercase tracking-widest hover:bg-md-600 transition-all"
                       >
                         Add Spec
                       </button>
@@ -1037,13 +1037,13 @@ export default function EditProductPage() {
                             placeholder="Feature"
                             value={spec.key}
                             onChange={(e) => updateSpecification(index, 'key', e.target.value)}
-                            className="flex-1 bg-slate-50/50 border border-slate-100 rounded-2xl px-5 py-3.5 text-xs font-bold focus:bg-white focus:border-blue-500 outline-none transition-all"
+                            className="flex-1 bg-slate-50/50 border border-slate-100 rounded-2xl px-5 py-3.5 text-xs font-semibold focus:bg-white focus:border-blue-500 outline-none transition-all"
                           />
                           <input
                             placeholder="Value"
                             value={spec.value}
                             onChange={(e) => updateSpecification(index, 'value', e.target.value)}
-                            className="flex-1 bg-slate-50/50 border border-slate-100 rounded-2xl px-5 py-3.5 text-xs font-bold focus:bg-white focus:border-blue-500 outline-none transition-all"
+                            className="flex-1 bg-slate-50/50 border border-slate-100 rounded-2xl px-5 py-3.5 text-xs font-semibold focus:bg-white focus:border-blue-500 outline-none transition-all"
                           />
                           <button
                             type="button"
@@ -1070,14 +1070,14 @@ export default function EditProductPage() {
                   <div className="bg-white rounded-[2.5rem] border border-slate-100 p-10 shadow-xl shadow-slate-200/20 space-y-10">
                     <div className="flex items-center justify-between">
                       <div className="space-y-1">
-                        <h3 className="text-xl font-black text-slate-900 uppercase tracking-tighter">Update Quality Audit</h3>
-                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Optimizing your listing for the next synchronization</p>
+                        <h3 className="text-xl font-semibold text-slate-900 uppercase tracking-tighter">Update Quality Audit</h3>
+                        <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">Optimizing your listing for the next synchronization</p>
                       </div>
                       <div className="flex items-center gap-6 bg-slate-50 px-8 py-5 rounded-[2rem] border border-slate-100 relative group overflow-hidden">
                         <div className="absolute inset-0 bg-blue-600/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
                          <div className="text-right relative z-10">
-                           <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Health Index</p>
-                           <p className={`text-3xl font-black ${calculateHealth() > 80 ? 'text-emerald-500' : 'text-blue-600'}`}>
+                           <p className="text-[9px] font-semibold text-slate-400 uppercase tracking-widest">Health Index</p>
+                           <p className={`text-3xl font-semibold ${calculateHealth() > 80 ? 'text-emerald-500' : 'text-blue-600'}`}>
                               {calculateHealth()}%
                            </p>
                          </div>
@@ -1090,7 +1090,7 @@ export default function EditProductPage() {
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                       {/* Health Checklist */}
                       <div className="space-y-6">
-                         <h4 className="text-[11px] font-black text-slate-900 uppercase tracking-widest flex items-center gap-2">
+                         <h4 className="text-[11px] font-semibold text-slate-900 uppercase tracking-widest flex items-center gap-2">
                            <Zap size={14} className="text-amber-500" /> Optimization Vector
                          </h4>
                          <div className="space-y-3">
@@ -1099,9 +1099,9 @@ export default function EditProductPage() {
                                <div key={idx} className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100 group hover:bg-white hover:border-blue-500 transition-all">
                                  <div className="flex items-center gap-3">
                                    <div className="w-1.5 h-1.5 rounded-full bg-slate-200 group-hover:bg-blue-500 transition-colors" />
-                                   <span className="text-xs font-bold text-slate-600">{item.text}</span>
+                                   <span className="text-xs font-semibold text-slate-600">{item.text}</span>
                                  </div>
-                                 <span className="text-[10px] font-black text-blue-600 bg-blue-50 px-3 py-1 rounded-full">{item.impact}</span>
+                                 <span className="text-[10px] font-semibold text-blue-600 bg-blue-50 px-3 py-1 rounded-full">{item.impact}</span>
                                </div>
                              ))
                            ) : (
@@ -1109,7 +1109,7 @@ export default function EditProductPage() {
                                 <div className="w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center text-white mx-auto shadow-lg shadow-emerald-200">
                                   <CheckCircle2 size={24} />
                                 </div>
-                                <p className="text-xs font-black text-emerald-600 uppercase tracking-widest leading-relaxed">Optimization Peak Achieved<br/><span className="text-[10px] opacity-60">Listing is ready for prime visibility</span></p>
+                                <p className="text-xs font-semibold text-emerald-600 uppercase tracking-widest leading-relaxed">Optimization Peak Achieved<br/><span className="text-[10px] opacity-60">Listing is ready for prime visibility</span></p>
                              </div>
                            )}
                          </div>
@@ -1118,27 +1118,27 @@ export default function EditProductPage() {
                       {/* Summary View */}
                       <div className="bg-slate-900 rounded-[2.5rem] p-10 text-white space-y-8 relative overflow-hidden">
                          <div className="absolute top-0 right-0 w-32 h-32 bg-blue-600/10 blur-3xl -mr-16 -mt-16" />
-                         <h4 className="text-[11px] font-black uppercase tracking-widest text-slate-400 relative z-10">Compliance Summary</h4>
+                         <h4 className="text-[11px] font-semibold uppercase tracking-widest text-slate-400 relative z-10">Compliance Summary</h4>
                          
                          <div className="space-y-6 relative z-10">
                             <div className="flex justify-between items-end border-b border-white/5 pb-4">
                               <div>
-                                <p className="text-[10px] font-black text-slate-500 uppercase">Essentials</p>
-                                <p className="text-sm font-black mt-1 uppercase tracking-tight">Standardized</p>
+                                <p className="text-[10px] font-semibold text-slate-500 uppercase">Essentials</p>
+                                <p className="text-sm font-semibold mt-1 uppercase tracking-tight">Standardized</p>
                               </div>
                               <CheckCircle2 className="text-emerald-400" size={18} />
                             </div>
                             <div className="flex justify-between items-end border-b border-white/5 pb-4">
                               <div>
-                                <p className="text-[10px] font-black text-slate-500 uppercase">Variations</p>
-                                <p className="text-sm font-black mt-1 uppercase tracking-tight">{form.variants.length} Matrix Nodes</p>
+                                <p className="text-[10px] font-semibold text-slate-500 uppercase">Variations</p>
+                                <p className="text-sm font-semibold mt-1 uppercase tracking-tight">{form.variants.length} Matrix Nodes</p>
                               </div>
                               <Layers className="text-blue-400" size={18} />
                             </div>
                             <div className="flex justify-between items-end border-b border-white/5 pb-4">
                               <div>
-                                <p className="text-[10px] font-black text-slate-500 uppercase">Global Scope</p>
-                                <p className="text-sm font-black mt-1 uppercase tracking-tight">{form.freeShipping ? 'Worldwide' : 'Standard'}</p>
+                                <p className="text-[10px] font-semibold text-slate-500 uppercase">Global Scope</p>
+                                <p className="text-sm font-semibold mt-1 uppercase tracking-tight">{form.freeShipping ? 'Worldwide' : 'Standard'}</p>
                               </div>
                               <Truck className="text-amber-400" size={18} />
                             </div>
@@ -1149,8 +1149,8 @@ export default function EditProductPage() {
                               <div className="flex items-center gap-3">
                                  {form.images[0]?.url && <img src={form.images[0].url} className="w-10 h-10 object-cover rounded-lg border border-white/10" />}
                                  <div>
-                                   <p className="text-[9px] font-black text-slate-500 uppercase">Primary Asset</p>
-                                   <p className="text-xs font-black truncate max-w-[150px]">{form.name || 'Spectral Project'}</p>
+                                   <p className="text-[9px] font-semibold text-slate-500 uppercase">Primary Asset</p>
+                                   <p className="text-xs font-semibold truncate max-w-[150px]">{form.name || 'Spectral Project'}</p>
                                  </div>
                               </div>
                             </div>
@@ -1168,8 +1168,8 @@ export default function EditProductPage() {
                           {declaration && <CheckCircle2 size={14} />}
                         </div>
                         <div className="flex-1">
-                          <p className="text-xs font-black text-slate-900 uppercase tracking-wide">Accuracy Declaration</p>
-                          <p className="text-[10px] font-bold text-slate-500 mt-1 uppercase leading-relaxed">I certify that all updates made to this listing, including variants and photos, are correct. I understand these changes may undergo re-verification by the quality team.</p>
+                          <p className="text-xs font-semibold text-slate-900 uppercase tracking-wide">Accuracy Declaration</p>
+                          <p className="text-[10px] font-semibold text-slate-500 mt-1 uppercase leading-relaxed">I certify that all updates made to this listing, including variants and photos, are correct. I understand these changes may undergo re-verification by the quality team.</p>
                         </div>
                       </label>
                     </div>
@@ -1188,7 +1188,7 @@ export default function EditProductPage() {
                       setActiveSection(formSections[currentIdx + 1].id)
                     }
                   }}
-                  className="flex-1 bg-slate-900 text-white py-5 rounded-[2rem] text-xs font-black uppercase tracking-widest shadow-2xl flex items-center justify-center gap-3 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                  className="flex-1 bg-slate-900 text-white py-5 rounded-[2rem] text-xs font-semibold uppercase tracking-widest shadow-2xl flex items-center justify-center gap-3 hover:scale-[1.02] active:scale-[0.98] transition-all"
                 >
                   Save & Continue
                   <ChevronRight size={18} />
@@ -1197,7 +1197,7 @@ export default function EditProductPage() {
                 <button
                   type="submit"
                   disabled={loading || !declaration}
-                  className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-5 rounded-[2rem] text-sm font-black uppercase tracking-widest shadow-2xl flex items-center justify-center gap-3 disabled:opacity-50 disabled:grayscale hover:shadow-blue-500/20 shadow-xl transition-all"
+                  className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-5 rounded-[2rem] text-sm font-semibold uppercase tracking-widest shadow-2xl flex items-center justify-center gap-3 disabled:opacity-50 disabled:grayscale hover:shadow-blue-500/20 shadow-xl transition-all"
                 >
                   {loading ? 'Synchronizing Updates...' : 'Publish Changes'}
                   {!loading && <ShieldCheck size={18} />}
@@ -1214,13 +1214,13 @@ export default function EditProductPage() {
             <div className="bg-white/80 backdrop-blur-md rounded-[2rem] border border-slate-100 p-2 flex items-center gap-2 shadow-xl shadow-slate-200/20">
               <button
                 onClick={() => setPreviewMode('desktop')}
-                className={`flex-1 py-3 px-4 rounded-2xl flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all ${previewMode === 'desktop' ? 'bg-slate-900 text-white shadow-xl' : 'text-slate-400 hover:bg-slate-50'}`}
+                className={`flex-1 py-3 px-4 rounded-2xl flex items-center justify-center gap-2 text-[10px] font-semibold uppercase tracking-widest transition-all ${previewMode === 'desktop' ? 'bg-slate-900 text-white shadow-xl' : 'text-slate-400 hover:bg-slate-50'}`}
               >
                 <Box size={14} /> Global View
               </button>
               <button
                 onClick={() => setPreviewMode('mobile')}
-                className={`flex-1 py-3 px-4 rounded-2xl flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all ${previewMode === 'mobile' ? 'bg-slate-900 text-white shadow-xl' : 'text-slate-400 hover:bg-slate-50'}`}
+                className={`flex-1 py-3 px-4 rounded-2xl flex items-center justify-center gap-2 text-[10px] font-semibold uppercase tracking-widest transition-all ${previewMode === 'mobile' ? 'bg-slate-900 text-white shadow-xl' : 'text-slate-400 hover:bg-slate-50'}`}
               >
                 <Target size={14} /> Micro View
               </button>
@@ -1240,8 +1240,8 @@ export default function EditProductPage() {
                     {form.images[0]?.url ? <img src={form.images[0].url} className="w-full h-full object-cover" /> : <Camera className="text-slate-200" size={previewMode === 'mobile' ? 32 : 48} />}
                   </div>
                   <div>
-                    <span className="bg-blue-600 text-[9px] font-black px-3 py-1 rounded-full uppercase">{form.category || 'Asset'}</span>
-                    <h2 className={`${previewMode === 'mobile' ? 'text-lg' : 'text-xl'} font-black mt-3 truncate`}>{form.name || 'Spectral Entity'}</h2>
+                    <span className="bg-blue-600 text-[9px] font-semibold px-3 py-1 rounded-full uppercase">{form.category || 'Asset'}</span>
+                    <h2 className={`${previewMode === 'mobile' ? 'text-lg' : 'text-xl'} font-semibold mt-3 truncate`}>{form.name || 'Spectral Entity'}</h2>
                   </div>
 
                   {/* Feature Highlights Preview */}
@@ -1258,12 +1258,12 @@ export default function EditProductPage() {
 
                   <div className="flex items-center justify-between border-t border-white/10 pt-6">
                     <div>
-                      <p className="text-[10px] font-black text-slate-500">Value</p>
-                      <p className={`${previewMode === 'mobile' ? 'text-xl' : 'text-2xl'} font-black`}>AED {form.basePrice || '--'}</p>
+                      <p className="text-[10px] font-semibold text-slate-500">Value</p>
+                      <p className={`${previewMode === 'mobile' ? 'text-xl' : 'text-2xl'} font-semibold`}>AED {form.basePrice || '--'}</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Supply</p>
-                      <p className={`${previewMode === 'mobile' ? 'text-lg' : 'text-xl'} font-black mt-1 text-emerald-400`}>
+                      <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest">Supply</p>
+                      <p className={`${previewMode === 'mobile' ? 'text-lg' : 'text-xl'} font-semibold mt-1 text-emerald-400`}>
                         {form.variants.length > 0
                           ? form.variants.reduce((a, b) => a + Number(b.stock), 0)
                           : (form.stock || '0')}

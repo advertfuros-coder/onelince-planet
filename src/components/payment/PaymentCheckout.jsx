@@ -180,7 +180,7 @@ export default function PaymentCheckout({ order, onSuccess, onCancel }) {
             >
                 {/* Header */}
                 <div className="mb-8">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-2">Complete Payment</h2>
+                    <h2 className="text-2xl font-semibold text-gray-900 mb-2">Complete Payment</h2>
                     <p className="text-gray-600">Order #{order.orderNumber}</p>
                 </div>
 
@@ -229,7 +229,7 @@ export default function PaymentCheckout({ order, onSuccess, onCancel }) {
                             </div>
                         )}
                         <div className="border-t pt-2 mt-2">
-                            <div className="flex justify-between text-lg font-bold">
+                            <div className="flex justify-between text-lg font-semibold">
                                 <span>Total Amount</span>
                                 <span className="text-blue-600">₹{(order.pricing.total - discountAmount).toFixed(2)}</span>
                             </div>

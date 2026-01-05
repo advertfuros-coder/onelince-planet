@@ -8,7 +8,7 @@ export default function Step7Review({ formData, onEdit }) {
                 <div className="p-2 bg-blue-100 rounded-lg text-blue-600">
                     <Icon className="w-5 h-5" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900">{title}</h3>
+                <h3 className="text-xl font-semibold text-gray-900">{title}</h3>
             </div>
             {onEditClick && (
                 <button
@@ -26,7 +26,7 @@ export default function Step7Review({ formData, onEdit }) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
             {items.map((item, index) => (
                 <div key={index} className="flex flex-col">
-                    <span className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">
+                    <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">
                         {item.label}
                     </span>
                     <span className="text-gray-900 font-medium break-words">
@@ -45,7 +45,7 @@ export default function Step7Review({ formData, onEdit }) {
                         <FiCheckCircle className="w-8 h-8" />
                     </div>
                     <div>
-                        <h2 className="text-2xl font-bold">Review Your Application</h2>
+                        <h2 className="text-2xl font-semibold">Review Your Application</h2>
                         <p className="text-blue-100">Please review all details before final submission.</p>
                     </div>
                 </div>
@@ -115,7 +115,7 @@ export default function Step7Review({ formData, onEdit }) {
                         <FiInfo className="w-5 h-5" />
                     </div>
                     <div>
-                        <h4 className="font-bold text-orange-900 mb-1">Final Declaration</h4>
+                        <h4 className="font-semibold text-orange-900 mb-1">Final Declaration</h4>
                         <p className="text-sm text-orange-800 leading-relaxed">
                             By clicking the submit button, you agree that all given information is correct to the best of your knowledge. Any false information may lead to rejection of your application.
                         </p>

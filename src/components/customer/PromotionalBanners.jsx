@@ -17,11 +17,11 @@ export default function PromotionalBanners() {
 
                         <div className="relative p-8 md:p-10 flex items-center justify-between">
                             <div className="flex-1">
-                                <h3 className="text-white text-3xl md:text-4xl font-black mb-2 leading-tight">
+                                <h3 className="text-white text-3xl md:text-4xl font-semibold mb-2 leading-tight">
                                     Get Electronics
                                 </h3>
-                                <p className="text-white text-xl md:text-2xl font-bold mb-1">
-                                    at <span className="inline-flex items-center justify-center w-12 h-12 bg-white text-red-600 rounded-full text-2xl font-black mx-1">₹0</span> Convenience Fee
+                                <p className="text-white text-xl md:text-2xl font-semibold mb-1">
+                                    at <span className="inline-flex items-center justify-center w-12 h-12 bg-white text-red-600 rounded-full text-2xl font-semibold mx-1">₹0</span> Convenience Fee
                                 </p>
                                 <p className="text-white/90 text-sm md:text-base mb-6">
                                     Get gadgets & accessories at best prices
@@ -29,7 +29,7 @@ export default function PromotionalBanners() {
 
                                 <Link
                                     href="/products?category=electronics"
-                                    className="inline-block px-8 py-3 bg-gray-900 hover:bg-black text-white font-bold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
+                                    className="inline-block px-8 py-3 bg-gray-900 hover:bg-black text-white font-semibold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
                                 >
                                     Order now
                                 </Link>
@@ -61,7 +61,7 @@ export default function PromotionalBanners() {
 
                         <div className="relative p-8 md:p-10">
                             <div className="text-center mb-6">
-                                <h3 className="text-purple-900 text-sm md:text-base font-black tracking-wider mb-4">
+                                <h3 className="text-purple-900 text-sm md:text-base font-semibold tracking-wider mb-4">
                                     ALL <span className="text-white">NEW</span> SHOPPING EXPERIENCE
                                 </h3>
 
@@ -69,10 +69,10 @@ export default function PromotionalBanners() {
                                     <div className="bg-white rounded-2xl p-4 shadow-lg">
                                         <div className="flex items-center gap-2">
                                             <div className="w-12 h-12 bg-purple-600 rounded-xl flex items-center justify-center">
-                                                <span className="text-white text-2xl font-black">S</span>
+                                                <span className="text-white text-2xl font-semibold">S</span>
                                             </div>
                                             <div className="text-left">
-                                                <p className="text-purple-900 text-3xl font-black leading-none">₹0 FEES</p>
+                                                <p className="text-purple-900 text-3xl font-semibold leading-none">₹0 FEES</p>
                                             </div>
                                         </div>
                                     </div>
@@ -83,8 +83,8 @@ export default function PromotionalBanners() {
                                                 <span className="text-2xl">💰</span>
                                             </div>
                                             <div className="text-left">
-                                                <p className="text-purple-900 text-xs font-bold">EVERYDAY</p>
-                                                <p className="text-purple-900 text-sm font-black">LOWEST PRICES</p>
+                                                <p className="text-purple-900 text-xs font-semibold">EVERYDAY</p>
+                                                <p className="text-purple-900 text-sm font-semibold">LOWEST PRICES</p>
                                             </div>
                                         </div>
                                     </div>

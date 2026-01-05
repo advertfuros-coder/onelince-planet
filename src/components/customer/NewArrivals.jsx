@@ -16,7 +16,7 @@ export default function NewArrivals({ products = [] }) {
         <div className="flex items-center space-x-3">
           <FiPackage className="w-8 h-8 text-green-600" />
           <div>
-            <h2 className="text-3xl font-bold text-gray-900">New Arrivals</h2>
+            <h2 className="text-3xl font-semibold text-gray-900">New Arrivals</h2>
             <p className="text-gray-600">Check out our latest products</p>
           </div>
         </div>

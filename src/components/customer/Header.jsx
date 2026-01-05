@@ -59,7 +59,9 @@ export default function Header() {
   // Check if current page is a product detail page or products listing page
   const isProductDetailPage = pathname?.startsWith('/products/') && pathname.split('/').length === 3
   const isProductsPage = pathname === '/products'
-  const hideHeaderExtras = isProductDetailPage || isProductsPage
+  const isProfilePage = pathname?.startsWith('/profile')
+  const isOrderDetailsPage = pathname?.startsWith('/orders/')
+  const hideHeaderExtras = isProductDetailPage || isProductsPage || isProfilePage || isOrderDetailsPage
 
   // Country configuration
   const countries = {
@@ -99,24 +101,52 @@ export default function Header() {
     return () => window.removeEventListener('locationUpdated', handleLocationUpdate)
   }, [])
 
-  // Scroll handler to hide/show secondary header with threshold to prevent flickering
+  // Scroll handler with lockout to prevent flickering during transitions
   useEffect(() => {
     let ticking = false;
     let lastScroll = window.scrollY;
+    let isLocked = false;
+    let lockTimeout = null;
 
     const updateHeader = () => {
-      const currentScroll = window.scrollY;
+      const currentScroll = Math.max(0, window.scrollY);
       const delta = currentScroll - lastScroll;
 
-      // Only trigger if we've scrolled more than 10px to avoid jitter
-      if (Math.abs(delta) > 10) {
-        if (currentScroll > lastScroll && currentScroll > 100) {
-          setShowSecondaryHeader(false);
-        } else if (currentScroll < lastScroll) {
-          setShowSecondaryHeader(true);
-        }
-        lastScroll = currentScroll;
+      // Update lastScroll immediately to track progress
+      const prevScroll = lastScroll;
+      lastScroll = currentScroll;
+
+      // If locked, skip state changes but keep tracking scroll
+      if (isLocked) {
+        ticking = false;
+        return;
       }
+
+      // Handle showing/hiding logic
+      if (currentScroll > 200 && delta > 15) {
+        // Scrolling Down - Hide
+        setShowSecondaryHeader((prev) => {
+          if (prev) {
+            isLocked = true;
+            if (lockTimeout) clearTimeout(lockTimeout);
+            lockTimeout = setTimeout(() => { isLocked = false; }, 400);
+            return false;
+          }
+          return prev;
+        });
+      } else if (currentScroll < 50 || delta < -30) {
+        // Scrolling Up or near top - Show
+        setShowSecondaryHeader((prev) => {
+          if (!prev) {
+            isLocked = true;
+            if (lockTimeout) clearTimeout(lockTimeout);
+            lockTimeout = setTimeout(() => { isLocked = false; }, 400);
+            return true;
+          }
+          return prev;
+        });
+      }
+
       ticking = false;
     };
 
@@ -128,7 +158,10 @@ export default function Header() {
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (lockTimeout) clearTimeout(lockTimeout);
+    };
   }, []);
 
   // Fetch location based on pincode
@@ -254,9 +287,11 @@ export default function Header() {
             </Link>
 
             {/* Search Bar - Center */}
-            <div className="flex flex-1 max-w-2xl mx-8">
-              <SearchAutocomplete />
-            </div>
+            {!hideHeaderExtras && (
+              <div className="flex flex-1 max-w-2xl mx-8">
+                <SearchAutocomplete />
+              </div>
+            )}
 
             <div className="flex items-center gap-4">
               <div className="relative">
@@ -267,7 +302,7 @@ export default function Header() {
                   <FiMapPin className="w-4 h-4" />
                   <div className="text-left">
                     <div className="text-gray-500 line-clamp-1 max-w-[150px]">
-                      Delivering to {location} {pincode && <span className="font-bold">{pincode}</span>}
+                      Delivering to {location} {pincode && <span className="font-semibold">{pincode}</span>}
                     </div>
                     <div className="font-semibold text-gray-900">Update Location</div>
                   </div>
@@ -283,7 +318,7 @@ export default function Header() {
                 {isCountryMenuOpen && (
                   <div className="absolute top-full right-0 mt-2 z-50 bg-white rounded-xl shadow-2xl w-80 border border-gray-100 overflow-hidden">
                     <div className="p-4 bg-gray-50 border-b border-gray-100">
-                      <h3 className="text-sm font-bold text-gray-900">Choose country</h3>
+                      <h3 className="text-sm font-semibold text-gray-900">Choose country</h3>
                     </div>
                     <div className="p-2">
                       {Object.values(countries).map((c) => (
@@ -304,7 +339,7 @@ export default function Header() {
 
               <Link href="/cart" className="relative p-2 hover:bg-gray-50 rounded-lg">
                 <FiShoppingCart className="w-5 h-5" />
-                {cartCount > 0 && <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">{cartCount}</span>}
+                {cartCount > 0 && <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-[10px] font-semibold rounded-full w-4 h-4 flex items-center justify-center">{cartCount}</span>}
               </Link>
 
               {user ? (
@@ -348,7 +383,7 @@ export default function Header() {
                   <FiMapPin className="w-4 h-4 text-black shrink-0" />
                   <div className="flex-1 min-w-0 flex items-center gap-1.5">
                     <span className="text-[12px] text-gray-800 font-medium">Deliver to</span>
-                    <span className="text-[12px] text-black font-bold truncate">{location}, {pincode}</span>
+                    <span className="text-[12px] text-black font-semibold truncate">{location}, {pincode}</span>
                     <FiChevronDown className="w-4 h-4 text-gray-800 shrink-0 ml-auto" />
                   </div>
                 </button>
@@ -379,7 +414,7 @@ export default function Header() {
               <Link href="/cart" className="relative">
                 <FiShoppingCart className="w-6 h-6 text-gray-700" />
                 {cartCount > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                  <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-[10px] font-semibold rounded-full w-4 h-4 flex items-center justify-center">
                     {cartCount}
                   </span>
                 )}
@@ -419,7 +454,7 @@ export default function Header() {
             <div className={`overflow-hidden transition-all duration-300 ease-in-out ${showSecondaryHeader ? 'max-h-12 opacity-100 py-1 mb-2' : 'max-h-0 opacity-0 py-0 mb-0'}`}>
               <div className="flex items-center gap-3 overflow-x-auto no-scrollbar whitespace-nowrap">
                 <div className="flex items-center gap-2 shrink-0">
-                  <span className="text-sm font-bold text-gray-900">Categories</span>
+                  <span className="text-sm font-semibold text-gray-900">Categories</span>
                   <div className="w-px h-4 bg-gray-300"></div>
                 </div>
                 {categories.map((category) => (
@@ -569,14 +604,14 @@ export default function Header() {
                   <FiMapPin className="w-6 h-6 text-blue-600" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-gray-900">Select Location</h3>
+                  <h3 className="text-xl font-semibold text-gray-900">Select Location</h3>
                   <p className="text-xs font-medium text-gray-400">Enter pincode for delivery estimates</p>
                 </div>
               </div>
             </div>
             <form onSubmit={handleLocationSubmit} className="space-y-6">
               <div className="space-y-2">
-                <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-1">Pincode</label>
+                <label className="text-[10px] font-semibold text-gray-500 uppercase tracking-widest ml-1">Pincode</label>
                 <input
                   type="text"
                   value={pincode}
@@ -590,7 +625,7 @@ export default function Header() {
               <button
                 type="submit"
                 disabled={loadingLocation}
-                className="w-full py-4 bg-blue-600 text-white font-bold rounded-2xl hover:bg-blue-700 disabled:bg-gray-200 transition-all shadow-lg"
+                className="w-full py-4 bg-blue-600 text-white font-semibold rounded-2xl hover:bg-blue-700 disabled:bg-gray-200 transition-all shadow-lg"
               >
                 {loadingLocation ? 'Detecting Location...' : 'Update Location'}
               </button>

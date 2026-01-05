@@ -215,7 +215,7 @@ export default function AdminOrdersPage() {
         <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 mb-8">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
-              <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
+              <h1 className="text-3xl sm:text-4xl font-semibold text-gray-900 mb-2">
                 Order Management
               </h1>
               <p className="text-gray-600">Manage all orders and assign deliveries</p>
@@ -237,22 +237,22 @@ export default function AdminOrdersPage() {
             <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-lg p-6 text-white">
               <FiShoppingBag className="text-3xl mb-2 opacity-80" />
               <p className="text-sm opacity-90">Total Orders</p>
-              <p className="text-3xl font-bold">{stats.total || 0}</p>
+              <p className="text-3xl font-semibold">{stats.total || 0}</p>
             </div>
             <div className="bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-xl shadow-lg p-6 text-white">
               <FiAlertCircle className="text-3xl mb-2 opacity-80" />
               <p className="text-sm opacity-90">Ready for Pickup</p>
-              <p className="text-3xl font-bold">{stats.ready_for_pickup || 0}</p>
+              <p className="text-3xl font-semibold">{stats.ready_for_pickup || 0}</p>
             </div>
             <div className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl shadow-lg p-6 text-white">
               <FiTruck className="text-3xl mb-2 opacity-80" />
               <p className="text-sm opacity-90">Shipped</p>
-              <p className="text-3xl font-bold">{stats.shipped || 0}</p>
+              <p className="text-3xl font-semibold">{stats.shipped || 0}</p>
             </div>
             <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl shadow-lg p-6 text-white">
               <FiDollarSign className="text-3xl mb-2 opacity-80" />
               <p className="text-sm opacity-90">Revenue</p>
-              <p className="text-2xl font-bold">₹{(stats.totalRevenue || 0).toLocaleString()}</p>
+              <p className="text-2xl font-semibold">₹{(stats.totalRevenue || 0).toLocaleString()}</p>
             </div>
           </div>
         )}
@@ -302,7 +302,7 @@ export default function AdminOrdersPage() {
                 >
                   <Icon />
                   <span>{filter.label}</span>
-                  <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${selectedStatus === filter.value
+                  <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${selectedStatus === filter.value
                     ? 'bg-white text-blue-600'
                     : 'bg-white text-gray-700'
                     }`}>
@@ -323,7 +323,7 @@ export default function AdminOrdersPage() {
         ) : orders.length === 0 ? (
           <div className="bg-white rounded-2xl shadow-xl p-12 text-center">
             <FiPackage className="text-6xl text-gray-300 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">No Orders Found</h2>
+            <h2 className="text-2xl font-semibold text-gray-900 mb-2">No Orders Found</h2>
             <p className="text-gray-600">
               {searchTerm || selectedStatus !== 'all'
                 ? 'Try adjusting your filters'
@@ -337,7 +337,7 @@ export default function AdminOrdersPage() {
                 <div className="p-6">
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
                     <div>
-                      <h3 className="text-xl font-bold text-gray-900 mb-1">
+                      <h3 className="text-xl font-semibold text-gray-900 mb-1">
                         Order #{order.orderNumber}
                       </h3>
                       <p className="text-sm text-gray-600">
@@ -380,7 +380,7 @@ export default function AdminOrdersPage() {
                     </div>
                     <div className="text-right">
                       <p className="text-xs text-gray-600">Total Amount</p>
-                      <p className="text-2xl font-bold text-blue-600">₹{order.pricing.total.toLocaleString()}</p>
+                      <p className="text-2xl font-semibold text-blue-600">₹{order.pricing.total.toLocaleString()}</p>
                     </div>
                   </div>
 
@@ -458,7 +458,7 @@ export default function AdminOrdersPage() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden">
             <div className="p-6 border-b border-gray-200 flex items-center justify-between">
-              <h2 className="text-2xl font-bold text-gray-900">Select Courier Partner</h2>
+              <h2 className="text-2xl font-semibold text-gray-900">Select Courier Partner</h2>
               <button
                 onClick={() => setShowCourierModal(false)}
                 className="p-2 hover:bg-gray-100 rounded-lg transition"
@@ -476,7 +476,7 @@ export default function AdminOrdersPage() {
               ) : availableCouriers.length === 0 ? (
                 <div className="text-center py-12">
                   <FiAlertCircle className="text-6xl text-red-300 mx-auto mb-4" />
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">No Couriers Available</h3>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">No Couriers Available</h3>
                   <p className="text-gray-600">No courier partners available for this location.</p>
                 </div>
               ) : (
@@ -490,12 +490,12 @@ export default function AdminOrdersPage() {
                     >
                       <div className="flex items-center justify-between">
                         <div>
-                          <h3 className="font-bold text-gray-900 text-lg">{courier.courier_name}</h3>
+                          <h3 className="font-semibold text-gray-900 text-lg">{courier.courier_name}</h3>
                           <p className="text-sm text-gray-600">Delivery in {courier.estimated_delivery_days} days</p>
                           <p className="text-xs text-gray-500">ETD: {courier.etd}</p>
                         </div>
                         <div className="text-right">
-                          <p className="text-2xl font-bold text-blue-600">₹{courier.rate}</p>
+                          <p className="text-2xl font-semibold text-blue-600">₹{courier.rate}</p>
                           <p className="text-xs text-gray-500">Shipping cost</p>
                         </div>
                       </div>

@@ -56,7 +56,7 @@ export default function OrderDetailPage() {
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <FiPackage className="text-6xl text-gray-300 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Order Not Found</h2>
+          <h2 className="text-2xl font-semibold text-gray-900 mb-2">Order Not Found</h2>
           <button
             onClick={() => router.back()}
             className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
@@ -81,7 +81,7 @@ export default function OrderDetailPage() {
               <FiArrowLeft className="text-2xl" />
             </button>
             <div className="flex-1">
-              <h1 className="text-3xl font-bold text-gray-900">
+              <h1 className="text-3xl font-semibold text-gray-900">
                 Order #{order.orderNumber}
               </h1>
               <p className="text-gray-600">
@@ -98,7 +98,7 @@ export default function OrderDetailPage() {
           </div>
 
           {/* Status Badge */}
-          <div className="inline-block px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-full font-bold text-lg">
+          <div className="inline-block px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-full font-semibold text-lg">
             Status: {order.status.replace(/_/g, ' ').toUpperCase()}
           </div>
         </div>
@@ -108,7 +108,7 @@ export default function OrderDetailPage() {
           <div className="lg:col-span-2 space-y-8">
             {/* Order Items */}
             <div className="bg-white rounded-2xl shadow-xl p-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+              <h2 className="text-2xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
                 <FiPackage className="text-blue-600" />
                 Order Items
               </h2>
@@ -135,7 +135,7 @@ export default function OrderDetailPage() {
                       {item.sku && <p className="text-xs text-gray-500">SKU: {item.sku}</p>}
                     </div>
                     <div className="text-right">
-                      <p className="font-bold text-gray-900 text-lg">
+                      <p className="font-semibold text-gray-900 text-lg">
                         ₹{(item.price * item.quantity).toLocaleString()}
                       </p>
                       <p className="text-sm text-gray-600">₹{item.price} each</p>
@@ -147,7 +147,7 @@ export default function OrderDetailPage() {
 
             {/* Timeline */}
             <div className="bg-white rounded-2xl shadow-xl p-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+              <h2 className="text-2xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
                 <FiClock className="text-blue-600" />
                 Order Timeline
               </h2>
@@ -185,7 +185,7 @@ export default function OrderDetailPage() {
           <div className="space-y-8">
             {/* Customer Info */}
             <div className="bg-white rounded-2xl shadow-xl p-6">
-              <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
                 <FiUser className="text-blue-600" />
                 Customer Details
               </h2>
@@ -207,7 +207,7 @@ export default function OrderDetailPage() {
 
             {/* Shipping Address */}
             <div className="bg-white rounded-2xl shadow-xl p-6">
-              <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
                 <FiMapPin className="text-green-600" />
                 Shipping Address
               </h2>
@@ -223,7 +223,7 @@ export default function OrderDetailPage() {
 
             {/* Payment Summary */}
             <div className="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl shadow-xl p-6 text-white">
-              <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+              <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
                 <FiDollarSign />
                 Payment Summary
               </h2>
@@ -246,7 +246,7 @@ export default function OrderDetailPage() {
                     <span>-₹{order.pricing.discount.toLocaleString()}</span>
                   </div>
                 )}
-                <div className="border-t border-white/30 pt-3 flex justify-between font-bold text-lg">
+                <div className="border-t border-white/30 pt-3 flex justify-between font-semibold text-lg">
                   <span>Total</span>
                   <span>₹{order.pricing.total.toLocaleString()}</span>
                 </div>
@@ -260,7 +260,7 @@ export default function OrderDetailPage() {
             {/* Tracking Info */}
             {order.shiprocket?.awbCode && (
               <div className="bg-white rounded-2xl shadow-xl p-6">
-                <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
                   <FiTruck className="text-orange-600" />
                   Shipping Details
                 </h2>

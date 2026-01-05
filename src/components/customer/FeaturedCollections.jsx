@@ -44,7 +44,7 @@ export default function FeaturedCollections({ products = [] }) {
                 {/* Section Header */}
                 <div className="flex items-center justify-between mb-12">
                     <div>
-                        <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-2">
+                        <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-2">
                             Featured Collections
                         </h2>
                         <p className="text-lg text-gray-600">
@@ -53,7 +53,7 @@ export default function FeaturedCollections({ products = [] }) {
                     </div>
                     <Link
                         href="/collections"
-                        className="hidden md:flex items-center gap-2 text-blue-600 hover:text-blue-700 font-bold transition-colors"
+                        className="hidden md:flex items-center gap-2 text-blue-600 hover:text-blue-700 font-semibold transition-colors"
                     >
                         <span>View All</span>
                         <FiArrowRight className="w-5 h-5" />
@@ -88,17 +88,17 @@ export default function FeaturedCollections({ products = [] }) {
                                 <div>
                                     <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/90 backdrop-blur-sm rounded-full mb-4">
                                         <FiShoppingBag className="w-4 h-4 text-gray-900" />
-                                        <span className="text-sm font-bold text-gray-900">{collection.description}</span>
+                                        <span className="text-sm font-semibold text-gray-900">{collection.description}</span>
                                     </div>
                                 </div>
 
                                 <div>
-                                    <h3 className={`font-black text-white mb-4 ${index === 0 ? 'text-4xl md:text-6xl' : 'text-3xl md:text-4xl'
+                                    <h3 className={`font-semibold text-white mb-4 ${index === 0 ? 'text-4xl md:text-6xl' : 'text-3xl md:text-4xl'
                                         }`}>
                                         {collection.title}
                                     </h3>
                                     <div className="inline-flex items-center gap-2 px-6 py-3 bg-white/90 backdrop-blur-sm rounded-full hover:bg-white transition-colors">
-                                        <span className="text-sm font-bold text-gray-900">Explore Collection</span>
+                                        <span className="text-sm font-semibold text-gray-900">Explore Collection</span>
                                         <FiArrowRight className="w-4 h-4 text-gray-900 group-hover:translate-x-1 transition-transform" />
                                     </div>
                                 </div>
@@ -117,7 +117,7 @@ export default function FeaturedCollections({ products = [] }) {
                 <div className="mt-8 text-center md:hidden">
                     <Link
                         href="/collections"
-                        className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-colors"
+                        className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-colors"
                     >
                         <span>View All Collections</span>
                         <FiArrowRight className="w-5 h-5" />

@@ -58,7 +58,7 @@ export default function CouponBanner() {
 
                             {/* Right Side: Promo Code Section */}
                             <div className="flex flex-col items-center md:items-end">
-                                <p className="text-sm md:text-xl font-bold text-[#1a1a1b] mb-1 italic tracking-tight opacity-90">
+                                <p className="text-sm md:text-xl font-semibold text-[#1a1a1b] mb-1 italic tracking-tight opacity-90">
                                     Use Code:
                                 </p>
                                 <div className="relative">
@@ -77,12 +77,12 @@ export default function CouponBanner() {
 
                                     {/* Floating Feedback */}
                                     {copied && (
-                                        <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] font-bold px-3 py-1.5 rounded-full animate-bounce">
+                                        <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] font-semibold px-3 py-1.5 rounded-full animate-bounce">
                                             COPIED!
                                         </div>
                                     )}
                                 </div>
-                                <p className="text-[10px] md:text-xs font-black text-[#1a1a1b]/40 mt-2 uppercase tracking-[0.2em]">
+                                <p className="text-[10px] md:text-xs font-semibold text-[#1a1a1b]/40 mt-2 uppercase tracking-[0.2em]">
                                     T&C Apply
                                 </p>
                             </div>

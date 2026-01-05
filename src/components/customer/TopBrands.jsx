@@ -120,7 +120,7 @@ export default function TopBrands() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h2 className="text-2xl md:text-3xl font-black text-gray-900 mb-2">
+            <h2 className="text-2xl md:text-3xl font-semibold text-gray-900 mb-2">
               Shop by Top Brands
             </h2>
             <p className="text-gray-600 text-sm md:text-base">
@@ -166,7 +166,7 @@ export default function TopBrands() {
                 </div>
 
                 {/* Brand Name */}
-                <h3 className="font-bold text-gray-900 text-sm mb-1 group-hover:text-blue-600 transition-colors">
+                <h3 className="font-semibold text-gray-900 text-sm mb-1 group-hover:text-blue-600 transition-colors">
                   {brand.name}
                 </h3>
 

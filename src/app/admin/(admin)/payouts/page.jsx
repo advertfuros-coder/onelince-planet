@@ -155,7 +155,7 @@ export default function AdminPayoutsPage() {
         {/* Header */}
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Payout Management</h1>
+            <h1 className="text-3xl font-semibold text-gray-900">Payout Management</h1>
             <p className="text-gray-600 mt-1">Manage seller payouts and transactions</p>
           </div>
           <div className="flex space-x-3">
@@ -395,7 +395,7 @@ export default function AdminPayoutsPage() {
                           </div>
                         </td>
                         <td className="px-6 py-4">
-                          <p className="font-bold text-gray-900">{formatPrice(payout.amount)}</p>
+                          <p className="font-semibold text-gray-900">{formatPrice(payout.amount)}</p>
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-900">{payout.orders?.length || 0}</td>
                         <td className="px-6 py-4">
@@ -454,7 +454,7 @@ export default function AdminPayoutsPage() {
       {showCreateModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4 max-h-[80vh] overflow-y-auto">
-            <h3 className="text-xl font-bold text-gray-900 mb-4">Create Payouts</h3>
+            <h3 className="text-xl font-semibold text-gray-900 mb-4">Create Payouts</h3>
 
             <div className="space-y-3 mb-6">
               {sellers.map((seller) => (
@@ -516,7 +516,7 @@ function StatCard({ label, value, icon, color, bgColor, small = false }) {
         </div>
         <div>
           <p className={`text-sm text-gray-600 ${small ? 'text-xs' : ''}`}>{label}</p>
-          <p className={`font-bold text-gray-900 ${small ? 'text-lg' : 'text-2xl'}`}>{value}</p>
+          <p className={`font-semibold text-gray-900 ${small ? 'text-lg' : 'text-2xl'}`}>{value}</p>
         </div>
       </div>
     </div>

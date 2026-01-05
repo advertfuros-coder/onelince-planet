@@ -65,7 +65,7 @@ export default function OrderDetails({ orderId, onClose, onUpdate }) {
                 <div className="max-w-7xl mx-auto px-6 py-4">
                     <div className="flex items-center justify-between">
                         <div>
-                            <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
+                            <h1 className="text-2xl font-semibold text-gray-900 flex items-center gap-3">
                                 <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
                                     ←
                                 </button>
@@ -149,7 +149,7 @@ function OrderDetailsTab({ order, onUpdate }) {
             <div className="lg:col-span-2 space-y-6">
                 {/* Items */}
                 <div className="bg-white rounded-lg shadow-sm p-6">
-                    <h3 className="text-lg font-bold text-gray-900 mb-4">Order Items</h3>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Order Items</h3>
                     <div className="space-y-4">
                         {order.items.map((item, idx) => (
                             <div key={idx} className="flex gap-4 pb-4 border-b last:border-b-0">
@@ -193,7 +193,7 @@ function OrderDetailsTab({ order, onUpdate }) {
                                 <span>-₹{order.pricing.discount.toFixed(2)}</span>
                             </div>
                         )}
-                        <div className="flex justify-between text-lg font-bold text-gray-900 pt-2 border-t">
+                        <div className="flex justify-between text-lg font-semibold text-gray-900 pt-2 border-t">
                             <span>Total</span>
                             <span>₹{order.pricing.total.toFixed(2)}</span>
                         </div>
@@ -202,7 +202,7 @@ function OrderDetailsTab({ order, onUpdate }) {
 
                 {/* Shipping Address */}
                 <div className="bg-white rounded-lg shadow-sm p-6">
-                    <h3 className="text-lg font-bold text-gray-900 mb-4">Shipping Address</h3>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Shipping Address</h3>
                     <div className="text-gray-700">
                         <p className="font-semibold">{order.shippingAddress.name}</p>
                         <p>{order.shippingAddress.phone}</p>
@@ -223,7 +223,7 @@ function OrderDetailsTab({ order, onUpdate }) {
 
                 {/* Payment Info */}
                 <div className="bg-white rounded-lg shadow-sm p-6">
-                    <h3 className="text-lg font-bold text-gray-900 mb-4">Payment Information</h3>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Payment Information</h3>
                     <div className="space-y-2 text-sm">
                         <div className="flex justify-between">
                             <span className="text-gray-600">Method:</span>
@@ -248,7 +248,7 @@ function OrderDetailsTab({ order, onUpdate }) {
                 {/* Shipping Info */}
                 {order.status !== 'pending' && order.status !== 'confirmed' && (
                     <div className="bg-white rounded-lg shadow-sm p-6">
-                        <h3 className="text-lg font-bold text-gray-900 mb-4">Shipping Information</h3>
+                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Shipping Information</h3>
                         {order.shipping?.trackingId ? (
                             <div className="space-y-2 text-sm">
                                 <div className="flex justify-between">
@@ -287,7 +287,7 @@ function StatusCard({ order }) {
 
     return (
         <div className="bg-white rounded-lg shadow-sm p-6">
-            <h3 className="text-lg font-bold text-gray-900 mb-4">Order Status</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Order Status</h3>
             <div className="space-y-4">
                 {ORDER_STATUSES.map((status, idx) => {
                     const isActive = idx === currentIndex;
@@ -320,7 +320,7 @@ function StatusCard({ order }) {
 function TimelineTab({ timeline }) {
     return (
         <div className="bg-white rounded-lg shadow-sm p-6">
-            <h3 className="text-lg font-bold text-gray-900 mb-6">Order Timeline</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-6">Order Timeline</h3>
             <div className="space-y-6">
                 {timeline.map((event, idx) => (
                     <div key={idx} className="flex gap-4">
@@ -375,7 +375,7 @@ function NotesTab({ orderId, notes }) {
         <div className="space-y-6">
             {/* Add Note Form */}
             <div className="bg-white rounded-lg shadow-sm p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Add Note</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Add Note</h3>
                 <textarea
                     value={newNote}
                     onChange={(e) => setNewNote(e.target.value)}
@@ -405,7 +405,7 @@ function NotesTab({ orderId, notes }) {
 
             {/* Notes List */}
             <div className="bg-white rounded-lg shadow-sm p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-4">All Notes</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">All Notes</h3>
                 {allNotes.length === 0 ? (
                     <p className="text-gray-600 text-center py-8">No notes yet</p>
                 ) : (
@@ -460,7 +460,7 @@ function DocumentsTab({ orderId, order }) {
 
     return (
         <div className="bg-white rounded-lg shadow-sm p-6">
-            <h3 className="text-lg font-bold text-gray-900 mb-6">Documents</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-6">Documents</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <DocumentCard
                     title="Packing Slip"
@@ -542,7 +542,7 @@ function StatusUpdateModal({ order, onClose, onUpdate }) {
                 animate={{ scale: 1, opacity: 1 }}
                 className="bg-white rounded-xl shadow-2xl max-w-md w-full p-6"
             >
-                <h3 className="text-xl font-bold text-gray-900 mb-4">Update Order Status</h3>
+                <h3 className="text-xl font-semibold text-gray-900 mb-4">Update Order Status</h3>
 
                 <div className="space-y-4">
                     <div>

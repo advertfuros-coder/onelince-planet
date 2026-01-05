@@ -66,7 +66,7 @@ export default function Step5StoreSetup({ formData, updateFormData, errors }) {
         <div className="space-y-8">
             {/* Store Name */}
             <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Store Name <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -82,7 +82,7 @@ export default function Step5StoreSetup({ formData, updateFormData, errors }) {
 
             {/* Store Description */}
             <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Store Description <span className="text-red-500">*</span>
                 </label>
                 <textarea
@@ -101,7 +101,7 @@ export default function Step5StoreSetup({ formData, updateFormData, errors }) {
 
             {/* Store Logo */}
             <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Store Logo
                 </label>
                 <div className="flex items-start gap-4">
@@ -142,7 +142,7 @@ export default function Step5StoreSetup({ formData, updateFormData, errors }) {
 
             {/* Store Banner */}
             <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Store Banner
                 </label>
                 {bannerPreview && (
@@ -179,7 +179,7 @@ export default function Step5StoreSetup({ formData, updateFormData, errors }) {
 
             {/* Product Categories */}
             <div>
-                <label className="block text-sm font-bold text-gray-700 mb-3">
+                <label className="block text-sm font-semibold text-gray-700 mb-3">
                     Product Categories <span className="text-red-500">*</span>
                 </label>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -207,7 +207,7 @@ export default function Step5StoreSetup({ formData, updateFormData, errors }) {
 
             {/* Website */}
             <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Website <span className="text-gray-500 text-xs">(Optional)</span>
                 </label>
                 <input
@@ -222,7 +222,7 @@ export default function Step5StoreSetup({ formData, updateFormData, errors }) {
             {/* Customer Support */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
                         Support Email
                     </label>
                     <input
@@ -235,7 +235,7 @@ export default function Step5StoreSetup({ formData, updateFormData, errors }) {
                 </div>
 
                 <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
                         Support Phone
                     </label>
                     <input
@@ -250,7 +250,7 @@ export default function Step5StoreSetup({ formData, updateFormData, errors }) {
 
             {/* Social Media */}
             <div className="bg-gray-50 rounded-2xl p-6 space-y-4">
-                <h3 className="text-lg font-bold text-gray-900">Social Media Links</h3>
+                <h3 className="text-lg font-semibold text-gray-900">Social Media Links</h3>
 
                 {['facebook', 'instagram', 'twitter', 'linkedin'].map((platform) => (
                     <div key={platform}>

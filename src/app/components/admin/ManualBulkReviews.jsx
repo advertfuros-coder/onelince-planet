@@ -127,7 +127,7 @@ export default function ManualBulkReviews() {
   return (
     <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-gray-800">Manual Entry</h2>
+        <h2 className="text-2xl font-semibold text-gray-800">Manual Entry</h2>
         <FiPlusCircle className="text-3xl text-green-600" />
       </div>
       
@@ -153,7 +153,7 @@ export default function ManualBulkReviews() {
             {reviews.map((review, index) => (
               <div key={review.id} className="border border-gray-200 p-4 rounded-lg bg-gray-50">
                 <div className="flex justify-between items-center mb-3">
-                  <h3 className="font-bold text-lg text-gray-800">Review #{index + 1}</h3>
+                  <h3 className="font-semibold text-lg text-gray-800">Review #{index + 1}</h3>
                   <button
                     onClick={() => removeReview(index)}
                     className="text-red-600 hover:text-red-800 transition-colors p-2"

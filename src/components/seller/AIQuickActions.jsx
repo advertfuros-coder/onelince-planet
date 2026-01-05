@@ -78,7 +78,7 @@ export default function AIQuickActions() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <FiZap className="w-5 h-5 text-purple-600" />
-            <h3 className="font-bold text-gray-900">AI Quick Actions</h3>
+            <h3 className="font-semibold text-gray-900">AI Quick Actions</h3>
           </div>
           <span className="text-xs font-semibold text-purple-600 bg-purple-100 px-2 py-1 rounded-full">
             NEW

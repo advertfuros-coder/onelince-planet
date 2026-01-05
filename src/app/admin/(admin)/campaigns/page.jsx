@@ -70,7 +70,7 @@ export default function AdminCampaignsPage() {
             completed: 'bg-blue-100 text-blue-700'
         }
         return (
-            <span className={`px-2 py-1 rounded-full text-xs font-bold uppercase ${styles[status] || styles.draft}`}>
+            <span className={`px-2 py-1 rounded-full text-xs font-semibold uppercase ${styles[status] || styles.draft}`}>
                 {status}
             </span>
         )
@@ -80,7 +80,7 @@ export default function AdminCampaignsPage() {
         <div className="space-y-6">
             <div className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-900">Ad Campaigns</h1>
+                    <h1 className="text-3xl font-semibold text-gray-900">Ad Campaigns</h1>
                     <p className="text-gray-600 mt-1">Manage sponsored products and platform advertisements</p>
                 </div>
             </div>
@@ -166,7 +166,7 @@ export default function AdminCampaignsPage() {
                             <div className="flex-1">
                                 <div className="flex justify-between items-start">
                                     <div>
-                                        <h3 className="text-xl font-bold text-gray-900">{campaign.campaignName}</h3>
+                                        <h3 className="text-xl font-semibold text-gray-900">{campaign.campaignName}</h3>
                                         <p className="text-sm text-gray-600 flex items-center gap-2 mt-1">
                                             Seller: <span className="font-medium text-blue-600">{campaign.sellerId?.businessName}</span>
                                             • Type: <span className="capitalize">{campaign.campaignType.replace('_', ' ')}</span>
@@ -174,7 +174,7 @@ export default function AdminCampaignsPage() {
                                     </div>
                                     <div className="text-right">
                                         <p className="text-sm text-gray-500">Budget</p>
-                                        <p className="text-lg font-bold text-gray-900">
+                                        <p className="text-lg font-semibold text-gray-900">
                                             ₹{campaign.budget.amount.toLocaleString()}
                                             <span className="text-xs font-normal text-gray-500 ml-1">/{campaign.budget.type}</span>
                                         </p>
@@ -184,19 +184,19 @@ export default function AdminCampaignsPage() {
                                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
                                     <div className="bg-gray-50 p-3 rounded text-sm">
                                         <span className="text-gray-500 block">Impressions</span>
-                                        <span className="font-bold">{campaign.metrics.impressions.toLocaleString()}</span>
+                                        <span className="font-semibold">{campaign.metrics.impressions.toLocaleString()}</span>
                                     </div>
                                     <div className="bg-gray-50 p-3 rounded text-sm">
                                         <span className="text-gray-500 block">Clicks</span>
-                                        <span className="font-bold">{campaign.metrics.clicks.toLocaleString()}</span>
+                                        <span className="font-semibold">{campaign.metrics.clicks.toLocaleString()}</span>
                                     </div>
                                     <div className="bg-gray-50 p-3 rounded text-sm">
                                         <span className="text-gray-500 block">CTR</span>
-                                        <span className="font-bold">{campaign.metrics.ctr.toFixed(2)}%</span>
+                                        <span className="font-semibold">{campaign.metrics.ctr.toFixed(2)}%</span>
                                     </div>
                                     <div className="bg-gray-50 p-3 rounded text-sm">
                                         <span className="text-gray-500 block">ROAS</span>
-                                        <span className="font-bold">{campaign.metrics.roas.toFixed(2)}x</span>
+                                        <span className="font-semibold">{campaign.metrics.roas.toFixed(2)}x</span>
                                     </div>
                                 </div>
                             </div>
@@ -250,7 +250,7 @@ function StatCard({ label, value, icon, color, bgColor }) {
                 </div>
                 <div>
                     <p className="text-sm text-gray-600">{label}</p>
-                    <p className="text-2xl font-bold text-gray-900">{value}</p>
+                    <p className="text-2xl font-semibold text-gray-900">{value}</p>
                 </div>
             </div>
         </div>

@@ -101,7 +101,7 @@ export default function SellerAnalytics() {
       <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC]">
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
-          <p className="text-gray-500 font-bold animate-pulse">Loading Analytics...</p>
+          <p className="text-gray-500 font-semibold animate-pulse">Loading Analytics...</p>
         </div>
       </div>
     )
@@ -114,7 +114,7 @@ export default function SellerAnalytics() {
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-6">
           <div>
-            <h1 className="text-3xl font-black text-gray-900 tracking-tight">Sales Analytics</h1>
+            <h1 className="text-3xl font-semibold text-gray-900 tracking-tight">Sales Analytics</h1>
             <p className="text-gray-500 mt-1 font-medium">Track your store performance and understand your customers</p>
           </div>
 
@@ -124,7 +124,7 @@ export default function SellerAnalytics() {
                 <button
                   key={range}
                   onClick={() => setDateRange(range)}
-                  className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${dateRange === range
+                  className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${dateRange === range
                     ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30'
                     : 'text-gray-500 hover:bg-gray-50'
                     }`}
@@ -133,7 +133,7 @@ export default function SellerAnalytics() {
                 </button>
               ))}
             </div>
-            <button className="flex items-center gap-2 px-6 py-3 bg-gray-900 text-white rounded-2xl font-bold hover:bg-black transition-all shadow-lg active:scale-95">
+            <button className="flex items-center gap-2 px-6 py-3 bg-gray-900 text-white rounded-2xl font-semibold hover:bg-black transition-all shadow-lg active:scale-95">
               <Download size={18} />
               <span>Export Report</span>
             </button>
@@ -146,7 +146,7 @@ export default function SellerAnalytics() {
           {/* Payments Funnel Visualization */}
           <div className="lg:col-span-2 bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100/50 relative overflow-hidden group">
             <div className="flex items-center justify-between mb-8">
-              <h3 className="text-xl font-black text-gray-900">Order Progress</h3>
+              <h3 className="text-xl font-semibold text-gray-900">Order Progress</h3>
               <button className="p-2 hover:bg-gray-50 rounded-xl transition-colors">
                 <MoreHorizontal size={20} className="text-gray-400" />
               </button>
@@ -187,9 +187,9 @@ export default function SellerAnalytics() {
               {/* Drop-off Tooltip (Absolute) */}
               <div className="absolute top-[35%] left-[55%] animate-in fade-in slide-in-from-left-4 duration-500">
                 <div className="bg-white/90 backdrop-blur-md p-3 rounded-2xl shadow-2xl border border-gray-100 flex items-center gap-2">
-                  <span className="text-[11px] font-bold text-gray-900">Success Rate: <span className="text-blue-600">{analyticsData.overview.conversionRate || 85}%</span></span>
+                  <span className="text-[11px] font-semibold text-gray-900">Success Rate: <span className="text-blue-600">{analyticsData.overview.conversionRate || 85}%</span></span>
                   <div className="w-[1px] h-3 bg-gray-200" />
-                  <span className="text-[11px] font-bold text-gray-400">Success: <span className="text-emerald-500">High</span></span>
+                  <span className="text-[11px] font-semibold text-gray-400">Success: <span className="text-emerald-500">High</span></span>
                 </div>
               </div>
             </div>
@@ -201,8 +201,8 @@ export default function SellerAnalytics() {
                   <Zap size={16} fill="currentColor" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-[11px] font-black text-blue-900/40 uppercase tracking-widest mb-0.5">Quick Insight</p>
-                  <p className="text-xs font-bold text-blue-900/60">
+                  <p className="text-[11px] font-semibold text-blue-900/40 uppercase tracking-widest mb-0.5">Quick Insight</p>
+                  <p className="text-xs font-semibold text-blue-900/60">
                     {analyticsData.growth.orders > 0
                       ? `Order volume is up by ${analyticsData.growth.orders.toFixed(1)}% - click to see why.`
                       : "Analyze factors affecting your conversion trends."}
@@ -217,16 +217,16 @@ export default function SellerAnalytics() {
           <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100/50 flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-black text-gray-900">Total Revenue</h3>
+                <h3 className="text-xl font-semibold text-gray-900">Total Revenue</h3>
                 <button className="p-2 hover:bg-gray-50 rounded-xl transition-colors">
                   <MoreHorizontal size={20} className="text-gray-400" />
                 </button>
               </div>
               <div className="flex items-center gap-4 mb-10">
-                <h2 className="text-4xl font-black text-gray-900 tracking-tighter">
+                <h2 className="text-4xl font-semibold text-gray-900 tracking-tighter">
                   {formatPrice(analyticsData.overview.totalRevenue)}
                 </h2>
-                <div className={`flex items-center gap-1 ${analyticsData.growth.revenue >= 0 ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-600'} px-3 py-1.5 rounded-full text-xs font-black`}>
+                <div className={`flex items-center gap-1 ${analyticsData.growth.revenue >= 0 ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-600'} px-3 py-1.5 rounded-full text-xs font-semibold`}>
                   {analyticsData.growth.revenue >= 0 ? <TrendingUp size={14} /> : <TrendingUp size={14} className="rotate-180" />}
                   <span>{Math.abs(analyticsData.growth.revenue).toFixed(1)}%</span>
                 </div>
@@ -265,13 +265,13 @@ export default function SellerAnalytics() {
           {/* Retention Stepped Chart */}
           <div className="lg:col-span-1 lg:row-span-2 bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100/50">
             <div className="flex items-center justify-between mb-8">
-              <h3 className="text-xl font-black text-gray-900">Customer Loyalty</h3>
+              <h3 className="text-xl font-semibold text-gray-900">Customer Loyalty</h3>
               <button className="p-2 hover:bg-gray-50 rounded-xl transition-colors">
                 <MoreHorizontal size={20} className="text-gray-400" />
               </button>
             </div>
             <div className="h-[300px] w-full relative">
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-[10px] font-black shadow-lg shadow-blue-200">
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-[10px] font-semibold shadow-lg shadow-blue-200">
                 {analyticsData.customerInsights.customerRetentionRate}% Rate
               </div>
               <ResponsiveContainer width="100%" height="100%">
@@ -329,15 +329,15 @@ export default function SellerAnalytics() {
             <div className="absolute top-10 right-10">
               <div className="bg-white/10 backdrop-blur-md px-4 py-2 rounded-2xl flex items-center gap-2 border border-white/20">
                 <Zap size={14} className="text-blue-400" />
-                <span className="text-xs font-bold uppercase tracking-widest">Revenue Forecast</span>
+                <span className="text-xs font-semibold uppercase tracking-widest">Revenue Forecast</span>
               </div>
             </div>
 
             <div className="relative z-10 space-y-4">
-              <h2 className="text-7xl font-black tracking-tighter">
+              <h2 className="text-7xl font-semibold tracking-tighter">
                 {analyticsData.growth.revenue > 0 ? `+${analyticsData.growth.revenue.toFixed(0)}%` : '---'}
               </h2>
-              <h4 className="text-2xl font-bold leading-tight">
+              <h4 className="text-2xl font-semibold leading-tight">
                 Your revenue growth trend is {analyticsData.growth.revenue >= 0 ? 'outperforming' : 'adjusting'}.
               </h4>
               <p className="text-white/60 text-sm font-medium pr-10">
@@ -367,8 +367,8 @@ function FunnelStep({ label, value, height, active, highlight }) {
   return (
     <div className="flex flex-col items-center gap-4 group flex-1">
       <div className="text-center">
-        <p className="text-[11px] font-black text-gray-400 uppercase tracking-widest mb-1">{label}</p>
-        <p className={`text-lg font-black ${active ? 'text-gray-900' : 'text-gray-300'}`}>{value}</p>
+        <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-widest mb-1">{label}</p>
+        <p className={`text-lg font-semibold ${active ? 'text-gray-900' : 'text-gray-300'}`}>{value}</p>
       </div>
       <div
         className={`w-full rounded-t-2xl transition-all duration-1000 ease-out ${highlight ? 'bg-gradient-to-t from-blue-700 to-blue-500' :
@@ -389,8 +389,8 @@ function ProgressStat({ label, value, total, color, stripes }) {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <span className="text-sm font-bold text-gray-500">{label}</span>
-        <span className="text-sm font-black text-gray-900">₹{value.toLocaleString()}</span>
+        <span className="text-sm font-semibold text-gray-500">{label}</span>
+        <span className="text-sm font-semibold text-gray-900">₹{value.toLocaleString()}</span>
       </div>
       <div className="h-4 w-full bg-gray-50 rounded-xl overflow-hidden relative">
         <motion.div
@@ -412,18 +412,18 @@ function MetricCard({ title, value, change, data, color, peak }) {
   return (
     <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100/50 flex items-center justify-between group overflow-hidden">
       <div>
-        <h4 className="text-lg font-black text-gray-900 mb-6">{title}</h4>
+        <h4 className="text-lg font-semibold text-gray-900 mb-6">{title}</h4>
         <div className="flex items-baseline gap-4">
-          <h2 className="text-5xl font-black text-gray-900 tracking-tighter">{value}</h2>
+          <h2 className="text-5xl font-semibold text-gray-900 tracking-tighter">{value}</h2>
           <div className="flex flex-col">
-            <span className="text-xs font-bold text-emerald-500 tracking-tight">{change}</span>
-            <span className="text-[10px] font-bold text-gray-300 uppercase tracking-widest">vs last period</span>
+            <span className="text-xs font-semibold text-emerald-500 tracking-tight">{change}</span>
+            <span className="text-[10px] font-semibold text-gray-300 uppercase tracking-widest">vs last period</span>
           </div>
         </div>
       </div>
 
       <div className="w-32 h-20 relative">
-        <div className="absolute top-[-30px] left-1/2 -translate-x-1/2 bg-gray-900 text-white text-[9px] font-black px-2 py-1 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+        <div className="absolute top-[-30px] left-1/2 -translate-x-1/2 bg-gray-900 text-white text-[9px] font-semibold px-2 py-1 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
           Peak: {peak}
         </div>
         <ResponsiveContainer width="100%" height="100%">

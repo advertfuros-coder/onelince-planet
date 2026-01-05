@@ -133,14 +133,14 @@ export default function PricingTiers({ currentTier = 'free', onSelectPlan }) {
                         <button
                             key={interval}
                             onClick={() => setBillingInterval(interval)}
-                            className={`relative px-6 py-3 rounded-xl font-bold text-sm transition-all ${billingInterval === interval
+                            className={`relative px-6 py-3 rounded-xl font-semibold text-sm transition-all ${billingInterval === interval
                                     ? 'bg-white text-gray-900 shadow-lg'
                                     : 'text-gray-500 hover:text-gray-700'
                                 }`}
                         >
                             {interval.charAt(0).toUpperCase() + interval.slice(1)}
                             {interval !== 'monthly' && (
-                                <span className="absolute -top-2 -right-2 px-2 py-0.5 bg-green-500 text-white text-[9px] font-black rounded-full">
+                                <span className="absolute -top-2 -right-2 px-2 py-0.5 bg-green-500 text-white text-[9px] font-semibold rounded-full">
                                     {interval === 'quarterly' ? '-10%' : '-20%'}
                                 </span>
                             )}
@@ -170,7 +170,7 @@ export default function PricingTiers({ currentTier = 'free', onSelectPlan }) {
                             {/* Popular Badge */}
                             {tier.popular && (
                                 <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                                    <div className="px-4 py-1 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-xs font-black uppercase tracking-wider rounded-full shadow-lg">
+                                    <div className="px-4 py-1 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-xs font-semibold uppercase tracking-wider rounded-full shadow-lg">
                                         Most Popular
                                     </div>
                                 </div>
@@ -179,7 +179,7 @@ export default function PricingTiers({ currentTier = 'free', onSelectPlan }) {
                             {/* Current Plan Badge */}
                             {isCurrentPlan && (
                                 <div className="absolute top-4 right-4">
-                                    <div className="px-3 py-1 bg-green-100 text-green-700 text-xs font-black uppercase rounded-full">
+                                    <div className="px-3 py-1 bg-green-100 text-green-700 text-xs font-semibold uppercase rounded-full">
                                         Current
                                     </div>
                                 </div>
@@ -191,13 +191,13 @@ export default function PricingTiers({ currentTier = 'free', onSelectPlan }) {
                             </div>
 
                             {/* Tier Name */}
-                            <h3 className="text-2xl font-black text-gray-900 mb-1">{tier.name}</h3>
+                            <h3 className="text-2xl font-semibold text-gray-900 mb-1">{tier.name}</h3>
                             <p className="text-sm text-gray-500 font-medium mb-6">{tier.tagline}</p>
 
                             {/* Price */}
                             <div className="mb-6">
                                 <div className="flex items-baseline gap-2">
-                                    <span className="text-4xl font-black text-gray-900">
+                                    <span className="text-4xl font-semibold text-gray-900">
                                         ₹{discountedPrice.toLocaleString()}
                                     </span>
                                     <span className="text-gray-500 font-medium">
@@ -209,7 +209,7 @@ export default function PricingTiers({ currentTier = 'free', onSelectPlan }) {
                                         <span className="text-sm text-gray-400 line-through">
                                             ₹{tier.price.toLocaleString()}
                                         </span>
-                                        <span className="ml-2 text-sm text-green-600 font-bold">
+                                        <span className="ml-2 text-sm text-green-600 font-semibold">
                                             {getDiscountBadge()}
                                         </span>
                                     </div>
@@ -220,7 +220,7 @@ export default function PricingTiers({ currentTier = 'free', onSelectPlan }) {
                             <button
                                 onClick={() => !isCurrentPlan && onSelectPlan(tier.id, billingInterval)}
                                 disabled={isCurrentPlan}
-                                className={`w-full py-4 rounded-xl font-black text-sm uppercase tracking-wider transition-all mb-6 ${isCurrentPlan
+                                className={`w-full py-4 rounded-xl font-semibold text-sm uppercase tracking-wider transition-all mb-6 ${isCurrentPlan
                                         ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                                         : tier.popular
                                             ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:shadow-xl hover:scale-105'
@@ -248,7 +248,7 @@ export default function PricingTiers({ currentTier = 'free', onSelectPlan }) {
 
                             {/* Limits Summary */}
                             <div className="mt-6 pt-6 border-t border-gray-200">
-                                <div className="text-xs font-black text-gray-400 uppercase tracking-wider mb-2">
+                                <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
                                     Plan Limits
                                 </div>
                                 <div className="space-y-1 text-sm text-gray-600">
@@ -264,7 +264,7 @@ export default function PricingTiers({ currentTier = 'free', onSelectPlan }) {
 
             {/* FAQ Section */}
             <div className="mt-16 text-center">
-                <h3 className="text-2xl font-black text-gray-900 mb-4">Frequently Asked Questions</h3>
+                <h3 className="text-2xl font-semibold text-gray-900 mb-4">Frequently Asked Questions</h3>
                 <div className="max-w-3xl mx-auto space-y-4 text-left">
                     <FAQItem
                         question="Can I change my plan anytime?"
@@ -297,7 +297,7 @@ function FAQItem({ question, answer }) {
                 onClick={() => setIsOpen(!isOpen)}
                 className="w-full flex items-center justify-between text-left"
             >
-                <span className="font-bold text-gray-900">{question}</span>
+                <span className="font-semibold text-gray-900">{question}</span>
                 <span className="text-gray-400">{isOpen ? '−' : '+'}</span>
             </button>
             {isOpen && (

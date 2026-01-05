@@ -71,11 +71,11 @@ export default function ProductFilters({ filters, onFiltersChange }) {
   return (
     <div className="w-full max-w-[280px] space-y-4">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-[22px] font-black text-[#1a1a1b] tracking-tight">Filters</h2>
+        <h2 className="text-[22px] font-semibold text-[#1a1a1b] tracking-tight">Filters</h2>
         {hasActiveFilters && (
           <button
             onClick={clearAllFilters}
-            className="text-sm font-bold text-blue-600 hover:text-blue-700 transition-colors"
+            className="text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors"
           >
             Clear All
           </button>
@@ -86,25 +86,25 @@ export default function ProductFilters({ filters, onFiltersChange }) {
       {hasActiveFilters && (
         <div className="flex flex-wrap gap-2 mb-4">
           {filters.minPrice && (
-            <span className="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-bold rounded-full flex items-center gap-1">
+            <span className="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-semibold rounded-full flex items-center gap-1">
               Min: ₹{filters.minPrice}
               <button onClick={() => updateFilter('minPrice', '')} className="hover:text-blue-900">×</button>
             </span>
           )}
           {filters.maxPrice && (
-            <span className="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-bold rounded-full flex items-center gap-1">
+            <span className="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-semibold rounded-full flex items-center gap-1">
               Max: ₹{filters.maxPrice}
               <button onClick={() => updateFilter('maxPrice', '')} className="hover:text-blue-900">×</button>
             </span>
           )}
           {filters.brand && (
-            <span className="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-bold rounded-full flex items-center gap-1 capitalize">
+            <span className="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-semibold rounded-full flex items-center gap-1 capitalize">
               {filters.brand}
               <button onClick={() => updateFilter('brand', '')} className="hover:text-blue-900">×</button>
             </span>
           )}
           {filters.rating && (
-            <span className="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-bold rounded-full flex items-center gap-1">
+            <span className="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-semibold rounded-full flex items-center gap-1">
               {filters.rating}★ & Up
               <button onClick={() => updateFilter('rating', '')} className="hover:text-blue-900">×</button>
             </span>
@@ -116,7 +116,7 @@ export default function ProductFilters({ filters, onFiltersChange }) {
       <div className="bg-[#F8F9FA] rounded-[24px] overflow-hidden border border-gray-100/50">
         <button
           onClick={() => toggleSection('price')}
-          className="flex items-center justify-between w-full p-5 text-left font-bold text-[#1a1a1b]"
+          className="flex items-center justify-between w-full p-5 text-left font-semibold text-[#1a1a1b]"
         >
           Price Range
           <FiChevronUp className={`w-5 h-5 transition-transform duration-300 ${!openSections.price ? 'rotate-180' : ''}`} />
@@ -131,7 +131,7 @@ export default function ProductFilters({ filters, onFiltersChange }) {
                   placeholder="Min"
                   value={filters.minPrice}
                   onChange={(e) => updateFilter('minPrice', e.target.value)}
-                  className="w-full pl-7 pr-3 py-2.5 bg-white border border-gray-200 rounded-xl text-sm font-bold focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none"
+                  className="w-full pl-7 pr-3 py-2.5 bg-white border border-gray-200 rounded-xl text-sm font-semibold focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none"
                 />
               </div>
               <span className="text-gray-400 font-medium">-</span>
@@ -142,7 +142,7 @@ export default function ProductFilters({ filters, onFiltersChange }) {
                   placeholder="Max"
                   value={filters.maxPrice}
                   onChange={(e) => updateFilter('maxPrice', e.target.value)}
-                  className="w-full pl-7 pr-3 py-2.5 bg-white border border-gray-200 rounded-xl text-sm font-bold focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none"
+                  className="w-full pl-7 pr-3 py-2.5 bg-white border border-gray-200 rounded-xl text-sm font-semibold focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none"
                 />
               </div>
             </div>
@@ -154,7 +154,7 @@ export default function ProductFilters({ filters, onFiltersChange }) {
       <div className="bg-[#F8F9FA] rounded-[24px] overflow-hidden border border-gray-100/50">
         <button
           onClick={() => toggleSection('brand')}
-          className="flex items-center justify-between w-full p-5 text-left font-bold text-[#1a1a1b]"
+          className="flex items-center justify-between w-full p-5 text-left font-semibold text-[#1a1a1b]"
         >
           Brand
           <FiChevronUp className={`w-5 h-5 transition-transform duration-300 ${!openSections.brand ? 'rotate-180' : ''}`} />
@@ -183,9 +183,9 @@ export default function ProductFilters({ filters, onFiltersChange }) {
                         <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
                     </div>
-                    <span className="ml-3 text-sm font-bold text-gray-600 group-hover:text-[#1a1a1b] transition-colors">{brand.name}</span>
+                    <span className="ml-3 text-sm font-semibold text-gray-600 group-hover:text-[#1a1a1b] transition-colors">{brand.name}</span>
                     {brand.count > 0 && (
-                      <span className="ml-auto text-[11px] font-black text-gray-400">({brand.count})</span>
+                      <span className="ml-auto text-[11px] font-semibold text-gray-400">({brand.count})</span>
                     )}
                   </label>
                 )
@@ -201,7 +201,7 @@ export default function ProductFilters({ filters, onFiltersChange }) {
       <div className="bg-[#F8F9FA] rounded-[24px] overflow-hidden border border-gray-100/50">
         <button
           onClick={() => toggleSection('rating')}
-          className="flex items-center justify-between w-full p-5 text-left font-bold text-[#1a1a1b]"
+          className="flex items-center justify-between w-full p-5 text-left font-semibold text-[#1a1a1b]"
         >
           Customer Rating
           <FiChevronUp className={`w-5 h-5 transition-transform duration-300 ${!openSections.rating ? 'rotate-180' : ''}`} />
@@ -220,7 +220,7 @@ export default function ProductFilters({ filters, onFiltersChange }) {
                   {[...Array(5)].map((_, i) => (
                     <FiStar key={i} className={`w-3.5 h-3.5 ${i < rating ? 'fill-[#FF9900] text-[#FF9900]' : 'text-gray-300'}`} />
                   ))}
-                  <span className="ml-1 text-sm font-bold text-gray-600 group-hover:text-[#1a1a1b] transition-colors">& Up</span>
+                  <span className="ml-1 text-sm font-semibold text-gray-600 group-hover:text-[#1a1a1b] transition-colors">& Up</span>
                 </div>
               </label>
             ))}
@@ -232,7 +232,7 @@ export default function ProductFilters({ filters, onFiltersChange }) {
       <div className="bg-[#F8F9FA] rounded-[24px] p-5 space-y-5 border border-gray-100/50">
         {/* Verified Seller */}
         <div className="flex items-center justify-between">
-          <span className="text-[14px] font-bold text-gray-700">Verified Seller</span>
+          <span className="text-[14px] font-semibold text-gray-700">Verified Seller</span>
           <button
             onClick={() => updateFilter('verified', !filters.verified)}
             className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors outline-none focus:ring-2 focus:ring-blue-500/20 ${filters.verified ? 'bg-blue-600' : 'bg-gray-200'}`}
@@ -243,7 +243,7 @@ export default function ProductFilters({ filters, onFiltersChange }) {
 
         {/* Fast Delivery */}
         <div className="flex items-center justify-between">
-          <span className="text-[14px] font-bold text-gray-700">Fast Delivery</span>
+          <span className="text-[14px] font-semibold text-gray-700">Fast Delivery</span>
           <button
             onClick={() => updateFilter('fastDelivery', !filters.fastDelivery)}
             className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors outline-none focus:ring-2 focus:ring-blue-500/20 ${filters.fastDelivery ? 'bg-blue-600' : 'bg-gray-200'}`}

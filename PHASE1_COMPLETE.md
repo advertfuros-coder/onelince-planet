@@ -82,7 +82,7 @@ Display: AED 15 (349 × 0.044)
 <span>₹{price.toLocaleString()}</span>
 
 // New way (automatic):
-<Price amount={price} className="font-bold" />
+<Price amount={price} className="font-semibold" />
 ```
 
 ## Testing Results

@@ -99,7 +99,7 @@ export default function SellerMessages() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[80vh] space-y-4">
         <div className="w-10 h-10 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin" />
-        <p className="text-gray-400 font-black uppercase tracking-widest text-[9px]">Initializing Communication Grid...</p>
+        <p className="text-gray-400 font-semibold uppercase tracking-widest text-[9px]">Initializing Communication Grid...</p>
       </div>
     )
   }
@@ -116,8 +116,8 @@ export default function SellerMessages() {
           <div className="p-8 pb-4">
             <div className="flex items-center justify-between mb-8">
               <div>
-                <h2 className="text-2xl font-black text-gray-900 tracking-tighter">Neural Comms</h2>
-                <p className="text-[10px] font-black text-indigo-500 uppercase tracking-widest mt-1">Global Interaction Hub</p>
+                <h2 className="text-2xl font-semibold text-gray-900 tracking-tighter">Neural Comms</h2>
+                <p className="text-[10px] font-semibold text-indigo-500 uppercase tracking-widest mt-1">Global Interaction Hub</p>
               </div>
               <div className="w-10 h-10 bg-indigo-50 rounded-2xl flex items-center justify-center text-indigo-600">
                 <Zap size={20} />
@@ -130,7 +130,7 @@ export default function SellerMessages() {
                 placeholder="Identify conversation..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-4 py-4 bg-gray-50 border-none rounded-2xl text-[11px] font-black uppercase tracking-widest focus:ring-4 focus:ring-indigo-50 outline-none transition-all"
+                className="w-full pl-12 pr-4 py-4 bg-gray-50 border-none rounded-2xl text-[11px] font-semibold uppercase tracking-widest focus:ring-4 focus:ring-indigo-50 outline-none transition-all"
               />
             </div>
           </div>
@@ -141,8 +141,8 @@ export default function SellerMessages() {
                 <div className="w-20 h-20 bg-gray-50 rounded-[2rem] flex items-center justify-center text-gray-300 mb-4">
                   <MessageCircle size={40} />
                 </div>
-                <h4 className="text-lg font-black text-gray-900">Zero Inbound</h4>
-                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-2 leading-relaxed">System standby. Awaiting customer transmission initiation.</p>
+                <h4 className="text-lg font-semibold text-gray-900">Zero Inbound</h4>
+                <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mt-2 leading-relaxed">System standby. Awaiting customer transmission initiation.</p>
               </div>
             ) : (
               conversations.map((conv) => (
@@ -159,18 +159,18 @@ export default function SellerMessages() {
                      `}
                 >
                   <div className="flex items-center gap-4 min-w-0">
-                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-lg font-black shrink-0 ${selectedConversation?.id === conv.id ? 'bg-white/20' : 'bg-gray-100'}`}>
+                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-lg font-semibold shrink-0 ${selectedConversation?.id === conv.id ? 'bg-white/20' : 'bg-gray-100'}`}>
                       {conv.customer.name.charAt(0)}
                     </div>
                     <div className="min-w-0">
-                      <h4 className={`text-sm font-black truncate ${selectedConversation?.id === conv.id ? 'text-white' : 'text-gray-900'}`}>{conv.customer.name}</h4>
-                      <p className={`text-[10px] font-bold truncate mt-1 ${selectedConversation?.id === conv.id ? 'text-white/60' : 'text-gray-400 font-black uppercase tracking-tighter'}`}>
+                      <h4 className={`text-sm font-semibold truncate ${selectedConversation?.id === conv.id ? 'text-white' : 'text-gray-900'}`}>{conv.customer.name}</h4>
+                      <p className={`text-[10px] font-semibold truncate mt-1 ${selectedConversation?.id === conv.id ? 'text-white/60' : 'text-gray-400 font-semibold uppercase tracking-tighter'}`}>
                         {conv.lastMessage.content}
                       </p>
                     </div>
                   </div>
                   {conv.unreadCount > 0 && selectedConversation?.id !== conv.id && (
-                    <div className="w-6 h-6 bg-rose-500 text-white rounded-full flex items-center justify-center text-[10px] font-black shadow-lg shadow-rose-500/30 shrink-0">
+                    <div className="w-6 h-6 bg-rose-500 text-white rounded-full flex items-center justify-center text-[10px] font-semibold shadow-lg shadow-rose-500/30 shrink-0">
                       {conv.unreadCount}
                     </div>
                   )}
@@ -193,14 +193,14 @@ export default function SellerMessages() {
                   <button onClick={() => setSelectedConversation(null)} className="lg:hidden p-2 text-gray-400 hover:text-gray-900">
                     <ArrowLeft size={20} />
                   </button>
-                  <div className="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center text-lg font-black shadow-lg shadow-indigo-500/20">
+                  <div className="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center text-lg font-semibold shadow-lg shadow-indigo-500/20">
                     {selectedConversation.customer.name.charAt(0)}
                   </div>
                   <div>
-                    <h3 className="text-xl font-black text-gray-900 tracking-tight leading-none">{selectedConversation.customer.name}</h3>
+                    <h3 className="text-xl font-semibold text-gray-900 tracking-tight leading-none">{selectedConversation.customer.name}</h3>
                     <div className="flex items-center gap-2 mt-2">
                       <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                      <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Active Link</span>
+                      <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Active Link</span>
                     </div>
                   </div>
                 </div>
@@ -214,7 +214,7 @@ export default function SellerMessages() {
               {/* Messages History */}
               <div ref={scrollRef} className="flex-1 overflow-y-auto p-10 space-y-6 bg-white">
                 <div className="text-center py-4">
-                  <span className="px-4 py-1.5 bg-gray-50 rounded-full text-[9px] font-black text-gray-400 uppercase tracking-widest border border-gray-100">Synchronized on {new Date().toLocaleDateString()}</span>
+                  <span className="px-4 py-1.5 bg-gray-50 rounded-full text-[9px] font-semibold text-gray-400 uppercase tracking-widest border border-gray-100">Synchronized on {new Date().toLocaleDateString()}</span>
                 </div>
                 {selectedConversation.messages.map((msg, idx) => (
                   <motion.div
@@ -233,7 +233,7 @@ export default function SellerMessages() {
                         {msg.content}
                       </div>
                       <div className={`flex items-center gap-2 mt-2 px-2 ${msg.sender === 'seller' ? 'justify-end' : 'justify-start'}`}>
-                        <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">{new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                        <span className="text-[9px] font-semibold text-gray-400 uppercase tracking-widest">{new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                         {msg.sender === 'seller' && <CheckCheck size={12} className="text-indigo-400" />}
                       </div>
                     </div>
@@ -251,7 +251,7 @@ export default function SellerMessages() {
                     onChange={(e) => setNewMessage(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                     placeholder="Transmit instruction..."
-                    className="flex-1 bg-transparent border-none outline-none text-[13px] font-bold px-4"
+                    className="flex-1 bg-transparent border-none outline-none text-[13px] font-semibold px-4"
                   />
                   <button
                     onClick={handleSendMessage}
@@ -272,12 +272,12 @@ export default function SellerMessages() {
                 </div>
               </div>
               <div className="space-y-4">
-                <h3 className="text-3xl font-black text-gray-900 tracking-tighter">Communication Void</h3>
-                <p className="text-gray-400 max-w-sm font-black uppercase text-[11px] tracking-widest leading-relaxed">System is operational. Select a neural link from the left portal to establish a secure data stream.</p>
+                <h3 className="text-3xl font-semibold text-gray-900 tracking-tighter">Communication Void</h3>
+                <p className="text-gray-400 max-w-sm font-semibold uppercase text-[11px] tracking-widest leading-relaxed">System is operational. Select a neural link from the left portal to establish a secure data stream.</p>
               </div>
               <div className="flex gap-3">
-                <div className="px-4 py-2 bg-white rounded-2xl border border-gray-100 text-[9px] font-black uppercase tracking-widest text-indigo-600 shadow-sm">Fast Response Active</div>
-                <div className="px-4 py-2 bg-white rounded-2xl border border-gray-100 text-[9px] font-black uppercase tracking-widest text-emerald-600 shadow-sm">End-to-End Encryption</div>
+                <div className="px-4 py-2 bg-white rounded-2xl border border-gray-100 text-[9px] font-semibold uppercase tracking-widest text-indigo-600 shadow-sm">Fast Response Active</div>
+                <div className="px-4 py-2 bg-white rounded-2xl border border-gray-100 text-[9px] font-semibold uppercase tracking-widest text-emerald-600 shadow-sm">End-to-End Encryption</div>
               </div>
             </div>
           )}

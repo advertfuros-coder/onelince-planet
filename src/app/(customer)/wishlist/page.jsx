@@ -37,7 +37,7 @@ export default function WishlistPage() {
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center space-x-3">
               <FiHeart className="text-3xl text-purple-600" />
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+              <h1 className="text-4xl font-semibold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
                 My Wishlist
               </h1>
             </div>
@@ -66,7 +66,7 @@ export default function WishlistPage() {
             <div className="w-24 h-24 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
               <FiHeart className="text-5xl text-purple-600" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Your wishlist is empty</h2>
+            <h2 className="text-2xl font-semibold text-gray-900 mb-2">Your wishlist is empty</h2>
             <p className="text-gray-600 mb-6">
               Start adding products you love to your wishlist
             </p>
@@ -176,7 +176,7 @@ export default function WishlistPage() {
                     {/* Price */}
                     <div className="mb-3">
                       <div className="flex items-baseline space-x-2">
-                        <span className="text-2xl font-bold text-gray-900">
+                        <span className="text-2xl font-semibold text-gray-900">
                           ₹{product.pricing?.salePrice?.toLocaleString()}
                         </span>
                         {product.pricing?.basePrice !== product.pricing?.salePrice && (

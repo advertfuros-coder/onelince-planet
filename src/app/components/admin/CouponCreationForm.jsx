@@ -144,7 +144,7 @@ export default function CouponCreationForm({ onSuccess }) {
     <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-lg p-8 space-y-6">
       {/* Header */}
       <div className="border-b pb-4">
-        <h2 className="text-3xl font-bold text-gray-800 flex items-center gap-3">
+        <h2 className="text-3xl font-semibold text-gray-800 flex items-center gap-3">
           <FiTag className="text-blue-600" />
           Create New Coupon
         </h2>
@@ -153,7 +153,7 @@ export default function CouponCreationForm({ onSuccess }) {
 
       {/* Basic Information */}
       <div className="space-y-4">
-        <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2">
+        <h3 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
           <FiTag className="text-blue-600" />
           Basic Information
         </h3>
@@ -205,7 +205,7 @@ export default function CouponCreationForm({ onSuccess }) {
 
       {/* Discount Configuration */}
       <div className="space-y-4 bg-blue-50 p-6 rounded-lg">
-        <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2">
+        <h3 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
           <FiPercent className="text-blue-600" />
           Discount Configuration
         </h3>
@@ -262,7 +262,7 @@ export default function CouponCreationForm({ onSuccess }) {
 
       {/* Coupon Scope */}
       <div className="space-y-4 bg-green-50 p-6 rounded-lg">
-        <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2">
+        <h3 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
           <FiPackage className="text-green-600" />
           Coupon Scope
         </h3>
@@ -369,7 +369,7 @@ export default function CouponCreationForm({ onSuccess }) {
 
       {/* Purchase Requirements */}
       <div className="space-y-4 bg-purple-50 p-6 rounded-lg">
-        <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2">
+        <h3 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
           <FiDollarSign className="text-purple-600" />
           Purchase Requirements
         </h3>
@@ -407,7 +407,7 @@ export default function CouponCreationForm({ onSuccess }) {
 
       {/* Usage Limits */}
       <div className="space-y-4 bg-orange-50 p-6 rounded-lg">
-        <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2">
+        <h3 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
           <FiUsers className="text-orange-600" />
           Usage Limits
         </h3>
@@ -448,7 +448,7 @@ export default function CouponCreationForm({ onSuccess }) {
 
       {/* Date Validity */}
       <div className="space-y-4 bg-pink-50 p-6 rounded-lg">
-        <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2">
+        <h3 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
           <FiCalendar className="text-pink-600" />
           Validity Period
         </h3>
@@ -484,7 +484,7 @@ export default function CouponCreationForm({ onSuccess }) {
 
       {/* User Eligibility */}
       <div className="space-y-4 bg-indigo-50 p-6 rounded-lg">
-        <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2">
+        <h3 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
           <FiUsers className="text-indigo-600" />
           User Eligibility
         </h3>
@@ -543,7 +543,7 @@ export default function CouponCreationForm({ onSuccess }) {
       <button
         type="submit"
         disabled={loading}
-        className="w-full flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-105 active:scale-95 shadow-lg font-bold text-lg"
+        className="w-full flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-105 active:scale-95 shadow-lg font-semibold text-lg"
       >
         <FiCheck className="text-2xl" />
         <span>{loading ? 'Creating Coupon...' : 'Create Coupon'}</span>

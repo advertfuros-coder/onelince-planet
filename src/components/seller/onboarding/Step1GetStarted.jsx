@@ -21,7 +21,7 @@ export default function Step1GetStarted({ formData, updateFormData, errors }) {
 
             {/* Email */}
             <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Email Address <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
@@ -44,7 +44,7 @@ export default function Step1GetStarted({ formData, updateFormData, errors }) {
 
             {/* Phone */}
             <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Phone Number <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
@@ -67,7 +67,7 @@ export default function Step1GetStarted({ formData, updateFormData, errors }) {
 
             {/* Business Type */}
             <div>
-                <label className="block text-sm font-bold text-gray-700 mb-3">
+                <label className="block text-sm font-semibold text-gray-700 mb-3">
                     Business Type <span className="text-red-500">*</span>
                 </label>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">

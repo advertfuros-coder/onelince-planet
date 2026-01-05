@@ -47,7 +47,7 @@ export default function LimitedStock() {
         <div className="text-center mb-8">
           <div className="flex items-center justify-center space-x-2 mb-4">
             <FiAlertCircle className="w-8 h-8 text-red-500" />
-            <h2 className="text-3xl font-bold text-gray-900">Limited Stock Alert</h2>
+            <h2 className="text-3xl font-semibold text-gray-900">Limited Stock Alert</h2>
           </div>
           <p className="text-gray-600">Hurry up! These products are almost sold out</p>
         </div>
@@ -83,7 +83,7 @@ export default function LimitedStock() {
                 </h3>
 
                 <div className="flex items-center space-x-2 mb-4">
-                  <span className="text-xl font-bold text-red-600">
+                  <span className="text-xl font-semibold text-red-600">
                     {formatPrice(product.price)}
                   </span>
                   <span className="text-sm text-gray-500 line-through">

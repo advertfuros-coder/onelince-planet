@@ -124,7 +124,7 @@ export default function AdminProductDetailPage({ params }) {
             <FiArrowLeft size={24} />
           </button>
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Product Details</h1>
+            <h1 className="text-3xl font-semibold text-gray-900">Product Details</h1>
             <p className="text-gray-600 mt-1">View and manage product information</p>
           </div>
         </div>
@@ -227,7 +227,7 @@ export default function AdminProductDetailPage({ params }) {
 
           {/* Stock Info */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center space-x-2">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center space-x-2">
               <FiPackage />
               <span>Inventory</span>
             </h3>
@@ -244,7 +244,7 @@ export default function AdminProductDetailPage({ params }) {
           {/* Basic Info */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <div className="mb-4">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">{product.name}</h2>
+              <h2 className="text-2xl font-semibold text-gray-900 mb-2">{product.name}</h2>
               <div className="flex items-center space-x-4 text-sm text-gray-600">
                 <span className="flex items-center space-x-1">
                   <FiTag />
@@ -268,7 +268,7 @@ export default function AdminProductDetailPage({ params }) {
               <div className="flex items-baseline space-x-3">
                 <div className="flex items-center space-x-2">
                   <FiDollarSign className="text-green-600" />
-                  <span className="text-3xl font-bold text-gray-900">
+                  <span className="text-3xl font-semibold text-gray-900">
                     ₹{product.pricing?.salePrice?.toLocaleString('en-IN')}
                   </span>
                 </div>
@@ -313,7 +313,7 @@ export default function AdminProductDetailPage({ params }) {
 
             {/* Description */}
             <div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Description</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Description</h3>
               <p className="text-gray-700 whitespace-pre-wrap">{product.description}</p>
             </div>
           </div>
@@ -321,7 +321,7 @@ export default function AdminProductDetailPage({ params }) {
           {/* Seller Info */}
           {product.seller && (
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center space-x-2">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center space-x-2">
                 <FiUser />
                 <span>Seller Information</span>
               </h3>
@@ -344,7 +344,7 @@ export default function AdminProductDetailPage({ params }) {
         {/* Specifications */}
 {product.specifications && product.specifications.length > 0 && (
   <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-    <h3 className="text-lg font-bold text-gray-900 mb-4">Specifications</h3>
+    <h3 className="text-lg font-semibold text-gray-900 mb-4">Specifications</h3>
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       {product.specifications.map((spec, idx) => {
         // Handle different specification formats
@@ -366,7 +366,7 @@ export default function AdminProductDetailPage({ params }) {
           {/* Tags */}
           {product.tags && product.tags.length > 0 && (
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h3 className="text-lg font-bold text-gray-900 mb-4">Tags</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Tags</h3>
               <div className="flex flex-wrap gap-2">
                 {product.tags.map((tag, idx) => (
                   <span key={idx} className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
@@ -380,7 +380,7 @@ export default function AdminProductDetailPage({ params }) {
           {/* Shipping Info */}
           {product.shipping && (
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center space-x-2">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center space-x-2">
                 <FiTruck />
                 <span>Shipping Information</span>
               </h3>
@@ -403,7 +403,7 @@ export default function AdminProductDetailPage({ params }) {
           {/* SEO Info */}
           {product.seo && (
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h3 className="text-lg font-bold text-gray-900 mb-4">SEO Information</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">SEO Information</h3>
               <div className="space-y-3">
                 <InfoRow label="Meta Title" value={product.seo.metaTitle || 'N/A'} />
                 <InfoRow label="Meta Description" value={product.seo.metaDescription || 'N/A'} />

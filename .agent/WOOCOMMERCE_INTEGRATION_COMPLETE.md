@@ -70,7 +70,7 @@ After the Shopify card (around line 493), add:
           <ShoppingBag className="w-8 h-8 text-white" />
         </div>
         <div>
-          <h2 className="text-2xl font-black text-gray-900">WooCommerce</h2>
+          <h2 className="text-2xl font-semibold text-gray-900">WooCommerce</h2>
           <p className="text-sm text-gray-500 font-medium">
             Sync products and inventory from your WooCommerce store
           </p>
@@ -79,12 +79,12 @@ After the Shopify card (around line 493), add:
       {wooCommerceData?.isConnected ? (
         <div className="flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-600 rounded-full">
           <CheckCircle2 size={16} />
-          <span className="text-xs font-black uppercase">Connected</span>
+          <span className="text-xs font-semibold uppercase">Connected</span>
         </div>
       ) : (
         <div className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-400 rounded-full">
           <XCircle size={16} />
-          <span className="text-xs font-black uppercase">Not Connected</span>
+          <span className="text-xs font-semibold uppercase">Not Connected</span>
         </div>
       )}
     </div>
@@ -98,7 +98,7 @@ After the Shopify card (around line 493), add:
       <div className="text-center py-12">
         <button
           onClick={connectWooCommerce}
-          className="inline-flex items-center gap-3 px-8 py-4 bg-[#7F54B3] text-white rounded-2xl font-black text-sm hover:bg-[#6a4699] transition-all shadow-lg"
+          className="inline-flex items-center gap-3 px-8 py-4 bg-[#7F54B3] text-white rounded-2xl font-semibold text-sm hover:bg-[#6a4699] transition-all shadow-lg"
         >
           <ShoppingBag size={20} />
           Connect WooCommerce Store
@@ -128,7 +128,7 @@ After the Shopify modal, add:
         <div className="p-10 bg-gradient-to-br from-[#7F54B3]/10 to-purple-50 border-b border-gray-100">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-3xl font-black text-gray-900 tracking-tight">
+              <h2 className="text-3xl font-semibold text-gray-900 tracking-tight">
                 Connect WooCommerce Store
               </h2>
               <p className="text-sm text-gray-600 mt-2">
@@ -147,7 +147,7 @@ After the Shopify modal, add:
         <div className="p-10 space-y-6">
           {/* Instructions */}
           <div className="p-6 bg-purple-50 rounded-2xl border border-purple-100">
-            <h3 className="text-sm font-black text-purple-900 mb-3 flex items-center gap-2">
+            <h3 className="text-sm font-semibold text-purple-900 mb-3 flex items-center gap-2">
               <AlertCircle size={16} />
               How to Get Your Credentials
             </h3>
@@ -177,7 +177,7 @@ After the Shopify modal, add:
           {/* Form */}
           <div className="space-y-4">
             <div>
-              <label className="text-sm font-black text-gray-700 mb-2 block">
+              <label className="text-sm font-semibold text-gray-700 mb-2 block">
                 Store URL
               </label>
               <input
@@ -190,12 +190,12 @@ After the Shopify modal, add:
                     storeUrl: e.target.value,
                   })
                 }
-                className="w-full px-6 py-4 bg-gray-50 border-2 border-gray-200 rounded-2xl text-sm font-bold focus:border-purple-500 focus:ring-2 focus:ring-purple-100 transition-all"
+                className="w-full px-6 py-4 bg-gray-50 border-2 border-gray-200 rounded-2xl text-sm font-semibold focus:border-purple-500 focus:ring-2 focus:ring-purple-100 transition-all"
               />
             </div>
 
             <div>
-              <label className="text-sm font-black text-gray-700 mb-2 block">
+              <label className="text-sm font-semibold text-gray-700 mb-2 block">
                 Consumer Key
               </label>
               <input
@@ -213,7 +213,7 @@ After the Shopify modal, add:
             </div>
 
             <div>
-              <label className="text-sm font-black text-gray-700 mb-2 block">
+              <label className="text-sm font-semibold text-gray-700 mb-2 block">
                 Consumer Secret
               </label>
               <input
@@ -247,7 +247,7 @@ After the Shopify modal, add:
           <div className="flex gap-4 pt-4">
             <button
               onClick={() => setShowWooModal(false)}
-              className="flex-1 px-8 py-4 border-2 border-gray-200 text-gray-600 rounded-2xl font-black text-sm hover:bg-gray-50 transition-all"
+              className="flex-1 px-8 py-4 border-2 border-gray-200 text-gray-600 rounded-2xl font-semibold text-sm hover:bg-gray-50 transition-all"
             >
               Cancel
             </button>
@@ -259,7 +259,7 @@ After the Shopify modal, add:
                 !wooConnectForm.consumerKey ||
                 !wooConnectForm.consumerSecret
               }
-              className="flex-1 px-8 py-4 bg-[#7F54B3] text-white rounded-2xl font-black text-sm hover:bg-[#6a4699] transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="flex-1 px-8 py-4 bg-[#7F54B3] text-white rounded-2xl font-semibold text-sm hover:bg-[#6a4699] transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {connecting ? (
                 <>

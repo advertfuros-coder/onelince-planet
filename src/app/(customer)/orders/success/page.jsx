@@ -64,7 +64,7 @@ export default function OrderSuccessPage() {
                 </div>
                 <div>
                   <p className="text-sm text-gray-500">Order Number</p>
-                  <p className="font-bold text-gray-900">{orderNumber}</p>
+                  <p className="font-semibold text-gray-900">{orderNumber}</p>
                 </div>
               </div>
 
@@ -74,7 +74,7 @@ export default function OrderSuccessPage() {
                 </div>
                 <div>
                   <p className="text-sm text-gray-500">Confirmation Email</p>
-                  <p className="font-bold text-gray-900 truncate">{email}</p>
+                  <p className="font-semibold text-gray-900 truncate">{email}</p>
                 </div>
               </div>
             </div>
@@ -97,26 +97,26 @@ export default function OrderSuccessPage() {
 
           {/* Next Steps */}
           <div className="bg-gray-50 rounded-2xl p-6">
-            <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
+            <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
               <FiPackage className="w-5 h-5 text-blue-600" />
               What's Next?
             </h3>
             <ul className="space-y-3 text-sm text-gray-600">
               <li className="flex items-start gap-3">
                 <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center shrink-0 mt-0.5">
-                  <span className="text-xs font-bold text-blue-600">1</span>
+                  <span className="text-xs font-semibold text-blue-600">1</span>
                 </div>
                 <span>You'll receive an order confirmation email at <strong>{email}</strong></span>
               </li>
               <li className="flex items-start gap-3">
                 <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center shrink-0 mt-0.5">
-                  <span className="text-xs font-bold text-blue-600">2</span>
+                  <span className="text-xs font-semibold text-blue-600">2</span>
                 </div>
                 <span>We'll send you tracking details once your order ships</span>
               </li>
               <li className="flex items-start gap-3">
                 <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center shrink-0 mt-0.5">
-                  <span className="text-xs font-bold text-blue-600">3</span>
+                  <span className="text-xs font-semibold text-blue-600">3</span>
                 </div>
                 <span>Your order will be delivered to your specified address</span>
               </li>
@@ -149,7 +149,7 @@ export default function OrderSuccessPage() {
                 <div className="flex items-start gap-3 bg-white/10 backdrop-blur-sm rounded-xl p-4">
                   <FiPackage className="w-6 h-6 shrink-0 mt-1" />
                   <div>
-                    <h4 className="font-bold mb-1">Track All Orders</h4>
+                    <h4 className="font-semibold mb-1">Track All Orders</h4>
                     <p className="text-sm text-white/80">View order history and track shipments in real-time</p>
                   </div>
                 </div>
@@ -157,7 +157,7 @@ export default function OrderSuccessPage() {
                 <div className="flex items-start gap-3 bg-white/10 backdrop-blur-sm rounded-xl p-4">
                   <FiTrendingUp className="w-6 h-6 shrink-0 mt-1" />
                   <div>
-                    <h4 className="font-bold mb-1">Exclusive Deals</h4>
+                    <h4 className="font-semibold mb-1">Exclusive Deals</h4>
                     <p className="text-sm text-white/80">Get early access to sales and member-only discounts</p>
                   </div>
                 </div>
@@ -165,7 +165,7 @@ export default function OrderSuccessPage() {
                 <div className="flex items-start gap-3 bg-white/10 backdrop-blur-sm rounded-xl p-4">
                   <FiShield className="w-6 h-6 shrink-0 mt-1" />
                   <div>
-                    <h4 className="font-bold mb-1">Saved Addresses</h4>
+                    <h4 className="font-semibold mb-1">Saved Addresses</h4>
                     <p className="text-sm text-white/80">Checkout faster with saved shipping addresses</p>
                   </div>
                 </div>
@@ -173,7 +173,7 @@ export default function OrderSuccessPage() {
                 <div className="flex items-start gap-3 bg-white/10 backdrop-blur-sm rounded-xl p-4">
                   <BiLeaf className="w-6 h-6 shrink-0 mt-1" />
                   <div>
-                    <h4 className="font-bold mb-1">Loyalty Rewards</h4>
+                    <h4 className="font-semibold mb-1">Loyalty Rewards</h4>
                     <p className="text-sm text-white/80">Earn points on every purchase and redeem for discounts</p>
                   </div>
                 </div>
@@ -183,7 +183,7 @@ export default function OrderSuccessPage() {
                 <Button
                   onClick={handleCreateAccount}
                   disabled={creatingAccount}
-                  className="flex-1 bg-white text-purple-600 hover:bg-gray-100 font-bold py-4 rounded-xl shadow-lg transform hover:scale-105 transition-all"
+                  className="flex-1 bg-white text-purple-600 hover:bg-gray-100 font-semibold py-4 rounded-xl shadow-lg transform hover:scale-105 transition-all"
                 >
                   <FiUser className="w-5 h-5 mr-2" />
                   {creatingAccount ? 'Redirecting...' : 'Create Free Account'}
@@ -203,14 +203,14 @@ export default function OrderSuccessPage() {
         <div className="flex flex-col sm:flex-row gap-4">
           <Button
             onClick={() => router.push('/')}
-            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg"
+            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 rounded-xl shadow-lg"
           >
             Continue Shopping
           </Button>
           {!isGuest && (
             <Button
               onClick={() => router.push('/orders')}
-              className="flex-1 bg-gray-800 hover:bg-gray-900 text-white font-bold py-4 rounded-xl shadow-lg"
+              className="flex-1 bg-gray-800 hover:bg-gray-900 text-white font-semibold py-4 rounded-xl shadow-lg"
             >
               View My Orders
             </Button>

@@ -72,7 +72,7 @@ export default function ForumPage() {
             <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl shadow-lg p-6 text-white">
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-3xl font-bold">💬 Seller Community Forum</h1>
+                        <h1 className="text-3xl font-semibold">💬 Seller Community Forum</h1>
                         <p className="mt-2 text-indigo-100">Connect, learn, and grow with fellow sellers</p>
                     </div>
                     <Link
@@ -97,7 +97,7 @@ export default function ForumPage() {
                 {/* Categories Sidebar */}
                 <div className="lg:col-span-1">
                     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-                        <h3 className="font-bold text-gray-900 mb-4">Categories</h3>
+                        <h3 className="font-semibold text-gray-900 mb-4">Categories</h3>
                         <div className="space-y-2">
                             {categories.map((category) => (
                                 <button
@@ -133,7 +133,7 @@ export default function ForumPage() {
                     {posts.length === 0 ? (
                         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
                             <FiMessageSquare className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                            <h3 className="text-xl font-bold text-gray-900 mb-2">No posts yet</h3>
+                            <h3 className="text-xl font-semibold text-gray-900 mb-2">No posts yet</h3>
                             <p className="text-gray-600 mb-6">Be the first to start a discussion!</p>
                             <Link
                                 href="/seller/forum/new"
@@ -169,7 +169,7 @@ function PostCard({ post }) {
                     <div className="flex items-start justify-between mb-2">
                         <div className="flex-1">
                             <Link href={`/seller/forum/${post.slug}`} className="hover:text-indigo-600">
-                                <h3 className="text-lg font-bold text-gray-900 mb-1">{post.title}</h3>
+                                <h3 className="text-lg font-semibold text-gray-900 mb-1">{post.title}</h3>
                             </Link>
                             <div className="flex items-center space-x-3 text-sm text-gray-600">
                                 <span>by {post.authorId?.name || 'Anonymous'}</span>
@@ -225,7 +225,7 @@ function StatCard({ icon, label, value, color }) {
                 </div>
                 <div>
                     <p className="text-sm text-gray-600">{label}</p>
-                    <p className="text-2xl font-bold text-gray-900">{value}</p>
+                    <p className="text-2xl font-semibold text-gray-900">{value}</p>
                 </div>
             </div>
         </div>

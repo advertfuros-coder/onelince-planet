@@ -43,7 +43,7 @@ export function AuthProvider({ children }) {
   const login = async (email, password) => {
     try {
       const response = await axios.post('/api/auth/login', { email, password })
-      
+
       if (response.data.success) {
         const { token, user } = response.data
         localStorage.setItem('token', token)
@@ -53,9 +53,11 @@ export function AuthProvider({ children }) {
       }
       return { success: false, message: response.data.message }
     } catch (error) {
-      return { 
-        success: false, 
-        message: error.response?.data?.message || 'Login failed' 
+      return {
+        success: false,
+        message: error.response?.data?.message || 'Login failed',
+        requiresVerification: error.response?.data?.requiresVerification,
+        email: error.response?.data?.email
       }
     }
   }
@@ -63,7 +65,7 @@ export function AuthProvider({ children }) {
   const register = async (userData) => {
     try {
       const response = await axios.post('/api/auth/register', userData)
-      
+
       if (response.data.success) {
         const { token, user } = response.data
         localStorage.setItem('token', token)
@@ -73,9 +75,9 @@ export function AuthProvider({ children }) {
       }
       return { success: false, message: response.data.message }
     } catch (error) {
-      return { 
-        success: false, 
-        message: error.response?.data?.message || 'Registration failed' 
+      return {
+        success: false,
+        message: error.response?.data?.message || 'Registration failed'
       }
     }
   }
@@ -94,16 +96,16 @@ export function AuthProvider({ children }) {
           Authorization: `Bearer ${token}`
         }
       })
-      
+
       if (response.data.success) {
         setUser(response.data.user)
         return { success: true }
       }
       return { success: false, message: response.data.message }
     } catch (error) {
-      return { 
-        success: false, 
-        message: error.response?.data?.message || 'Update failed' 
+      return {
+        success: false,
+        message: error.response?.data?.message || 'Update failed'
       }
     }
   }

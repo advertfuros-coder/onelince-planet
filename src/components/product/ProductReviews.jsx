@@ -86,7 +86,7 @@ export default function ProductReviews({ productId }) {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {/* Average Rating */}
                         <div className="text-center">
-                            <div className="text-5xl font-bold text-gray-900 mb-2">
+                            <div className="text-5xl font-semibold text-gray-900 mb-2">
                                 {stats.averageRating.toFixed(1)}
                             </div>
                             <div className="flex justify-center mb-2">

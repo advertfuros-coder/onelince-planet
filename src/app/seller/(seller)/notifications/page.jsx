@@ -111,7 +111,7 @@ export default function SellerNotifications() {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen space-y-4">
         <div className="w-10 h-10 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin" />
-        <p className="text-gray-400 font-black uppercase tracking-widest text-[9px]">Ingesting Feed Data...</p>
+        <p className="text-gray-400 font-semibold uppercase tracking-widest text-[9px]">Ingesting Feed Data...</p>
       </div>
     )
   }
@@ -127,11 +127,11 @@ export default function SellerNotifications() {
               <div className="w-10 h-10 rounded-2xl bg-indigo-600 flex items-center justify-center text-white shadow-xl shadow-indigo-500/20">
                 <Bell size={20} />
               </div>
-              <span className="text-[10px] font-black text-indigo-600 bg-indigo-50 px-4 py-1.5 rounded-full uppercase tracking-widest">Feed Terminal</span>
+              <span className="text-[10px] font-semibold text-indigo-600 bg-indigo-50 px-4 py-1.5 rounded-full uppercase tracking-widest">Feed Terminal</span>
             </div>
             <div>
-              <h1 className="text-5xl font-black text-gray-900 tracking-tighter leading-none">Intelligence Stream</h1>
-              <p className="text-gray-500 font-bold uppercase tracking-widest text-[11px] mt-3 flex items-center gap-2">
+              <h1 className="text-5xl font-semibold text-gray-900 tracking-tighter leading-none">Intelligence Stream</h1>
+              <p className="text-gray-500 font-semibold uppercase tracking-widest text-[11px] mt-3 flex items-center gap-2">
                 {unreadCount > 0 ? (
                   <span className="flex items-center gap-2 text-rose-500">
                     <div className="w-2 h-2 rounded-full bg-rose-500 animate-pulse" />
@@ -146,7 +146,7 @@ export default function SellerNotifications() {
             {unreadCount > 0 && (
               <button
                 onClick={markAllAsRead}
-                className="px-6 py-3.5 bg-white border border-gray-100 text-gray-900 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-gray-50 transition-all shadow-sm flex items-center gap-2"
+                className="px-6 py-3.5 bg-white border border-gray-100 text-gray-900 rounded-2xl text-[10px] font-semibold uppercase tracking-widest hover:bg-gray-50 transition-all shadow-sm flex items-center gap-2"
               >
                 <CheckCircle2 size={16} className="text-emerald-500" /> Omni-Read
               </button>
@@ -165,7 +165,7 @@ export default function SellerNotifications() {
                 key={opt}
                 onClick={() => setFilter(opt)}
                 className={`
-                      px-8 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all
+                      px-8 py-3 rounded-2xl text-[10px] font-semibold uppercase tracking-widest transition-all
                       ${filter === opt ? 'bg-indigo-600 text-white shadow-xl shadow-indigo-500/20' : 'text-gray-400 hover:bg-gray-50'}
                    `}
               >
@@ -175,7 +175,7 @@ export default function SellerNotifications() {
           </div>
           <div className="flex items-center gap-2 px-6 py-2 border-l border-gray-50">
             <Activity size={16} className="text-indigo-400" />
-            <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Link Active: 480ms</span>
+            <span className="text-[9px] font-semibold text-gray-400 uppercase tracking-widest">Link Active: 480ms</span>
             <button
               onClick={loadNotifications}
               className="ml-4 p-2.5 bg-gray-50 hover:bg-indigo-50 text-gray-400 hover:text-indigo-600 rounded-xl transition-all"
@@ -214,14 +214,14 @@ export default function SellerNotifications() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between">
                       <div className="space-y-1">
-                        <h3 className="text-xl font-black text-gray-900 tracking-tight leading-none uppercase">{notif.title}</h3>
+                        <h3 className="text-xl font-semibold text-gray-900 tracking-tight leading-none uppercase">{notif.title}</h3>
                         <p className="text-sm font-medium text-gray-500 leading-relaxed mt-2">{notif.message}</p>
                       </div>
                       <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                         {!notif.read && (
                           <button
                             onClick={() => markAsRead(notif._id)}
-                            className="p-3 bg-indigo-50 text-indigo-600 rounded-2xl border border-indigo-100 hover:bg-indigo-100 transition-all font-black text-[9px] uppercase tracking-widest"
+                            className="p-3 bg-indigo-50 text-indigo-600 rounded-2xl border border-indigo-100 hover:bg-indigo-100 transition-all font-semibold text-[9px] uppercase tracking-widest"
                           >
                             Mark Resolved
                           </button>
@@ -237,16 +237,16 @@ export default function SellerNotifications() {
                     <div className="flex items-center gap-6 mt-6 pt-6 border-t border-gray-50">
                       <div className="flex items-center gap-2">
                         <Clock size={14} className="text-gray-300" />
-                        <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                        <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">
                           {new Date(notif.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </span>
                       </div>
                       <div className="flex items-center gap-2">
                         <Zap size={14} className="text-gray-300" />
-                        <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{notif.type} PROTOCOL</span>
+                        <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">{notif.type} PROTOCOL</span>
                       </div>
                       {notif.actionUrl && (
-                        <a href={notif.actionUrl} className="ml-auto text-[10px] font-black text-indigo-600 flex items-center gap-1 uppercase tracking-widest hover:translate-x-1 transition-transform">
+                        <a href={notif.actionUrl} className="ml-auto text-[10px] font-semibold text-indigo-600 flex items-center gap-1 uppercase tracking-widest hover:translate-x-1 transition-transform">
                           Inspect Origin <ChevronRight size={14} />
                         </a>
                       )}
@@ -265,8 +265,8 @@ export default function SellerNotifications() {
                   <RefreshCcw size={40} />
                 </div>
               </div>
-              <h3 className="text-3xl font-black text-gray-900 tracking-tighter uppercase">Feed Vacuum</h3>
-              <p className="text-gray-400 max-w-sm font-black uppercase text-[10px] tracking-[0.2em] leading-relaxed">System backlog purged. No active intelligence signals detected in the selected domain.</p>
+              <h3 className="text-3xl font-semibold text-gray-900 tracking-tighter uppercase">Feed Vacuum</h3>
+              <p className="text-gray-400 max-w-sm font-semibold uppercase text-[10px] tracking-[0.2em] leading-relaxed">System backlog purged. No active intelligence signals detected in the selected domain.</p>
             </div>
           )}
         </div>
@@ -275,14 +275,14 @@ export default function SellerNotifications() {
         <div className="fixed bottom-10 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-8 py-5 rounded-[2.5rem] shadow-2xl flex items-center gap-10 border border-gray-800 backdrop-blur-md bg-gray-900/90 z-40">
           <div className="flex items-center gap-3">
             <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-            <span className="text-[9px] font-black uppercase tracking-widest text-emerald-500">Node Sync: 100%</span>
+            <span className="text-[9px] font-semibold uppercase tracking-widest text-emerald-500">Node Sync: 100%</span>
           </div>
           <div className="h-4 w-[1px] bg-gray-800" />
           <div className="flex items-center gap-6">
-            <p className="text-[9px] font-black uppercase tracking-widest text-gray-500">Recent Signals</p>
+            <p className="text-[9px] font-semibold uppercase tracking-widest text-gray-500">Recent Signals</p>
             <div className="flex -space-x-3">
               {[1, 2, 3].map(i => (
-                <div key={i} className="w-8 h-8 rounded-xl border-2 border-gray-900 bg-gray-800 text-[10px] font-black flex items-center justify-center text-gray-400">
+                <div key={i} className="w-8 h-8 rounded-xl border-2 border-gray-900 bg-gray-800 text-[10px] font-semibold flex items-center justify-center text-gray-400">
                   {i}
                 </div>
               ))}

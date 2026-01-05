@@ -78,7 +78,7 @@ export default function ReportsPage() {
         return (
             <div className="flex flex-col items-center justify-center min-h-[80vh] space-y-4">
                 <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
-                <p className="text-gray-400 font-black uppercase tracking-widest text-[9px]">Compiling Analytical Nodes...</p>
+                <p className="text-gray-400 font-semibold uppercase tracking-widest text-[9px]">Compiling Analytical Nodes...</p>
             </div>
         )
     }
@@ -94,10 +94,10 @@ export default function ReportsPage() {
                             <div className="w-10 h-10 rounded-2xl bg-indigo-600 flex items-center justify-center text-white shadow-xl shadow-indigo-500/20">
                                 <BarChart3 size={22} />
                             </div>
-                            <span className="text-[10px] font-black text-indigo-600 uppercase tracking-widest bg-indigo-50 px-4 py-1.5 rounded-full border border-indigo-100">Analytical Terminal</span>
+                            <span className="text-[10px] font-semibold text-indigo-600 uppercase tracking-widest bg-indigo-50 px-4 py-1.5 rounded-full border border-indigo-100">Analytical Terminal</span>
                         </div>
-                        <h1 className="text-5xl font-black text-gray-900 tracking-tighter leading-none uppercase">Data Intelligence Gallery</h1>
-                        <p className="text-gray-500 font-bold uppercase tracking-widest text-[11px] mt-3 flex items-center gap-2">
+                        <h1 className="text-5xl font-semibold text-gray-900 tracking-tighter leading-none uppercase">Data Intelligence Gallery</h1>
+                        <p className="text-gray-500 font-semibold uppercase tracking-widest text-[11px] mt-3 flex items-center gap-2">
                             <Database size={14} className="text-indigo-500" /> Repository: Multi-Node Distribution — Insights V4
                         </p>
                     </div>
@@ -108,7 +108,7 @@ export default function ReportsPage() {
                                 <button
                                     key={opt}
                                     onClick={() => setPeriod(opt)}
-                                    className={`px-6 py-3 rounded-2xl text-[10px] font-black tracking-widest transition-all ${period === opt
+                                    className={`px-6 py-3 rounded-2xl text-[10px] font-semibold tracking-widest transition-all ${period === opt
                                             ? 'bg-indigo-600 text-white shadow-lg'
                                             : 'text-gray-400 hover:bg-gray-50'
                                         }`}
@@ -124,7 +124,7 @@ export default function ReportsPage() {
                             <button className="p-4 bg-white border border-gray-100 rounded-2xl text-gray-400 hover:text-indigo-600 transition-all shadow-sm">
                                 <Printer size={18} />
                             </button>
-                            <button className="flex items-center gap-3 px-6 py-4 bg-indigo-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-xl shadow-indigo-500/20 hover:bg-indigo-500 transition-all">
+                            <button className="flex items-center gap-3 px-6 py-4 bg-indigo-600 text-white rounded-2xl text-[10px] font-semibold uppercase tracking-widest shadow-xl shadow-indigo-500/20 hover:bg-indigo-500 transition-all">
                                 <Download size={18} />
                                 <span>Export Matrix</span>
                             </button>
@@ -144,19 +144,19 @@ export default function ReportsPage() {
                 <div className="bg-white rounded-[3rem] p-10 shadow-sm border border-gray-100/50">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
                         <div>
-                            <h3 className="text-2xl font-black text-gray-900 tracking-tight uppercase leading-none">Market Evolution Matrix</h3>
-                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-2 flex items-center gap-2">
+                            <h3 className="text-2xl font-semibold text-gray-900 tracking-tight uppercase leading-none">Market Evolution Matrix</h3>
+                            <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mt-2 flex items-center gap-2">
                                 <Binary size={14} className="text-indigo-500" /> Revenue vs Transaction Velocity (Time-Series)
                             </p>
                         </div>
                         <div className="flex items-center gap-4">
                             <div className="flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-xl border border-gray-100">
                                 <div className="w-2 h-2 rounded-full bg-indigo-600" />
-                                <span className="text-[9px] font-black text-gray-600 uppercase tracking-widest">Revenue Alpha</span>
+                                <span className="text-[9px] font-semibold text-gray-600 uppercase tracking-widest">Revenue Alpha</span>
                             </div>
                             <div className="flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-xl border border-gray-100">
                                 <div className="w-2 h-2 rounded-full bg-gray-200" />
-                                <span className="text-[9px] font-black text-gray-600 uppercase tracking-widest">Benchmark</span>
+                                <span className="text-[9px] font-semibold text-gray-600 uppercase tracking-widest">Benchmark</span>
                             </div>
                         </div>
                     </div>
@@ -216,8 +216,8 @@ export default function ReportsPage() {
                     <div className="bg-white rounded-[3rem] p-10 shadow-sm border border-gray-100/50">
                         <div className="flex items-center justify-between mb-12">
                             <div>
-                                <h3 className="text-xl font-black text-gray-900 tracking-tight uppercase leading-none">Categorical Slices</h3>
-                                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-2">Revenue cluster breakdown by node</p>
+                                <h3 className="text-xl font-semibold text-gray-900 tracking-tight uppercase leading-none">Categorical Slices</h3>
+                                <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mt-2">Revenue cluster breakdown by node</p>
                             </div>
                             <div className="w-12 h-12 rounded-2xl bg-gray-50 flex items-center justify-center text-indigo-600">
                                 <Layers size={21} />
@@ -246,8 +246,8 @@ export default function ReportsPage() {
                                 <div key={idx} className="flex items-center gap-3 p-4 bg-gray-50 rounded-2xl border border-gray-100/50">
                                     <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: CHART_COLORS[idx % CHART_COLORS.length] }} />
                                     <div>
-                                        <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1">{cat.name}</p>
-                                        <p className="text-xs font-black text-gray-900">{cat.percentage}%</p>
+                                        <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-widest leading-none mb-1">{cat.name}</p>
+                                        <p className="text-xs font-semibold text-gray-900">{cat.percentage}%</p>
                                     </div>
                                 </div>
                             ))}
@@ -258,8 +258,8 @@ export default function ReportsPage() {
                     <div className="bg-white rounded-[3rem] p-10 shadow-sm border border-gray-100/50">
                         <div className="flex items-center justify-between mb-12">
                             <div>
-                                <h3 className="text-xl font-black text-gray-900 tracking-tight uppercase leading-none">Territorial Velocity</h3>
-                                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-2">Top performing geographical nodes</p>
+                                <h3 className="text-xl font-semibold text-gray-900 tracking-tight uppercase leading-none">Territorial Velocity</h3>
+                                <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mt-2">Top performing geographical nodes</p>
                             </div>
                             <div className="w-12 h-12 rounded-2xl bg-gray-50 flex items-center justify-center text-indigo-600">
                                 <Globe size={21} />
@@ -269,8 +269,8 @@ export default function ReportsPage() {
                             {(data?.regions || []).map((region, idx) => (
                                 <div key={idx} className="space-y-2">
                                     <div className="flex items-center justify-between px-2">
-                                        <span className="text-[10px] font-black text-gray-900 uppercase tracking-widest">{region.label}</span>
-                                        <span className="text-[10px] font-black text-indigo-600">{formatCurrency(region.value)}</span>
+                                        <span className="text-[10px] font-semibold text-gray-900 uppercase tracking-widest">{region.label}</span>
+                                        <span className="text-[10px] font-semibold text-indigo-600">{formatCurrency(region.value)}</span>
                                     </div>
                                     <div className="h-3 w-full bg-gray-50 rounded-full overflow-hidden border border-gray-100/50">
                                         <motion.div
@@ -286,8 +286,8 @@ export default function ReportsPage() {
                         <div className="mt-12 p-8 bg-indigo-900 rounded-[2rem] text-white relative overflow-hidden group">
                             <TrendingUp className="absolute bottom-[-20%] right-[-10%] w-32 h-32 text-indigo-500/20 group-hover:scale-110 transition-transform" />
                             <div className="relative z-10">
-                                <p className="text-[9px] font-black text-indigo-300 uppercase tracking-widest mb-2">Aggregated Forecast</p>
-                                <h4 className="text-xl font-black tracking-tight uppercase leading-none">Regional Scale Potential: +24%</h4>
+                                <p className="text-[9px] font-semibold text-indigo-300 uppercase tracking-widest mb-2">Aggregated Forecast</p>
+                                <h4 className="text-xl font-semibold tracking-tight uppercase leading-none">Regional Scale Potential: +24%</h4>
                             </div>
                         </div>
                     </div>
@@ -309,7 +309,7 @@ function ReportKPI({ label, value, change, trend, icon: Icon }) {
                 <div className="p-4 rounded-xl bg-gray-50 text-indigo-600 group-hover:scale-110 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-500 shadow-sm border border-gray-100 group-hover:border-indigo-500">
                     <Icon size={20} />
                 </div>
-                <div className={`px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest flex items-center gap-1 border ${trend === 'up'
+                <div className={`px-3 py-1.5 rounded-full text-[9px] font-semibold uppercase tracking-widest flex items-center gap-1 border ${trend === 'up'
                         ? 'text-emerald-600 bg-emerald-50 border-emerald-100'
                         : 'text-rose-600 bg-rose-50 border-rose-100'
                     }`}>
@@ -318,15 +318,15 @@ function ReportKPI({ label, value, change, trend, icon: Icon }) {
                 </div>
             </div>
             <div>
-                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 leading-none">{label}</p>
-                <p className="text-3xl font-black text-gray-900 tracking-tighter leading-none">{value}</p>
+                <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-2 leading-none">{label}</p>
+                <p className="text-3xl font-semibold text-gray-900 tracking-tighter leading-none">{value}</p>
             </div>
         </motion.div>
     )
 }
 
 function DollarSignIcon({ size = 20 }) {
-    return <span className="font-black text-lg">$</span>
+    return <span className="font-semibold text-lg">$</span>
 }
 
 const CHART_COLORS = ['#4F46E5', '#818CF8', '#C7D2FE', '#E0E7FF', '#3730A3'];

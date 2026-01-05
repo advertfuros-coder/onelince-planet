@@ -10,7 +10,7 @@ export default function BecomeSellerSection() {
                     {/* Left Side - Content */}
                     <div className="space-y-6">
                         <div>
-                            <h2 className="text-4xl md:text-5xl font-black text-gray-900 leading-tight mb-4">
+                            <h2 className="text-4xl md:text-5xl font-semibold text-gray-900 leading-tight mb-4">
                                 Fueling Brands<br />
                                 for the <span className="text-orange-500">Digital</span><br />
                                 Age.
@@ -24,7 +24,7 @@ export default function BecomeSellerSection() {
                         <div className="flex flex-wrap items-center gap-4">
                             <Link
                                 href="/seller/register"
-                                className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-bold px-8 py-3.5 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
+                                className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3.5 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
                             >
                                 Get Started
                                 <FiArrowRight className="w-5 h-5" />
@@ -43,13 +43,13 @@ export default function BecomeSellerSection() {
                                 <div className="relative z-10">
                                     <div className="flex items-center gap-2 mb-3">
                                         <div className="flex -space-x-2">
-                                            <div className="w-8 h-8 rounded-full bg-blue-500 border-2 border-white flex items-center justify-center text-xs font-bold">A</div>
-                                            <div className="w-8 h-8 rounded-full bg-purple-500 border-2 border-white flex items-center justify-center text-xs font-bold">B</div>
-                                            <div className="w-8 h-8 rounded-full bg-pink-500 border-2 border-white flex items-center justify-center text-xs font-bold">C</div>
-                                            <div className="w-8 h-8 rounded-full bg-orange-500 border-2 border-white flex items-center justify-center text-xs font-bold">D</div>
+                                            <div className="w-8 h-8 rounded-full bg-blue-500 border-2 border-white flex items-center justify-center text-xs font-semibold">A</div>
+                                            <div className="w-8 h-8 rounded-full bg-purple-500 border-2 border-white flex items-center justify-center text-xs font-semibold">B</div>
+                                            <div className="w-8 h-8 rounded-full bg-pink-500 border-2 border-white flex items-center justify-center text-xs font-semibold">C</div>
+                                            <div className="w-8 h-8 rounded-full bg-orange-500 border-2 border-white flex items-center justify-center text-xs font-semibold">D</div>
                                         </div>
                                     </div>
-                                    <p className="text-3xl md:text-4xl font-black mb-1">305K+</p>
+                                    <p className="text-3xl md:text-4xl font-semibold mb-1">305K+</p>
                                     <p className="text-white/80 text-sm font-medium">Happy sellers and successful transactions</p>
                                 </div>
                             </div>
@@ -59,7 +59,7 @@ export default function BecomeSellerSection() {
                                 <div className="absolute bottom-0 left-0 w-20 h-20 bg-white/10 rounded-full -ml-10 -mb-10"></div>
                                 <div className="relative z-10">
                                     <FiUsers className="w-10 h-10 mb-3 opacity-90" />
-                                    <p className="text-3xl md:text-4xl font-black mb-1">600K+</p>
+                                    <p className="text-3xl md:text-4xl font-semibold mb-1">600K+</p>
                                     <p className="text-white/90 text-sm font-medium">Clients</p>
                                 </div>
                             </div>
@@ -71,7 +71,7 @@ export default function BecomeSellerSection() {
                                     <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center mb-3">
                                         <FiDollarSign className="w-6 h-6" />
                                     </div>
-                                    <p className="text-3xl md:text-4xl font-black mb-1">50K</p>
+                                    <p className="text-3xl md:text-4xl font-semibold mb-1">50K</p>
                                     <p className="text-white/90 text-sm font-medium">All Contributions to Sellers</p>
                                 </div>
                             </div>
@@ -103,7 +103,7 @@ export default function BecomeSellerSection() {
                                             <FiTrendingUp className="w-10 h-10 text-white" />
                                         </div>
                                         <div className="text-center text-white">
-                                            <p className="text-4xl font-black mb-2">₹15,340.00</p>
+                                            <p className="text-4xl font-semibold mb-2">₹15,340.00</p>
                                             <p className="text-sm opacity-80">Your Monthly Revenue</p>
                                         </div>
                                         {/* Mini chart illustration */}
@@ -125,7 +125,7 @@ export default function BecomeSellerSection() {
                                         </div>
                                         <div>
                                             <p className="text-xs text-gray-500 font-medium">Monthly Growth</p>
-                                            <p className="text-xl font-black text-gray-900">+28%</p>
+                                            <p className="text-xl font-semibold text-gray-900">+28%</p>
                                         </div>
                                     </div>
                                 </div>

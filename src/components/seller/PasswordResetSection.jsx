@@ -121,7 +121,7 @@ export default function PasswordResetSection({ token }) {
         <form onSubmit={handleSubmit} className="space-y-8">
             {/* Current Password */}
             <div className="space-y-2 group max-w-lg">
-                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-2 group-focus-within:text-blue-600 transition-colors">
+                <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest px-2 group-focus-within:text-blue-600 transition-colors">
                     Current Secure Key
                 </label>
                 <div className="relative">
@@ -130,7 +130,7 @@ export default function PasswordResetSection({ token }) {
                         value={passwords.currentPassword}
                         onChange={(e) => handlePasswordChange('currentPassword', e.target.value)}
                         placeholder="Enter your current password"
-                        className="w-full px-6 py-4 pr-12 bg-gray-50/50 border border-transparent rounded-[1.5rem] text-[13px] font-black placeholder:text-gray-300 focus:bg-white focus:border-blue-100 focus:ring-4 focus:ring-blue-500/5 transition-all outline-none"
+                        className="w-full px-6 py-4 pr-12 bg-gray-50/50 border border-transparent rounded-[1.5rem] text-[13px] font-semibold placeholder:text-gray-300 focus:bg-white focus:border-blue-100 focus:ring-4 focus:ring-blue-500/5 transition-all outline-none"
                     />
                     <button
                         type="button"
@@ -144,7 +144,7 @@ export default function PasswordResetSection({ token }) {
 
             {/* New Password */}
             <div className="space-y-2 group max-w-lg">
-                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-2 group-focus-within:text-blue-600 transition-colors">
+                <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest px-2 group-focus-within:text-blue-600 transition-colors">
                     New Entropy Passphrase
                 </label>
                 <div className="relative">
@@ -153,7 +153,7 @@ export default function PasswordResetSection({ token }) {
                         value={passwords.newPassword}
                         onChange={(e) => handlePasswordChange('newPassword', e.target.value)}
                         placeholder="Min 8 characters, mix of letters, numbers & symbols"
-                        className="w-full px-6 py-4 pr-12 bg-gray-50/50 border border-transparent rounded-[1.5rem] text-[13px] font-black placeholder:text-gray-300 focus:bg-white focus:border-blue-100 focus:ring-4 focus:ring-blue-500/5 transition-all outline-none"
+                        className="w-full px-6 py-4 pr-12 bg-gray-50/50 border border-transparent rounded-[1.5rem] text-[13px] font-semibold placeholder:text-gray-300 focus:bg-white focus:border-blue-100 focus:ring-4 focus:ring-blue-500/5 transition-all outline-none"
                     />
                     <button
                         type="button"
@@ -168,10 +168,10 @@ export default function PasswordResetSection({ token }) {
                 {passwords.newPassword && (
                     <div className="space-y-2 px-2">
                         <div className="flex items-center justify-between">
-                            <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">
+                            <span className="text-[9px] font-semibold text-gray-400 uppercase tracking-widest">
                                 Password Strength
                             </span>
-                            <span className={`text-[9px] font-black uppercase tracking-widest ${passwordStrength < 40 ? 'text-red-500' : passwordStrength < 70 ? 'text-yellow-500' : 'text-green-500'
+                            <span className={`text-[9px] font-semibold uppercase tracking-widest ${passwordStrength < 40 ? 'text-red-500' : passwordStrength < 70 ? 'text-yellow-500' : 'text-green-500'
                                 }`}>
                                 {getStrengthText()}
                             </span>
@@ -188,7 +188,7 @@ export default function PasswordResetSection({ token }) {
 
             {/* Confirm Password */}
             <div className="space-y-2 group max-w-lg">
-                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-2 group-focus-within:text-blue-600 transition-colors">
+                <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest px-2 group-focus-within:text-blue-600 transition-colors">
                     Verify Entropy
                 </label>
                 <div className="relative">
@@ -197,7 +197,7 @@ export default function PasswordResetSection({ token }) {
                         value={passwords.confirmPassword}
                         onChange={(e) => handlePasswordChange('confirmPassword', e.target.value)}
                         placeholder="Re-enter your new password"
-                        className="w-full px-6 py-4 pr-12 bg-gray-50/50 border border-transparent rounded-[1.5rem] text-[13px] font-black placeholder:text-gray-300 focus:bg-white focus:border-blue-100 focus:ring-4 focus:ring-blue-500/5 transition-all outline-none"
+                        className="w-full px-6 py-4 pr-12 bg-gray-50/50 border border-transparent rounded-[1.5rem] text-[13px] font-semibold placeholder:text-gray-300 focus:bg-white focus:border-blue-100 focus:ring-4 focus:ring-blue-500/5 transition-all outline-none"
                     />
                     <button
                         type="button"
@@ -214,14 +214,14 @@ export default function PasswordResetSection({ token }) {
                         {passwords.newPassword === passwords.confirmPassword ? (
                             <>
                                 <Check size={14} className="text-green-500" />
-                                <span className="text-[9px] font-black text-green-500 uppercase tracking-widest">
+                                <span className="text-[9px] font-semibold text-green-500 uppercase tracking-widest">
                                     Passwords Match
                                 </span>
                             </>
                         ) : (
                             <>
                                 <X size={14} className="text-red-500" />
-                                <span className="text-[9px] font-black text-red-500 uppercase tracking-widest">
+                                <span className="text-[9px] font-semibold text-red-500 uppercase tracking-widest">
                                     Passwords Don't Match
                                 </span>
                             </>
@@ -235,7 +235,7 @@ export default function PasswordResetSection({ token }) {
                 <div className="bg-gray-50/50 rounded-[2rem] p-6 border border-gray-100 max-w-lg">
                     <div className="flex items-center gap-2 mb-4">
                         <AlertCircle size={16} className="text-blue-600" />
-                        <h4 className="text-[10px] font-black text-gray-900 uppercase tracking-widest">
+                        <h4 className="text-[10px] font-semibold text-gray-900 uppercase tracking-widest">
                             Security Requirements
                         </h4>
                     </div>
@@ -247,7 +247,7 @@ export default function PasswordResetSection({ token }) {
                                 ) : (
                                     <X size={14} className="text-gray-300" />
                                 )}
-                                <span className={`text-[11px] font-bold ${req.met ? 'text-green-600' : 'text-gray-400'}`}>
+                                <span className={`text-[11px] font-semibold ${req.met ? 'text-green-600' : 'text-gray-400'}`}>
                                     {req.text}
                                 </span>
                             </div>
@@ -261,7 +261,7 @@ export default function PasswordResetSection({ token }) {
                 <button
                     type="submit"
                     disabled={loading || !passwords.currentPassword || !passwords.newPassword || passwords.newPassword !== passwords.confirmPassword || passwordStrength < 40}
-                    className="px-10 py-4 bg-blue-600 text-white rounded-[1.5rem] font-black uppercase text-[11px] tracking-widest shadow-xl shadow-blue-500/20 hover:bg-blue-700 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-3"
+                    className="px-10 py-4 bg-blue-600 text-white rounded-[1.5rem] font-semibold uppercase text-[11px] tracking-widest shadow-xl shadow-blue-500/20 hover:bg-blue-700 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-3"
                 >
                     {loading ? (
                         <>

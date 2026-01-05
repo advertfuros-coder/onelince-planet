@@ -79,7 +79,7 @@ export default function PricingRulesPage() {
         return (
             <div className="flex flex-col items-center justify-center min-h-screen space-y-4">
                 <div className="w-12 h-12 border-4 border-purple-600 border-t-transparent rounded-full animate-spin" />
-                <p className="text-gray-400 font-black uppercase tracking-widest text-[10px]">Loading Algorithm Nodes...</p>
+                <p className="text-gray-400 font-semibold uppercase tracking-widest text-[10px]">Loading Algorithm Nodes...</p>
             </div>
         )
     }
@@ -95,15 +95,15 @@ export default function PricingRulesPage() {
                             <div className="w-8 h-8 rounded-lg bg-purple-600 flex items-center justify-center text-white shadow-lg shadow-purple-500/20">
                                 <Zap size={18} />
                             </div>
-                            <span className="text-[10px] font-black text-purple-600 uppercase tracking-widest bg-purple-50 px-3 py-1 rounded-full">Yield Management</span>
+                            <span className="text-[10px] font-semibold text-purple-600 uppercase tracking-widest bg-purple-50 px-3 py-1 rounded-full">Yield Management</span>
                         </div>
-                        <h1 className="text-4xl font-black text-gray-900 tracking-tighter">Autonomous Pricing Engine</h1>
+                        <h1 className="text-4xl font-semibold text-gray-900 tracking-tighter">Autonomous Pricing Engine</h1>
                         <p className="text-gray-500 font-medium mt-1">Deploy dynamic valuation protocols based on market velocity and inventory load</p>
                     </div>
 
                     <button
                         onClick={() => setShowAddModal(true)}
-                        className="px-8 py-4 bg-purple-600 text-white rounded-[1.5rem] font-black uppercase text-[11px] tracking-widest shadow-2xl shadow-purple-500/30 hover:bg-purple-700 transition-all active:scale-95 flex items-center justify-center gap-2"
+                        className="px-8 py-4 bg-purple-600 text-white rounded-[1.5rem] font-semibold uppercase text-[11px] tracking-widest shadow-2xl shadow-purple-500/30 hover:bg-purple-700 transition-all active:scale-95 flex items-center justify-center gap-2"
                     >
                         <Plus size={18} />
                         Deploy New Protocol
@@ -115,7 +115,7 @@ export default function PricingRulesPage() {
                     {/* Analytics Pane */}
                     <div className="lg:col-span-1 space-y-8">
                         <div className="bg-white rounded-[2.8rem] p-8 shadow-sm border border-gray-100/50">
-                            <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest mb-8 flex items-center gap-2">
+                            <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-widest mb-8 flex items-center gap-2">
                                 <Activity size={16} className="text-purple-600" /> Delta Velocity
                             </h3>
                             <div className="h-[250px] w-full">
@@ -137,12 +137,12 @@ export default function PricingRulesPage() {
                             </div>
                             <div className="mt-8 grid grid-cols-2 gap-4">
                                 <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Avg Lift</p>
-                                    <p className="text-xl font-black text-gray-900">+22.4%</p>
+                                    <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-1">Avg Lift</p>
+                                    <p className="text-xl font-semibold text-gray-900">+22.4%</p>
                                 </div>
                                 <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Buy Box Win</p>
-                                    <p className="text-xl font-black text-gray-900">89%</p>
+                                    <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-1">Buy Box Win</p>
+                                    <p className="text-xl font-semibold text-gray-900">89%</p>
                                 </div>
                             </div>
                         </div>
@@ -150,11 +150,11 @@ export default function PricingRulesPage() {
                         <div className="bg-gradient-to-br from-[#581C87] to-[#7E22CE] rounded-[2.8rem] p-8 text-white relative overflow-hidden">
                             <div className="absolute top-[-20%] right-[-10%] w-[250px] h-[250px] bg-purple-400/20 rounded-full blur-3xl pointer-events-none" />
                             <ShieldCheck className="text-purple-300 mb-4" size={32} />
-                            <h4 className="text-xl font-black mb-2 tracking-tight">Active Safeguard</h4>
-                            <p className="text-purple-100/60 text-[11px] font-bold uppercase tracking-widest leading-relaxed">
+                            <h4 className="text-xl font-semibold mb-2 tracking-tight">Active Safeguard</h4>
+                            <p className="text-purple-100/60 text-[11px] font-semibold uppercase tracking-widest leading-relaxed">
                                 No rule can drop price below "Global Minimum" floor set in your treasury preferences.
                             </p>
-                            <button className="mt-6 w-full py-4 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-2xl text-[10px] font-black uppercase tracking-widest border border-white/20 transition-all">
+                            <button className="mt-6 w-full py-4 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-2xl text-[10px] font-semibold uppercase tracking-widest border border-white/20 transition-all">
                                 Adjust Treasury Floor
                             </button>
                         </div>
@@ -167,11 +167,11 @@ export default function PricingRulesPage() {
                                 <div className="w-20 h-20 bg-purple-50 rounded-3xl flex items-center justify-center text-purple-300">
                                     <Zap size={40} />
                                 </div>
-                                <h3 className="text-2xl font-black text-gray-900 tracking-tighter">Engine Standby</h3>
+                                <h3 className="text-2xl font-semibold text-gray-900 tracking-tighter">Engine Standby</h3>
                                 <p className="text-gray-500 max-w-sm font-medium">Initialize your first automated pricing protocol to stay competitive at scale.</p>
                                 <button
                                     onClick={() => setShowAddModal(true)}
-                                    className="px-8 py-4 bg-purple-600 text-white rounded-2xl font-black uppercase text-[11px] tracking-widest hover:bg-purple-700 transition-all shadow-xl"
+                                    className="px-8 py-4 bg-purple-600 text-white rounded-2xl font-semibold uppercase text-[11px] tracking-widest hover:bg-purple-700 transition-all shadow-xl"
                                 >
                                     Launch Protocol 01
                                 </button>
@@ -220,8 +220,8 @@ function ModernRuleCard({ rule, idx, onUpdate }) {
                     </div>
                     <div>
                         <div className="flex items-center gap-3 mb-1">
-                            <h4 className="text-xl font-black text-gray-900 tracking-tight leading-none">{rule.name}</h4>
-                            <span className={`px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest ${meta.bg} ${meta.text}`}>
+                            <h4 className="text-xl font-semibold text-gray-900 tracking-tight leading-none">{rule.name}</h4>
+                            <span className={`px-3 py-1 rounded-lg text-[9px] font-semibold uppercase tracking-widest ${meta.bg} ${meta.text}`}>
                                 {rule.type.replace('_', ' ')}
                             </span>
                             {isActive && (
@@ -231,18 +231,18 @@ function ModernRuleCard({ rule, idx, onUpdate }) {
                                 </span>
                             )}
                         </div>
-                        <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">{rule.description || 'Automated valuation logic'}</p>
+                        <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest">{rule.description || 'Automated valuation logic'}</p>
                     </div>
                 </div>
 
                 <div className="flex items-center gap-4 bg-gray-50/50 p-6 rounded-3xl border border-gray-50">
                     <div className="text-center px-4 border-r border-gray-100">
-                        <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1">SKU Reach</p>
-                        <p className="text-lg font-black text-gray-900 leading-none">{rule.metrics?.productsAffected || 0}</p>
+                        <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-widest mb-1">SKU Reach</p>
+                        <p className="text-lg font-semibold text-gray-900 leading-none">{rule.metrics?.productsAffected || 0}</p>
                     </div>
                     <div className="text-center px-4">
-                        <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1">Avg Δ</p>
-                        <p className="text-lg font-black text-emerald-500 leading-none">{(rule.metrics?.averageDiscount || 0).toFixed(1)}%</p>
+                        <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-widest mb-1">Avg Δ</p>
+                        <p className="text-lg font-semibold text-emerald-500 leading-none">{(rule.metrics?.averageDiscount || 0).toFixed(1)}%</p>
                     </div>
                 </div>
 
@@ -303,8 +303,8 @@ function AddPricingRuleModal({ onClose, onSuccess }) {
             >
                 <div className="p-10 border-b border-gray-100 flex items-center justify-between bg-purple-50/30">
                     <div>
-                        <h2 className="text-3xl font-black text-gray-900 tracking-tighter">Forge Rule Node</h2>
-                        <p className="text-purple-400 text-[10px] font-black uppercase tracking-[0.2em] mt-1">Autonomous Pricing Synthesis</p>
+                        <h2 className="text-3xl font-semibold text-gray-900 tracking-tighter">Forge Rule Node</h2>
+                        <p className="text-purple-400 text-[10px] font-semibold uppercase tracking-[0.2em] mt-1">Autonomous Pricing Synthesis</p>
                     </div>
                     <button onClick={onClose} className="w-12 h-12 bg-white border border-gray-100 rounded-2xl flex items-center justify-center text-gray-400 hover:text-rose-500 transition-colors shadow-sm">
                         <Plus size={24} className="rotate-45" />
@@ -313,24 +313,24 @@ function AddPricingRuleModal({ onClose, onSuccess }) {
 
                 <form onSubmit={handleSubmit} className="p-10 space-y-8 overflow-y-auto">
                     <div className="space-y-2">
-                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Protocol Designation</label>
+                        <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest ml-1">Protocol Designation</label>
                         <input
                             type="text"
                             required
                             value={formData.name}
                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                            className="w-full px-8 py-5 bg-gray-50 border-none rounded-[2rem] text-[15px] font-bold focus:ring-4 focus:ring-purple-100 transition-all outline-none"
+                            className="w-full px-8 py-5 bg-gray-50 border-none rounded-[2rem] text-[15px] font-semibold focus:ring-4 focus:ring-purple-100 transition-all outline-none"
                             placeholder="e.g. Flash Velocity Surge"
                         />
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Logic Pattern</label>
+                            <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest ml-1">Logic Pattern</label>
                             <select
                                 value={formData.type}
                                 onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                                className="w-full px-8 py-5 bg-gray-50 border-none rounded-[2rem] text-[15px] font-bold focus:ring-4 focus:ring-purple-100 transition-all outline-none appearance-none cursor-pointer"
+                                className="w-full px-8 py-5 bg-gray-50 border-none rounded-[2rem] text-[15px] font-semibold focus:ring-4 focus:ring-purple-100 transition-all outline-none appearance-none cursor-pointer"
                             >
                                 <option value="inventory_based">Inventory Load</option>
                                 <option value="scheduled">Time Domain</option>
@@ -340,13 +340,13 @@ function AddPricingRuleModal({ onClose, onSuccess }) {
                             </select>
                         </div>
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Valuation Delta (%)</label>
+                            <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest ml-1">Valuation Delta (%)</label>
                             <input
                                 type="number"
                                 required
                                 value={formData.priceAdjustment.value}
                                 onChange={(e) => setFormData({ ...formData, priceAdjustment: { ...formData.priceAdjustment, value: parseFloat(e.target.value) } })}
-                                className="w-full px-8 py-5 bg-gray-50 border-none rounded-[2rem] text-[15px] font-bold focus:ring-4 focus:ring-purple-100 transition-all outline-none"
+                                className="w-full px-8 py-5 bg-gray-50 border-none rounded-[2rem] text-[15px] font-semibold focus:ring-4 focus:ring-purple-100 transition-all outline-none"
                                 placeholder="-10"
                             />
                         </div>
@@ -354,7 +354,7 @@ function AddPricingRuleModal({ onClose, onSuccess }) {
 
                     <div className="p-8 bg-blue-50/50 rounded-[2.5rem] border border-blue-50 flex gap-4">
                         <Info className="text-blue-500 shrink-0" size={20} />
-                        <p className="text-[11px] font-black text-blue-600/70 uppercase tracking-widest leading-relaxed">
+                        <p className="text-[11px] font-semibold text-blue-600/70 uppercase tracking-widest leading-relaxed">
                             A -10% delta will reduce the product price by 10% relative to your current global floor when protocol triggers.
                         </p>
                     </div>
@@ -363,14 +363,14 @@ function AddPricingRuleModal({ onClose, onSuccess }) {
                         <button
                             type="button"
                             onClick={onClose}
-                            className="flex-1 px-8 py-5 border-2 border-gray-100 text-gray-400 rounded-[2rem] text-[11px] font-black uppercase tracking-widest hover:bg-gray-50 transition-all"
+                            className="flex-1 px-8 py-5 border-2 border-gray-100 text-gray-400 rounded-[2rem] text-[11px] font-semibold uppercase tracking-widest hover:bg-gray-50 transition-all"
                         >
                             Decline Protocol
                         </button>
                         <button
                             type="submit"
                             disabled={loading}
-                            className="flex-1 px-8 py-5 bg-purple-600 text-white rounded-[2rem] text-[11px] font-black uppercase tracking-widest hover:bg-purple-700 shadow-2xl shadow-purple-500/20 disabled:opacity-50 transition-all"
+                            className="flex-1 px-8 py-5 bg-purple-600 text-white rounded-[2rem] text-[11px] font-semibold uppercase tracking-widest hover:bg-purple-700 shadow-2xl shadow-purple-500/20 disabled:opacity-50 transition-all"
                         >
                             {loading ? 'Synthesizing...' : 'Authorize Engine'}
                         </button>

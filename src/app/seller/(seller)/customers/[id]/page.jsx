@@ -139,7 +139,7 @@ export default function CustomerDetail() {
             </span>
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">{customer.name}</h1>
+            <h1 className="text-2xl font-semibold text-gray-900">{customer.name}</h1>
             <p className="text-gray-600">Customer since {new Date(customer.joinDate).toLocaleDateString()}</p>
           </div>
         </div>
@@ -161,7 +161,7 @@ export default function CustomerDetail() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Total Orders</p>
-              <p className="text-2xl font-bold text-gray-900">{customer.totalOrders}</p>
+              <p className="text-2xl font-semibold text-gray-900">{customer.totalOrders}</p>
             </div>
             <FiShoppingBag className="w-8 h-8 text-blue-600" />
           </div>
@@ -171,7 +171,7 @@ export default function CustomerDetail() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Total Spent</p>
-              <p className="text-2xl font-bold text-gray-900">{formatPrice(customer.totalSpent)}</p>
+              <p className="text-2xl font-semibold text-gray-900">{formatPrice(customer.totalSpent)}</p>
             </div>
             <FiTrendingUp className="w-8 h-8 text-green-600" />
           </div>
@@ -181,7 +181,7 @@ export default function CustomerDetail() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Avg Order Value</p>
-              <p className="text-2xl font-bold text-gray-900">{formatPrice(customer.averageOrderValue)}</p>
+              <p className="text-2xl font-semibold text-gray-900">{formatPrice(customer.averageOrderValue)}</p>
             </div>
             <FiStar className="w-8 h-8 text-yellow-600" />
           </div>
@@ -191,7 +191,7 @@ export default function CustomerDetail() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Loyalty Points</p>
-              <p className="text-2xl font-bold text-gray-900">{customer.loyaltyPoints}</p>
+              <p className="text-2xl font-semibold text-gray-900">{customer.loyaltyPoints}</p>
             </div>
             <FiCalendar className="w-8 h-8 text-purple-600" />
           </div>

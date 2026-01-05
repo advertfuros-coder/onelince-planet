@@ -96,7 +96,7 @@ export default function SuppliersPage() {
         return (
             <div className="flex flex-col items-center justify-center min-h-screen space-y-4">
                 <div className="w-12 h-12 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin" />
-                <p className="text-gray-400 font-black uppercase tracking-widest text-[10px]">Auditing Supply Network...</p>
+                <p className="text-gray-400 font-semibold uppercase tracking-widest text-[10px]">Auditing Supply Network...</p>
             </div>
         )
     }
@@ -112,15 +112,15 @@ export default function SuppliersPage() {
                             <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center text-white shadow-lg shadow-emerald-500/20">
                                 <Truck size={18} />
                             </div>
-                            <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest bg-emerald-50 px-3 py-1 rounded-full">Global Supply Chain</span>
+                            <span className="text-[10px] font-semibold text-emerald-600 uppercase tracking-widest bg-emerald-50 px-3 py-1 rounded-full">Global Supply Chain</span>
                         </div>
-                        <h1 className="text-4xl font-black text-gray-900 tracking-tighter">Merchant Partnerships</h1>
+                        <h1 className="text-4xl font-semibold text-gray-900 tracking-tighter">Merchant Partnerships</h1>
                         <p className="text-gray-500 font-medium mt-1">Manage vendor relations and automated restock protocols for peak efficiency</p>
                     </div>
 
                     <button
                         onClick={() => { setEditingSupplier(null); setShowModal(true); }}
-                        className="px-8 py-4 bg-emerald-600 text-white rounded-3xl font-black uppercase text-[11px] tracking-widest shadow-2xl shadow-emerald-500/20 hover:bg-emerald-700 transition-all active:scale-95 flex items-center justify-center gap-2"
+                        className="px-8 py-4 bg-emerald-600 text-white rounded-3xl font-semibold uppercase text-[11px] tracking-widest shadow-2xl shadow-emerald-500/20 hover:bg-emerald-700 transition-all active:scale-95 flex items-center justify-center gap-2"
                     >
                         <Plus size={18} />
                         Onboard Partner
@@ -132,7 +132,7 @@ export default function SuppliersPage() {
                     {/* Network Analytics */}
                     <div className="xl:col-span-1 space-y-8">
                         <div className="bg-white rounded-[2.8rem] p-8 shadow-sm border border-gray-100/50">
-                            <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest mb-8 flex items-center gap-2">
+                            <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-widest mb-8 flex items-center gap-2">
                                 <Activity size={16} className="text-emerald-500" /> Network Radar
                             </h3>
                             <div className="h-[280px] w-full">
@@ -146,19 +146,19 @@ export default function SuppliersPage() {
                             </div>
                             <div className="mt-6 space-y-4">
                                 <div className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl">
-                                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Health Index</span>
-                                    <span className="text-xs font-black text-emerald-600">92.4% Optimal</span>
+                                    <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Health Index</span>
+                                    <span className="text-xs font-semibold text-emerald-600">92.4% Optimal</span>
                                 </div>
                             </div>
                         </div>
 
                         <div className="bg-gradient-to-br from-[#064E3B] to-[#065F46] rounded-[2.8rem] p-8 text-white relative overflow-hidden group">
                             <ShieldCheck className="text-emerald-300 mb-4" size={32} />
-                            <h4 className="text-xl font-black mb-2 tracking-tight">Verified Source Protocol</h4>
-                            <p className="text-emerald-100/60 text-[11px] font-bold uppercase tracking-widest leading-relaxed">
+                            <h4 className="text-xl font-semibold mb-2 tracking-tight">Verified Source Protocol</h4>
+                            <p className="text-emerald-100/60 text-[11px] font-semibold uppercase tracking-widest leading-relaxed">
                                 100% of your current suppliers have passed the 2024 compliance audit.
                             </p>
-                            <button className="mt-8 w-full py-4 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-2xl text-[10px] font-black uppercase tracking-widest border border-white/10 transition-all">
+                            <button className="mt-8 w-full py-4 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-2xl text-[10px] font-semibold uppercase tracking-widest border border-white/10 transition-all">
                                 Global Compliance Log
                             </button>
                         </div>
@@ -174,11 +174,11 @@ export default function SuppliersPage() {
                         </div>
 
                         <div className="flex items-center justify-between px-2 pt-4">
-                            <h3 className="text-lg font-black text-gray-900 tracking-tight">Supply Link Ledger</h3>
+                            <h3 className="text-lg font-semibold text-gray-900 tracking-tight">Supply Link Ledger</h3>
                             <div className="flex items-center gap-3">
                                 <div className="relative">
                                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={14} />
-                                    <input type="text" placeholder="Search vendor..." className="pl-10 pr-4 py-2.5 bg-white border border-gray-100 rounded-2xl text-[10px] font-bold uppercase tracking-widest focus:ring-4 focus:ring-emerald-50/50 outline-none w-64 shadow-sm" />
+                                    <input type="text" placeholder="Search vendor..." className="pl-10 pr-4 py-2.5 bg-white border border-gray-100 rounded-2xl text-[10px] font-semibold uppercase tracking-widest focus:ring-4 focus:ring-emerald-50/50 outline-none w-64 shadow-sm" />
                                 </div>
                                 <button className="p-3 bg-white border border-gray-100 rounded-2xl text-gray-400 hover:text-emerald-600 shadow-sm transition-all"><Filter size={18} /></button>
                             </div>
@@ -189,9 +189,9 @@ export default function SuppliersPage() {
                                 <div className="w-24 h-24 bg-emerald-50 rounded-[2.5rem] flex items-center justify-center text-emerald-300">
                                     <Users size={40} />
                                 </div>
-                                <h3 className="text-3xl font-black text-gray-900 tracking-tighter">No Active Provisioners</h3>
-                                <p className="text-gray-500 max-w-sm font-black uppercase text-[11px] tracking-widest leading-relaxed">Initialize your global supply grid by onboarding your first manufacturing partner.</p>
-                                <button onClick={() => setShowModal(true)} className="px-10 py-5 bg-emerald-600 text-white rounded-3xl font-black uppercase text-[11px] tracking-widest hover:bg-emerald-700 transition-all shadow-2xl shadow-emerald-500/30">Sync New Partner</button>
+                                <h3 className="text-3xl font-semibold text-gray-900 tracking-tighter">No Active Provisioners</h3>
+                                <p className="text-gray-500 max-w-sm font-semibold uppercase text-[11px] tracking-widest leading-relaxed">Initialize your global supply grid by onboarding your first manufacturing partner.</p>
+                                <button onClick={() => setShowModal(true)} className="px-10 py-5 bg-emerald-600 text-white rounded-3xl font-semibold uppercase text-[11px] tracking-widest hover:bg-emerald-700 transition-all shadow-2xl shadow-emerald-500/30">Sync New Partner</button>
                             </div>
                         ) : (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-20">
@@ -229,8 +229,8 @@ function ModernSupplierCard({ supplier, idx, onEdit, onDelete }) {
                         <Users size={28} />
                     </div>
                     <div>
-                        <h4 className="text-xl font-black text-gray-900 tracking-tighter leading-none">{supplier.name}</h4>
-                        <p className="text-[10px] font-black text-blue-500 uppercase tracking-widest mt-2">{supplier.companyName || 'Private Provisioner'}</p>
+                        <h4 className="text-xl font-semibold text-gray-900 tracking-tighter leading-none">{supplier.name}</h4>
+                        <p className="text-[10px] font-semibold text-blue-500 uppercase tracking-widest mt-2">{supplier.companyName || 'Private Provisioner'}</p>
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -242,12 +242,12 @@ function ModernSupplierCard({ supplier, idx, onEdit, onDelete }) {
             <div className="space-y-4 mb-8">
                 <div className="flex items-center gap-3 text-gray-500">
                     <Mail size={14} className="text-emerald-500" />
-                    <span className="text-xs font-bold truncate">{supplier.email}</span>
+                    <span className="text-xs font-semibold truncate">{supplier.email}</span>
                 </div>
                 {supplier.address?.city && (
                     <div className="flex items-center gap-3 text-gray-500">
                         <MapPin size={14} className="text-emerald-500" />
-                        <span className="text-xs font-bold uppercase tracking-widest">{supplier.address.city}, {supplier.address.country}</span>
+                        <span className="text-xs font-semibold uppercase tracking-widest">{supplier.address.city}, {supplier.address.country}</span>
                     </div>
                 )}
             </div>
@@ -255,21 +255,21 @@ function ModernSupplierCard({ supplier, idx, onEdit, onDelete }) {
             <div className="flex items-center justify-between pt-6 border-t border-gray-50">
                 <div className="flex gap-6">
                     <div className="text-center">
-                        <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1.5">SKU Flow</p>
-                        <p className="text-lg font-black text-gray-900">{supplier.products?.length || 0}</p>
+                        <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-widest mb-1.5">SKU Flow</p>
+                        <p className="text-lg font-semibold text-gray-900">{supplier.products?.length || 0}</p>
                     </div>
                     <div className="text-center">
-                        <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1.5">Rating</p>
+                        <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-widest mb-1.5">Rating</p>
                         <div className="flex items-center gap-1">
                             <Star size={14} className="text-amber-500 fill-current" />
-                            <p className="text-lg font-black text-gray-900">{supplier.metrics?.rating || 5}</p>
+                            <p className="text-lg font-semibold text-gray-900">{supplier.metrics?.rating || 5}</p>
                         </div>
                     </div>
                 </div>
                 {supplier.autoRestock?.enabled && (
                     <div className="flex items-center gap-2 px-4 py-2 bg-emerald-50 rounded-2xl border border-emerald-100">
                         <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                        <span className="text-[9px] font-black text-emerald-600 uppercase tracking-widest">Active Sync</span>
+                        <span className="text-[9px] font-semibold text-emerald-600 uppercase tracking-widest">Active Sync</span>
                     </div>
                 )}
             </div>
@@ -288,8 +288,8 @@ function SmallStat({ label, value, icon: Icon, color }) {
         <div className="bg-white p-5 rounded-3xl shadow-sm border border-gray-100/50 flex items-center gap-4 group">
             <div className={`p-3 rounded-2xl ${colors[color]} border group-hover:scale-110 transition-transform duration-500`}><Icon size={18} /></div>
             <div>
-                <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1.5">{label}</p>
-                <p className="text-lg font-black text-gray-900 tracking-tight leading-none">{value}</p>
+                <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-widest leading-none mb-1.5">{label}</p>
+                <p className="text-lg font-semibold text-gray-900 tracking-tight leading-none">{value}</p>
             </div>
         </div>
     )
@@ -324,8 +324,8 @@ function SupplierModal({ supplier, onClose, onSuccess, token }) {
             <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="bg-white rounded-[3.5rem] shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col">
                 <div className="p-10 border-b border-gray-100 flex items-center justify-between bg-emerald-50/20">
                     <div>
-                        <h2 className="text-3xl font-black text-gray-900 tracking-tighter uppercase">{supplier ? 'Edit Partner' : 'Onboard Partner'}</h2>
-                        <p className="text-emerald-500 text-[10px] font-black uppercase tracking-widest mt-1">Vendor Node Authorization</p>
+                        <h2 className="text-3xl font-semibold text-gray-900 tracking-tighter uppercase">{supplier ? 'Edit Partner' : 'Onboard Partner'}</h2>
+                        <p className="text-emerald-500 text-[10px] font-semibold uppercase tracking-widest mt-1">Vendor Node Authorization</p>
                     </div>
                     <button onClick={onClose} className="w-12 h-12 bg-white border border-gray-100 rounded-2xl flex items-center justify-center text-gray-400 hover:text-rose-500 transition-colors">
                         <Plus size={24} className="rotate-45" />
@@ -334,27 +334,27 @@ function SupplierModal({ supplier, onClose, onSuccess, token }) {
                 <form onSubmit={handleSubmit} className="p-10 space-y-8 overflow-y-auto">
                     <div className="grid grid-cols-2 gap-8">
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Legal Identity</label>
-                            <input type="text" required value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="w-full px-8 py-5 bg-gray-50 border-none rounded-[2rem] text-[15px] font-bold focus:ring-4 focus:ring-emerald-100 transition-all outline-none" placeholder="Full Name / Brand" />
+                            <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest ml-1">Legal Identity</label>
+                            <input type="text" required value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="w-full px-8 py-5 bg-gray-50 border-none rounded-[2rem] text-[15px] font-semibold focus:ring-4 focus:ring-emerald-100 transition-all outline-none" placeholder="Full Name / Brand" />
                         </div>
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Email Communication</label>
-                            <input type="email" required value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="w-full px-8 py-5 bg-gray-50 border-none rounded-[2rem] text-[15px] font-bold focus:ring-4 focus:ring-emerald-100 transition-all outline-none" placeholder="vendor@provision.com" />
+                            <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest ml-1">Email Communication</label>
+                            <input type="email" required value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="w-full px-8 py-5 bg-gray-50 border-none rounded-[2rem] text-[15px] font-semibold focus:ring-4 focus:ring-emerald-100 transition-all outline-none" placeholder="vendor@provision.com" />
                         </div>
                     </div>
                     <div className="space-y-4 pt-4 border-t border-gray-100">
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Global Restock Sync</p>
+                        <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Global Restock Sync</p>
                         <label className="flex items-center gap-3 p-6 bg-gray-50 rounded-[2.5rem] cursor-pointer group">
                             <div className={`w-12 h-6 rounded-full relative transition-colors ${formData.autoRestock.enabled ? 'bg-emerald-500' : 'bg-gray-200'}`}>
                                 <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-all ${formData.autoRestock.enabled ? 'left-7' : 'left-1'}`} />
                             </div>
                             <input type="checkbox" className="hidden" checked={formData.autoRestock.enabled} onChange={(e) => setFormData({ ...formData, autoRestock: { ...formData.autoRestock, enabled: e.target.checked } })} />
-                            <span className="text-[11px] font-black uppercase tracking-widest text-gray-900">Authorize Automated Replenishment</span>
+                            <span className="text-[11px] font-semibold uppercase tracking-widest text-gray-900">Authorize Automated Replenishment</span>
                         </label>
                     </div>
                     <div className="flex gap-4 pt-6">
-                        <button type="button" onClick={onClose} className="flex-1 px-8 py-5 border-2 border-gray-100 text-gray-400 rounded-[2rem] text-[11px] font-black uppercase tracking-widest hover:bg-gray-50 transition-all">Abort Sync</button>
-                        <button type="submit" className="flex-1 px-8 py-5 bg-emerald-600 text-white rounded-[2rem] text-[11px] font-black uppercase tracking-widest hover:bg-emerald-700 shadow-2xl shadow-emerald-500/20 transition-all">Execute Onboarding</button>
+                        <button type="button" onClick={onClose} className="flex-1 px-8 py-5 border-2 border-gray-100 text-gray-400 rounded-[2rem] text-[11px] font-semibold uppercase tracking-widest hover:bg-gray-50 transition-all">Abort Sync</button>
+                        <button type="submit" className="flex-1 px-8 py-5 bg-emerald-600 text-white rounded-[2rem] text-[11px] font-semibold uppercase tracking-widest hover:bg-emerald-700 shadow-2xl shadow-emerald-500/20 transition-all">Execute Onboarding</button>
                     </div>
                 </form>
             </motion.div>

@@ -51,7 +51,7 @@ export default function PayoutsPage() {
       <div className="min-h-screen flex items-center justify-center p-8 bg-[#F8FAFC]">
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
-          <p className="text-xs font-black uppercase tracking-widest text-slate-400">Syncing Ledger...</p>
+          <p className="text-xs font-semibold uppercase tracking-widest text-slate-400">Syncing Ledger...</p>
         </div>
       </div>
     )
@@ -71,11 +71,11 @@ export default function PayoutsPage() {
         {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div>
-            <h1 className="text-4xl font-black text-slate-900 tracking-tight">Financials <span className="text-blue-600">.</span></h1>
-            <p className="text-slate-500 font-bold text-sm mt-1">Real-time revenue settlement and payout tracking.</p>
+            <h1 className="text-4xl font-semibold text-slate-900 tracking-tight">Financials <span className="text-blue-600">.</span></h1>
+            <p className="text-slate-500 font-semibold text-sm mt-1">Real-time revenue settlement and payout tracking.</p>
           </div>
           <div className="flex items-center gap-3">
-            <button className="flex items-center gap-2 px-6 py-3 bg-white border border-slate-200 text-slate-600 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 transition-all shadow-sm">
+            <button className="flex items-center gap-2 px-6 py-3 bg-white border border-slate-200 text-slate-600 rounded-2xl text-[10px] font-semibold uppercase tracking-widest hover:bg-slate-50 transition-all shadow-sm">
               <Download size={14} /> Export Report
             </button>
           </div>
@@ -123,8 +123,8 @@ export default function PayoutsPage() {
             <div className="bg-white rounded-[2.5rem] border border-slate-100 p-8 shadow-xl shadow-slate-200/20">
               <div className="flex items-center justify-between mb-8">
                 <div>
-                  <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest">Revenue Waterfall</h3>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase mt-1">Breakdown for the current cycle</p>
+                  <h3 className="text-sm font-semibold text-slate-900 uppercase tracking-widest">Revenue Waterfall</h3>
+                  <p className="text-[10px] font-semibold text-slate-400 uppercase mt-1">Breakdown for the current cycle</p>
                 </div>
                 <div className="p-3 bg-blue-50 text-blue-600 rounded-2xl">
                   <Wallet size={20} />
@@ -148,8 +148,8 @@ export default function PayoutsPage() {
                         if (active && payload && payload.length) {
                           return (
                             <div className="bg-white p-4 rounded-2xl shadow-2xl border border-slate-100">
-                              <p className="text-[10px] font-black text-slate-400 uppercase mb-1">{payload[0].payload.name}</p>
-                              <p className="text-xl font-black text-slate-900">₹{Math.abs(payload[0].value).toLocaleString()}</p>
+                              <p className="text-[10px] font-semibold text-slate-400 uppercase mb-1">{payload[0].payload.name}</p>
+                              <p className="text-xl font-semibold text-slate-900">₹{Math.abs(payload[0].value).toLocaleString()}</p>
                             </div>
                           )
                         }
@@ -168,8 +168,8 @@ export default function PayoutsPage() {
               <div className="grid grid-cols-4 gap-4 mt-8">
                 {waterfallData.map((item, idx) => (
                   <div key={idx} className="text-center">
-                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">{item.name}</p>
-                    <p className={`text-sm font-black ${item.value < 0 ? 'text-rose-500' : 'text-slate-900'}`}>
+                    <p className="text-[9px] font-semibold text-slate-400 uppercase tracking-widest mb-1">{item.name}</p>
+                    <p className={`text-sm font-semibold ${item.value < 0 ? 'text-rose-500' : 'text-slate-900'}`}>
                       {item.value < 0 ? '-' : ''}₹{Math.abs(item.value).toLocaleString()}
                     </p>
                   </div>
@@ -180,18 +180,18 @@ export default function PayoutsPage() {
             {/* Eligible Orders for Next Payout */}
             <div className="bg-white rounded-[2.5rem] border border-slate-100 p-8 shadow-xl shadow-slate-200/20">
               <div className="flex items-center justify-between mb-8">
-                <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest">Upcoming Payout Items</h3>
-                <button className="text-[10px] font-black text-blue-600 uppercase tracking-widest hover:underline">View All Orders</button>
+                <h3 className="text-sm font-semibold text-slate-900 uppercase tracking-widest">Upcoming Payout Items</h3>
+                <button className="text-[10px] font-semibold text-blue-600 uppercase tracking-widest hover:underline">View All Orders</button>
               </div>
 
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
                     <tr className="border-b border-slate-50">
-                      <th className="text-left py-4 text-[10px] font-black text-slate-400 uppercase">Order</th>
-                      <th className="text-left py-4 text-[10px] font-black text-slate-400 uppercase">Amount</th>
-                      <th className="text-left py-4 text-[10px] font-black text-slate-400 uppercase">Status</th>
-                      <th className="text-right py-4 text-[10px] font-black text-slate-400 uppercase">Action</th>
+                      <th className="text-left py-4 text-[10px] font-semibold text-slate-400 uppercase">Order</th>
+                      <th className="text-left py-4 text-[10px] font-semibold text-slate-400 uppercase">Amount</th>
+                      <th className="text-left py-4 text-[10px] font-semibold text-slate-400 uppercase">Status</th>
+                      <th className="text-right py-4 text-[10px] font-semibold text-slate-400 uppercase">Action</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-50">
@@ -199,15 +199,15 @@ export default function PayoutsPage() {
                       data.pendingOrders.map((order, idx) => (
                         <tr key={idx} className="group hover:bg-slate-50/50 transition-colors">
                           <td className="py-4">
-                            <p className="text-xs font-black text-slate-900">#{order.orderNumber}</p>
-                            <p className="text-[10px] font-bold text-slate-400">{new Date(order.date).toLocaleDateString()}</p>
+                            <p className="text-xs font-semibold text-slate-900">#{order.orderNumber}</p>
+                            <p className="text-[10px] font-semibold text-slate-400">{new Date(order.date).toLocaleDateString()}</p>
                           </td>
                           <td className="py-4">
-                            <p className="text-xs font-black text-slate-900">₹{order.amount.toLocaleString()}</p>
-                            <p className="text-[9px] font-bold text-rose-500">-₹{order.commission.toLocaleString()} (fee)</p>
+                            <p className="text-xs font-semibold text-slate-900">₹{order.amount.toLocaleString()}</p>
+                            <p className="text-[9px] font-semibold text-rose-500">-₹{order.commission.toLocaleString()} (fee)</p>
                           </td>
                           <td className="py-4">
-                            <span className="px-3 py-1 bg-emerald-50 text-emerald-600 rounded-full text-[9px] font-black uppercase tracking-widest">
+                            <span className="px-3 py-1 bg-emerald-50 text-emerald-600 rounded-full text-[9px] font-semibold uppercase tracking-widest">
                               {order.status}
                             </span>
                           </td>
@@ -221,7 +221,7 @@ export default function PayoutsPage() {
                     ) : (
                       <tr>
                         <td colSpan="4" className="py-10 text-center">
-                          <p className="text-xs font-bold text-slate-400">No pending orders for payout.</p>
+                          <p className="text-xs font-semibold text-slate-400">No pending orders for payout.</p>
                         </td>
                       </tr>
                     )}
@@ -237,17 +237,17 @@ export default function PayoutsPage() {
             {/* Summary Card */}
             <div className="bg-[#1E293B] rounded-[2.5rem] p-8 text-white relative overflow-hidden">
               <div className="relative z-10">
-                <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6">Settlement Account</h4>
+                <h4 className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest mb-6">Settlement Account</h4>
                 <div className="flex items-center gap-4 mb-8">
                   <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center text-blue-400">
                     <Wallet size={24} />
                   </div>
                   <div>
-                    <p className="text-xs font-black tracking-tight">HDFC Bank</p>
-                    <p className="text-[10px] font-bold text-slate-400">**** 8291</p>
+                    <p className="text-xs font-semibold tracking-tight">HDFC Bank</p>
+                    <p className="text-[10px] font-semibold text-slate-400">**** 8291</p>
                   </div>
                 </div>
-                <button className="w-full py-4 bg-blue-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-700 transition-all shadow-lg active:scale-95">
+                <button className="w-full py-4 bg-blue-600 text-white rounded-2xl text-[10px] font-semibold uppercase tracking-widest hover:bg-blue-700 transition-all shadow-lg active:scale-95">
                   Update Payment Details
                 </button>
               </div>
@@ -256,7 +256,7 @@ export default function PayoutsPage() {
 
             {/* Recent History */}
             <div className="bg-white rounded-[2.5rem] border border-slate-100 p-8 shadow-xl shadow-slate-200/20">
-              <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest mb-6">Recent History</h3>
+              <h3 className="text-sm font-semibold text-slate-900 uppercase tracking-widest mb-6">Recent History</h3>
               <div className="space-y-6">
                 {data?.history?.length > 0 ? (
                   data.history.map((payout, idx) => (
@@ -267,18 +267,18 @@ export default function PayoutsPage() {
                           <CheckCircle2 size={16} />
                         </div>
                         <div>
-                          <p className="text-xs font-black text-slate-900">₹{payout.amount.toLocaleString()}</p>
-                          <p className="text-[10px] font-bold text-slate-400">{new Date(payout.createdAt).toLocaleDateString()}</p>
+                          <p className="text-xs font-semibold text-slate-900">₹{payout.amount.toLocaleString()}</p>
+                          <p className="text-[10px] font-semibold text-slate-400">{new Date(payout.createdAt).toLocaleDateString()}</p>
                         </div>
                       </div>
-                      <button className="text-[10px] font-black text-slate-300 group-hover:text-slate-900 transition-colors">
+                      <button className="text-[10px] font-semibold text-slate-300 group-hover:text-slate-900 transition-colors">
                         INVOICE
                       </button>
                     </div>
                   ))
                 ) : (
                   <div className="text-center py-6">
-                    <p className="text-[10px] font-bold text-slate-400 uppercase">No history found</p>
+                    <p className="text-[10px] font-semibold text-slate-400 uppercase">No history found</p>
                   </div>
                 )}
               </div>
@@ -286,9 +286,9 @@ export default function PayoutsPage() {
 
             {/* Support Card */}
             <div className="bg-indigo-600 rounded-[2.5rem] p-8 text-white">
-              <h4 className="font-bold text-lg mb-2">Need Help?</h4>
+              <h4 className="font-semibold text-lg mb-2">Need Help?</h4>
               <p className="text-indigo-100 text-xs font-medium mb-6">Facing issues with your payout? Our finance team is available 24/7.</p>
-              <button className="w-full py-4 bg-black/20 backdrop-blur-md text-white border border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-black/30 transition-all">
+              <button className="w-full py-4 bg-black/20 backdrop-blur-md text-white border border-white/10 rounded-2xl text-[10px] font-semibold uppercase tracking-widest hover:bg-black/30 transition-all">
                 Raise Ticket
               </button>
             </div>
@@ -317,9 +317,9 @@ function StatCard({ title, value, subtitle, icon: Icon, variant }) {
         </div>
         <ArrowUpRight size={16} className="text-slate-200 group-hover:text-slate-400 transition-colors" />
       </div>
-      <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">{title}</p>
-      <p className="text-2xl font-black text-slate-900 tracking-tight mb-1">{value}</p>
-      <p className="text-[10px] font-bold text-slate-400">{subtitle}</p>
+      <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-[0.2em] mb-1">{title}</p>
+      <p className="text-2xl font-semibold text-slate-900 tracking-tight mb-1">{value}</p>
+      <p className="text-[10px] font-semibold text-slate-400">{subtitle}</p>
     </div>
   )
 }

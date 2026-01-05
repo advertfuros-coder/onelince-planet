@@ -79,7 +79,7 @@ export default function ShippingPage() {
          <div className="min-h-screen flex items-center justify-center p-8 bg-[#F8FAFC]">
             <div className="flex flex-col items-center gap-4">
                <div className="w-12 h-12 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin" />
-               <p className="text-xs font-black uppercase tracking-widest text-slate-400">Loading Fleet...</p>
+               <p className="text-xs font-semibold uppercase tracking-widest text-slate-400">Loading Fleet...</p>
             </div>
          </div>
       )
@@ -92,11 +92,11 @@ export default function ShippingPage() {
             {/* Header */}
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
                <div>
-                  <h1 className="text-4xl font-black text-slate-900 tracking-tight">Shipping Hub <span className="text-emerald-600">.</span></h1>
-                  <p className="text-slate-500 font-bold text-sm mt-1">Manage manifests, labels, and courier handovers.</p>
+                  <h1 className="text-4xl font-semibold text-slate-900 tracking-tight">Shipping Hub <span className="text-emerald-600">.</span></h1>
+                  <p className="text-slate-500 font-semibold text-sm mt-1">Manage manifests, labels, and courier handovers.</p>
                </div>
                <div className="flex items-center gap-3">
-                  <button className="flex items-center gap-2 px-6 py-3 bg-emerald-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-200">
+                  <button className="flex items-center gap-2 px-6 py-3 bg-emerald-600 text-white rounded-2xl text-[10px] font-semibold uppercase tracking-widest hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-200">
                      <Printer size={14} /> Bulk Print Labels
                   </button>
                </div>
@@ -144,7 +144,7 @@ export default function ShippingPage() {
                         <button
                            key={tab}
                            onClick={() => setActiveTab(tab)}
-                           className={`px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === tab ? 'bg-white text-slate-900 shadow-sm border border-slate-100' : 'text-slate-400 hover:text-slate-600'
+                           className={`px-6 py-2.5 rounded-xl text-[10px] font-semibold uppercase tracking-widest transition-all ${activeTab === tab ? 'bg-white text-slate-900 shadow-sm border border-slate-100' : 'text-slate-400 hover:text-slate-600'
                               }`}
                         >
                            {tab}
@@ -159,7 +159,7 @@ export default function ShippingPage() {
                         placeholder="Search Shipment ID or Client..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="pl-12 pr-6 py-3 bg-slate-50 border border-slate-100 rounded-2xl text-xs font-bold outline-none focus:bg-white focus:border-emerald-500 transition-all w-full md:w-[300px]"
+                        className="pl-12 pr-6 py-3 bg-slate-50 border border-slate-100 rounded-2xl text-xs font-semibold outline-none focus:bg-white focus:border-emerald-500 transition-all w-full md:w-[300px]"
                      />
                   </div>
                </div>
@@ -169,11 +169,11 @@ export default function ShippingPage() {
                   <table className="w-full">
                      <thead>
                         <tr className="bg-slate-50/30">
-                           <th className="text-left px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Shipment Detail</th>
-                           <th className="text-left px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Destination</th>
-                           <th className="text-left px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Courier Partner</th>
-                           <th className="text-left px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Status</th>
-                           <th className="text-right px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Operations</th>
+                           <th className="text-left px-8 py-5 text-[10px] font-semibold text-slate-400 uppercase tracking-widest">Shipment Detail</th>
+                           <th className="text-left px-8 py-5 text-[10px] font-semibold text-slate-400 uppercase tracking-widest">Destination</th>
+                           <th className="text-left px-8 py-5 text-[10px] font-semibold text-slate-400 uppercase tracking-widest">Courier Partner</th>
+                           <th className="text-left px-8 py-5 text-[10px] font-semibold text-slate-400 uppercase tracking-widest">Status</th>
+                           <th className="text-right px-8 py-5 text-[10px] font-semibold text-slate-400 uppercase tracking-widest">Operations</th>
                         </tr>
                      </thead>
                      <tbody className="divide-y divide-slate-50">
@@ -186,23 +186,23 @@ export default function ShippingPage() {
                                           <Box size={20} />
                                        </div>
                                        <div>
-                                          <p className="text-xs font-black text-slate-900">#{order.orderNumber}</p>
-                                          <p className="text-[10px] font-bold text-slate-400">{new Date(order.date).toLocaleDateString()}</p>
+                                          <p className="text-xs font-semibold text-slate-900">#{order.orderNumber}</p>
+                                          <p className="text-[10px] font-semibold text-slate-400">{new Date(order.date).toLocaleDateString()}</p>
                                        </div>
                                     </div>
                                  </td>
                                  <td className="px-8 py-6">
-                                    <p className="text-xs font-black text-slate-900">{order.customer}</p>
-                                    <p className="text-[10px] font-bold text-slate-400">{order.itemsCount} Items in Package</p>
+                                    <p className="text-xs font-semibold text-slate-900">{order.customer}</p>
+                                    <p className="text-[10px] font-semibold text-slate-400">{order.itemsCount} Items in Package</p>
                                  </td>
                                  <td className="px-8 py-6">
                                     <div className="flex items-center gap-2">
                                        <div className="w-6 h-6 bg-slate-900 rounded-lg flex items-center justify-center">
                                           <Truck size={12} className="text-white" />
                                        </div>
-                                       <span className="text-xs font-black text-slate-700">{order.courier}</span>
+                                       <span className="text-xs font-semibold text-slate-700">{order.courier}</span>
                                     </div>
-                                    {order.trackingId && <p className="text-[9px] font-bold text-emerald-600 mt-1 uppercase tracking-tight">{order.trackingId}</p>}
+                                    {order.trackingId && <p className="text-[9px] font-semibold text-emerald-600 mt-1 uppercase tracking-tight">{order.trackingId}</p>}
                                  </td>
                                  <td className="px-8 py-6">
                                     <ShipmentStatus status={order.status} />
@@ -212,7 +212,7 @@ export default function ShippingPage() {
                                        {['confirmed', 'processing'].includes(order.status) && (
                                           <button
                                              onClick={() => handleAction(order.id, 'READY_FOR_PICKUP')}
-                                             className="px-4 py-2 bg-emerald-50 text-emerald-600 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-600 hover:text-white transition-all border border-emerald-100"
+                                             className="px-4 py-2 bg-emerald-50 text-emerald-600 rounded-xl text-[10px] font-semibold uppercase tracking-widest hover:bg-emerald-600 hover:text-white transition-all border border-emerald-100"
                                           >
                                              Mark Ready
                                           </button>
@@ -234,7 +234,7 @@ export default function ShippingPage() {
                               <td colSpan="5" className="py-20 text-center">
                                  <div className="flex flex-col items-center gap-2 grayscale">
                                     <Box size={40} className="text-slate-200" />
-                                    <p className="text-xs font-black text-slate-400 uppercase tracking-widest">No matching shipments found</p>
+                                    <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest">No matching shipments found</p>
                                  </div>
                               </td>
                            </tr>
@@ -247,11 +247,11 @@ export default function ShippingPage() {
             {/* Courier Pickup Banner */}
             <div className="bg-slate-900 rounded-[2.5rem] p-10 text-white relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
                <div className="relative z-10 space-y-2">
-                  <span className="text-emerald-400 text-[10px] font-black uppercase tracking-[0.3em]">Logistics Alert</span>
-                  <h3 className="text-2xl font-black tracking-tight">Daily Courier Pickup Cycle</h3>
+                  <span className="text-emerald-400 text-[10px] font-semibold uppercase tracking-[0.3em]">Logistics Alert</span>
+                  <h3 className="text-2xl font-semibold tracking-tight">Daily Courier Pickup Cycle</h3>
                   <p className="text-slate-400 text-sm font-medium">Last pickup scan occurred at 04:30 PM. Next window in 14 hours.</p>
                </div>
-               <button className="relative z-10 px-8 py-4 bg-white text-slate-900 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-emerald-50 transition-all shadow-xl shadow-white/5 active:scale-95">
+               <button className="relative z-10 px-8 py-4 bg-white text-slate-900 rounded-2xl text-xs font-semibold uppercase tracking-widest hover:bg-emerald-50 transition-all shadow-xl shadow-white/5 active:scale-95">
                   DOWNLOAD DAILY MANIFEST
                </button>
                <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-600 opacity-20 rounded-full blur-[100px]" />
@@ -269,8 +269,8 @@ function ShippingStat({ title, value, icon: Icon, color, bgColor }) {
             <Icon size={24} />
          </div>
          <div>
-            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{title}</p>
-            <p className="text-2xl font-black text-slate-900 tracking-tight">{value || 0}</p>
+            <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest mb-1">{title}</p>
+            <p className="text-2xl font-semibold text-slate-900 tracking-tight">{value || 0}</p>
          </div>
       </div>
    )
@@ -287,7 +287,7 @@ function ShipmentStatus({ status }) {
    const config = configs[status] || { label: status, color: 'bg-slate-50 text-slate-600 border-slate-100' }
 
    return (
-      <span className={`px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border ${config.color}`}>
+      <span className={`px-4 py-1.5 rounded-full text-[9px] font-semibold uppercase tracking-widest border ${config.color}`}>
          {config.label}
       </span>
    )

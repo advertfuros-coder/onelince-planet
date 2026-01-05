@@ -50,14 +50,14 @@ export default function FlashDeals({ products = [] }) {
         {/* Header */}
         <div className="flex flex-col md:flex-row items-center justify-between mb-8">
           <div>
-            <h2 className="text-3xl font-bold text-white mb-2">⚡ Flash Deals</h2>
+            <h2 className="text-3xl font-semibold text-white mb-2">⚡ Flash Deals</h2>
             <p className="text-white/90">Limited time offers - Grab them fast!</p>
           </div>
           
           {/* Countdown Timer */}
           <div className="flex items-center space-x-2 bg-white/20 backdrop-blur-sm rounded-lg px-4 py-3 mt-4 md:mt-0">
             <FiClock className="text-white w-5 h-5" />
-            <div className="flex items-center space-x-2 text-white font-bold">
+            <div className="flex items-center space-x-2 text-white font-semibold">
               <div className="flex flex-col items-center">
                 <span className="text-2xl">{String(timeLeft.hours).padStart(2, '0')}</span>
                 <span className="text-xs">Hours</span>

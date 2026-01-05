@@ -216,7 +216,7 @@ export default function AdminMarketingPage() {
         <div className="bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl shadow-lg p-6 text-white">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-3xl font-bold">📢 Marketing Campaigns</h1>
+              <h1 className="text-3xl font-semibold">📢 Marketing Campaigns</h1>
               <p className="mt-2 text-purple-100">Create and manage marketing campaigns across channels</p>
             </div>
             <button
@@ -272,7 +272,7 @@ export default function AdminMarketingPage() {
         {/* Charts */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <h3 className="text-lg font-bold text-gray-900 mb-4">Campaigns by Type</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Campaigns by Type</h3>
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
                 <Pie
@@ -295,7 +295,7 @@ export default function AdminMarketingPage() {
           </div>
 
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <h3 className="text-lg font-bold text-gray-900 mb-4">Campaign Performance</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Campaign Performance</h3>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={campaigns.slice(0, 10)}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -342,7 +342,7 @@ export default function AdminMarketingPage() {
 
                         <div className="flex-1">
                           <div className="flex items-center space-x-3 mb-2">
-                            <h3 className="text-xl font-bold text-gray-900">{campaign.name}</h3>
+                            <h3 className="text-xl font-semibold text-gray-900">{campaign.name}</h3>
                             <StatusBadge status={campaign.status} />
                           </div>
 
@@ -449,7 +449,7 @@ export default function AdminMarketingPage() {
           <div className="bg-white rounded-lg max-w-3xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6">
               <div className="flex justify-between items-center mb-6">
-                <h3 className="text-xl font-bold text-gray-900">
+                <h3 className="text-xl font-semibold text-gray-900">
                   {editingCampaign ? 'Edit Campaign' : 'Create New Campaign'}
                 </h3>
                 <button onClick={() => setShowModal(false)} className="p-2 hover:bg-gray-100 rounded-lg">
@@ -632,7 +632,7 @@ function StatCard({ label, value, icon, color, bgColor }) {
         </div>
         <div>
           <p className="text-sm text-gray-600">{label}</p>
-          <p className="text-2xl font-bold text-gray-900">{value}</p>
+          <p className="text-2xl font-semibold text-gray-900">{value}</p>
         </div>
       </div>
     </div>

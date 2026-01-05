@@ -47,7 +47,7 @@ export default function OrderTracking({ order }) {
     return (
         <div className="bg-white rounded-lg border p-6">
             <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-bold text-gray-900">Track Shipment</h3>
+                <h3 className="text-lg font-semibold text-gray-900">Track Shipment</h3>
                 <button
                     onClick={fetchTracking}
                     disabled={loading}

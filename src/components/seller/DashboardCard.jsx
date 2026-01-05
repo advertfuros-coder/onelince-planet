@@ -20,7 +20,7 @@ export default function DashboardCard({ title, value, icon: Icon, change, change
         )}
       </div>
       <p className="text-gray-600 text-sm mb-1">{title}</p>
-      <p className="text-2xl font-bold text-gray-900">{value}</p>
+      <p className="text-2xl font-semibold text-gray-900">{value}</p>
     </div>
   )
 }

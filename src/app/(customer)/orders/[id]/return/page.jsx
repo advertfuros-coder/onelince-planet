@@ -61,7 +61,7 @@ export default function ReturnRequestPage() {
 
   return (
     <div className="max-w-3xl mx-auto bg-white border border-gray-200 rounded-xl shadow-sm p-8 mt-6">
-      <h1 className="text-2xl font-bold mb-6 text-gray-900">Return Product</h1>
+      <h1 className="text-2xl font-semibold mb-6 text-gray-900">Return Product</h1>
 
       <form onSubmit={handleSubmit} className="space-y-5">
         <div>

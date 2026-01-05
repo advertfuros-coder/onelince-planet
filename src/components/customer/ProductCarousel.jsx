@@ -39,7 +39,7 @@ export default function ProductCarousel({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">{title}</h2>
+            <h2 className="text-3xl font-semibold text-gray-900 mb-2">{title}</h2>
             {subtitle && <p className="text-gray-600">{subtitle}</p>}
           </div>
           <div className="flex items-center space-x-4">
@@ -135,7 +135,7 @@ export default function ProductCarousel({
 
                   <div className="mb-3">
                     <div className="flex items-center space-x-2">
-                      <span className="text-lg font-bold text-gray-900">
+                      <span className="text-lg font-semibold text-gray-900">
                         {formatPrice(product.price)}
                       </span>
                       {product.originalPrice && (

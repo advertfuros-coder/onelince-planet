@@ -142,7 +142,7 @@ export default function AdminProductsPage() {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Product Management</h1>
+          <h1 className="text-3xl font-semibold text-gray-900">Product Management</h1>
           <p className="text-gray-600 mt-1">Manage all products on the platform</p>
         </div>
         <div className="flex space-x-3">
@@ -542,7 +542,7 @@ function StatCard({ label, value, icon, color, bgColor }) {
         </div>
         <div>
           <p className="text-sm text-gray-600">{label}</p>
-          <p className="text-2xl font-bold text-gray-900">{value}</p>
+          <p className="text-2xl font-semibold text-gray-900">{value}</p>
         </div>
       </div>
     </div>

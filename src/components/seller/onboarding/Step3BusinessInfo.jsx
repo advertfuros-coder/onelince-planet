@@ -12,7 +12,7 @@ export default function Step3BusinessInfo({ formData, updateFormData, errors }) 
         <div className="space-y-8">
             {/* Business Name */}
             <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Business Name <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
@@ -33,7 +33,7 @@ export default function Step3BusinessInfo({ formData, updateFormData, errors }) 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* GSTIN/TRN */}
                 <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
                         GSTIN / TRN <span className="text-red-500">*</span>
                     </label>
                     <div className="relative">
@@ -53,7 +53,7 @@ export default function Step3BusinessInfo({ formData, updateFormData, errors }) 
 
                 {/* PAN */}
                 <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
                         PAN Card Number
                     </label>
                     <div className="relative">
@@ -73,7 +73,7 @@ export default function Step3BusinessInfo({ formData, updateFormData, errors }) 
 
             {/* Business Category */}
             <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Primary Business Category <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
@@ -96,7 +96,7 @@ export default function Step3BusinessInfo({ formData, updateFormData, errors }) 
 
             {/* Established Year */}
             <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Established Year
                 </label>
                 <input

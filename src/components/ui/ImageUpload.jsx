@@ -136,7 +136,7 @@ export default function ImageUpload({ images = [], onChange, token, maxFiles = 8
                                     <button
                                         type="button"
                                         onClick={() => setPrimary(index)}
-                                        className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5 transition-all ${img.isPrimary ? 'bg-blue-600 text-white' : 'bg-white hover:bg-blue-600 hover:text-white text-slate-900'}`}
+                                        className={`px-3 py-1.5 rounded-lg text-[10px] font-semibold uppercase tracking-widest flex items-center gap-1.5 transition-all ${img.isPrimary ? 'bg-blue-600 text-white' : 'bg-white hover:bg-blue-600 hover:text-white text-slate-900'}`}
                                     >
                                         <Star size={10} fill={img.isPrimary ? "currentColor" : "none"} />
                                         {img.isPrimary ? 'Master' : 'Main'}
@@ -154,7 +154,7 @@ export default function ImageUpload({ images = [], onChange, token, maxFiles = 8
                                 <button
                                     type="button"
                                     onClick={() => removeImage(index)}
-                                    className="px-4 py-2 bg-rose-500/20 hover:bg-rose-500 text-rose-500 hover:text-white rounded-xl text-[10px] font-black uppercase tracking-widest border border-rose-500/30 transition-all flex items-center gap-2"
+                                    className="px-4 py-2 bg-rose-500/20 hover:bg-rose-500 text-rose-500 hover:text-white rounded-xl text-[10px] font-semibold uppercase tracking-widest border border-rose-500/30 transition-all flex items-center gap-2"
                                 >
                                     <X size={14} /> Remove
                                 </button>
@@ -163,11 +163,11 @@ export default function ImageUpload({ images = [], onChange, token, maxFiles = 8
                             {/* Indicators */}
                             <div className="absolute top-3 left-3 flex gap-2">
                                 {img.isPrimary && (
-                                    <div className="px-2 py-1 bg-blue-600 text-white text-[9px] font-black uppercase tracking-widest rounded-lg shadow-lg">
+                                    <div className="px-2 py-1 bg-blue-600 text-white text-[9px] font-semibold uppercase tracking-widest rounded-lg shadow-lg">
                                         Primary
                                     </div>
                                 )}
-                                <div className="px-2 py-1 bg-white/90 backdrop-blur-sm text-slate-900 text-[9px] font-black uppercase tracking-widest rounded-lg shadow-sm border border-slate-200">
+                                <div className="px-2 py-1 bg-white/90 backdrop-blur-sm text-slate-900 text-[9px] font-semibold uppercase tracking-widest rounded-lg shadow-sm border border-slate-200">
                                     #{index + 1}
                                 </div>
                             </div>
@@ -186,7 +186,7 @@ export default function ImageUpload({ images = [], onChange, token, maxFiles = 8
                         {uploading ? (
                             <>
                                 <Loader2 size={24} className="animate-spin text-blue-600" />
-                                <span className="text-[10px] font-black uppercase tracking-widest animate-pulse">Syncing...</span>
+                                <span className="text-[10px] font-semibold uppercase tracking-widest animate-pulse">Syncing...</span>
                             </>
                         ) : (
                             <>
@@ -194,8 +194,8 @@ export default function ImageUpload({ images = [], onChange, token, maxFiles = 8
                                     <Upload size={24} />
                                 </div>
                                 <div className="text-center">
-                                    <span className="text-[10px] font-black uppercase tracking-widest block">Add Matrix Asset</span>
-                                    <span className="text-[9px] font-bold opacity-60">Limit: {maxFiles} Files</span>
+                                    <span className="text-[10px] font-semibold uppercase tracking-widest block">Add Matrix Asset</span>
+                                    <span className="text-[9px] font-semibold opacity-60">Limit: {maxFiles} Files</span>
                                 </div>
                             </>
                         )}
@@ -213,7 +213,7 @@ export default function ImageUpload({ images = [], onChange, token, maxFiles = 8
             />
 
             <div className="flex items-center gap-3 px-2">
-                <div className="flex items-center gap-2 text-[9px] font-black text-slate-400 uppercase tracking-widest">
+                <div className="flex items-center gap-2 text-[9px] font-semibold text-slate-400 uppercase tracking-widest">
                     <ImageIcon size={14} className="text-blue-500/50" />
                     Optimal: 1:1 Aspect Ratio (WEBP/PNG)
                 </div>

@@ -212,11 +212,11 @@ export default function SubscriptionPage() {
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
                 <div className="text-center mb-12">
-                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-bold mb-4">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold mb-4">
                         <Crown size={16} />
                         Subscription Plans
                     </div>
-                    <h1 className="text-5xl font-black text-gray-900 mb-4">
+                    <h1 className="text-5xl font-semibold text-gray-900 mb-4">
                         Choose Your Plan
                     </h1>
                     <p className="text-xl text-gray-600 max-w-2xl mx-auto">
@@ -240,20 +240,20 @@ export default function SubscriptionPage() {
 
                 {/* Features Comparison Table */}
                 <div className="bg-white rounded-3xl shadow-xl p-8 mb-8">
-                    <h2 className="text-3xl font-black text-gray-900 mb-8 text-center">
+                    <h2 className="text-3xl font-semibold text-gray-900 mb-8 text-center">
                         Compare Plans
                     </h2>
                     <div className="overflow-x-auto">
                         <table className="w-full">
                             <thead>
                                 <tr className="border-b-2 border-gray-200">
-                                    <th className="text-left py-4 px-6 font-black text-gray-900">
+                                    <th className="text-left py-4 px-6 font-semibold text-gray-900">
                                         Feature
                                     </th>
                                     {plans.map((plan) => (
                                         <th
                                             key={plan.id}
-                                            className="text-center py-4 px-6 font-black text-gray-900"
+                                            className="text-center py-4 px-6 font-semibold text-gray-900"
                                         >
                                             {plan.displayName}
                                         </th>
@@ -355,7 +355,7 @@ function PlanCard({ plan, index, currentTier, processingPlanId, onUpgrade }) {
             {/* Popular Badge */}
             {plan.isPopular && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                    <div className="px-4 py-1 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-xs font-black uppercase rounded-full shadow-lg">
+                    <div className="px-4 py-1 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-xs font-semibold uppercase rounded-full shadow-lg">
                         Most Popular
                     </div>
                 </div>
@@ -364,7 +364,7 @@ function PlanCard({ plan, index, currentTier, processingPlanId, onUpgrade }) {
             {/* Current Plan Badge */}
             {isCurrentPlan && (
                 <div className="absolute top-4 right-4">
-                    <div className="px-3 py-1 bg-green-100 text-green-700 text-xs font-black uppercase rounded-full">
+                    <div className="px-3 py-1 bg-green-100 text-green-700 text-xs font-semibold uppercase rounded-full">
                         Current Plan
                     </div>
                 </div>
@@ -379,7 +379,7 @@ function PlanCard({ plan, index, currentTier, processingPlanId, onUpgrade }) {
             </div>
 
             {/* Plan Name */}
-            <h3 className="text-2xl font-black text-gray-900 mb-2">
+            <h3 className="text-2xl font-semibold text-gray-900 mb-2">
                 {plan.displayName}
             </h3>
             <p className="text-sm text-gray-600 mb-6">{plan.tagline || plan.description}</p>
@@ -387,13 +387,13 @@ function PlanCard({ plan, index, currentTier, processingPlanId, onUpgrade }) {
             {/* Price */}
             <div className="mb-6">
                 <div className="flex items-baseline gap-2">
-                    <span className="text-4xl font-black text-gray-900">
+                    <span className="text-4xl font-semibold text-gray-900">
                         ₹{plan.pricing.monthly.toLocaleString()}
                     </span>
                     <span className="text-gray-500 font-medium">/month</span>
                 </div>
                 {plan.discounts.yearly > 0 && (
-                    <p className="text-sm text-green-600 font-bold mt-1">
+                    <p className="text-sm text-green-600 font-semibold mt-1">
                         Save {plan.discounts.yearly}% with yearly billing
                     </p>
                 )}
@@ -403,7 +403,7 @@ function PlanCard({ plan, index, currentTier, processingPlanId, onUpgrade }) {
             <button
                 onClick={() => !isCurrentPlan && !isFree && !isAnyProcessing && onUpgrade(plan.name)}
                 disabled={isCurrentPlan || isFree || isAnyProcessing}
-                className={`w-full py-4 rounded-xl font-black text-sm uppercase tracking-wider transition-all mb-6 flex items-center justify-center gap-2 ${isCurrentPlan
+                className={`w-full py-4 rounded-xl font-semibold text-sm uppercase tracking-wider transition-all mb-6 flex items-center justify-center gap-2 ${isCurrentPlan
                     ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                     : isFree
                         ? 'bg-gray-100 text-gray-600 cursor-default'
@@ -434,7 +434,7 @@ function PlanCard({ plan, index, currentTier, processingPlanId, onUpgrade }) {
 
             {/* Features */}
             <div className="space-y-3">
-                <p className="text-xs font-black text-gray-400 uppercase tracking-wider">
+                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
                     Includes:
                 </p>
                 <FeatureItem
@@ -488,7 +488,7 @@ function FeatureItem({ text, included }) {
 function ComparisonRow({ label, plans, getValue, isBoolean = false }) {
     return (
         <tr className="border-b border-gray-100 hover:bg-gray-50">
-            <td className="py-4 px-6 font-bold text-gray-700">{label}</td>
+            <td className="py-4 px-6 font-semibold text-gray-700">{label}</td>
             {plans.map((plan) => {
                 const value = getValue(plan)
                 return (
@@ -500,7 +500,7 @@ function ComparisonRow({ label, plans, getValue, isBoolean = false }) {
                                 <X size={20} className="inline text-gray-300" />
                             )
                         ) : (
-                            <span className="font-bold text-gray-900">{value}</span>
+                            <span className="font-semibold text-gray-900">{value}</span>
                         )}
                     </td>
                 )

@@ -241,7 +241,7 @@ export default function SellerRegistrationPage() {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
+          <h1 className="text-5xl font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
             Become a Seller
           </h1>
           <p className="text-xl text-gray-600">
@@ -300,13 +300,13 @@ export default function SellerRegistrationPage() {
           {currentStep === 1 && (
             <div className="space-y-8">
               <div>
-                <h2 className="text-3xl font-bold text-gray-900 mb-3">Business Information</h2>
+                <h2 className="text-3xl font-semibold text-gray-900 mb-3">Business Information</h2>
                 <p className="text-gray-600 text-lg">Let's start with your business details</p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-bold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Business/Company Name *
                   </label>
                   <input
@@ -319,7 +319,7 @@ export default function SellerRegistrationPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
                     GSTIN (GST Number) *
                   </label>
                   <input
@@ -334,7 +334,7 @@ export default function SellerRegistrationPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
                     PAN Number *
                   </label>
                   <input
@@ -349,7 +349,7 @@ export default function SellerRegistrationPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Business Type *
                   </label>
                   <select
@@ -367,7 +367,7 @@ export default function SellerRegistrationPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Business Category *
                   </label>
                   <select
@@ -384,7 +384,7 @@ export default function SellerRegistrationPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Established Year
                   </label>
                   <input
@@ -404,13 +404,13 @@ export default function SellerRegistrationPage() {
           {currentStep === 2 && (
             <div className="space-y-8">
               <div>
-                <h2 className="text-3xl font-bold text-gray-900 mb-3">Store Details</h2>
+                <h2 className="text-3xl font-semibold text-gray-900 mb-3">Store Details</h2>
                 <p className="text-gray-600 text-lg">Create your online store identity</p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-bold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Store Name *
                   </label>
                   <input
@@ -428,7 +428,7 @@ export default function SellerRegistrationPage() {
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-bold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Store Description
                   </label>
                   <textarea
@@ -446,7 +446,7 @@ export default function SellerRegistrationPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Store Logo URL
                   </label>
                   <input
@@ -464,7 +464,7 @@ export default function SellerRegistrationPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Store Banner URL
                   </label>
                   <input
@@ -482,7 +482,7 @@ export default function SellerRegistrationPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Website (Optional)
                   </label>
                   <input
@@ -500,7 +500,7 @@ export default function SellerRegistrationPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Store Categories
                   </label>
                   <select
@@ -529,7 +529,7 @@ export default function SellerRegistrationPage() {
 
                 {/* Social Media */}
                 <div className="md:col-span-2 border-t pt-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-4">Social Media (Optional)</h3>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-4">Social Media (Optional)</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <input
                       type="url"
@@ -601,13 +601,13 @@ export default function SellerRegistrationPage() {
           {currentStep === 3 && (
             <div className="space-y-8">
               <div>
-                <h2 className="text-3xl font-bold text-gray-900 mb-3">Pickup Address</h2>
+                <h2 className="text-3xl font-semibold text-gray-900 mb-3">Pickup Address</h2>
                 <p className="text-gray-600 text-lg">Where should orders be picked up from?</p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-bold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Address Line 1 *
                   </label>
                   <input
@@ -625,7 +625,7 @@ export default function SellerRegistrationPage() {
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-bold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Address Line 2
                   </label>
                   <input
@@ -643,7 +643,7 @@ export default function SellerRegistrationPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Landmark
                   </label>
                   <input
@@ -661,7 +661,7 @@ export default function SellerRegistrationPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
                     City *
                   </label>
                   <input
@@ -679,7 +679,7 @@ export default function SellerRegistrationPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
                     State *
                   </label>
                   <select
@@ -702,7 +702,7 @@ export default function SellerRegistrationPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Pincode *
                   </label>
                   <input
@@ -727,13 +727,13 @@ export default function SellerRegistrationPage() {
           {currentStep === 4 && (
             <div className="space-y-8">
               <div>
-                <h2 className="text-3xl font-bold text-gray-900 mb-3">Contact Information</h2>
+                <h2 className="text-3xl font-semibold text-gray-900 mb-3">Contact Information</h2>
                 <p className="text-gray-600 text-lg">Customer support contact details</p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Support Email *
                   </label>
                   <input
@@ -751,7 +751,7 @@ export default function SellerRegistrationPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Support Phone *
                   </label>
                   <input
@@ -776,14 +776,14 @@ export default function SellerRegistrationPage() {
           {currentStep === 5 && (
             <div className="space-y-8">
               <div>
-                <h2 className="text-3xl font-bold text-gray-900 mb-3">Bank Account Details</h2>
+                <h2 className="text-3xl font-semibold text-gray-900 mb-3">Bank Account Details</h2>
                 <p className="text-gray-600 text-lg">For receiving payments</p>
               </div>
 
               <div className="bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-blue-200 rounded-xl p-6 flex items-start space-x-4">
                 <FiAlertCircle className="text-blue-600 text-2xl mt-1" />
                 <div>
-                  <p className="text-blue-900 font-bold text-lg">Secure & Encrypted</p>
+                  <p className="text-blue-900 font-semibold text-lg">Secure & Encrypted</p>
                   <p className="text-blue-800 mt-1">
                     Your bank details are encrypted and will only be used for payment processing
                   </p>
@@ -792,7 +792,7 @@ export default function SellerRegistrationPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-bold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Account Holder Name *
                   </label>
                   <input
@@ -810,7 +810,7 @@ export default function SellerRegistrationPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Account Number *
                   </label>
                   <input
@@ -828,7 +828,7 @@ export default function SellerRegistrationPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
                     IFSC Code *
                   </label>
                   <input
@@ -850,7 +850,7 @@ export default function SellerRegistrationPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Bank Name *
                   </label>
                   <input
@@ -868,7 +868,7 @@ export default function SellerRegistrationPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Account Type
                   </label>
                   <select
@@ -887,7 +887,7 @@ export default function SellerRegistrationPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Branch Name
                   </label>
                   <input
@@ -905,7 +905,7 @@ export default function SellerRegistrationPage() {
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-bold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
                     UPI ID (Optional)
                   </label>
                   <input
@@ -929,7 +929,7 @@ export default function SellerRegistrationPage() {
           {currentStep === 6 && (
             <div className="space-y-8">
               <div>
-                <h2 className="text-3xl font-bold text-gray-900 mb-3">Upload Documents</h2>
+                <h2 className="text-3xl font-semibold text-gray-900 mb-3">Upload Documents</h2>
                 <p className="text-gray-600 text-lg">Upload required documents for verification</p>
               </div>
 
@@ -959,7 +959,7 @@ export default function SellerRegistrationPage() {
                 />
 
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
                     ID Proof Type
                   </label>
                   <select
@@ -1053,7 +1053,7 @@ export default function SellerRegistrationPage() {
                       className="w-6 h-6 text-green-600 rounded focus:ring-green-500 mt-1"
                     />
                     <div>
-                      <p className="text-green-900 font-bold text-lg">Terms & Agreement *</p>
+                      <p className="text-green-900 font-semibold text-lg">Terms & Agreement *</p>
                       <p className="text-green-800 mt-2">
                         I agree to the seller terms and conditions, commission structure, and return/refund policies.
                         I confirm that all information provided is accurate and complete.
@@ -1068,7 +1068,7 @@ export default function SellerRegistrationPage() {
                 <div className="flex items-start space-x-4">
                   <FiCheckCircle className="text-4xl flex-shrink-0" />
                   <div>
-                    <h3 className="text-2xl font-bold mb-4">You're Almost There!</h3>
+                    <h3 className="text-2xl font-semibold mb-4">You're Almost There!</h3>
                     <p className="text-blue-100 mb-4">
                       Your application will be reviewed within 24-48 hours. Once approved, you'll get:
                     </p>
@@ -1109,7 +1109,7 @@ export default function SellerRegistrationPage() {
             {currentStep > 1 ? (
               <button
                 onClick={prevStep}
-                className="flex items-center space-x-2 px-8 py-4 border-2 border-gray-300 rounded-xl hover:bg-gray-50 font-bold text-lg transition-all"
+                className="flex items-center space-x-2 px-8 py-4 border-2 border-gray-300 rounded-xl hover:bg-gray-50 font-semibold text-lg transition-all"
               >
                 <FiArrowLeft />
                 <span>Previous</span>
@@ -1121,7 +1121,7 @@ export default function SellerRegistrationPage() {
             {currentStep < STEPS.length ? (
               <button
                 onClick={nextStep}
-                className="flex items-center space-x-2 px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 font-bold text-lg shadow-lg transition-all"
+                className="flex items-center space-x-2 px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 font-semibold text-lg shadow-lg transition-all"
               >
                 <span>Continue</span>
                 <FiArrowRight />
@@ -1130,7 +1130,7 @@ export default function SellerRegistrationPage() {
               <button
                 onClick={handleSubmit}
                 disabled={loading || !formData.documents.agreementSigned}
-                className="flex items-center space-x-2 px-10 py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl hover:from-green-700 hover:to-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed font-bold text-lg shadow-xl transition-all"
+                className="flex items-center space-x-2 px-10 py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl hover:from-green-700 hover:to-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-lg shadow-xl transition-all"
               >
                 {loading ? (
                   <>
@@ -1155,7 +1155,7 @@ export default function SellerRegistrationPage() {
 function DocumentUpload({ label, value, onChange, required }) {
   return (
     <div>
-      <label className="block text-sm font-bold text-gray-700 mb-2">
+      <label className="block text-sm font-semibold text-gray-700 mb-2">
         {label}
       </label>
       <div className="border-3 border-dashed border-gray-300 rounded-xl p-6 hover:border-blue-400 transition-all bg-gray-50">

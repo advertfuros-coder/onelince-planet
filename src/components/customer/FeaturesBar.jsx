@@ -42,7 +42,7 @@ export default function FeaturesBar() {
                                 </div>
 
                                 {/* Title */}
-                                <h3 className="text-sm md:text-base font-bold text-gray-900 mb-1">
+                                <h3 className="text-sm md:text-base font-semibold text-gray-900 mb-1">
                                     {feature.title}
                                 </h3>
 

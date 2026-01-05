@@ -242,7 +242,7 @@ export default function EditProductPage({ params }) {
             <FiArrowLeft size={24} />
           </button>
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Edit Product</h1>
+            <h1 className="text-3xl font-semibold text-gray-900">Edit Product</h1>
             <p className="text-gray-600 mt-1">Update product information</p>
           </div>
         </div>
@@ -623,7 +623,7 @@ export default function EditProductPage({ params }) {
 function Section({ title, children }) {
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-      <h3 className="text-lg font-bold text-gray-900 mb-4">{title}</h3>
+      <h3 className="text-lg font-semibold text-gray-900 mb-4">{title}</h3>
       <div className="space-y-4">{children}</div>
     </div>
   )

@@ -110,9 +110,9 @@ export default function SellerHeader() {
               placeholder="Search logistics, orders, or analytics..."
               onFocus={() => setSearchFocused(true)}
               onBlur={() => setSearchFocused(false)}
-              className="ml-3 w-full bg-transparent border-none outline-none text-[13px] font-bold text-slate-700 placeholder-slate-400"
+              className="ml-3 w-full bg-transparent border-none outline-none text-[13px] font-semibold text-slate-700 placeholder-slate-400"
             />
-            <div className="flex items-center gap-1.5 ml-3 bg-white border border-slate-200 px-2 py-1 rounded-lg text-[10px] text-slate-400 font-black tracking-widest uppercase">
+            <div className="flex items-center gap-1.5 ml-3 bg-white border border-slate-200 px-2 py-1 rounded-lg text-[10px] text-slate-400 font-semibold tracking-widest uppercase">
               <Command size={10} />
               <span>/</span>
             </div>
@@ -145,8 +145,8 @@ export default function SellerHeader() {
               <div className="absolute right-0 mt-4 w-[380px] bg-white rounded-[2.5rem] shadow-[0_30px_100px_-20px_rgba(0,0,0,0.15)] border border-slate-100 py-6 z-50 overflow-hidden animate-in fade-in zoom-in-95 slide-in-from-top-4 duration-500">
                 <div className="px-7 pb-5 border-b border-slate-50 flex justify-between items-center">
                   <div>
-                    <h3 className="font-black text-slate-900 text-sm uppercase tracking-widest">Global Signals</h3>
-                    <p className="text-[10px] font-bold text-slate-400 mt-0.5">{unreadCount} unread system dispatches</p>
+                    <h3 className="font-semibold text-slate-900 text-sm uppercase tracking-widest">Global Signals</h3>
+                    <p className="text-[10px] font-semibold text-slate-400 mt-0.5">{unreadCount} unread system dispatches</p>
                   </div>
                   <button onClick={() => markRead(null, true)} className="p-2 hover:bg-slate-50 rounded-xl text-blue-600 transition-colors group">
                     <CheckCircle2 size={18} className="group-hover:scale-110 transition-transform" />
@@ -159,7 +159,7 @@ export default function SellerHeader() {
                       <div className="w-16 h-16 bg-slate-50 rounded-3xl flex items-center justify-center mx-auto mb-4">
                         <Bell className="text-slate-300" size={32} />
                       </div>
-                      <p className="text-sm font-bold text-slate-400">System quiet. No signals found.</p>
+                      <p className="text-sm font-semibold text-slate-400">System quiet. No signals found.</p>
                     </div>
                   ) : (
                     notifications.map((n) => (
@@ -174,10 +174,10 @@ export default function SellerHeader() {
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex justify-between items-start mb-1">
-                              <h4 className={`text-xs truncate pr-4 ${n.read ? 'font-bold text-slate-600' : 'font-black text-slate-900'}`}>
+                              <h4 className={`text-xs truncate pr-4 ${n.read ? 'font-semibold text-slate-600' : 'font-semibold text-slate-900'}`}>
                                 {n.title}
                               </h4>
-                              <span className="text-[9px] font-bold text-slate-300 whitespace-nowrap">
+                              <span className="text-[9px] font-semibold text-slate-300 whitespace-nowrap">
                                 {new Date(n.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                               </span>
                             </div>
@@ -187,7 +187,7 @@ export default function SellerHeader() {
                             {n.actionUrl && (
                               <Link
                                 href={n.actionUrl}
-                                className="flex items-center gap-1.5 text-[9px] font-black uppercase tracking-widest text-blue-600 hover:text-blue-700 hover:underline"
+                                className="flex items-center gap-1.5 text-[9px] font-semibold uppercase tracking-widest text-blue-600 hover:text-blue-700 hover:underline"
                               >
                                 {n.actionText || 'Process Action'}
                                 <ExternalLink size={10} />
@@ -210,7 +210,7 @@ export default function SellerHeader() {
                 <div className="px-7 pt-4 bg-slate-50/50">
                   <Link
                     href="/seller/notifications"
-                    className="flex items-center justify-center gap-2 w-full py-4 bg-white border border-slate-200 rounded-[1.5rem] text-[10px] font-black uppercase tracking-widest text-slate-600 hover:shadow-lg hover:border-blue-100 hover:text-blue-600 transition-all active:scale-95"
+                    className="flex items-center justify-center gap-2 w-full py-4 bg-white border border-slate-200 rounded-[1.5rem] text-[10px] font-semibold uppercase tracking-widest text-slate-600 hover:shadow-lg hover:border-blue-100 hover:text-blue-600 transition-all active:scale-95"
                   >
                     Enter Control Center
                   </Link>
@@ -222,15 +222,15 @@ export default function SellerHeader() {
           {/* Profile Nexus */}
           <div className="flex items-center gap-4 ml-4 pl-4 border-l border-slate-100">
             <div className="text-right hidden sm:block">
-              <p className="text-[11px] font-black text-slate-900 leading-none mb-1.5 uppercase tracking-wide">{user?.name || 'Administrator'}</p>
+              <p className="text-[11px] font-semibold text-slate-900 leading-none mb-1.5 uppercase tracking-wide">{user?.name || 'Administrator'}</p>
               <div className="flex items-center gap-1.5 justify-end">
                 <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full" />
-                <p className="text-[9px] text-slate-400 font-black uppercase tracking-tighter">Signal Online</p>
+                <p className="text-[9px] text-slate-400 font-semibold uppercase tracking-tighter">Signal Online</p>
               </div>
             </div>
             <div className="w-11 h-11 rounded-[1.25rem] bg-gradient-to-tr from-slate-900 to-slate-800 p-[2px] shadow-2xl shadow-slate-900/10 active:scale-95 transition-all cursor-pointer">
               <div className="w-full h-full rounded-[1.15rem] bg-white flex items-center justify-center border border-slate-700/5">
-                <span className="text-slate-900 font-black text-xs">
+                <span className="text-slate-900 font-semibold text-xs">
                   {user?.name?.charAt(0).toUpperCase() || 'A'}
                 </span>
               </div>

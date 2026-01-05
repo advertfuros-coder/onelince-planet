@@ -46,7 +46,7 @@ export default function WhyChooseUs() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-3">
+          <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-3">
             Why Shop With Us?
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
@@ -73,7 +73,7 @@ export default function WhyChooseUs() {
 
                 {/* Content */}
                 <div className="relative">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-blue-600 group-hover:to-purple-600 transition-all duration-300">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-blue-600 group-hover:to-purple-600 transition-all duration-300">
                     {feature.title}
                   </h3>
                   <p className="text-gray-600 text-sm">

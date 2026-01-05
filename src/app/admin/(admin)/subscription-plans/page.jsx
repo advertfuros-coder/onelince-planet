@@ -133,12 +133,12 @@ export default function SubscriptionPlansPage() {
                 {/* Header */}
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-4xl font-black text-gray-900">Subscription Plans</h1>
+                        <h1 className="text-4xl font-semibold text-gray-900">Subscription Plans</h1>
                         <p className="text-gray-600 mt-2">Manage pricing tiers and features</p>
                     </div>
                     <button
                         onClick={handleCreatePlan}
-                        className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-colors"
+                        className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors"
                     >
                         <Plus size={20} />
                         Create New Plan
@@ -179,22 +179,22 @@ export default function SubscriptionPlansPage() {
                         <table className="w-full">
                             <thead className="bg-gray-50 border-b border-gray-200">
                                 <tr>
-                                    <th className="px-6 py-4 text-left text-xs font-black text-gray-500 uppercase tracking-wider">
+                                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                                         Plan
                                     </th>
-                                    <th className="px-6 py-4 text-left text-xs font-black text-gray-500 uppercase tracking-wider">
+                                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                                         Price
                                     </th>
-                                    <th className="px-6 py-4 text-left text-xs font-black text-gray-500 uppercase tracking-wider">
+                                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                                         Subscribers
                                     </th>
-                                    <th className="px-6 py-4 text-left text-xs font-black text-gray-500 uppercase tracking-wider">
+                                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                                         Revenue
                                     </th>
-                                    <th className="px-6 py-4 text-left text-xs font-black text-gray-500 uppercase tracking-wider">
+                                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                                         Status
                                     </th>
-                                    <th className="px-6 py-4 text-right text-xs font-black text-gray-500 uppercase tracking-wider">
+                                    <th className="px-6 py-4 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">
                                         Actions
                                     </th>
                                 </tr>
@@ -206,13 +206,13 @@ export default function SubscriptionPlansPage() {
                                             <div className="flex items-center gap-3">
                                                 <span className="text-2xl">{plan.icon}</span>
                                                 <div>
-                                                    <div className="font-bold text-gray-900">{plan.displayName}</div>
+                                                    <div className="font-semibold text-gray-900">{plan.displayName}</div>
                                                     <div className="text-sm text-gray-500">{plan.description}</div>
                                                 </div>
                                             </div>
                                         </td>
                                         <td className="px-6 py-4">
-                                            <div className="font-bold text-gray-900">
+                                            <div className="font-semibold text-gray-900">
                                                 ₹{plan.pricing.monthly.toLocaleString()}/mo
                                             </div>
                                             {plan.discounts.yearly > 0 && (
@@ -222,18 +222,18 @@ export default function SubscriptionPlansPage() {
                                             )}
                                         </td>
                                         <td className="px-6 py-4">
-                                            <div className="font-bold text-gray-900">
+                                            <div className="font-semibold text-gray-900">
                                                 {plan.analytics?.activeSubscribers || 0}
                                             </div>
                                         </td>
                                         <td className="px-6 py-4">
-                                            <div className="font-bold text-gray-900">
+                                            <div className="font-semibold text-gray-900">
                                                 ₹{(plan.analytics?.monthlyRevenue || 0).toLocaleString()}
                                             </div>
                                         </td>
                                         <td className="px-6 py-4">
                                             <span
-                                                className={`px-3 py-1 rounded-full text-xs font-bold ${plan.status === 'active'
+                                                className={`px-3 py-1 rounded-full text-xs font-semibold ${plan.status === 'active'
                                                         ? 'bg-green-100 text-green-700'
                                                         : plan.status === 'draft'
                                                             ? 'bg-yellow-100 text-yellow-700'
@@ -304,7 +304,7 @@ function StatCard({ icon: Icon, label, value, color }) {
             <div className={`inline-flex p-3 rounded-xl bg-gradient-to-br ${colors[color]} mb-4`}>
                 <Icon className="text-white" size={24} />
             </div>
-            <div className="text-3xl font-black text-gray-900 mb-1">{value}</div>
+            <div className="text-3xl font-semibold text-gray-900 mb-1">{value}</div>
             <div className="text-sm text-gray-600 font-medium">{label}</div>
         </div>
     )
@@ -353,7 +353,7 @@ function PlanEditorModal({ plan, onClose, onSave, token }) {
                 className="bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto p-8"
             >
                 <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-2xl font-black text-gray-900">
+                    <h2 className="text-2xl font-semibold text-gray-900">
                         {plan.id ? 'Edit Plan' : 'Create New Plan'}
                     </h2>
                     <button
@@ -368,7 +368,7 @@ function PlanEditorModal({ plan, onClose, onSave, token }) {
                     {/* Basic Info */}
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-2">
+                            <label className="block text-sm font-semibold text-gray-700 mb-2">
                                 Plan Name (ID)
                             </label>
                             <input
@@ -380,7 +380,7 @@ function PlanEditorModal({ plan, onClose, onSave, token }) {
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-2">
+                            <label className="block text-sm font-semibold text-gray-700 mb-2">
                                 Display Name
                             </label>
                             <input
@@ -394,7 +394,7 @@ function PlanEditorModal({ plan, onClose, onSave, token }) {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-bold text-gray-700 mb-2">
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
                             Description
                         </label>
                         <textarea
@@ -408,10 +408,10 @@ function PlanEditorModal({ plan, onClose, onSave, token }) {
 
                     {/* Pricing */}
                     <div className="border-t pt-6">
-                        <h3 className="text-lg font-black text-gray-900 mb-4">Pricing</h3>
+                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Pricing</h3>
                         <div className="grid grid-cols-3 gap-4">
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">
+                                <label className="block text-sm font-semibold text-gray-700 mb-2">
                                     Monthly Price (₹)
                                 </label>
                                 <input
@@ -427,7 +427,7 @@ function PlanEditorModal({ plan, onClose, onSave, token }) {
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">
+                                <label className="block text-sm font-semibold text-gray-700 mb-2">
                                     Quarterly Discount (%)
                                 </label>
                                 <input
@@ -443,7 +443,7 @@ function PlanEditorModal({ plan, onClose, onSave, token }) {
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">
+                                <label className="block text-sm font-semibold text-gray-700 mb-2">
                                     Yearly Discount (%)
                                 </label>
                                 <input
@@ -463,10 +463,10 @@ function PlanEditorModal({ plan, onClose, onSave, token }) {
 
                     {/* Features - Simplified for length */}
                     <div className="border-t pt-6">
-                        <h3 className="text-lg font-black text-gray-900 mb-4">Features & Limits</h3>
+                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Features & Limits</h3>
                         <div className="grid grid-cols-3 gap-4">
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">
+                                <label className="block text-sm font-semibold text-gray-700 mb-2">
                                     Max Products (-1 = unlimited)
                                 </label>
                                 <input
@@ -482,7 +482,7 @@ function PlanEditorModal({ plan, onClose, onSave, token }) {
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">
+                                <label className="block text-sm font-semibold text-gray-700 mb-2">
                                     Max Warehouses
                                 </label>
                                 <input
@@ -498,7 +498,7 @@ function PlanEditorModal({ plan, onClose, onSave, token }) {
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">
+                                <label className="block text-sm font-semibold text-gray-700 mb-2">
                                     Max Images/Product
                                 </label>
                                 <input
@@ -542,14 +542,14 @@ function PlanEditorModal({ plan, onClose, onSave, token }) {
                     <div className="flex gap-4 pt-6 border-t">
                         <button
                             onClick={onClose}
-                            className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-xl font-bold hover:bg-gray-50 transition-colors"
+                            className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition-colors"
                         >
                             Cancel
                         </button>
                         <button
                             onClick={handleSave}
                             disabled={saving}
-                            className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                            className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
                         >
                             {saving ? (
                                 <>

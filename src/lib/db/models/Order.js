@@ -33,6 +33,10 @@ const OrderSchema = new mongoose.Schema(
         sku: String,
         hsn: String,
         weight: { type: Number, default: 0.5 },
+        variant: {
+          type: mongoose.Schema.Types.Mixed,
+          default: {},
+        },
         status: {
           type: String,
           enum: [
@@ -53,6 +57,7 @@ const OrderSchema = new mongoose.Schema(
       tax: { type: Number, default: 0 },
       shipping: { type: Number, default: 0 },
       discount: { type: Number, default: 0 },
+      donation: { type: Number, default: 0 },
       total: Number,
     },
 

@@ -35,7 +35,7 @@ Add this after the WooCommerce integration card (around line 700):
           <ShoppingBag className="w-8 h-8 text-white" />
         </div>
         <div>
-          <h2 className="text-2xl font-black text-gray-900">
+          <h2 className="text-2xl font-semibold text-gray-900">
             Amazon Seller Central
           </h2>
           <p className="text-sm text-gray-500 font-medium">
@@ -46,12 +46,12 @@ Add this after the WooCommerce integration card (around line 700):
       {amazonData?.isConnected ? (
         <div className="flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-600 rounded-full">
           <CheckCircle2 size={16} />
-          <span className="text-xs font-black uppercase">Connected</span>
+          <span className="text-xs font-semibold uppercase">Connected</span>
         </div>
       ) : (
         <div className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-400 rounded-full">
           <XCircle size={16} />
-          <span className="text-xs font-black uppercase">Not Connected</span>
+          <span className="text-xs font-semibold uppercase">Not Connected</span>
         </div>
       )}
     </div>
@@ -64,26 +64,26 @@ Add this after the WooCommerce integration card (around line 700):
           <div className="p-6 bg-gray-50 rounded-2xl">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">
+                <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-1">
                   Seller ID
                 </p>
-                <p className="text-sm font-bold text-gray-900">
+                <p className="text-sm font-semibold text-gray-900">
                   {amazonData.sellerId}
                 </p>
               </div>
               <div>
-                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">
+                <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-1">
                   Region
                 </p>
-                <p className="text-sm font-bold text-gray-900">
+                <p className="text-sm font-semibold text-gray-900">
                   {amazonData.region?.toUpperCase()}
                 </p>
               </div>
               <div>
-                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">
+                <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-1">
                   Last Synced
                 </p>
-                <p className="text-sm font-bold text-gray-900">
+                <p className="text-sm font-semibold text-gray-900">
                   {amazonData.lastSyncAt
                     ? new Date(amazonData.lastSyncAt).toLocaleString()
                     : "Never"}
@@ -94,13 +94,13 @@ Add this after the WooCommerce integration card (around line 700):
 
           {/* Sync Settings */}
           <div className="p-6 bg-orange-50/50 rounded-2xl border border-orange-100">
-            <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest mb-4 flex items-center gap-2">
+            <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-widest mb-4 flex items-center gap-2">
               <Settings size={16} className="text-orange-600" />
               Sync Settings
             </h3>
             <div className="space-y-4">
               <label className="flex items-center justify-between">
-                <span className="text-sm font-bold text-gray-700">
+                <span className="text-sm font-semibold text-gray-700">
                   Auto-sync Products
                 </span>
                 <input
@@ -116,7 +116,7 @@ Add this after the WooCommerce integration card (around line 700):
                 />
               </label>
               <label className="flex items-center justify-between">
-                <span className="text-sm font-bold text-gray-700">
+                <span className="text-sm font-semibold text-gray-700">
                   Auto-sync Inventory
                 </span>
                 <input
@@ -132,7 +132,7 @@ Add this after the WooCommerce integration card (around line 700):
                 />
               </label>
               <label className="flex items-center justify-between">
-                <span className="text-sm font-bold text-gray-700">
+                <span className="text-sm font-semibold text-gray-700">
                   Auto-sync Orders
                 </span>
                 <input
@@ -148,7 +148,7 @@ Add this after the WooCommerce integration card (around line 700):
                 />
               </label>
               <div>
-                <label className="text-sm font-bold text-gray-700 block mb-2">
+                <label className="text-sm font-semibold text-gray-700 block mb-2">
                   Sync Frequency
                 </label>
                 <select
@@ -159,7 +159,7 @@ Add this after the WooCommerce integration card (around line 700):
                       syncInterval: e.target.value,
                     })
                   }
-                  className="w-full px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-bold focus:ring-2 focus:ring-orange-100"
+                  className="w-full px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-semibold focus:ring-2 focus:ring-orange-100"
                 >
                   <option value="hourly">Every Hour</option>
                   <option value="daily">Once Daily</option>
@@ -168,7 +168,7 @@ Add this after the WooCommerce integration card (around line 700):
               </div>
               <button
                 onClick={updateAmazonSyncSettings}
-                className="w-full px-6 py-3 bg-orange-600 text-white rounded-xl font-black text-xs uppercase tracking-widest hover:bg-orange-700 transition-all"
+                className="w-full px-6 py-3 bg-orange-600 text-white rounded-xl font-semibold text-xs uppercase tracking-widest hover:bg-orange-700 transition-all"
               >
                 Save Settings
               </button>
@@ -178,7 +178,7 @@ Add this after the WooCommerce integration card (around line 700):
           {/* Disconnect Button */}
           <button
             onClick={disconnectAmazon}
-            className="w-full px-6 py-4 bg-rose-50 text-rose-600 rounded-2xl font-black text-sm hover:bg-rose-100 transition-all flex items-center justify-center gap-2"
+            className="w-full px-6 py-4 bg-rose-50 text-rose-600 rounded-2xl font-semibold text-sm hover:bg-rose-100 transition-all flex items-center justify-center gap-2"
           >
             <Unlink size={18} />
             Disconnect Amazon Account
@@ -192,7 +192,7 @@ Add this after the WooCommerce integration card (around line 700):
           <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <LinkIcon className="w-10 h-10 text-gray-400" />
           </div>
-          <h3 className="text-xl font-black text-gray-900 mb-2">
+          <h3 className="text-xl font-semibold text-gray-900 mb-2">
             Connect Your Amazon Seller Account
           </h3>
           <p className="text-gray-500 font-medium mb-8 max-w-md mx-auto">
@@ -201,7 +201,7 @@ Add this after the WooCommerce integration card (around line 700):
           </p>
           <button
             onClick={connectAmazon}
-            className="inline-flex items-center gap-3 px-8 py-4 bg-[#FF9900] text-white rounded-2xl font-black text-sm hover:bg-[#e68a00] transition-all shadow-lg"
+            className="inline-flex items-center gap-3 px-8 py-4 bg-[#FF9900] text-white rounded-2xl font-semibold text-sm hover:bg-[#e68a00] transition-all shadow-lg"
           >
             <ShoppingBag size={20} />
             Connect Amazon Account
@@ -214,7 +214,7 @@ Add this after the WooCommerce integration card (around line 700):
             <div className="w-12 h-12 bg-orange-50 rounded-xl flex items-center justify-center mx-auto mb-3">
               <Package className="w-6 h-6 text-orange-600" />
             </div>
-            <h4 className="font-black text-sm text-gray-900 mb-1">
+            <h4 className="font-semibold text-sm text-gray-900 mb-1">
               Product Sync
             </h4>
             <p className="text-xs text-gray-500">
@@ -225,7 +225,7 @@ Add this after the WooCommerce integration card (around line 700):
             <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center mx-auto mb-3">
               <TrendingUp className="w-6 h-6 text-emerald-600" />
             </div>
-            <h4 className="font-black text-sm text-gray-900 mb-1">
+            <h4 className="font-semibold text-sm text-gray-900 mb-1">
               FBA Inventory
             </h4>
             <p className="text-xs text-gray-500">
@@ -236,7 +236,7 @@ Add this after the WooCommerce integration card (around line 700):
             <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center mx-auto mb-3">
               <Clock className="w-6 h-6 text-blue-600" />
             </div>
-            <h4 className="font-black text-sm text-gray-900 mb-1">
+            <h4 className="font-semibold text-sm text-gray-900 mb-1">
               Multi-Marketplace
             </h4>
             <p className="text-xs text-gray-500">
@@ -269,7 +269,7 @@ Add this after the WooCommerce modal (around line 940):
         <div className="p-10 bg-gradient-to-br from-[#FF9900]/10 to-orange-50 border-b border-gray-100 sticky top-0 bg-white/95 backdrop-blur-sm z-10">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-3xl font-black text-gray-900 tracking-tight">
+              <h2 className="text-3xl font-semibold text-gray-900 tracking-tight">
                 Connect Amazon Seller Central
               </h2>
               <p className="text-sm text-gray-600 mt-2">
@@ -288,7 +288,7 @@ Add this after the WooCommerce modal (around line 940):
         <div className="p-10 space-y-6">
           {/* Instructions */}
           <div className="p-6 bg-orange-50 rounded-2xl border border-orange-100">
-            <h3 className="text-sm font-black text-orange-900 mb-3 flex items-center gap-2">
+            <h3 className="text-sm font-semibold text-orange-900 mb-3 flex items-center gap-2">
               <AlertCircle size={16} />
               How to Get Your SP-API Credentials
             </h3>
@@ -306,7 +306,7 @@ Add this after the WooCommerce modal (around line 940):
               href="https://developer-docs.amazon.com/sp-api/docs/registering-your-application"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs text-orange-600 hover:text-orange-700 font-bold mt-2 inline-flex items-center gap-1"
+              className="text-xs text-orange-600 hover:text-orange-700 font-semibold mt-2 inline-flex items-center gap-1"
             >
               View Full Guide <ExternalLink size={12} />
             </a>
@@ -315,7 +315,7 @@ Add this after the WooCommerce modal (around line 940):
           {/* Form */}
           <div className="space-y-4">
             <div>
-              <label className="text-sm font-black text-gray-700 mb-2 block">
+              <label className="text-sm font-semibold text-gray-700 mb-2 block">
                 Seller ID
               </label>
               <input
@@ -328,7 +328,7 @@ Add this after the WooCommerce modal (around line 940):
                     sellerId: e.target.value,
                   })
                 }
-                className="w-full px-6 py-4 bg-gray-50 border-2 border-gray-200 rounded-2xl text-sm font-bold focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition-all"
+                className="w-full px-6 py-4 bg-gray-50 border-2 border-gray-200 rounded-2xl text-sm font-semibold focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition-all"
               />
               <p className="text-xs text-gray-500 mt-2">
                 Your Amazon Seller ID
@@ -336,7 +336,7 @@ Add this after the WooCommerce modal (around line 940):
             </div>
 
             <div>
-              <label className="text-sm font-black text-gray-700 mb-2 block">
+              <label className="text-sm font-semibold text-gray-700 mb-2 block">
                 AWS Access Key ID
               </label>
               <input
@@ -355,7 +355,7 @@ Add this after the WooCommerce modal (around line 940):
             </div>
 
             <div>
-              <label className="text-sm font-black text-gray-700 mb-2 block">
+              <label className="text-sm font-semibold text-gray-700 mb-2 block">
                 AWS Secret Access Key
               </label>
               <input
@@ -374,7 +374,7 @@ Add this after the WooCommerce modal (around line 940):
             </div>
 
             <div>
-              <label className="text-sm font-black text-gray-700 mb-2 block">
+              <label className="text-sm font-semibold text-gray-700 mb-2 block">
                 SP-API Refresh Token
               </label>
               <input
@@ -396,7 +396,7 @@ Add this after the WooCommerce modal (around line 940):
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-sm font-black text-gray-700 mb-2 block">
+                <label className="text-sm font-semibold text-gray-700 mb-2 block">
                   AWS Region
                 </label>
                 <select
@@ -407,7 +407,7 @@ Add this after the WooCommerce modal (around line 940):
                       region: e.target.value,
                     })
                   }
-                  className="w-full px-6 py-4 bg-gray-50 border-2 border-gray-200 rounded-2xl text-sm font-bold focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition-all"
+                  className="w-full px-6 py-4 bg-gray-50 border-2 border-gray-200 rounded-2xl text-sm font-semibold focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition-all"
                 >
                   <option value="us-east-1">US East (North America)</option>
                   <option value="eu-west-1">EU West (Europe)</option>
@@ -417,7 +417,7 @@ Add this after the WooCommerce modal (around line 940):
               </div>
 
               <div>
-                <label className="text-sm font-black text-gray-700 mb-2 block">
+                <label className="text-sm font-semibold text-gray-700 mb-2 block">
                   Marketplace
                 </label>
                 <select
@@ -428,7 +428,7 @@ Add this after the WooCommerce modal (around line 940):
                       marketplaceId: e.target.value,
                     })
                   }
-                  className="w-full px-6 py-4 bg-gray-50 border-2 border-gray-200 rounded-2xl text-sm font-bold focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition-all"
+                  className="w-full px-6 py-4 bg-gray-50 border-2 border-gray-200 rounded-2xl text-sm font-semibold focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition-all"
                 >
                   <option value="ATVPDKIKX0DER">United States</option>
                   <option value="A2EUQ1WTGCTBG2">Canada</option>
@@ -457,7 +457,7 @@ Add this after the WooCommerce modal (around line 940):
           <div className="flex gap-4 pt-4">
             <button
               onClick={() => setShowAmazonModal(false)}
-              className="flex-1 px-8 py-4 border-2 border-gray-200 text-gray-600 rounded-2xl font-black text-sm hover:bg-gray-50 transition-all"
+              className="flex-1 px-8 py-4 border-2 border-gray-200 text-gray-600 rounded-2xl font-semibold text-sm hover:bg-gray-50 transition-all"
             >
               Cancel
             </button>
@@ -470,7 +470,7 @@ Add this after the WooCommerce modal (around line 940):
                 !amazonConnectForm.awsSecretKey ||
                 !amazonConnectForm.refreshToken
               }
-              className="flex-1 px-8 py-4 bg-[#FF9900] text-white rounded-2xl font-black text-sm hover:bg-[#e68a00] transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="flex-1 px-8 py-4 bg-[#FF9900] text-white rounded-2xl font-semibold text-sm hover:bg-[#e68a00] transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {connecting ? (
                 <>

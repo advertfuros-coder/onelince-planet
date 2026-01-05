@@ -153,13 +153,13 @@ export default function FlashDealsSection() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Mobile Header */}
                 <div className="md:hidden mb-4">
-                    <h2 className="text-xl font-black text-gray-900">Flash Deals</h2>
+                    <h2 className="text-xl font-semibold text-gray-900">Flash Deals</h2>
                 </div>
 
                 <div className="flex gap-4">
                     {/* Vertical Label - Desktop Only */}
                     <div className="hidden md:flex items-center justify-center bg-gradient-to-b from-blue-600 to-indigo-700 rounded-2xl px-4 py-8 min-w-[100px] flex-shrink-0 shadow-lg">
-                        <h2 className="text-white font-black text-2xl tracking-wider transform -rotate-90 whitespace-nowrap">
+                        <h2 className="text-white font-semibold text-2xl tracking-wider transform -rotate-90 whitespace-nowrap">
                             FLASH DEALS
                         </h2>
                     </div>

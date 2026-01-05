@@ -78,7 +78,7 @@ export default function AdminSettingsPage() {
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Platform Settings</h1>
+          <h1 className="text-3xl font-semibold text-gray-900">Platform Settings</h1>
           <p className="text-gray-600 mt-1">Configure your marketplace global settings</p>
         </div>
         <button
@@ -99,7 +99,7 @@ export default function AdminSettingsPage() {
         <div className="bg-white rounded-lg shadow p-6 border border-gray-200">
           <div className="flex items-center space-x-2 mb-4">
             <FiGlobe className="text-blue-600 text-xl" />
-            <h2 className="text-lg font-bold text-gray-900">Site Identity</h2>
+            <h2 className="text-lg font-semibold text-gray-900">Site Identity</h2>
           </div>
           <div className="space-y-4">
             <div>
@@ -136,7 +136,7 @@ export default function AdminSettingsPage() {
         <div className="bg-white rounded-lg shadow p-6 border border-gray-200">
           <div className="flex items-center space-x-2 mb-4">
             <FiPercent className="text-green-600 text-xl" />
-            <h2 className="text-lg font-bold text-gray-900">Commission & Tax</h2>
+            <h2 className="text-lg font-semibold text-gray-900">Commission & Tax</h2>
           </div>
           <div className="space-y-4">
             <div>
@@ -164,7 +164,7 @@ export default function AdminSettingsPage() {
         <div className="bg-white rounded-lg shadow p-6 border border-gray-200">
           <div className="flex items-center space-x-2 mb-4">
             <FiPhone className="text-purple-600 text-xl" />
-            <h2 className="text-lg font-bold text-gray-900">Contact Information</h2>
+            <h2 className="text-lg font-semibold text-gray-900">Contact Information</h2>
           </div>
           <div className="space-y-4">
             <div>
@@ -201,7 +201,7 @@ export default function AdminSettingsPage() {
         <div className="bg-white rounded-lg shadow p-6 border border-gray-200">
           <div className="flex items-center space-x-2 mb-4">
             <FiToggleLeft className="text-orange-600 text-xl" />
-            <h2 className="text-lg font-bold text-gray-900">Platform Features</h2>
+            <h2 className="text-lg font-semibold text-gray-900">Platform Features</h2>
           </div>
           <div className="space-y-4">
             <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
@@ -247,7 +247,7 @@ export default function AdminSettingsPage() {
       <div className="bg-white rounded-lg shadow p-6 border border-gray-200">
         <div className="flex items-center space-x-2 mb-4">
           <FiMail className="text-red-600 text-xl" />
-          <h2 className="text-lg font-bold text-gray-900">Email Configuration</h2>
+          <h2 className="text-lg font-semibold text-gray-900">Email Configuration</h2>
         </div>
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
@@ -299,7 +299,7 @@ export default function AdminSettingsPage() {
       <div className="bg-white rounded-lg shadow p-6 border border-gray-200">
         <div className="flex items-center space-x-2 mb-4">
           <FiCreditCard className="text-indigo-600 text-xl" />
-          <h2 className="text-lg font-bold text-gray-900">Payment Gateways</h2>
+          <h2 className="text-lg font-semibold text-gray-900">Payment Gateways</h2>
         </div>
         <div className="space-y-4">
           <div>

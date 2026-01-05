@@ -293,7 +293,7 @@ Background Layers:
 - Gray-100: #F3F4F6
 
 Text Hierarchy:
-- Heading: text-gray-900 font-black
+- Heading: text-gray-900 font-semibold
 - Body: text-gray-600
 - Muted: text-gray-500
 ```
@@ -302,13 +302,13 @@ Text Hierarchy:
 
 ```css
 Headings:
-- H2: text-3xl md:text-4xl font-black
-- H3: text-2xl md:text-3xl font-bold
+- H2: text-3xl md:text-4xl font-semibold
+- H3: text-2xl md:text-3xl font-semibold
 
 Body:
 - Regular: text-sm to text-lg
 - Semibold: font-semibold
-- Bold: font-bold
+- Bold: font-semibold
 ```
 
 ### **Spacing:**

@@ -118,7 +118,7 @@ export default function SellerInsightsPage() {
         return (
             <div className="flex flex-col items-center justify-center min-h-[80vh] bg-transparent">
                 <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-                <p className="mt-4 text-gray-400 font-bold animate-pulse uppercase tracking-widest text-[10px]">Loading Your Business Data...</p>
+                <p className="mt-4 text-gray-400 font-semibold animate-pulse uppercase tracking-widest text-[10px]">Loading Your Business Data...</p>
             </div>
         )
     }
@@ -134,10 +134,10 @@ export default function SellerInsightsPage() {
                             <div className="w-10 h-10 rounded-2xl bg-blue-600 flex items-center justify-center text-white shadow-xl shadow-blue-500/20">
                                 <BrainCircuit size={22} />
                             </div>
-                            <span className="text-[10px] font-black text-blue-600 uppercase tracking-widest bg-blue-50 px-4 py-1.5 rounded-full border border-blue-100">Business Insights</span>
+                            <span className="text-[10px] font-semibold text-blue-600 uppercase tracking-widest bg-blue-50 px-4 py-1.5 rounded-full border border-blue-100">Business Insights</span>
                         </div>
-                        <h1 className="text-5xl font-black text-gray-900 tracking-tighter leading-none uppercase">Your Store Performance</h1>
-                        <p className="text-gray-500 font-bold uppercase tracking-widest text-[11px] mt-3 flex items-center gap-2">
+                        <h1 className="text-5xl font-semibold text-gray-900 tracking-tighter leading-none uppercase">Your Store Performance</h1>
+                        <p className="text-gray-500 font-semibold uppercase tracking-widest text-[11px] mt-3 flex items-center gap-2">
                             <Activity size={14} className="text-blue-500" /> Real-time data updated daily
                         </p>
                     </div>
@@ -152,7 +152,7 @@ export default function SellerInsightsPage() {
                                 <button
                                     key={opt.value}
                                     onClick={() => setPeriod(opt.value)}
-                                    className={`px-6 py-3 rounded-2xl text-[10px] font-black tracking-widest transition-all ${period === opt.value
+                                    className={`px-6 py-3 rounded-2xl text-[10px] font-semibold tracking-widest transition-all ${period === opt.value
                                         ? 'bg-blue-600 text-white shadow-lg'
                                         : 'text-gray-400 hover:bg-gray-50'
                                         }`}
@@ -178,18 +178,18 @@ export default function SellerInsightsPage() {
                             <div className="space-y-8 text-center lg:text-left">
                                 <div className="inline-flex items-center gap-3 px-4 py-2 bg-blue-500/10 rounded-full border border-blue-500/20 text-blue-400">
                                     <Sparkles size={16} />
-                                    <span className="text-[10px] font-black uppercase tracking-[0.2em]">AI Assistant</span>
+                                    <span className="text-[10px] font-semibold uppercase tracking-[0.2em]">AI Assistant</span>
                                 </div>
-                                <h2 className="text-4xl lg:text-6xl font-black tracking-tight leading-none uppercase">
+                                <h2 className="text-4xl lg:text-6xl font-semibold tracking-tight leading-none uppercase">
                                     Get AI <br /> <span className="text-blue-500">Business Advice</span>
                                 </h2>
-                                <p className="text-white/40 font-bold uppercase tracking-widest text-[11px] leading-relaxed max-w-md mx-auto lg:mx-0">
+                                <p className="text-white/40 font-semibold uppercase tracking-widest text-[11px] leading-relaxed max-w-md mx-auto lg:mx-0">
                                     Our AI will analyze your sales data, customer reviews, and market trends to give you personalized tips to grow your business.
                                 </p>
                                 <button
                                     onClick={runNeuralAnalysis}
                                     disabled={analyzing}
-                                    className="px-12 py-6 bg-blue-600 text-white rounded-[2rem] text-[12px] font-black uppercase tracking-[0.2em] shadow-2xl shadow-blue-500/30 hover:bg-blue-500 transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-3 w-full lg:w-auto overflow-hidden relative group/btn"
+                                    className="px-12 py-6 bg-blue-600 text-white rounded-[2rem] text-[12px] font-semibold uppercase tracking-[0.2em] shadow-2xl shadow-blue-500/30 hover:bg-blue-500 transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-3 w-full lg:w-auto overflow-hidden relative group/btn"
                                 >
                                     {analyzing ? (
                                         <RefreshCw className="animate-spin" size={20} />
@@ -207,14 +207,14 @@ export default function SellerInsightsPage() {
                                 {analyzing ? (
                                     <div className="flex flex-col items-center justify-center p-20 space-y-6">
                                         <Binary size={48} className="text-blue-500 animate-pulse" />
-                                        <p className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-400">Analyzing Your Store Data...</p>
+                                        <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-blue-400">Analyzing Your Store Data...</p>
                                     </div>
                                 ) : aiAnalysis ? (
                                     <div className="w-full space-y-8">
                                         <div className="flex items-center justify-between border-b border-white/5 pb-6">
                                             <div>
-                                                <p className="text-[10px] font-black text-white/40 uppercase tracking-widest mb-1">Overall Score</p>
-                                                <p className="text-5xl font-black text-white tracking-tighter">{aiAnalysis.overallScore || 85}%</p>
+                                                <p className="text-[10px] font-semibold text-white/40 uppercase tracking-widest mb-1">Overall Score</p>
+                                                <p className="text-5xl font-semibold text-white tracking-tighter">{aiAnalysis.overallScore || 85}%</p>
                                             </div>
                                             <div className="w-16 h-16 rounded-2xl bg-blue-600 flex items-center justify-center text-white shadow-xl">
                                                 <Gauge size={32} />
@@ -222,20 +222,20 @@ export default function SellerInsightsPage() {
                                         </div>
                                         <div className="grid grid-cols-2 gap-4">
                                             <div className="p-4 bg-emerald-500/10 rounded-2xl border border-emerald-500/20">
-                                                <p className="text-[9px] font-black text-emerald-400 uppercase tracking-widest mb-1">Strengths</p>
-                                                <p className="text-xl font-black text-white">{aiAnalysis.strengths?.length || 0}</p>
+                                                <p className="text-[9px] font-semibold text-emerald-400 uppercase tracking-widest mb-1">Strengths</p>
+                                                <p className="text-xl font-semibold text-white">{aiAnalysis.strengths?.length || 0}</p>
                                             </div>
                                             <div className="p-4 bg-rose-500/10 rounded-2xl border border-rose-500/20">
-                                                <p className="text-[9px] font-black text-rose-400 uppercase tracking-widest mb-1">Risk Factors</p>
-                                                <p className="text-xl font-black text-white">{aiAnalysis.weaknesses?.length || 0}</p>
+                                                <p className="text-[9px] font-semibold text-rose-400 uppercase tracking-widest mb-1">Risk Factors</p>
+                                                <p className="text-xl font-semibold text-white">{aiAnalysis.weaknesses?.length || 0}</p>
                                             </div>
                                         </div>
-                                        <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest text-center">Recommendations Valid for Next 12 Months</p>
+                                        <p className="text-[10px] font-semibold text-white/40 uppercase tracking-widest text-center">Recommendations Valid for Next 12 Months</p>
                                     </div>
                                 ) : (
                                     <div className="flex flex-col items-center justify-center py-20 text-center space-y-6">
                                         <Cpu size={56} className="text-white/10" />
-                                        <p className="text-[11px] font-black uppercase tracking-widest text-white/30 max-w-[200px]">AI ready. Click the button above to get personalized business advice.</p>
+                                        <p className="text-[11px] font-semibold uppercase tracking-widest text-white/30 max-w-[200px]">AI ready. Click the button above to get personalized business advice.</p>
                                     </div>
                                 )}
                             </div>
@@ -263,10 +263,10 @@ export default function SellerInsightsPage() {
                                 <div className="bg-white rounded-[3rem] p-10 shadow-sm border border-gray-100/50">
                                     <div className="flex items-center justify-between mb-10">
                                         <div>
-                                            <h3 className="text-xl font-black text-gray-900 tracking-tight uppercase">Action Items</h3>
-                                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1">Steps to Grow Your Business</p>
+                                            <h3 className="text-xl font-semibold text-gray-900 tracking-tight uppercase">Action Items</h3>
+                                            <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mt-1">Steps to Grow Your Business</p>
                                         </div>
-                                        <div className="px-4 py-2 bg-blue-50 text-blue-600 rounded-xl text-[10px] font-black uppercase tracking-widest">AI Recommended</div>
+                                        <div className="px-4 py-2 bg-blue-50 text-blue-600 rounded-xl text-[10px] font-semibold uppercase tracking-widest">AI Recommended</div>
                                     </div>
 
                                     <div className="space-y-4">
@@ -274,18 +274,18 @@ export default function SellerInsightsPage() {
                                             <div key={idx} className="group p-6 bg-gray-50/50 rounded-[1.8rem] border border-transparent hover:border-blue-100 hover:bg-white transition-all duration-500 flex items-start justify-between gap-6 cursor-pointer">
                                                 <div className="flex gap-5">
                                                     <div className="w-12 h-12 rounded-xl bg-white border border-gray-100 flex items-center justify-center text-blue-600 shadow-sm group-hover:scale-110 transition-transform">
-                                                        <span className="text-xs font-black">0{idx + 1}</span>
+                                                        <span className="text-xs font-semibold">0{idx + 1}</span>
                                                     </div>
                                                     <div>
-                                                        <h4 className="text-sm font-black text-gray-900 group-hover:text-blue-600 transition-colors uppercase tracking-tight">{action.action}</h4>
+                                                        <h4 className="text-sm font-semibold text-gray-900 group-hover:text-blue-600 transition-colors uppercase tracking-tight">{action.action}</h4>
                                                         <p className="text-[10px] font-medium text-gray-400 uppercase tracking-widest mt-1 leading-relaxed">{action.expectedOutcome}</p>
                                                     </div>
                                                 </div>
                                                 <div className="flex flex-col items-end gap-2 shrink-0">
-                                                    <span className="text-[8px] font-black text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full uppercase tracking-widest border border-emerald-100">
+                                                    <span className="text-[8px] font-semibold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full uppercase tracking-widest border border-emerald-100">
                                                         Impact: {action.impact}
                                                     </span>
-                                                    <span className="text-[8px] font-black text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full uppercase tracking-widest border border-blue-100">
+                                                    <span className="text-[8px] font-semibold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full uppercase tracking-widest border border-blue-100">
                                                         Effort: {action.effort}
                                                     </span>
                                                 </div>
@@ -299,34 +299,34 @@ export default function SellerInsightsPage() {
                                     <div className="absolute top-0 right-0 p-10 opacity-[0.03] pointer-events-none">
                                         <Trophy size={200} />
                                     </div>
-                                    <h3 className="text-xl font-black text-gray-900 tracking-tight uppercase mb-8">Your Competitive Advantage</h3>
+                                    <h3 className="text-xl font-semibold text-gray-900 tracking-tight uppercase mb-8">Your Competitive Advantage</h3>
                                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
                                         <div className="space-y-4">
                                             <div className="flex items-center justify-between">
-                                                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Return on Investment</span>
+                                                <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Return on Investment</span>
                                                 <TrendingUp size={14} className="text-emerald-500" />
                                             </div>
-                                            <p className="text-3xl font-black text-gray-900">4.2x</p>
+                                            <p className="text-3xl font-semibold text-gray-900">4.2x</p>
                                             <div className="h-1 w-full bg-gray-50 rounded-full overflow-hidden">
                                                 <div className="h-full bg-blue-500 w-[75%]" />
                                             </div>
                                         </div>
                                         <div className="space-y-4">
                                             <div className="flex items-center justify-between">
-                                                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Customer Retention</span>
+                                                <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Customer Retention</span>
                                                 <Workflow size={14} className="text-blue-500" />
                                             </div>
-                                            <p className="text-3xl font-black text-gray-900">68%</p>
+                                            <p className="text-3xl font-semibold text-gray-900">68%</p>
                                             <div className="h-1 w-full bg-gray-50 rounded-full overflow-hidden">
                                                 <div className="h-full bg-emerald-500 w-[68%]" />
                                             </div>
                                         </div>
                                         <div className="space-y-4">
                                             <div className="flex items-center justify-between">
-                                                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">New Customer Growth</span>
+                                                <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">New Customer Growth</span>
                                                 <TrendingUp size={14} className="text-purple-500" />
                                             </div>
-                                            <p className="text-3xl font-black text-gray-900">12%</p>
+                                            <p className="text-3xl font-semibold text-gray-900">12%</p>
                                             <div className="h-1 w-full bg-gray-50 rounded-full overflow-hidden">
                                                 <div className="h-full bg-purple-500 w-[45%]" />
                                             </div>
@@ -338,7 +338,7 @@ export default function SellerInsightsPage() {
                             {/* SWOT Mini Grid */}
                             <div className="space-y-6">
                                 <div className="bg-white rounded-[3rem] p-10 shadow-sm border border-gray-100/50">
-                                    <h4 className="text-[10px] font-black text-gray-900 uppercase tracking-widest mb-8 flex items-center gap-2">
+                                    <h4 className="text-[10px] font-semibold text-gray-900 uppercase tracking-widest mb-8 flex items-center gap-2">
                                         <ShieldAlert size={16} className="text-blue-600" /> Business Health Check
                                     </h4>
                                     <div className="space-y-8">
@@ -348,11 +348,11 @@ export default function SellerInsightsPage() {
                                     </div>
                                 </div>
                                 <div className="bg-gradient-to-br from-indigo-600 to-purple-600 rounded-[3rem] p-10 text-white shadow-xl shadow-indigo-500/20">
-                                    <h4 className="text-[10px] font-black uppercase tracking-widest mb-4 opacity-60">Revenue Projection (90d)</h4>
-                                    <p className="text-xs font-bold leading-relaxed mb-6 italic">"{aiAnalysis.growthProjection?.['90days']}"</p>
+                                    <h4 className="text-[10px] font-semibold uppercase tracking-widest mb-4 opacity-60">Revenue Projection (90d)</h4>
+                                    <p className="text-xs font-semibold leading-relaxed mb-6 italic">"{aiAnalysis.growthProjection?.['90days']}"</p>
                                     <div className="flex items-center gap-2">
                                         <TrendingUp size={20} className="text-emerald-400" />
-                                        <span className="text-2xl font-black tracking-tighter">+24.8% Expected</span>
+                                        <span className="text-2xl font-semibold tracking-tighter">+24.8% Expected</span>
                                     </div>
                                 </div>
                             </div>
@@ -365,10 +365,10 @@ export default function SellerInsightsPage() {
                     <div className="lg:col-span-2 bg-white rounded-[3rem] p-10 shadow-sm border border-gray-100/50">
                         <div className="flex items-center justify-between mb-10">
                             <div>
-                                <h3 className="text-xl font-black text-gray-900 tracking-tight uppercase">Sales Growth</h3>
-                                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1">How your sales are growing over time</p>
+                                <h3 className="text-xl font-semibold text-gray-900 tracking-tight uppercase">Sales Growth</h3>
+                                <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mt-1">How your sales are growing over time</p>
                             </div>
-                            <select className="bg-gray-50 border-none rounded-xl px-4 py-2 text-[10px] font-black uppercase tracking-widest outline-none focus:ring-2 focus:ring-blue-100">
+                            <select className="bg-gray-50 border-none rounded-xl px-4 py-2 text-[10px] font-semibold uppercase tracking-widest outline-none focus:ring-2 focus:ring-blue-100">
                                 <option>Volume vs Revenue</option>
                                 <option>AOV vs Conversion</option>
                             </select>
@@ -395,7 +395,7 @@ export default function SellerInsightsPage() {
 
                     <div className="space-y-8">
                         <div className="bg-white rounded-[3rem] p-10 shadow-sm border border-gray-100/50">
-                            <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest mb-8">Category Performance</h3>
+                            <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-widest mb-8">Category Performance</h3>
                             <div className="h-[250px] w-full">
                                 <ResponsiveContainer width="100%" height="100%">
                                     <RadarChart cx="50%" cy="50%" outerRadius="80%" data={performance?.categoryPerformance?.map(c => ({ subject: c.category, A: c.revenue, fullMark: performance.summary.totalRevenue })) || performanceRadarMock}>
@@ -407,24 +407,24 @@ export default function SellerInsightsPage() {
                             </div>
                             <div className="mt-8 p-6 bg-blue-50/50 rounded-3xl border border-blue-100 flex items-center justify-between">
                                 <div>
-                                    <p className="text-[9px] font-black text-blue-400 uppercase tracking-widest leading-none mb-2">Top Category</p>
-                                    <p className="text-sm font-black text-blue-900 uppercase">{performance?.categoryPerformance?.[0]?.category || 'ELECTRONICS'}</p>
+                                    <p className="text-[9px] font-semibold text-blue-400 uppercase tracking-widest leading-none mb-2">Top Category</p>
+                                    <p className="text-sm font-semibold text-blue-900 uppercase">{performance?.categoryPerformance?.[0]?.category || 'ELECTRONICS'}</p>
                                 </div>
                                 <Layers size={24} className="text-blue-500" />
                             </div>
                         </div>
 
                         <div className="bg-white rounded-[3rem] p-10 shadow-sm border border-gray-100/50 group overflow-hidden relative">
-                            <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest mb-6">Product Views</h3>
+                            <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-widest mb-6">Product Views</h3>
                             <div className="flex items-center gap-6">
                                 <div className="text-center">
-                                    <p className="text-3xl font-black text-gray-900 tracking-tighter">12.4K</p>
-                                    <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Total Impressions</p>
+                                    <p className="text-3xl font-semibold text-gray-900 tracking-tighter">12.4K</p>
+                                    <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-widest">Total Impressions</p>
                                 </div>
                                 <div className="w-[1px] h-10 bg-gray-100" />
                                 <div className="text-center">
-                                    <p className="text-3xl font-black text-gray-900 tracking-tighter">2.1K</p>
-                                    <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Unique Visitors</p>
+                                    <p className="text-3xl font-semibold text-gray-900 tracking-tighter">2.1K</p>
+                                    <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-widest">Unique Visitors</p>
                                 </div>
                             </div>
                             <div className="mt-8 h-1.5 w-full bg-gray-50 rounded-full overflow-hidden">
@@ -434,7 +434,7 @@ export default function SellerInsightsPage() {
                                     className="h-full bg-blue-600 rounded-full"
                                 />
                             </div>
-                            <p className="text-[9px] font-black text-blue-500 mt-3 uppercase tracking-widest">+15% vs last month</p>
+                            <p className="text-[9px] font-semibold text-blue-500 mt-3 uppercase tracking-widest">+15% vs last month</p>
                         </div>
                     </div>
                 </div>
@@ -460,13 +460,13 @@ function IntelligenceCard({ label, value, trend, icon: Icon, color }) {
                 <div className={`p-4 rounded-2xl ${colors[color]} group-hover:scale-110 transition-transform duration-500`}>
                     <Icon size={20} />
                 </div>
-                <div className="bg-emerald-50 text-emerald-600 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-tighter">
+                <div className="bg-emerald-50 text-emerald-600 px-3 py-1 rounded-full text-[9px] font-semibold uppercase tracking-tighter">
                     {trend}
                 </div>
             </div>
             <div>
-                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 leading-none">{label}</p>
-                <p className="text-3xl font-black text-gray-900 tracking-tighter leading-none">{value}</p>
+                <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-2 leading-none">{label}</p>
+                <p className="text-3xl font-semibold text-gray-900 tracking-tighter leading-none">{value}</p>
             </div>
         </motion.div>
     )
@@ -482,13 +482,13 @@ function MatrixBlock({ label, items, color }) {
         <div className="space-y-4">
             <div className="flex items-center gap-2">
                 <div className={`w-2 h-2 rounded-full ${colors[color].split(' ')[0]}`} />
-                <span className="text-[10px] font-black text-gray-900 uppercase tracking-widest">{label}</span>
+                <span className="text-[10px] font-semibold text-gray-900 uppercase tracking-widest">{label}</span>
             </div>
             <div className="space-y-2">
                 {items?.slice(0, 3).map((item, i) => (
                     <div key={i} className="flex gap-2">
                         <ChevronRight size={10} className="mt-1 text-gray-300" />
-                        <p className="text-[11px] font-bold text-gray-500 leading-tight tracking-tight">{item}</p>
+                        <p className="text-[11px] font-semibold text-gray-500 leading-tight tracking-tight">{item}</p>
                     </div>
                 ))}
             </div>

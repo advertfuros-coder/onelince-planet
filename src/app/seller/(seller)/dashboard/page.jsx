@@ -48,7 +48,7 @@ export default function SellerDashboard() {
       <div className="min-h-screen flex items-center justify-center p-8">
         <div className="bg-red-50 border-2 border-red-200 rounded-2xl p-8 text-center max-w-md">
           <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-red-800 mb-2">Error Loading Dashboard</h2>
+          <h2 className="text-2xl font-semibold text-red-800 mb-2">Error Loading Dashboard</h2>
           <p className="text-red-600 mb-6">{error}</p>
           <button
             onClick={() => loadDashboardData()}

@@ -71,7 +71,7 @@ export default function WarehousesPage() {
         return (
             <div className="flex flex-col items-center justify-center min-h-screen space-y-4">
                 <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin" />
-                <p className="text-gray-400 font-black uppercase tracking-widest text-[10px]">Accessing Storage Protocols...</p>
+                <p className="text-gray-400 font-semibold uppercase tracking-widest text-[10px]">Accessing Storage Protocols...</p>
             </div>
         )
     }
@@ -94,15 +94,15 @@ export default function WarehousesPage() {
                            <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white shadow-lg shadow-indigo-500/20">
                               <Box size={18} />
                            </div>
-                           <span className="text-[10px] font-black text-indigo-600 uppercase tracking-widest bg-indigo-50 px-3 py-1 rounded-full">Inventory Architecture</span>
+                           <span className="text-[10px] font-semibold text-indigo-600 uppercase tracking-widest bg-indigo-50 px-3 py-1 rounded-full">Inventory Architecture</span>
                         </div>
-                        <h1 className="text-4xl font-black text-gray-900 tracking-tighter">Global Hub Terminals</h1>
+                        <h1 className="text-4xl font-semibold text-gray-900 tracking-tighter">Global Hub Terminals</h1>
                         <p className="text-gray-500 font-medium mt-1">Orchestrate stock distribution across your verified storage points</p>
                     </div>
 
                     <button 
                         onClick={() => setShowAddModal(true)}
-                        className="px-8 py-4 bg-indigo-600 text-white rounded-[1.5rem] font-black uppercase text-[11px] tracking-widest shadow-2xl shadow-indigo-500/20 hover:bg-indigo-700 transition-all active:scale-95 flex items-center justify-center gap-2"
+                        className="px-8 py-4 bg-indigo-600 text-white rounded-[1.5rem] font-semibold uppercase text-[11px] tracking-widest shadow-2xl shadow-indigo-500/20 hover:bg-indigo-700 transition-all active:scale-95 flex items-center justify-center gap-2"
                     >
                         <Plus size={18} />
                         Establish New Hub
@@ -122,7 +122,7 @@ export default function WarehousesPage() {
                     {/* Left Column: Analytics & Visualization */}
                     <div className="xl:col-span-1 space-y-8">
                         <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100/50">
-                            <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest mb-8">Capacity Distribution</h3>
+                            <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-widest mb-8">Capacity Distribution</h3>
                             <div className="h-[300px] w-full">
                                 <ResponsiveContainer width="100%" height="100%">
                                     <BarChart data={chartData} layout="vertical" margin={{ left: -20, right: 20 }}>
@@ -133,7 +133,7 @@ export default function WarehousesPage() {
                                             content={({ active, payload }) => {
                                                 if (active && payload && payload.length) {
                                                     return (
-                                                        <div className="bg-gray-900 text-white p-3 rounded-xl text-[10px] font-black uppercase tracking-widest border border-gray-800 shadow-2xl">
+                                                        <div className="bg-gray-900 text-white p-3 rounded-xl text-[10px] font-semibold uppercase tracking-widest border border-gray-800 shadow-2xl">
                                                             {payload[0].payload.name}: {payload[0].value} Units
                                                         </div>
                                                     )
@@ -150,7 +150,7 @@ export default function WarehousesPage() {
                                 </ResponsiveContainer>
                             </div>
                             <div className="mt-6 pt-6 border-t border-gray-50">
-                                <div className="flex items-center justify-between text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                                <div className="flex items-center justify-between text-[10px] font-semibold text-gray-400 uppercase tracking-widest">
                                     <span>Global Load</span>
                                     <span>Average Threshold</span>
                                 </div>
@@ -164,9 +164,9 @@ export default function WarehousesPage() {
                             <div className="absolute top-[-10%] right-[-10%] w-[200px] h-[200px] bg-blue-500/20 rounded-full blur-3xl pointer-events-none" />
                             <div className="relative z-10 space-y-4">
                                 <Zap className="text-blue-400" />
-                                <h4 className="text-xl font-bold font-black leading-tight">Optimization Report</h4>
+                                <h4 className="text-xl font-semibold font-semibold leading-tight">Optimization Report</h4>
                                 <p className="text-white/60 text-xs font-medium">Node "Mumbai Alpha" is operating at 88% capacity. Consider rerouting stock to Bangalore Hub.</p>
-                                <button className="w-full py-3 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-2xl text-[10px] font-black uppercase tracking-widest border border-white/10 transition-all">
+                                <button className="w-full py-3 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-2xl text-[10px] font-semibold uppercase tracking-widest border border-white/10 transition-all">
                                     Reroute Protocol
                                 </button>
                             </div>
@@ -180,11 +180,11 @@ export default function WarehousesPage() {
                                 <div className="w-20 h-20 bg-indigo-50 rounded-3xl flex items-center justify-center text-indigo-300">
                                     <MapPin size={40} />
                                 </div>
-                                <h3 className="text-2xl font-black text-gray-900 tracking-tighter">No Active Nodes Detected</h3>
+                                <h3 className="text-2xl font-semibold text-gray-900 tracking-tighter">No Active Nodes Detected</h3>
                                 <p className="text-gray-500 max-w-sm font-medium">Synchronize your first hub terminal to begin multi-point fulfillment orchestrations.</p>
                                 <button 
                                     onClick={() => setShowAddModal(true)}
-                                    className="px-8 py-4 bg-gray-900 text-white rounded-2xl font-black uppercase text-[11px] tracking-widest hover:bg-black transition-all shadow-xl"
+                                    className="px-8 py-4 bg-gray-900 text-white rounded-2xl font-semibold uppercase text-[11px] tracking-widest hover:bg-black transition-all shadow-xl"
                                 >
                                     Initialize Terminal
                                 </button>
@@ -228,7 +228,7 @@ function ModernWarehouseCard({ warehouse, idx, onUpdate }) {
                         <Box size={24} />
                     </div>
                     <div className="flex items-center gap-2">
-                         <span className={`px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest border ${
+                         <span className={`px-3 py-1 rounded-lg text-[9px] font-semibold uppercase tracking-widest border ${
                             warehouse.settings?.isActive ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-gray-50 text-gray-400 border-gray-100'
                          }`}>
                             {warehouse.settings?.isActive ? 'Operational' : 'Dormant'}
@@ -240,30 +240,30 @@ function ModernWarehouseCard({ warehouse, idx, onUpdate }) {
                 </div>
 
                 <div>
-                    <h4 className="text-lg font-black text-gray-900 tracking-tight leading-none group-hover:text-indigo-600 transition-colors">{warehouse.name}</h4>
-                    <p className="text-[10px] font-black text-blue-500 uppercase tracking-tighter mt-1">{warehouse.code}</p>
+                    <h4 className="text-lg font-semibold text-gray-900 tracking-tight leading-none group-hover:text-indigo-600 transition-colors">{warehouse.name}</h4>
+                    <p className="text-[10px] font-semibold text-blue-500 uppercase tracking-tighter mt-1">{warehouse.code}</p>
                 </div>
 
                 <div className="flex items-start gap-2 text-gray-500">
                     <MapPin size={14} className="mt-0.5 text-indigo-400" />
-                    <p className="text-[12px] font-bold leading-tight truncate">{warehouse.address?.city}, {warehouse.address?.state}</p>
+                    <p className="text-[12px] font-semibold leading-tight truncate">{warehouse.address?.city}, {warehouse.address?.state}</p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 py-4 border-y border-gray-50">
                     <div>
-                        <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1.5">Stock Load</p>
-                        <p className="text-xl font-black text-gray-900 tracking-tight">{warehouse.metrics?.totalStock || 0}</p>
+                        <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-widest leading-none mb-1.5">Stock Load</p>
+                        <p className="text-xl font-semibold text-gray-900 tracking-tight">{warehouse.metrics?.totalStock || 0}</p>
                     </div>
                     <div>
-                        <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1.5">SKU Density</p>
-                        <p className="text-xl font-black text-gray-900 tracking-tight">{warehouse.metrics?.totalProducts || 0}</p>
+                        <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-widest leading-none mb-1.5">SKU Density</p>
+                        <p className="text-xl font-semibold text-gray-900 tracking-tight">{warehouse.metrics?.totalProducts || 0}</p>
                     </div>
                 </div>
 
                 <div className="space-y-3">
                     <div className="flex justify-between items-end">
-                        <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Hub Volume</span>
-                        <span className={`text-xs font-black ${capacityPercent > 85 ? 'text-rose-500' : 'text-indigo-600'}`}>{capacityPercent.toFixed(1)}%</span>
+                        <span className="text-[9px] font-semibold text-gray-400 uppercase tracking-widest">Hub Volume</span>
+                        <span className={`text-xs font-semibold ${capacityPercent > 85 ? 'text-rose-500' : 'text-indigo-600'}`}>{capacityPercent.toFixed(1)}%</span>
                     </div>
                     <div className="h-2 w-full bg-gray-50 rounded-full overflow-hidden">
                         <motion.div 
@@ -280,7 +280,7 @@ function ModernWarehouseCard({ warehouse, idx, onUpdate }) {
                 <div className="pt-2 flex items-center gap-2">
                     <Link 
                         href={`/seller/warehouses/${warehouse._id}`}
-                        className="flex-1 py-3 bg-gray-50 hover:bg-indigo-50 text-gray-400 hover:text-indigo-600 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all text-center flex items-center justify-center gap-2"
+                        className="flex-1 py-3 bg-gray-50 hover:bg-indigo-50 text-gray-400 hover:text-indigo-600 rounded-xl text-[10px] font-semibold uppercase tracking-widest transition-all text-center flex items-center justify-center gap-2"
                     >
                         Master Panel <ChevronRight size={14} />
                     </Link>
@@ -311,8 +311,8 @@ function MetricCard({ label, value, icon: Icon, color }) {
                <Icon size={22} />
             </div>
             <div>
-               <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1.5">{label}</p>
-               <p className="text-2xl font-black text-gray-900 tracking-tight">{value}</p>
+               <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest leading-none mb-1.5">{label}</p>
+               <p className="text-2xl font-semibold text-gray-900 tracking-tight">{value}</p>
             </div>
          </div>
          <div className="absolute top-0 right-0 w-24 h-24 bg-gray-50/50 -mr-12 -mt-12 rounded-full pointer-events-none group-hover:scale-125 transition-transform duration-700" />
@@ -359,8 +359,8 @@ function AddWarehouseModal({ onClose, onSuccess }) {
             >
                 <div className="p-10 border-b border-gray-100 flex items-center justify-between bg-gray-50/30">
                     <div>
-                        <h2 className="text-2xl font-black text-gray-900 tracking-tight">Sync New Hub Terminal</h2>
-                        <p className="text-gray-400 text-xs font-bold uppercase tracking-widest mt-1">Inventory Node Initialization</p>
+                        <h2 className="text-2xl font-semibold text-gray-900 tracking-tight">Sync New Hub Terminal</h2>
+                        <p className="text-gray-400 text-xs font-semibold uppercase tracking-widest mt-1">Inventory Node Initialization</p>
                     </div>
                     <button onClick={onClose} className="w-10 h-10 bg-white border border-gray-100 rounded-full flex items-center justify-center text-gray-400 hover:text-rose-500 transition-colors shadow-sm">
                         <Plus size={20} className="rotate-45" />
@@ -370,64 +370,64 @@ function AddWarehouseModal({ onClose, onSuccess }) {
                 <form onSubmit={handleSubmit} className="p-10 space-y-8 overflow-y-auto">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div className="space-y-2">
-                           <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Terminal Designation</label>
+                           <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest ml-1">Terminal Designation</label>
                            <input
                                type="text"
                                required
                                value={formData.name}
                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                               className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-[13px] font-bold focus:ring-2 focus:ring-indigo-100 transition-all"
+                               className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-[13px] font-semibold focus:ring-2 focus:ring-indigo-100 transition-all"
                                placeholder="e.g. Mumbai Prime Hub"
                            />
                         </div>
                         <div className="space-y-2">
-                           <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Protocol Code</label>
+                           <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest ml-1">Protocol Code</label>
                            <input
                                type="text"
                                required
                                placeholder="e.g. WH-BOM-001"
                                value={formData.code}
                                onChange={(e) => setFormData({ ...formData, code: e.target.value.toUpperCase() })}
-                               className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-[13px] font-bold focus:ring-2 focus:ring-indigo-100 transition-all"
+                               className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-[13px] font-semibold focus:ring-2 focus:ring-indigo-100 transition-all"
                            />
                         </div>
                     </div>
 
                     <div className="space-y-4 pt-4 border-t border-gray-100">
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Geographical Coordinates</p>
+                        <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Geographical Coordinates</p>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                            <input
                                type="text"
                                placeholder="City"
                                value={formData.address.city}
                                onChange={(e) => setFormData({ ...formData, address: { ...formData.address, city: e.target.value } })}
-                               className="px-6 py-4 bg-gray-50 border-none rounded-2xl text-[13px] font-bold focus:ring-2 focus:ring-indigo-100 transition-all"
+                               className="px-6 py-4 bg-gray-50 border-none rounded-2xl text-[13px] font-semibold focus:ring-2 focus:ring-indigo-100 transition-all"
                            />
                            <input
                                type="text"
                                placeholder="State"
                                value={formData.address.state}
                                onChange={(e) => setFormData({ ...formData, address: { ...formData.address, state: e.target.value } })}
-                               className="px-6 py-4 bg-gray-50 border-none rounded-2xl text-[13px] font-bold focus:ring-2 focus:ring-indigo-100 transition-all"
+                               className="px-6 py-4 bg-gray-50 border-none rounded-2xl text-[13px] font-semibold focus:ring-2 focus:ring-indigo-100 transition-all"
                            />
                            <input
                                type="text"
                                placeholder="Pincode"
                                value={formData.address.pincode}
                                onChange={(e) => setFormData({ ...formData, address: { ...formData.address, pincode: e.target.value } })}
-                               className="px-6 py-4 bg-gray-50 border-none rounded-2xl text-[13px] font-bold focus:ring-2 focus:ring-indigo-100 transition-all"
+                               className="px-6 py-4 bg-gray-50 border-none rounded-2xl text-[13px] font-semibold focus:ring-2 focus:ring-indigo-100 transition-all"
                            />
                         </div>
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Node Volume Threshold</label>
+                        <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest ml-1">Node Volume Threshold</label>
                         <input
                             type="number"
                             placeholder="Units (e.g. 5000)"
                             value={formData.capacity.total}
                             onChange={(e) => setFormData({ ...formData, capacity: { total: parseInt(e.target.value) } })}
-                            className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-[13px] font-bold focus:ring-2 focus:ring-indigo-100 transition-all"
+                            className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-[13px] font-semibold focus:ring-2 focus:ring-indigo-100 transition-all"
                         />
                     </div>
 
@@ -435,14 +435,14 @@ function AddWarehouseModal({ onClose, onSuccess }) {
                         <button
                             type="button"
                             onClick={onClose}
-                            className="flex-1 px-8 py-5 border-2 border-gray-100 text-gray-400 rounded-3xl text-[11px] font-black uppercase tracking-widest hover:bg-gray-50 transition-all"
+                            className="flex-1 px-8 py-5 border-2 border-gray-100 text-gray-400 rounded-3xl text-[11px] font-semibold uppercase tracking-widest hover:bg-gray-50 transition-all"
                         >
                             Abort Sync
                         </button>
                         <button
                             type="submit"
                             disabled={loading}
-                            className="flex-1 px-8 py-5 bg-indigo-600 text-white rounded-3xl text-[11px] font-black uppercase tracking-widest hover:bg-indigo-700 shadow-xl shadow-indigo-500/20 disabled:opacity-50 transition-all"
+                            className="flex-1 px-8 py-5 bg-indigo-600 text-white rounded-3xl text-[11px] font-semibold uppercase tracking-widest hover:bg-indigo-700 shadow-xl shadow-indigo-500/20 disabled:opacity-50 transition-all"
                         >
                             {loading ? 'Initializing...' : 'Authorize Terminal'}
                         </button>

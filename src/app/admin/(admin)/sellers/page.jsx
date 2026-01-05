@@ -60,7 +60,7 @@ export default function SellersPage() {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Seller Management</h1>
+          <h1 className="text-3xl font-semibold text-gray-900">Seller Management</h1>
           <p className="text-gray-600 mt-1">Manage and verify sellers on the platform</p>
         </div>
       </div>

@@ -157,11 +157,11 @@ export default function ModernSellerSidebar() {
                 className="flex items-center space-x-3"
               >
                 <div className="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">
-                  <span className="text-white font-black text-xs">OP</span>
+                  <span className="text-white font-semibold text-xs">OP</span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="font-black text-lg text-gray-900 leading-none">Online Planet</span>
-                  <span className="text-[10px] font-bold text-blue-600 uppercase tracking-widest mt-1">Seller Hub</span>
+                  <span className="font-semibold text-lg text-gray-900 leading-none">Online Planet</span>
+                  <span className="text-[10px] font-semibold text-blue-600 uppercase tracking-widest mt-1">Seller Hub</span>
                 </div>
               </motion.div>
             )}
@@ -199,7 +199,7 @@ export default function ModernSellerSidebar() {
                   <motion.p
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] px-3 mb-4"
+                    className="text-[10px] font-semibold text-gray-400 uppercase tracking-[0.2em] px-3 mb-4"
                   >
                     {section.title}
                   </motion.p>
@@ -226,7 +226,7 @@ export default function ModernSellerSidebar() {
                             initial={{ opacity: 0, x: -10 }}
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: -10 }}
-                            className="ml-4 font-bold text-[13px] tracking-tight whitespace-nowrap"
+                            className="ml-4 font-semibold text-[13px] tracking-tight whitespace-nowrap"
                           >
                             {item.name}
                           </motion.span>
@@ -239,7 +239,7 @@ export default function ModernSellerSidebar() {
                         />
                       )}
                       {!collapsed && item.badge && (
-                        <span className={`ml-auto text-[10px] font-black px-2 py-0.5 rounded-full ${item.badge === 'New' ? 'bg-blue-600 text-white' : 'bg-gray-900 text-white'
+                        <span className={`ml-auto text-[10px] font-semibold px-2 py-0.5 rounded-full ${item.badge === 'New' ? 'bg-blue-600 text-white' : 'bg-gray-900 text-white'
                           }`}>
                           {item.badge}
                         </span>
@@ -259,13 +259,13 @@ export default function ModernSellerSidebar() {
             ${collapsed ? 'justify-center' : 'justify-between'}
           `}>
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white font-black text-xs shadow-lg shadow-blue-500/20">
+              <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white font-semibold text-xs shadow-lg shadow-blue-500/20">
                 {user?.name?.charAt(0).toUpperCase() || 'S'}
               </div>
               {!collapsed && (
                 <div className="flex flex-col min-w-0">
-                  <span className="text-xs font-black text-gray-900 truncate">{user?.name || 'Seller User'}</span>
-                  <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tighter">Verified Merchant</span>
+                  <span className="text-xs font-semibold text-gray-900 truncate">{user?.name || 'Seller User'}</span>
+                  <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-tighter">Verified Merchant</span>
                 </div>
               )}
             </div>

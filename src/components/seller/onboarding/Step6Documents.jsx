@@ -48,7 +48,7 @@ export default function Step6Documents({ formData, updateFormData, errors }) {
             <div className="space-y-6">
                 {documents.map((doc) => (
                     <div key={doc.key} className="border border-gray-200 rounded-2xl p-6 hover:border-blue-300 transition-all">
-                        <label className="block text-sm font-bold text-gray-900 mb-3">
+                        <label className="block text-sm font-semibold text-gray-900 mb-3">
                             {doc.label} {doc.required && <span className="text-red-500">*</span>}
                         </label>
 

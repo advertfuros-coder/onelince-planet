@@ -113,9 +113,9 @@ export default function InventoryAlertsPage() {
                             <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/20">
                                 <ShieldAlert size={18} />
                             </div>
-                            <span className="text-[10px] font-black text-blue-600 uppercase tracking-widest bg-blue-50 px-3 py-1 rounded-full">Safety Protocol</span>
+                            <span className="text-[10px] font-semibold text-blue-600 uppercase tracking-widest bg-blue-50 px-3 py-1 rounded-full">Safety Protocol</span>
                         </div>
-                        <h1 className="text-4xl font-black text-gray-900 tracking-tighter">Inventory Guard</h1>
+                        <h1 className="text-4xl font-semibold text-gray-900 tracking-tighter">Inventory Guard</h1>
                         <p className="text-gray-500 font-medium mt-1">Real-time depletion monitoring and restock intelligence</p>
                     </div>
 
@@ -123,7 +123,7 @@ export default function InventoryAlertsPage() {
                         <button
                             onClick={checkAllInventory}
                             disabled={checking}
-                            className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-2xl font-black hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/10 active:scale-95 disabled:opacity-50"
+                            className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-2xl font-semibold hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/10 active:scale-95 disabled:opacity-50"
                         >
                             <RefreshCw size={18} className={checking ? 'animate-spin' : ''} />
                             <span>Run Global Audit</span>
@@ -172,7 +172,7 @@ export default function InventoryAlertsPage() {
                             <button
                                 key={f}
                                 onClick={() => setFilter(f)}
-                                className={`px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-tight transition-all shrink-0 ${filter === f
+                                className={`px-6 py-2.5 rounded-xl text-xs font-semibold uppercase tracking-tight transition-all shrink-0 ${filter === f
                                         ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20'
                                         : 'bg-gray-50 text-gray-400 hover:bg-gray-100'
                                     }`}
@@ -186,7 +186,7 @@ export default function InventoryAlertsPage() {
                         <input
                             type="text"
                             placeholder="Filter alerts by SKU..."
-                            className="w-full pl-12 pr-4 py-3 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-2 focus:ring-blue-100 transition-all"
+                            className="w-full pl-12 pr-4 py-3 bg-gray-50 border-none rounded-2xl text-sm font-semibold focus:ring-2 focus:ring-blue-100 transition-all"
                         />
                     </div>
                 </div>
@@ -196,7 +196,7 @@ export default function InventoryAlertsPage() {
                     {loading ? (
                         <div className="flex flex-col items-center justify-center py-32 space-y-4">
                             <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
-                            <p className="text-gray-400 font-black uppercase tracking-widest text-[10px]">Scanning Warehouses...</p>
+                            <p className="text-gray-400 font-semibold uppercase tracking-widest text-[10px]">Scanning Warehouses...</p>
                         </div>
                     ) : alerts.length === 0 ? (
                         <motion.div
@@ -207,7 +207,7 @@ export default function InventoryAlertsPage() {
                             <div className="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-6">
                                 <Check className="w-10 h-10 text-emerald-400" />
                             </div>
-                            <h3 className="text-2xl font-black text-gray-900 tracking-tighter">Inventory levels optimal</h3>
+                            <h3 className="text-2xl font-semibold text-gray-900 tracking-tighter">Inventory levels optimal</h3>
                             <p className="text-gray-500 font-medium mt-2 max-w-sm mx-auto">No critical depletion detected across your catalog.</p>
                         </motion.div>
                     ) : (
@@ -245,8 +245,8 @@ function AlertStatCard({ label, value, icon: Icon, color, delay, alert }) {
                     <Icon size={22} />
                 </div>
                 <div>
-                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">{label}</p>
-                    <p className="text-2xl font-black text-gray-900 tracking-tight">{value || 0}</p>
+                    <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-1">{label}</p>
+                    <p className="text-2xl font-semibold text-gray-900 tracking-tight">{value || 0}</p>
                 </div>
             </div>
         </motion.div>
@@ -293,12 +293,12 @@ function ModernAlertCard({ alert, onAction, delay }) {
                     </div>
                     <div>
                         <div className="flex items-center gap-3 mb-1.5">
-                            <h4 className="text-lg font-black text-gray-900 tracking-tighter leading-none">{alert.productId?.name}</h4>
-                            <span className={`px-2 py-0.5 rounded-lg border text-[9px] font-black uppercase tracking-tighter ${priorityColors[alert.priority]}`}>
+                            <h4 className="text-lg font-semibold text-gray-900 tracking-tighter leading-none">{alert.productId?.name}</h4>
+                            <span className={`px-2 py-0.5 rounded-lg border text-[9px] font-semibold uppercase tracking-tighter ${priorityColors[alert.priority]}`}>
                                 {alert.priority}
                             </span>
                         </div>
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{alert.productId?.sku}</p>
+                        <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">{alert.productId?.sku}</p>
                     </div>
                 </div>
 
@@ -322,27 +322,27 @@ function ModernAlertCard({ alert, onAction, delay }) {
 
             <div className="grid grid-cols-3 gap-8 mb-8 border-y border-gray-50 py-8">
                 <div>
-                    <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5"><Package size={10} /> Live Units</p>
-                    <p className={`text-2xl font-black ${alert.currentStock === 0 ? 'text-rose-600' : 'text-gray-900'}`}>{alert.currentStock}</p>
+                    <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5"><Package size={10} /> Live Units</p>
+                    <p className={`text-2xl font-semibold ${alert.currentStock === 0 ? 'text-rose-600' : 'text-gray-900'}`}>{alert.currentStock}</p>
                 </div>
                 <div>
-                    <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5"><Clock size={10} /> Safe Zone</p>
-                    <p className="text-2xl font-black text-gray-900">{alert.threshold}</p>
+                    <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5"><Clock size={10} /> Safe Zone</p>
+                    <p className="text-2xl font-semibold text-gray-900">{alert.threshold}</p>
                 </div>
                 <div className="text-right">
-                    <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1.5 flex items-center justify-end gap-1.5">Restock <ArrowUpRight size={10} /></p>
-                    <p className="text-2xl font-black text-emerald-600">+{alert.recommendedRestock || 0}</p>
+                    <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-widest mb-1.5 flex items-center justify-end gap-1.5">Restock <ArrowUpRight size={10} /></p>
+                    <p className="text-2xl font-semibold text-emerald-600">+{alert.recommendedRestock || 0}</p>
                 </div>
             </div>
 
             <div className="space-y-6">
                 <div className="space-y-2">
                     <div className="flex justify-between items-center mb-1">
-                        <span className={`text-[10px] font-black uppercase tracking-tight flex items-center gap-1.5 ${alert.currentStock === 0 ? 'text-rose-600' : 'text-amber-600'
+                        <span className={`text-[10px] font-semibold uppercase tracking-tight flex items-center gap-1.5 ${alert.currentStock === 0 ? 'text-rose-600' : 'text-amber-600'
                             }`}>
                             {typeIcons[alert.alertType]} {typeLabels[alert.alertType]}
                         </span>
-                        <span className="text-[10px] font-black text-gray-400">{Math.round(stockPercentage)}% Cap</span>
+                        <span className="text-[10px] font-semibold text-gray-400">{Math.round(stockPercentage)}% Cap</span>
                     </div>
                     <div className="w-full h-3 bg-gray-50 rounded-full overflow-hidden shadow-inner">
                         <motion.div
@@ -360,14 +360,14 @@ function ModernAlertCard({ alert, onAction, delay }) {
                     <div className="flex gap-3">
                         <button
                             onClick={() => onAction(alert._id, 'trigger_auto_restock')}
-                            className="flex-1 py-3.5 bg-gray-900 text-white rounded-[1.2rem] text-[10px] font-black uppercase tracking-widest hover:bg-black transition-all shadow-xl active:scale-95 flex items-center justify-center gap-2"
+                            className="flex-1 py-3.5 bg-gray-900 text-white rounded-[1.2rem] text-[10px] font-semibold uppercase tracking-widest hover:bg-black transition-all shadow-xl active:scale-95 flex items-center justify-center gap-2"
                         >
                             <Zap size={14} className="text-amber-400" />
                             Procure Now
                         </button>
                         <button
                             onClick={() => onAction(alert._id, 'resolve', `Restocked ${alert.recommendedRestock} units`)}
-                            className="flex-1 py-3.5 bg-blue-600 text-white rounded-[1.2rem] text-[10px] font-black uppercase tracking-widest hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/10 active:scale-95 flex items-center justify-center gap-2"
+                            className="flex-1 py-3.5 bg-blue-600 text-white rounded-[1.2rem] text-[10px] font-semibold uppercase tracking-widest hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/10 active:scale-95 flex items-center justify-center gap-2"
                         >
                             <Check size={14} />
                             Resolve
@@ -381,8 +381,8 @@ function ModernAlertCard({ alert, onAction, delay }) {
                             <Check size={16} />
                         </div>
                         <div>
-                            <p className="text-[10px] font-black text-gray-900 uppercase tracking-tight">Status: {alert.status}</p>
-                            <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Resolved on {new Date(alert.resolvedAt || alert.updatedAt).toLocaleDateString()}</p>
+                            <p className="text-[10px] font-semibold text-gray-900 uppercase tracking-tight">Status: {alert.status}</p>
+                            <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-widest">Resolved on {new Date(alert.resolvedAt || alert.updatedAt).toLocaleDateString()}</p>
                         </div>
                     </div>
                 )}

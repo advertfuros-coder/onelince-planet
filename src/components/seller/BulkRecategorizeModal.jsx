@@ -109,10 +109,10 @@ export default function BulkRecategorizeModal({
                                 <CheckSquare size={24} className="text-white" />
                             </div>
                             <div>
-                                <h3 className="text-lg font-black text-slate-900 uppercase tracking-widest">
+                                <h3 className="text-lg font-semibold text-slate-900 uppercase tracking-widest">
                                     Bulk Recategorize
                                 </h3>
-                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">
+                                <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest mt-0.5">
                                     {selectedProducts.length} product{selectedProducts.length !== 1 ? 's' : ''} selected
                                 </p>
                             </div>
@@ -128,20 +128,20 @@ export default function BulkRecategorizeModal({
 
                     {/* Current Categories */}
                     <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4">
-                        <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">
+                        <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 mb-2">
                             Current Categories:
                         </p>
                         <div className="flex items-center gap-2 flex-wrap">
                             {currentCategories.map((cat, idx) => (
                                 <span
                                     key={idx}
-                                    className="px-3 py-1 bg-slate-200 text-slate-700 rounded-lg text-xs font-bold"
+                                    className="px-3 py-1 bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold"
                                 >
                                     {cat}
                                 </span>
                             ))}
                             {currentCategories.length > 3 && (
-                                <span className="text-xs text-slate-400 font-bold">
+                                <span className="text-xs text-slate-400 font-semibold">
                                     + {currentCategories.length - 3} more
                                 </span>
                             )}
@@ -157,7 +157,7 @@ export default function BulkRecategorizeModal({
 
                     {/* New Category Selection */}
                     <div className="space-y-4">
-                        <p className="text-[11px] font-black uppercase tracking-widest text-slate-700">
+                        <p className="text-[11px] font-semibold uppercase tracking-widest text-slate-700">
                             Select New Category:
                         </p>
                         <CategorySelector
@@ -170,13 +170,13 @@ export default function BulkRecategorizeModal({
                     {/* Preview */}
                     {selectedCategory && (
                         <div className="bg-green-50 border border-green-200 rounded-2xl p-4">
-                            <p className="text-[10px] font-black uppercase tracking-widest text-green-900 mb-2">
+                            <p className="text-[10px] font-semibold uppercase tracking-widest text-green-900 mb-2">
                                 ✓ Preview: All {selectedProducts.length} products will be moved to:
                             </p>
                             <div className="flex items-center gap-2 flex-wrap">
                                 {selectedCategory.hierarchy.level1 && (
                                     <>
-                                        <span className="px-3 py-1 bg-green-100 text-green-700 rounded-lg text-xs font-bold">
+                                        <span className="px-3 py-1 bg-green-100 text-green-700 rounded-lg text-xs font-semibold">
                                             {selectedCategory.hierarchy.level1}
                                         </span>
                                         {selectedCategory.hierarchy.level2 && <ChevronRight size={14} className="text-green-400" />}
@@ -184,14 +184,14 @@ export default function BulkRecategorizeModal({
                                 )}
                                 {selectedCategory.hierarchy.level2 && (
                                     <>
-                                        <span className="px-3 py-1 bg-green-100 text-green-700 rounded-lg text-xs font-bold">
+                                        <span className="px-3 py-1 bg-green-100 text-green-700 rounded-lg text-xs font-semibold">
                                             {selectedCategory.hierarchy.level2}
                                         </span>
                                         {selectedCategory.hierarchy.level3 && <ChevronRight size={14} className="text-green-400" />}
                                     </>
                                 )}
                                 {selectedCategory.hierarchy.level3 && (
-                                    <span className="px-3 py-1 bg-green-600 text-white rounded-lg text-xs font-bold">
+                                    <span className="px-3 py-1 bg-green-600 text-white rounded-lg text-xs font-semibold">
                                         {selectedCategory.hierarchy.level3}
                                     </span>
                                 )}
@@ -204,7 +204,7 @@ export default function BulkRecategorizeModal({
                         <div className="bg-rose-50 border border-rose-200 rounded-2xl p-4 flex items-start gap-3">
                             <AlertCircle size={20} className="text-rose-600 shrink-0 mt-0.5" />
                             <div>
-                                <p className="text-[11px] font-black uppercase tracking-widest text-rose-900 mb-1">Error</p>
+                                <p className="text-[11px] font-semibold uppercase tracking-widest text-rose-900 mb-1">Error</p>
                                 <p className="text-xs text-rose-700">{error}</p>
                             </div>
                         </div>
@@ -214,10 +214,10 @@ export default function BulkRecategorizeModal({
                     {progress && (
                         <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4">
                             <div className="flex items-center justify-between mb-3">
-                                <p className="text-[11px] font-black uppercase tracking-widest text-blue-900">
+                                <p className="text-[11px] font-semibold uppercase tracking-widest text-blue-900">
                                     {progress.processed < progress.total ? 'Processing...' : 'Complete!'}
                                 </p>
-                                <p className="text-xs font-bold text-blue-700">
+                                <p className="text-xs font-semibold text-blue-700">
                                     {progress.processed} / {progress.total}
                                 </p>
                             </div>
@@ -233,23 +233,23 @@ export default function BulkRecategorizeModal({
                             {/* Results */}
                             <div className="grid grid-cols-2 gap-3">
                                 <div className="bg-white rounded-xl p-3 border border-blue-100">
-                                    <p className="text-[9px] font-black uppercase tracking-widest text-blue-400 mb-1">
+                                    <p className="text-[9px] font-semibold uppercase tracking-widest text-blue-400 mb-1">
                                         Updated
                                     </p>
-                                    <p className="text-xl font-black text-green-600">{progress.updated}</p>
+                                    <p className="text-xl font-semibold text-green-600">{progress.updated}</p>
                                 </div>
                                 <div className="bg-white rounded-xl p-3 border border-blue-100">
-                                    <p className="text-[9px] font-black uppercase tracking-widest text-blue-400 mb-1">
+                                    <p className="text-[9px] font-semibold uppercase tracking-widest text-blue-400 mb-1">
                                         Failed
                                     </p>
-                                    <p className="text-xl font-black text-rose-600">{progress.failed}</p>
+                                    <p className="text-xl font-semibold text-rose-600">{progress.failed}</p>
                                 </div>
                             </div>
 
                             {/* Error List (if any) */}
                             {progress.errors && progress.errors.length > 0 && (
                                 <div className="mt-3 p-3 bg-rose-50 rounded-xl border border-rose-100">
-                                    <p className="text-[9px] font-black uppercase tracking-widest text-rose-900 mb-2">
+                                    <p className="text-[9px] font-semibold uppercase tracking-widest text-rose-900 mb-2">
                                         Errors ({progress.errors.length}):
                                     </p>
                                     <div className="space-y-1 max-h-32 overflow-y-auto">
@@ -269,14 +269,14 @@ export default function BulkRecategorizeModal({
                         <button
                             onClick={handleClose}
                             disabled={isProcessing}
-                            className="flex-1 px-6 py-4 bg-slate-100 text-slate-700 rounded-2xl text-[11px] font-black uppercase tracking-widest hover:bg-slate-200 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="flex-1 px-6 py-4 bg-slate-100 text-slate-700 rounded-2xl text-[11px] font-semibold uppercase tracking-widest hover:bg-slate-200 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             {isProcessing ? 'Processing...' : 'Cancel'}
                         </button>
                         <button
                             onClick={handleRecategorize}
                             disabled={!selectedCategory || isProcessing || progress?.processed === progress?.total}
-                            className="flex-1 px-6 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl text-[11px] font-black uppercase tracking-widest hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg shadow-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                            className="flex-1 px-6 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl text-[11px] font-semibold uppercase tracking-widest hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg shadow-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                         >
                             {isProcessing ? (
                                 <>

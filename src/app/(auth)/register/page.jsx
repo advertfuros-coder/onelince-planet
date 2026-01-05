@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { 
+import {
   FiMail,
   FiLock,
   FiUser,
@@ -37,44 +37,44 @@ export default function RegisterPage() {
 
   const validateStep1 = () => {
     const newErrors = {}
-    
+
     if (!formData.name.trim()) {
       newErrors.name = 'Name is required'
     }
-    
+
     if (!formData.email.trim()) {
       newErrors.email = 'Email is required'
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = 'Email is invalid'
     }
-    
+
     if (!formData.phone.trim()) {
       newErrors.phone = 'Phone number is required'
     } else if (!/^\+?[1-9]\d{1,14}$/.test(formData.phone.replace(/[\s-]/g, ''))) {
       newErrors.phone = 'Phone number is invalid'
     }
-    
+
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
 
   const validateStep2 = () => {
     const newErrors = {}
-    
+
     if (!formData.password) {
       newErrors.password = 'Password is required'
     } else if (formData.password.length < 8) {
       newErrors.password = 'Password must be at least 8 characters'
     }
-    
+
     if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = 'Passwords do not match'
     }
-    
+
     if (!formData.agreeToTerms) {
       newErrors.agreeToTerms = 'You must agree to the terms and conditions'
     }
-    
+
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
@@ -87,9 +87,9 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    
+
     if (!validateStep2()) return
-    
+
     setLoading(true)
 
     try {
@@ -100,10 +100,10 @@ export default function RegisterPage() {
         password: formData.password,
         role: 'customer'
       })
-      
+
       if (result.success) {
-        toast.success('Registration successful! Please check your email to verify your account.')
-        router.push('/login')
+        toast.success('Registration successful! Please check your email for the verification code.')
+        router.push(`/verify-email?email=${encodeURIComponent(formData.email)}`)
       } else {
         toast.error(result.message || 'Registration failed')
       }
@@ -146,7 +146,7 @@ export default function RegisterPage() {
             <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
               <FiShoppingBag className="w-6 h-6 text-white" />
             </div>
-            <span className="text-2xl font-bold text-gray-900">OnlinePlanet</span>
+            <span className="text-2xl font-semibold text-gray-900">OnlinePlanet</span>
           </Link>
           <p className="text-gray-600 mt-2">Create your account</p>
         </div>
@@ -155,18 +155,16 @@ export default function RegisterPage() {
         <div className="mb-8">
           <div className="flex items-center justify-center space-x-4">
             <div className="flex flex-col items-center">
-              <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                step >= 1 ? 'bg-blue-600 text-white' : 'bg-gray-300 text-gray-600'
-              }`}>
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center ${step >= 1 ? 'bg-blue-600 text-white' : 'bg-gray-300 text-gray-600'
+                }`}>
                 {step > 1 ? <FiCheck /> : '1'}
               </div>
               <span className="text-xs mt-1">Details</span>
             </div>
             <div className={`w-16 h-1 ${step >= 2 ? 'bg-blue-600' : 'bg-gray-300'}`}></div>
             <div className="flex flex-col items-center">
-              <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                step >= 2 ? 'bg-blue-600 text-white' : 'bg-gray-300 text-gray-600'
-              }`}>
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center ${step >= 2 ? 'bg-blue-600 text-white' : 'bg-gray-300 text-gray-600'
+                }`}>
                 2
               </div>
               <span className="text-xs mt-1">Security</span>
@@ -190,9 +188,8 @@ export default function RegisterPage() {
                       type="text"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                        errors.name ? 'border-red-500' : 'border-gray-300'
-                      }`}
+                      className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.name ? 'border-red-500' : 'border-gray-300'
+                        }`}
                       placeholder="John Doe"
                     />
                   </div>
@@ -209,9 +206,8 @@ export default function RegisterPage() {
                       type="email"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                        errors.email ? 'border-red-500' : 'border-gray-300'
-                      }`}
+                      className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.email ? 'border-red-500' : 'border-gray-300'
+                        }`}
                       placeholder="you@example.com"
                     />
                   </div>
@@ -228,9 +224,8 @@ export default function RegisterPage() {
                       type="tel"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                        errors.phone ? 'border-red-500' : 'border-gray-300'
-                      }`}
+                      className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.phone ? 'border-red-500' : 'border-gray-300'
+                        }`}
                       placeholder="+91-9876543210"
                     />
                   </div>
@@ -260,9 +255,8 @@ export default function RegisterPage() {
                       type={showPassword ? 'text' : 'password'}
                       value={formData.password}
                       onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                      className={`w-full pl-10 pr-12 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                        errors.password ? 'border-red-500' : 'border-gray-300'
-                      }`}
+                      className={`w-full pl-10 pr-12 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.password ? 'border-red-500' : 'border-gray-300'
+                        }`}
                       placeholder="Create a strong password"
                     />
                     <button
@@ -274,7 +268,7 @@ export default function RegisterPage() {
                     </button>
                   </div>
                   {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
-                  
+
                   {/* Password Strength */}
                   {formData.password && (
                     <div className="mt-2">
@@ -303,9 +297,8 @@ export default function RegisterPage() {
                       type={showConfirmPassword ? 'text' : 'password'}
                       value={formData.confirmPassword}
                       onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                      className={`w-full pl-10 pr-12 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                        errors.confirmPassword ? 'border-red-500' : 'border-gray-300'
-                      }`}
+                      className={`w-full pl-10 pr-12 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.confirmPassword ? 'border-red-500' : 'border-gray-300'
+                        }`}
                       placeholder="Confirm your password"
                     />
                     <button

@@ -62,7 +62,7 @@ export default function AISellerPredictions() {
                             <FiZap className="w-6 h-6 text-white" />
                         </div>
                         <div>
-                            <h2 className="text-xl font-bold text-white">AI Business Predictions</h2>
+                            <h2 className="text-xl font-semibold text-white">AI Business Predictions</h2>
                             <p className="text-sm text-white/80">Powered by Gemini 1.5 Flash</p>
                         </div>
                     </div>
@@ -204,14 +204,14 @@ function PredictionCard({ title, icon, color, bgColor, content, isList }) {
                 <div className={`p-3 rounded-xl ${bgColor}`}>
                     <div className={`${color} text-lg`}>{icon}</div>
                 </div>
-                <h3 className="font-bold text-gray-900">{title}</h3>
+                <h3 className="font-semibold text-gray-900">{title}</h3>
             </div>
 
             {isList && Array.isArray(content) ? (
                 <ul className="space-y-2">
                     {content.map((item, idx) => (
                         <li key={idx} className="text-sm text-gray-700 flex items-start gap-2 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                            <span className="text-purple-600 font-bold mt-0.5">•</span>
+                            <span className="text-purple-600 font-semibold mt-0.5">•</span>
                             <span className="flex-1">{item}</span>
                         </li>
                     ))}

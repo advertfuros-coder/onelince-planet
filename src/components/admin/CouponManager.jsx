@@ -39,7 +39,7 @@ export default function CouponManager() {
             {/* Header */}
             <div className="flex items-center justify-between mb-8">
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-900">Coupon Management</h1>
+                    <h1 className="text-3xl font-semibold text-gray-900">Coupon Management</h1>
                     <p className="text-gray-600 mt-1">Create and manage discount coupons</p>
                 </div>
                 <button
@@ -114,7 +114,7 @@ function CouponCard({ coupon, onUpdate }) {
             {/* Header */}
             <div className="flex items-start justify-between mb-4">
                 <div>
-                    <h3 className="text-2xl font-bold text-blue-600">{coupon.code}</h3>
+                    <h3 className="text-2xl font-semibold text-blue-600">{coupon.code}</h3>
                     <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold mt-2 ${coupon.type === 'percentage' ? 'bg-purple-100 text-purple-800' :
                             coupon.type === 'fixed' ? 'bg-green-100 text-green-800' :
                                 'bg-blue-100 text-blue-800'
@@ -242,7 +242,7 @@ function CreateCouponModal({ onClose, onSuccess }) {
                 animate={{ scale: 1, opacity: 1 }}
                 className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6"
             >
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">Create New Coupon</h2>
+                <h2 className="text-2xl font-semibold text-gray-900 mb-6">Create New Coupon</h2>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                     {/* Code */}

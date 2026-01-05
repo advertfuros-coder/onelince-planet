@@ -1,0 +1,74 @@
+# ============================================================
+# eKart Delivery API Configuration
+# ============================================================
+
+# eKart API Base URL (Production)
+EKART_API_URL=https://api.ekart.com
+
+# eKart API Credentials
+# Get these from: https://sellers.ekart.com/api-credentials
+EKART_API_KEY=your_api_key_here
+EKART_API_SECRET=your_api_secret_here
+
+# Optional: Use staging for testing
+# EKART_API_URL=https://api-staging.ekart.com
+
+# ============================================================
+# Delivery Cache Configuration
+# ============================================================
+
+# Cache expiry in days (default: 7)
+DELIVERY_CACHE_EXPIRY_DAYS=7
+
+# Update threshold for confidence score (0-1, default: 0.7)
+# Routes with confidence < this value will be updated
+DELIVERY_UPDATE_THRESHOLD=0.7
+
+# Batch size for API calls (default: 50)
+DELIVERY_BATCH_SIZE=50
+
+# ============================================================
+# Cron Job Configuration
+# ============================================================
+
+# Enable/disable auto cron (default: true)
+DELIVERY_CRON_ENABLED=true
+
+# Cron schedule (default: "0 3 * * *" = 3 AM daily)
+DELIVERY_CRON_SCHEDULE=0 3 * * *
+
+# Timezone for cron (default: Asia/Kolkata)
+DELIVERY_CRON_TIMEZONE=Asia/Kolkata
+
+# ============================================================
+# Monitoring & Alerts
+# ============================================================
+
+# Email for failure alerts (optional)
+ADMIN_EMAIL=admin@yourstore.com
+
+# Slack webhook for notifications (optional)
+SLACK_WEBHOOK_URL=
+
+# ============================================================
+# Rate Limiting
+# ============================================================
+
+# Delay between API batches in milliseconds (default: 100)
+EKART_API_DELAY=100
+
+# Max retries for failed API calls (default: 3)
+EKART_API_MAX_RETRIES=3
+
+# ============================================================
+# Feature Flags
+# ============================================================
+
+# Enable fallback estimates when API fails (default: true)
+ENABLE_FALLBACK_ESTIMATES=true
+
+# Enable zone-based estimation (default: true)
+ENABLE_ZONE_BASED_ESTIMATES=true
+
+# Show "eKart" branding on frontend (default: false)
+SHOW_EKART_BRANDING=false

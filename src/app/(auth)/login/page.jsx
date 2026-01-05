@@ -49,6 +49,9 @@ export default function LoginPage() {
         } else {
           router.push('/')
         }
+      } else if (result.requiresVerification) {
+        toast.error(result.message)
+        router.push(`/verify-email?email=${encodeURIComponent(result.email)}`)
       } else {
         toast.error(result.message || 'Login failed')
       }
@@ -79,14 +82,14 @@ export default function LoginPage() {
               <div className="w-12 h-12 bg-white/20 backdrop-blur-lg rounded-2xl flex items-center justify-center border border-white/30 group-hover:scale-110 transition-transform">
                 <FiShoppingBag className="w-6 h-6 text-white" />
               </div>
-              <span className="text-2xl font-bold text-white">OnlinePlanet</span>
+              <span className="text-2xl font-semibold text-white">OnlinePlanet</span>
             </Link>
           </div>
 
           {/* Center Content */}
           <div className="space-y-8">
             <div className="space-y-4">
-              <h1 className="text-5xl font-bold text-white leading-tight">
+              <h1 className="text-5xl font-semibold text-white leading-tight">
                 Shop Smarter,
                 <br />
                 Live Better
@@ -105,7 +108,7 @@ export default function LoginPage() {
               ].map((stat, index) => (
                 <div key={index} className="bg-white/10 backdrop-blur-lg rounded-2xl p-4 border border-white/20">
                   <stat.icon className="w-6 h-6 text-white mb-2" />
-                  <div className="text-2xl font-bold text-white">{stat.value}</div>
+                  <div className="text-2xl font-semibold text-white">{stat.value}</div>
                   <div className="text-sm text-white/80">{stat.label}</div>
                 </div>
               ))}
@@ -158,7 +161,7 @@ export default function LoginPage() {
               <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
                 <FiShoppingBag className="w-4 h-4 text-white" />
               </div>
-              <span className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              <span className="text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 OnlinePlanet
               </span>
             </Link>
@@ -166,7 +169,7 @@ export default function LoginPage() {
 
           {/* Header */}
           <div className="space-y-1">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Welcome back</h2>
+            <h2 className="text-2xl md:text-3xl font-semibold text-gray-900">Welcome back</h2>
             <p className="text-sm md:text-base text-gray-600">Sign in to your account to continue</p>
           </div>
 
@@ -269,7 +272,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="relative w-full py-3 md:py-4 text-sm md:text-base bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold rounded-xl hover:shadow-2xl hover:shadow-blue-500/50 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 overflow-hidden group"
+              className="relative w-full py-3 md:py-4 text-sm md:text-base bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl hover:shadow-2xl hover:shadow-blue-500/50 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 overflow-hidden group"
             >
               <span className="relative z-10 flex items-center justify-center gap-2">
                 {loading ? (

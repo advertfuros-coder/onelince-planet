@@ -28,7 +28,7 @@ export default function Newsletter() {
   return (
     <section className="py-16 bg-gradient-to-r from-blue-600 to-purple-600">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h2 className="text-3xl font-bold text-white mb-4">
+        <h2 className="text-3xl font-semibold text-white mb-4">
           Stay Updated with OnlinePlanet
         </h2>
         <p className="text-xl text-blue-100 mb-8">

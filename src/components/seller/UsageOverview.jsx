@@ -49,18 +49,18 @@ export default function UsageOverview({ token }) {
             <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-3xl p-8 border-2 border-blue-100">
                 <div className="flex items-center justify-between mb-4">
                     <div>
-                        <div className="text-xs font-black text-blue-600 uppercase tracking-widest mb-2">
+                        <div className="text-xs font-semibold text-blue-600 uppercase tracking-widest mb-2">
                             Current Plan
                         </div>
-                        <h2 className="text-3xl font-black text-gray-900 capitalize">
+                        <h2 className="text-3xl font-semibold text-gray-900 capitalize">
                             {usage.plan.tierName}
                         </h2>
                     </div>
                     <div className="text-right">
-                        <div className="text-xs font-black text-gray-400 uppercase tracking-widest mb-2">
+                        <div className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-2">
                             Monthly
                         </div>
-                        <div className="text-3xl font-black text-gray-900">
+                        <div className="text-3xl font-semibold text-gray-900">
                             ₹{usage.plan.price.toLocaleString()}
                         </div>
                     </div>
@@ -85,7 +85,7 @@ export default function UsageOverview({ token }) {
                             <Sparkles className="text-amber-600" size={24} />
                         </div>
                         <div className="flex-1">
-                            <h3 className="text-lg font-black text-gray-900 mb-2">
+                            <h3 className="text-lg font-semibold text-gray-900 mb-2">
                                 Upgrade Recommended
                             </h3>
                             <p className="text-sm text-gray-600 mb-3">
@@ -95,7 +95,7 @@ export default function UsageOverview({ token }) {
                                 {usage.upgradeRecommendation.benefits.map((benefit, idx) => (
                                     <span
                                         key={idx}
-                                        className="px-3 py-1 bg-white rounded-full text-xs font-bold text-gray-700"
+                                        className="px-3 py-1 bg-white rounded-full text-xs font-semibold text-gray-700"
                                     >
                                         ✓ {benefit}
                                     </span>
@@ -103,7 +103,7 @@ export default function UsageOverview({ token }) {
                             </div>
                             <Link
                                 href="/seller/subscription"
-                                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl font-black text-sm hover:shadow-lg transition-all"
+                                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl font-semibold text-sm hover:shadow-lg transition-all"
                             >
                                 Upgrade to {usage.upgradeRecommendation.tierName}
                                 <ArrowUpRight size={16} />
@@ -221,32 +221,32 @@ function UsageCard({
                 {status === 'critical' && (
                     <div className="flex items-center gap-1 text-red-600">
                         <AlertCircle size={16} />
-                        <span className="text-xs font-black uppercase">At Limit</span>
+                        <span className="text-xs font-semibold uppercase">At Limit</span>
                     </div>
                 )}
                 {status === 'warning' && (
                     <div className="flex items-center gap-1 text-yellow-600">
                         <TrendingUp size={16} />
-                        <span className="text-xs font-black uppercase">High Usage</span>
+                        <span className="text-xs font-semibold uppercase">High Usage</span>
                     </div>
                 )}
             </div>
 
             <div className="mb-4">
-                <div className="text-xs font-black text-gray-400 uppercase tracking-widest mb-2">
+                <div className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-2">
                     {label}
                 </div>
 
                 {isLimit ? (
-                    <div className="text-2xl font-black text-gray-900">
+                    <div className="text-2xl font-semibold text-gray-900">
                         {limit === -1 ? 'Unlimited' : limit} per product
                     </div>
                 ) : isFeature ? (
-                    <div className="text-2xl font-black text-gray-900">
+                    <div className="text-2xl font-semibold text-gray-900">
                         {available ? 'Enabled' : 'Not Available'}
                     </div>
                 ) : (
-                    <div className="text-2xl font-black text-gray-900">
+                    <div className="text-2xl font-semibold text-gray-900">
                         {current} / {limit === -1 ? '∞' : limit.toLocaleString()}
                     </div>
                 )}
@@ -267,12 +267,12 @@ function UsageCard({
                     {/* Status Message */}
                     <div className="text-sm font-medium text-gray-600">
                         {status === 'critical' && (
-                            <span className="text-red-600 font-bold">
+                            <span className="text-red-600 font-semibold">
                                 🔴 Limit reached. Upgrade to add more.
                             </span>
                         )}
                         {status === 'warning' && daysUntilLimit > 0 && (
-                            <span className="text-yellow-600 font-bold">
+                            <span className="text-yellow-600 font-semibold">
                                 ⚠️ You'll hit your limit in {daysUntilLimit} days
                             </span>
                         )}
@@ -288,7 +288,7 @@ function UsageCard({
             {isFeature && !available && (
                 <Link
                     href="/seller/subscription"
-                    className="inline-flex items-center gap-2 text-sm font-bold text-blue-600 hover:text-blue-700 mt-2"
+                    className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-700 mt-2"
                 >
                     Upgrade to unlock
                     <ArrowUpRight size={14} />

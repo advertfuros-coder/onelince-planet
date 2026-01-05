@@ -149,7 +149,7 @@ export default function AdminCategoriesPage() {
         {/* Header */}
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Category Management</h1>
+            <h1 className="text-3xl font-semibold text-gray-900">Category Management</h1>
             <p className="text-gray-600 mt-1">Organize products with categories and subcategories</p>
           </div>
           <button
@@ -260,7 +260,7 @@ export default function AdminCategoriesPage() {
                         </div>
                       )}
                       <div>
-                        <h3 className="font-bold text-gray-900">{category.name}</h3>
+                        <h3 className="font-semibold text-gray-900">{category.name}</h3>
                         <p className="text-sm text-gray-600">{category.slug}</p>
                         {category.parentCategory && (
                           <p className="text-xs text-blue-600 mt-1">
@@ -336,7 +336,7 @@ export default function AdminCategoriesPage() {
           <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6">
               <div className="flex justify-between items-center mb-6">
-                <h3 className="text-xl font-bold text-gray-900">
+                <h3 className="text-xl font-semibold text-gray-900">
                   {editingCategory ? 'Edit Category' : 'Create New Category'}
                 </h3>
                 <button onClick={() => setShowModal(false)} className="p-2 hover:bg-gray-100 rounded-lg">
@@ -475,7 +475,7 @@ function StatCard({ label, value, icon, color, bgColor }) {
         </div>
         <div>
           <p className="text-sm text-gray-600">{label}</p>
-          <p className="text-2xl font-bold text-gray-900">{value}</p>
+          <p className="text-2xl font-semibold text-gray-900">{value}</p>
         </div>
       </div>
     </div>

@@ -52,7 +52,7 @@ export default function CategoryAnalyticsPage() {
             <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center">
                 <div className="text-center">
                     <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-                    <p className="text-gray-400 font-black uppercase tracking-widest text-xs">Loading Analytics...</p>
+                    <p className="text-gray-400 font-semibold uppercase tracking-widest text-xs">Loading Analytics...</p>
                 </div>
             </div>
         )
@@ -65,11 +65,11 @@ export default function CategoryAnalyticsPage() {
                     <div className="w-16 h-16 bg-rose-50 rounded-full flex items-center justify-center mx-auto mb-4">
                         <AlertCircle size={32} className="text-rose-600" />
                     </div>
-                    <h2 className="text-xl font-black text-slate-900 mb-2">Error Loading Analytics</h2>
+                    <h2 className="text-xl font-semibold text-slate-900 mb-2">Error Loading Analytics</h2>
                     <p className="text-sm text-slate-600 mb-6">{error}</p>
                     <button
                         onClick={fetchAnalytics}
-                        className="px-6 py-3 bg-blue-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-700 transition-all"
+                        className="px-6 py-3 bg-blue-600 text-white rounded-2xl font-semibold text-xs uppercase tracking-widest hover:bg-blue-700 transition-all"
                     >
                         Try Again
                     </button>
@@ -88,14 +88,14 @@ export default function CategoryAnalyticsPage() {
                             <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-purple-600 to-pink-600 flex items-center justify-center text-white shadow-xl shadow-purple-500/20">
                                 <TrendingUp size={20} />
                             </div>
-                            <span className="text-[11px] font-black text-purple-600 uppercase tracking-[0.2em] bg-purple-50 px-4 py-1.5 rounded-full">
+                            <span className="text-[11px] font-semibold text-purple-600 uppercase tracking-[0.2em] bg-purple-50 px-4 py-1.5 rounded-full">
                                 Performance Analytics
                             </span>
                         </div>
-                        <h1 className="text-5xl font-black text-slate-900 tracking-tighter">
+                        <h1 className="text-5xl font-semibold text-slate-900 tracking-tighter">
                             Category Insights<span className="text-purple-600">.</span>
                         </h1>
-                        <p className="text-slate-400 font-bold text-base max-w-2xl">
+                        <p className="text-slate-400 font-semibold text-base max-w-2xl">
                             Track performance, identify opportunities, and optimize your catalog based on real data.
                         </p>
                     </div>
@@ -136,7 +136,7 @@ export default function CategoryAnalyticsPage() {
                 {/* Smart Insights */}
                 {analytics?.insights && analytics.insights.length > 0 && (
                     <div className="bg-white rounded-[2.5rem] p-10 shadow-xl border border-slate-100">
-                        <h2 className="text-lg font-black text-slate-900 uppercase tracking-widest mb-6">
+                        <h2 className="text-lg font-semibold text-slate-900 uppercase tracking-widest mb-6">
                             Smart Insights
                         </h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -150,10 +150,10 @@ export default function CategoryAnalyticsPage() {
                 {/* Category Performance Table */}
                 <div className="bg-white rounded-[2.5rem] shadow-xl border border-slate-100 overflow-hidden">
                     <div className="p-10 border-b border-slate-100">
-                        <h2 className="text-lg font-black text-slate-900 uppercase tracking-widest">
+                        <h2 className="text-lg font-semibold text-slate-900 uppercase tracking-widest">
                             Category Performance
                         </h2>
-                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">
+                        <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest mt-1">
                             Last 30 days
                         </p>
                     </div>
@@ -162,30 +162,30 @@ export default function CategoryAnalyticsPage() {
                         <table className="w-full">
                             <thead>
                                 <tr className="border-b border-gray-50 bg-gray-50/30">
-                                    <th className="px-8 py-5 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">Category</th>
-                                    <th className="px-6 py-5 text-right text-[10px] font-black text-gray-400 uppercase tracking-widest">Views</th>
-                                    <th className="px-6 py-5 text-right text-[10px] font-black text-gray-400 uppercase tracking-widest">Orders</th>
-                                    <th className="px-6 py-5 text-right text-[10px] font-black text-gray-400 uppercase tracking-widest">Conv. Rate</th>
-                                    <th className="px-6 py-5 text-right text-[10px] font-black text-gray-400 uppercase tracking-widest">Revenue</th>
-                                    <th className="px-6 py-5 text-right text-[10px] font-black text-gray-400 uppercase tracking-widest">AOV</th>
-                                    <th className="px-6 py-5 text-right text-[10px] font-black text-gray-400 uppercase tracking-widest">Products</th>
+                                    <th className="px-8 py-5 text-left text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Category</th>
+                                    <th className="px-6 py-5 text-right text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Views</th>
+                                    <th className="px-6 py-5 text-right text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Orders</th>
+                                    <th className="px-6 py-5 text-right text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Conv. Rate</th>
+                                    <th className="px-6 py-5 text-right text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Revenue</th>
+                                    <th className="px-6 py-5 text-right text-[10px] font-semibold text-gray-400 uppercase tracking-widest">AOV</th>
+                                    <th className="px-6 py-5 text-right text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Products</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-50">
                                 {analytics?.categories?.map((category, idx) => (
                                     <tr key={idx} className="group hover:bg-gray-50/30 transition-all">
                                         <td className="px-8 py-6">
-                                            <p className="text-sm font-black text-gray-900">{category.categoryPath}</p>
-                                            <p className="text-xs text-gray-400 font-bold mt-0.5">{category.categoryName}</p>
+                                            <p className="text-sm font-semibold text-gray-900">{category.categoryPath}</p>
+                                            <p className="text-xs text-gray-400 font-semibold mt-0.5">{category.categoryName}</p>
                                         </td>
                                         <td className="px-6 py-6 text-right">
                                             <div className="flex items-center justify-end gap-2">
                                                 <Eye size={14} className="text-gray-400" />
-                                                <span className="text-sm font-black text-gray-900">{category.views.toLocaleString()}</span>
+                                                <span className="text-sm font-semibold text-gray-900">{category.views.toLocaleString()}</span>
                                             </div>
                                         </td>
                                         <td className="px-6 py-6 text-right">
-                                            <span className="text-sm font-black text-gray-900">{category.orders}</span>
+                                            <span className="text-sm font-semibold text-gray-900">{category.orders}</span>
                                         </td>
                                         <td className="px-6 py-6 text-right">
                                             <div className="flex items-center justify-end gap-2">
@@ -198,7 +198,7 @@ export default function CategoryAnalyticsPage() {
                                                         style={{ width: `${Math.min(parseFloat(category.conversionRate) * 10, 100)}%` }}
                                                     />
                                                 </div>
-                                                <span className={`text-xs font-black ${parseFloat(category.conversionRate) >= 8 ? 'text-green-600' :
+                                                <span className={`text-xs font-semibold ${parseFloat(category.conversionRate) >= 8 ? 'text-green-600' :
                                                         parseFloat(category.conversionRate) >= 5 ? 'text-blue-600' :
                                                             'text-orange-600'
                                                     }`}>
@@ -207,13 +207,13 @@ export default function CategoryAnalyticsPage() {
                                             </div>
                                         </td>
                                         <td className="px-6 py-6 text-right">
-                                            <span className="text-sm font-black text-green-600">{formatCurrency(category.revenue)}</span>
+                                            <span className="text-sm font-semibold text-green-600">{formatCurrency(category.revenue)}</span>
                                         </td>
                                         <td className="px-6 py-6 text-right">
-                                            <span className="text-sm font-black text-gray-900">{formatCurrency(category.averageOrderValue)}</span>
+                                            <span className="text-sm font-semibold text-gray-900">{formatCurrency(category.averageOrderValue)}</span>
                                         </td>
                                         <td className="px-6 py-6 text-right">
-                                            <span className="text-xs text-gray-600 font-bold">
+                                            <span className="text-xs text-gray-600 font-semibold">
                                                 {category.productCount?.active || 0} / {category.productCount?.total || 0}
                                             </span>
                                         </td>
@@ -228,7 +228,7 @@ export default function CategoryAnalyticsPage() {
                             <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
                                 <TrendingUp size={24} className="text-gray-300" />
                             </div>
-                            <p className="text-gray-400 font-bold">No sales data yet</p>
+                            <p className="text-gray-400 font-semibold">No sales data yet</p>
                             <p className="text-xs text-gray-300 mt-1">Analytics will appear once you have orders</p>
                         </div>
                     )}
@@ -258,8 +258,8 @@ function SummaryCard({ label, value, icon: Icon, color, delay }) {
                     <Icon size={24} />
                 </div>
                 <div>
-                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">{label}</p>
-                    <p className="text-2xl font-black text-gray-900 tracking-tight">{value}</p>
+                    <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-1">{label}</p>
+                    <p className="text-2xl font-semibold text-gray-900 tracking-tight">{value}</p>
                 </div>
             </div>
         </motion.div>
@@ -288,10 +288,10 @@ function InsightCard({ insight, delay }) {
                 <Icon size={20} className={config.iconColor} />
             </div>
             <div>
-                <p className="text-[10px] font-black uppercase tracking-widest mb-1" style={{ color: config.iconColor.replace('text-', '') }}>
+                <p className="text-[10px] font-semibold uppercase tracking-widest mb-1" style={{ color: config.iconColor.replace('text-', '') }}>
                     {insight.icon} {insight.title}
                 </p>
-                <p className={`text-xs font-bold ${config.text}`}>{insight.message}</p>
+                <p className={`text-xs font-semibold ${config.text}`}>{insight.message}</p>
             </div>
         </motion.div>
     )

@@ -108,7 +108,7 @@ export default function SearchPage() {
           <FiChevronRight className="w-3.5 h-3.5" />
           <Link href="/audio" className="hover:text-blue-600 transition-colors">Audio</Link>
           <FiChevronRight className="w-3.5 h-3.5" />
-          <span className="text-[#1a1a1b] font-bold">Wireless Headphones</span>
+          <span className="text-[#1a1a1b] font-semibold">Wireless Headphones</span>
         </nav>
 
         <div className="flex gap-10">
@@ -123,10 +123,10 @@ export default function SearchPage() {
             <div className="flex flex-col gap-6 mb-8">
               <div className="flex items-start justify-between">
                 <div className="space-y-1">
-                  <h1 className="text-[34px] font-black text-[#1a1a1b] leading-tight tracking-tight">
+                  <h1 className="text-[34px] font-semibold text-[#1a1a1b] leading-tight tracking-tight">
                     Search results for '{filters.search}'
                   </h1>
-                  <p className="text-[14px] font-bold text-gray-400">
+                  <p className="text-[14px] font-semibold text-gray-400">
                     Showing 1-12 of 348 results
                   </p>
                 </div>
@@ -134,19 +134,19 @@ export default function SearchPage() {
                 <div className="flex items-center gap-3">
                   {/* Sort Dropdown */}
                   <div className="group relative">
-                    <button className="flex items-center gap-3 px-5 py-2.5 bg-[#F8F9FA] rounded-[14px] border border-gray-100 font-bold text-[14px] text-[#1a1a1b] hover:border-gray-300 transition-all">
+                    <button className="flex items-center gap-3 px-5 py-2.5 bg-[#F8F9FA] rounded-[14px] border border-gray-100 font-semibold text-[14px] text-[#1a1a1b] hover:border-gray-300 transition-all">
                       Sort by: <span className="text-gray-500">Relevance</span>
                       <FiChevronRight className="w-4 h-4 rotate-90 text-gray-400" />
                     </button>
                   </div>
                   
                   {/* Quick Filters */}
-                  <button className="flex items-center gap-3 px-5 py-2.5 bg-[#F8F9FA] rounded-[14px] border border-gray-100 font-bold text-[14px] text-[#1a1a1b] hover:border-gray-300 transition-all">
+                  <button className="flex items-center gap-3 px-5 py-2.5 bg-[#F8F9FA] rounded-[14px] border border-gray-100 font-semibold text-[14px] text-[#1a1a1b] hover:border-gray-300 transition-all">
                     Brand
                     <FiChevronRight className="w-4 h-4 rotate-90 text-gray-400" />
                   </button>
                   
-                  <button className="flex items-center gap-3 px-5 py-2.5 bg-[#F8F9FA] rounded-[14px] border border-gray-100 font-bold text-[14px] text-[#1a1a1b] hover:border-gray-300 transition-all">
+                  <button className="flex items-center gap-3 px-5 py-2.5 bg-[#F8F9FA] rounded-[14px] border border-gray-100 font-semibold text-[14px] text-[#1a1a1b] hover:border-gray-300 transition-all">
                     Price
                     <FiChevronRight className="w-4 h-4 rotate-90 text-gray-400" />
                   </button>
@@ -167,11 +167,11 @@ export default function SearchPage() {
                 <FiChevronLeft className="w-5 h-5" />
               </button>
               
-              <button className="w-10 h-10 flex items-center justify-center rounded-full bg-blue-600 text-white font-black text-[14px] shadow-lg shadow-blue-200">1</button>
-              <button className="w-10 h-10 flex items-center justify-center rounded-full bg-transparent text-gray-500 font-bold text-[14px] hover:bg-[#F8F9FA] transition-all">2</button>
-              <button className="w-10 h-10 flex items-center justify-center rounded-full bg-transparent text-gray-500 font-bold text-[14px] hover:bg-[#F8F9FA] transition-all">3</button>
-              <span className="text-gray-400 font-bold px-2">...</span>
-              <button className="w-10 h-10 flex items-center justify-center rounded-full bg-transparent text-gray-500 font-bold text-[14px] hover:bg-[#F8F9FA] transition-all">8</button>
+              <button className="w-10 h-10 flex items-center justify-center rounded-full bg-blue-600 text-white font-semibold text-[14px] shadow-lg shadow-blue-200">1</button>
+              <button className="w-10 h-10 flex items-center justify-center rounded-full bg-transparent text-gray-500 font-semibold text-[14px] hover:bg-[#F8F9FA] transition-all">2</button>
+              <button className="w-10 h-10 flex items-center justify-center rounded-full bg-transparent text-gray-500 font-semibold text-[14px] hover:bg-[#F8F9FA] transition-all">3</button>
+              <span className="text-gray-400 font-semibold px-2">...</span>
+              <button className="w-10 h-10 flex items-center justify-center rounded-full bg-transparent text-gray-500 font-semibold text-[14px] hover:bg-[#F8F9FA] transition-all">8</button>
               
               <button className="p-2 bg-[#F8F9FA] rounded-full text-gray-400 hover:text-blue-600 transition-colors border border-gray-100">
                 <FiChevronRight className="w-5 h-5" />

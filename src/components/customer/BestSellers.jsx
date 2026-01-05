@@ -16,7 +16,7 @@ export default function BestSellers({ products = [] }) {
         <div className="flex items-center space-x-3">
           <FiAward className="w-8 h-8 text-yellow-600" />
           <div>
-            <h2 className="text-3xl font-bold text-gray-900">Best Sellers</h2>
+            <h2 className="text-3xl font-semibold text-gray-900">Best Sellers</h2>
             <p className="text-gray-600">Top rated and most loved products</p>
           </div>
         </div>

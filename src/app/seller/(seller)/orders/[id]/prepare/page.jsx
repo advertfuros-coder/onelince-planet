@@ -106,7 +106,7 @@ export default function PrepareOrderPage() {
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <FiPackage className="text-6xl text-gray-300 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-gray-900">Order Not Found</h2>
+          <h2 className="text-2xl font-semibold text-gray-900">Order Not Found</h2>
         </div>
       </div>
     );
@@ -125,7 +125,7 @@ export default function PrepareOrderPage() {
               <FiArrowLeft className="text-2xl" />
             </button>
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Prepare Order</h1>
+              <h1 className="text-3xl font-semibold text-gray-900">Prepare Order</h1>
               <p className="text-gray-600">Order #{order.orderNumber}</p>
             </div>
           </div>
@@ -133,7 +133,7 @@ export default function PrepareOrderPage() {
 
         {/* Order Items */}
         <div className="bg-white rounded-2xl shadow-xl p-6 mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
             <FiBox className="text-blue-600" />
             Items to Pack
           </h2>
@@ -158,13 +158,13 @@ export default function PrepareOrderPage() {
                   )}
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-bold text-gray-900 text-lg mb-1">
+                  <h3 className="font-semibold text-gray-900 text-lg mb-1">
                     {item.name}
                   </h3>
                   <div className="flex items-center gap-4 text-sm">
                     <span className="text-gray-600">
                       Quantity:{" "}
-                      <span className="font-bold text-blue-600">
+                      <span className="font-semibold text-blue-600">
                         {item.quantity}
                       </span>
                     </span>
@@ -174,7 +174,7 @@ export default function PrepareOrderPage() {
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="font-bold text-gray-900 text-xl">
+                  <p className="font-semibold text-gray-900 text-xl">
                     ₹{(item.price * item.quantity).toLocaleString()}
                   </p>
                 </div>
@@ -185,7 +185,7 @@ export default function PrepareOrderPage() {
 
         {/* Preparation Checklist */}
         <div className="bg-white rounded-2xl shadow-xl p-6 mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
             <FiCheckCircle className="text-green-600" />
             Preparation Checklist
           </h2>
@@ -249,7 +249,7 @@ export default function PrepareOrderPage() {
             <div className="flex items-start gap-3">
               <FiAlertCircle className="text-2xl text-yellow-600 flex-shrink-0 mt-1" />
               <div>
-                <h3 className="font-bold text-yellow-900 mb-2">
+                <h3 className="font-semibold text-yellow-900 mb-2">
                   Complete All Steps
                 </h3>
                 <p className="text-sm text-yellow-800">
@@ -266,7 +266,7 @@ export default function PrepareOrderPage() {
         <button
           onClick={handleMarkReadyForPickup}
           disabled={!allChecked || submitting}
-          className="w-full flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl hover:from-green-700 hover:to-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-bold text-lg shadow-lg"
+          className="w-full flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl hover:from-green-700 hover:to-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-semibold text-lg shadow-lg"
         >
           {submitting ? (
             <>

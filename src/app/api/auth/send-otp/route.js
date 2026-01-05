@@ -5,8 +5,7 @@ import User from "@/lib/db/models/User";
 import emailService from "@/lib/email/emailService";
 import { generateOTPEmail } from "@/lib/email/templates/otpEmail";
 
-// Store OTPs in memory (in production, use Redis or database)
-const otpStore = new Map();
+import OTP from "@/lib/db/models/OTP";
 
 function generateOTP() {
   return Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit OTP
@@ -36,13 +35,14 @@ export async function POST(request) {
 
     // Generate OTP
     const otp = generateOTP();
-    const expiryTime = Date.now() + 10 * 60 * 1000; // 10 minutes
+    const expiryTime = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
-    // Store OTP (in production, store in Redis or database)
-    otpStore.set(email, {
+    // Store OTP in database
+    await OTP.deleteMany({ email }); // Clear old OTPs for this email
+    await OTP.create({
+      email,
       otp,
-      expiryTime,
-      attempts: 0,
+      expiresAt: expiryTime,
     });
 
     // Send OTP email
@@ -89,5 +89,4 @@ export async function POST(request) {
   }
 }
 
-// Export otpStore for verification (not ideal, but works for demo)
-export { otpStore };
+

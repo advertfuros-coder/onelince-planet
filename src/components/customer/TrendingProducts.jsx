@@ -90,7 +90,7 @@ export default function TrendingProducts({ products = [] }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header with Tabs */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+          <h2 className="text-3xl md:text-4xl font-semibold text-gray-900">
             Our Trending <span className="text-gray-500">Products</span>
           </h2>
 
@@ -132,7 +132,7 @@ export default function TrendingProducts({ products = [] }) {
               <div className="relative aspect-square bg-gray-50 p-4">
                 {/* Discount Badge */}
                 {(product.badge || product.discount > 0) && (
-                  <div className="absolute top-3 left-3 bg-yellow-400 text-gray-900 text-xs font-bold px-2 py-1 rounded-md z-10">
+                  <div className="absolute top-3 left-3 bg-yellow-400 text-gray-900 text-xs font-semibold px-2 py-1 rounded-md z-10">
                     {product.badge || `-${product.discount}%`}
                   </div>
                 )}
@@ -187,7 +187,7 @@ export default function TrendingProducts({ products = [] }) {
 
                 {/* Price */}
                 <div className="flex flex-col">
-                  <span className="text-lg font-bold text-gray-900">
+                  <span className="text-lg font-semibold text-gray-900">
                     {formatPrice(product.price || product.pricing?.salePrice || product.pricing?.basePrice || 0, region)}
                   </span>
                   {(product.mrp || product.pricing?.basePrice) > (product.price || product.pricing?.salePrice) && (
@@ -210,7 +210,7 @@ export default function TrendingProducts({ products = [] }) {
             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
             <div className="relative h-full flex items-center justify-center">
               <div className="text-center text-white">
-                <h3 className="text-2xl font-bold mb-1">Electronics</h3>
+                <h3 className="text-2xl font-semibold mb-1">Electronics</h3>
                 <p className="text-sm opacity-90">Explore Latest Gadgets</p>
               </div>
             </div>
@@ -223,7 +223,7 @@ export default function TrendingProducts({ products = [] }) {
             <div className="absolute inset-0 bg-black/10 group-hover:bg-black/5 transition-colors" />
             <div className="relative h-full flex items-center justify-center">
               <div className="text-center text-gray-900">
-                <h3 className="text-2xl font-bold mb-1">Fashion</h3>
+                <h3 className="text-2xl font-semibold mb-1">Fashion</h3>
                 <p className="text-sm opacity-90">Trending Styles</p>
               </div>
             </div>
@@ -236,7 +236,7 @@ export default function TrendingProducts({ products = [] }) {
             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
             <div className="relative h-full flex items-center justify-center">
               <div className="text-center text-white">
-                <h3 className="text-2xl font-bold mb-1">Home & Living</h3>
+                <h3 className="text-2xl font-semibold mb-1">Home & Living</h3>
                 <p className="text-sm opacity-90">Transform Your Space</p>
               </div>
             </div>

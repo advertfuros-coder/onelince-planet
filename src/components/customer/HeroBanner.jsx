@@ -137,7 +137,7 @@ export default function HeroBanner() {
                 <div className="pt-2 md:pt-4">
                   <Link
                     href={currentBanner.buttonLink}
-                    className={`inline-block px-6 md:px-10 py-2 md:py-4 ${currentBanner.textColor === 'text-white' ? 'bg-white text-gray-900' : 'bg-gray-900 text-white'} rounded-full font-bold text-xs md:text-base hover:scale-105 transition-all duration-300 shadow-xl`}
+                    className={`inline-block px-6 md:px-10 py-2 md:py-4 ${currentBanner.textColor === 'text-white' ? 'bg-white text-gray-900' : 'bg-gray-900 text-white'} rounded-full font-semibold text-xs md:text-base hover:scale-105 transition-all duration-300 shadow-xl`}
                   >
                     {currentBanner.buttonText}
                   </Link>
@@ -176,19 +176,19 @@ export default function HeroBanner() {
             {/* Content */}
             <div className="relative h-full flex flex-col items-center justify-center text-center px-6 space-y-6">
               <div className="space-y-2">
-                <h3 className="text-2xl md:text-3xl font-black text-white tracking-wider">
+                <h3 className="text-2xl md:text-3xl font-semibold text-white tracking-wider">
                   {currentSale.title}
                 </h3>
-                <p className="text-sm md:text-base font-bold text-white/90 uppercase tracking-widest">
+                <p className="text-sm md:text-base font-semibold text-white/90 uppercase tracking-widest">
                   {currentSale.subtitle}
                 </p>
               </div>
 
               <div className="relative">
-                <div className="text-7xl md:text-8xl font-black text-white leading-none">
+                <div className="text-7xl md:text-8xl font-semibold text-white leading-none">
                   {currentSale.discount}
                 </div>
-                <div className="text-xl md:text-2xl font-black text-white/90 mt-2">
+                <div className="text-xl md:text-2xl font-semibold text-white/90 mt-2">
                   {currentSale.description}
                 </div>
               </div>

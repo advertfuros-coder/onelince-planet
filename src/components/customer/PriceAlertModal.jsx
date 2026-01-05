@@ -66,7 +66,7 @@ export default function PriceAlertModal({ product, onClose }) {
             <FiBell className="w-6 h-6 text-purple-600" />
           </div>
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">Set Price Alert</h2>
+            <h2 className="text-2xl font-semibold text-gray-900">Set Price Alert</h2>
             <p className="text-sm text-gray-500">Get notified when price drops</p>
           </div>
         </div>
@@ -76,7 +76,7 @@ export default function PriceAlertModal({ product, onClose }) {
           <p className="font-medium text-gray-900 mb-2">{product.name}</p>
           <div className="flex items-baseline space-x-2">
             <span className="text-sm text-gray-500">Current Price:</span>
-            <span className="text-xl font-bold text-gray-900">
+            <span className="text-xl font-semibold text-gray-900">
               ₹{currentPrice.toLocaleString()}
             </span>
           </div>

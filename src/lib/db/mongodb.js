@@ -1,38 +1,41 @@
-import mongoose from 'mongoose'
-import '@/lib/db/models/User'
-import '@/lib/db/models/Order'
-import '@/lib/db/models/Review'
-import '@/lib/db/models/Product'
-import '@/lib/db/models/Seller'
-import '@/lib/db/models/Coupon'
+import mongoose from "mongoose";
+import "@/lib/db/models/User";
+import "@/lib/db/models/Order";
+import "@/lib/db/models/Review";
+import "@/lib/db/models/Product";
+import "@/lib/db/models/Seller";
+import "@/lib/db/models/Coupon";
+import "@/lib/db/models/OTP";
 
-const MONGODB_URI = process.env.MONGODB_URI
+const MONGODB_URI = process.env.MONGODB_URI;
 
 if (!MONGODB_URI) {
-  throw new Error('Please define the MONGODB_URI environment variable inside .env.local')
+  throw new Error(
+    "Please define the MONGODB_URI environment variable inside .env.local"
+  );
 }
 
-let cached = global.mongoose
+let cached = global.mongoose;
 
 if (!cached) {
-  cached = global.mongoose = { conn: null, promise: null }
+  cached = global.mongoose = { conn: null, promise: null };
 }
 
 async function connectDB() {
   if (cached.conn) {
-    return cached.conn
+    return cached.conn;
   }
 
   if (!cached.promise) {
     const opts = {
       bufferCommands: false,
-    }
-    cached.promise = mongoose.connect(MONGODB_URI, opts).then(mongoose => {
-      return mongoose
-    })
+    };
+    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
+      return mongoose;
+    });
   }
-  cached.conn = await cached.promise
-  return cached.conn
+  cached.conn = await cached.promise;
+  return cached.conn;
 }
 
-export default connectDB
+export default connectDB;

@@ -168,10 +168,10 @@ export default function SellerSidebar() {
         {!collapsed && (
           <Link href="/seller/dashboard" className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">OP</span>
+              <span className="text-white font-semibold text-sm">OP</span>
             </div>
             <div>
-              <span className="text-lg font-bold text-blue-600">OnlinePlanet</span>
+              <span className="text-lg font-semibold text-blue-600">OnlinePlanet</span>
               <p className="text-xs text-gray-500">Seller Panel</p>
             </div>
           </Link>

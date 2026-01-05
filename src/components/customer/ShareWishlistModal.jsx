@@ -81,7 +81,7 @@ export default function ShareWishlistModal({ onClose }) {
                         <FiShare2 className="w-6 h-6 text-blue-600" />
                     </div>
                     <div>
-                        <h2 className="text-2xl font-bold text-gray-900">Share Wishlist</h2>
+                        <h2 className="text-2xl font-semibold text-gray-900">Share Wishlist</h2>
                         <p className="text-sm text-gray-500">Share your wishlist with friends</p>
                     </div>
                 </div>

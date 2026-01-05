@@ -106,7 +106,7 @@ export default function ProfilePage() {
         return (
             <div className="flex flex-col items-center justify-center min-h-screen space-y-4">
                 <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
-                <p className="text-gray-400 font-black uppercase tracking-widest text-[10px]">Retrieving Master Data...</p>
+                <p className="text-gray-400 font-semibold uppercase tracking-widest text-[10px]">Retrieving Master Data...</p>
             </div>
         )
     }
@@ -121,7 +121,7 @@ export default function ProfilePage() {
                         <div className="absolute top-[-30%] right-[-10%] w-[40rem] h-[40rem] bg-blue-600/10 rounded-full blur-[100px]" />
                         <div className="relative z-10 flex flex-col lg:flex-row lg:items-center gap-8">
                             <div className="relative">
-                                <div className="w-32 h-32 lg:w-40 lg:h-40 rounded-[3rem] bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-5xl font-black shadow-2xl border-4 border-white/5">
+                                <div className="w-32 h-32 lg:w-40 lg:h-40 rounded-[3rem] bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-5xl font-semibold shadow-2xl border-4 border-white/5">
                                     {profile.name.charAt(0).toUpperCase()}
                                 </div>
                                 <button type="button" className="absolute bottom-2 right-2 p-3 bg-white text-gray-900 rounded-2xl shadow-xl hover:scale-110 transition-transform">
@@ -130,13 +130,13 @@ export default function ProfilePage() {
                             </div>
                             <div className="flex-1">
                                 <div className="flex items-center gap-3 mb-2">
-                                    <span className="text-[10px] font-black text-blue-400 uppercase tracking-[0.2em] bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20">Authorized Seller</span>
+                                    <span className="text-[10px] font-semibold text-blue-400 uppercase tracking-[0.2em] bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20">Authorized Seller</span>
                                     <div className="flex items-center gap-1 text-emerald-400">
                                         <CheckCircle2 size={12} />
-                                        <span className="text-[10px] font-black uppercase tracking-widest">Verified</span>
+                                        <span className="text-[10px] font-semibold uppercase tracking-widest">Verified</span>
                                     </div>
                                 </div>
-                                <h1 className="text-4xl lg:text-5xl font-black tracking-tighter mb-4">{profile.name || 'Set Identity'}</h1>
+                                <h1 className="text-4xl lg:text-5xl font-semibold tracking-tighter mb-4">{profile.name || 'Set Identity'}</h1>
                                 <div className="flex flex-wrap gap-6 text-white/50 text-sm font-medium">
                                     <div className="flex items-center gap-2">
                                         <Mail size={16} className="text-blue-400" />
@@ -156,7 +156,7 @@ export default function ProfilePage() {
                                 <button 
                                     type="submit"
                                     disabled={saving}
-                                    className="px-10 py-5 bg-white text-gray-900 rounded-[1.5rem] font-black uppercase text-[11px] tracking-widest shadow-2xl hover:bg-blue-50 transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
+                                    className="px-10 py-5 bg-white text-gray-900 rounded-[1.5rem] font-semibold uppercase text-[11px] tracking-widest shadow-2xl hover:bg-blue-50 transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
                                 >
                                     {saving ? <RefreshCw size={18} className="animate-spin" /> : <Save size={18} />}
                                     Synchronize Changes
@@ -174,9 +174,9 @@ export default function ProfilePage() {
                             <SectionTab icon={Lock} label="Security Protocols" />
                             
                             <div className="mt-8 p-6 bg-blue-50/50 rounded-[2rem] border border-blue-100/50">
-                                <h4 className="text-[10px] font-black text-blue-900 uppercase tracking-widest mb-4">Account Integrity</h4>
-                                <p className="text-xs font-bold text-blue-800/60 leading-relaxed mb-4">Your store parameters are encrypted and stored in secondary secure vaults.</p>
-                                <button type="button" className="text-[10px] font-black text-blue-700 uppercase tracking-widest flex items-center gap-2">
+                                <h4 className="text-[10px] font-semibold text-blue-900 uppercase tracking-widest mb-4">Account Integrity</h4>
+                                <p className="text-xs font-semibold text-blue-800/60 leading-relaxed mb-4">Your store parameters are encrypted and stored in secondary secure vaults.</p>
+                                <button type="button" className="text-[10px] font-semibold text-blue-700 uppercase tracking-widest flex items-center gap-2">
                                    View Audit Logs <ExternalLink size={12} />
                                 </button>
                             </div>
@@ -190,7 +190,7 @@ export default function ProfilePage() {
                                 animate={{ opacity: 1, y: 0 }}
                                 className="bg-white rounded-[2.5rem] p-10 shadow-sm border border-gray-100/50"
                             >
-                                <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest mb-8 flex items-center gap-2">
+                                <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-widest mb-8 flex items-center gap-2">
                                     <Building2 size={18} className="text-blue-600" />
                                     Identity Architecture
                                 </h3>
@@ -230,7 +230,7 @@ export default function ProfilePage() {
                                 transition={{ delay: 0.1 }}
                                 className="bg-white rounded-[2.5rem] p-10 shadow-sm border border-gray-100/50"
                             >
-                                <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest mb-8 flex items-center gap-2">
+                                <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-widest mb-8 flex items-center gap-2">
                                     <MapPin size={18} className="text-blue-600" />
                                     Global Distribution Point
                                 </h3>
@@ -272,7 +272,7 @@ export default function ProfilePage() {
                                 transition={{ delay: 0.2 }}
                                 className="bg-white rounded-[2.5rem] p-10 shadow-sm border border-gray-100/50"
                             >
-                                <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest mb-8 flex items-center gap-2">
+                                <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-widest mb-8 flex items-center gap-2">
                                     <Shield size={18} className="text-blue-600" />
                                     Compliance Parameters
                                 </h3>
@@ -293,8 +293,8 @@ export default function ProfilePage() {
                                       <CheckCircle2 size={24} />
                                    </div>
                                    <div>
-                                      <p className="text-[10px] font-black text-emerald-900 uppercase tracking-widest mb-0.5">Automated Tax Delta</p>
-                                      <p className="text-xs font-bold text-emerald-700">GST settlements are reconciled dynamically against your sales ledger.</p>
+                                      <p className="text-[10px] font-semibold text-emerald-900 uppercase tracking-widest mb-0.5">Automated Tax Delta</p>
+                                      <p className="text-xs font-semibold text-emerald-700">GST settlements are reconciled dynamically against your sales ledger.</p>
                                    </div>
                                 </div>
                             </motion.div>
@@ -320,7 +320,7 @@ function SectionTab({ icon: Icon, label, active }) {
               <div className={`p-2.5 rounded-xl transition-colors ${active ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20' : 'bg-gray-50 text-gray-300 group-hover:bg-blue-100 group-hover:text-blue-600'}`}>
                  <Icon size={18} />
               </div>
-              <span className="text-[11px] font-black uppercase tracking-widest">{label}</span>
+              <span className="text-[11px] font-semibold uppercase tracking-widest">{label}</span>
            </div>
            {active && <ChevronRight size={16} className="text-blue-600" />}
         </button>
@@ -330,7 +330,7 @@ function SectionTab({ icon: Icon, label, active }) {
 function InputField({ label, icon: Icon, value, onChange, type = "text" }) {
     return (
         <div className="space-y-2 group">
-            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1 flex items-center justify-between">
+            <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest px-1 flex items-center justify-between">
                 {label}
                 {Icon && <Icon size={12} className="text-gray-200 group-focus-within:text-blue-400 transition-colors" />}
             </label>
@@ -338,7 +338,7 @@ function InputField({ label, icon: Icon, value, onChange, type = "text" }) {
                 type={type}
                 value={value || ''}
                 onChange={(e) => onChange(e.target.value)}
-                className="w-full px-5 py-4 bg-gray-50/50 border border-transparent rounded-[1.2rem] text-[13px] font-black placeholder:text-gray-300 focus:bg-white focus:border-blue-100 focus:ring-4 focus:ring-blue-500/5 transition-all outline-none"
+                className="w-full px-5 py-4 bg-gray-50/50 border border-transparent rounded-[1.2rem] text-[13px] font-semibold placeholder:text-gray-300 focus:bg-white focus:border-blue-100 focus:ring-4 focus:ring-blue-500/5 transition-all outline-none"
             />
         </div>
     )

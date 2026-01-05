@@ -325,20 +325,20 @@ export default function SellerOnboardingPage() {
                         <div className="flex items-center gap-3">
                             <FiRefreshCw className="w-6 h-6 animate-spin-slow" />
                             <div>
-                                <p className="font-bold">Resume Previous Session?</p>
+                                <p className="font-semibold">Resume Previous Session?</p>
                                 <p className="text-sm text-blue-100">We found an unfinished application. Would you like to continue from where you left off?</p>
                             </div>
                         </div>
                         <div className="flex gap-2">
                             <button 
                                 onClick={() => setShowResumePrompt(false)}
-                                className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-sm font-bold transition-colors"
+                                className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-sm font-semibold transition-colors"
                             >
                                 Dismiss
                             </button>
                             <button 
                                 onClick={resumeDraft}
-                                className="px-4 py-2 bg-white text-blue-600 hover:bg-blue-50 rounded-lg text-sm font-bold transition-colors"
+                                className="px-4 py-2 bg-white text-blue-600 hover:bg-blue-50 rounded-lg text-sm font-semibold transition-colors"
                             >
                                 Continue
                             </button>
@@ -353,17 +353,17 @@ export default function SellerOnboardingPage() {
                             <div className="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-6">
                                 <FiAlertTriangle className="w-8 h-8" />
                             </div>
-                            <h3 className="text-2xl font-black text-center text-gray-900 mb-2">Registration Blocked</h3>
+                            <h3 className="text-2xl font-semibold text-center text-gray-900 mb-2">Registration Blocked</h3>
                             <p className="text-center text-gray-600 mb-6 font-medium">
-                                The business <span className="text-gray-900 font-bold">"{bannedSeller.storeName}"</span> has been suspended or rejected.
+                                The business <span className="text-gray-900 font-semibold">"{bannedSeller.storeName}"</span> has been suspended or rejected.
                             </p>
                             <div className="bg-red-50 border border-red-100 rounded-2xl p-4 mb-8">
-                                <p className="text-xs font-bold text-red-400 uppercase tracking-widest mb-1">Reason</p>
+                                <p className="text-xs font-semibold text-red-400 uppercase tracking-widest mb-1">Reason</p>
                                 <p className="text-sm text-red-900 font-medium">{bannedSeller.reason}</p>
                             </div>
                             <button 
                                 onClick={() => setBannedSeller(null)}
-                                className="w-full py-4 bg-gray-900 text-white rounded-2xl font-bold hover:bg-gray-800 transition-all shadow-lg"
+                                className="w-full py-4 bg-gray-900 text-white rounded-2xl font-semibold hover:bg-gray-800 transition-all shadow-lg"
                             >
                                 I Understand
                             </button>
@@ -380,7 +380,7 @@ export default function SellerOnboardingPage() {
                                     <button 
                                         onClick={() => handleStepClick(step.id)}
                                         className={`
-                    relative z-10 w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm
+                    relative z-10 w-10 h-10 rounded-full flex items-center justify-center font-semibold text-sm
                     transition-all duration-300 hover:scale-110 active:scale-95
                     ${currentStep > step.id
                                             ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white'
@@ -405,7 +405,7 @@ export default function SellerOnboardingPage() {
                                 <button 
                                     onClick={() => handleStepClick(step.id)}
                                     className={`
-                  absolute top-12 left-1/2 transform -translate-x-1/2 text-xs font-bold whitespace-nowrap transition-colors
+                  absolute top-12 left-1/2 transform -translate-x-1/2 text-xs font-semibold whitespace-nowrap transition-colors
                   ${currentStep === step.id ? 'text-blue-600' : 'text-gray-500 hover:text-blue-400'}
                 `}>
                                     <span className="hidden sm:inline">{step.title}</span>
@@ -419,7 +419,7 @@ export default function SellerOnboardingPage() {
                 {/* Form Card */}
                 <div className="bg-white rounded-3xl shadow-2xl p-8 lg:p-12">
                     <div className="mb-8">
-                        <h2 className="text-3xl font-black text-gray-900 mb-2">
+                        <h2 className="text-3xl font-semibold text-gray-900 mb-2">
                             {STEPS[currentStep - 1].title}
                         </h2>
                         <div className="h-1 w-20 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full" />

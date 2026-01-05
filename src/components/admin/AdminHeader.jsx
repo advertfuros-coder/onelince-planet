@@ -53,11 +53,11 @@ export default function AdminHeader() {
             >
               <div className="flex items-center gap-3 text-gray-400 group-hover:text-blue-600 transition-colors">
                 <Search size={18} />
-                <span className="text-xs font-bold uppercase tracking-widest leading-none">Global Terminal Seek</span>
+                <span className="text-xs font-semibold uppercase tracking-widest leading-none">Global Terminal Seek</span>
               </div>
               <div className="flex items-center gap-1.5 px-2 py-1 bg-white border border-gray-200 rounded-lg shadow-sm">
                 <Command size={10} className="text-gray-400" />
-                <span className="text-[10px] font-black text-gray-500 uppercase">K</span>
+                <span className="text-[10px] font-semibold text-gray-500 uppercase">K</span>
               </div>
             </button>
           </div>
@@ -69,7 +69,7 @@ export default function AdminHeader() {
           {/* Quick Create Button */}
           <button className="hidden lg:flex items-center gap-2 px-4 py-2 bg-[#0F172A] text-white rounded-xl hover:bg-black transition-all shadow-lg shadow-gray-200 active:scale-95 group">
             <Plus size={16} className="group-hover:rotate-90 transition-transform duration-300" />
-            <span className="text-[10px] font-black uppercase tracking-widest">Quick Create</span>
+            <span className="text-[10px] font-semibold uppercase tracking-widest">Quick Create</span>
           </button>
 
           {/* Notifications Hub */}
@@ -86,18 +86,18 @@ export default function AdminHeader() {
               className="flex items-center gap-3 p-1.5 rounded-2xl hover:bg-gray-50 transition-all duration-300 border border-transparent hover:border-gray-100"
             >
               <div className="w-9 h-9 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20 text-white">
-                <span className="font-black text-xs uppercase tracking-tighter">
+                <span className="font-semibold text-xs uppercase tracking-tighter">
                   {user?.name?.[0] || 'A'}
                 </span>
               </div>
 
               <div className="hidden md:block text-left pr-2">
-                <p className="text-[11px] font-black text-gray-900 uppercase tracking-tight leading-none">
+                <p className="text-[11px] font-semibold text-gray-900 uppercase tracking-tight leading-none">
                   {user?.name || 'Administrator'}
                 </p>
                 <div className="flex items-center gap-1 mt-1 text-emerald-500">
                   <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  <span className="text-[9px] font-black uppercase tracking-[0.1em]">Root Access</span>
+                  <span className="text-[9px] font-semibold uppercase tracking-[0.1em]">Root Access</span>
                 </div>
               </div>
 
@@ -108,8 +108,8 @@ export default function AdminHeader() {
             {showDropdown && (
               <div className="absolute right-0 mt-3 w-64 bg-white rounded-3xl shadow-2xl shadow-blue-900/10 border border-gray-100 overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-300">
                 <div className="px-6 py-6 bg-gray-50/50 border-b border-gray-100">
-                  <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Authenticated Account</p>
-                  <p className="text-sm font-black text-gray-900">{user?.email || 'admin@onlineplanet.com'}</p>
+                  <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-1">Authenticated Account</p>
+                  <p className="text-sm font-semibold text-gray-900">{user?.email || 'admin@onlineplanet.com'}</p>
                 </div>
 
                 <div className="p-2">
@@ -124,7 +124,7 @@ export default function AdminHeader() {
                   >
                     <div className="flex items-center gap-3">
                       <LogOut size={16} />
-                      <span className="text-[11px] font-black uppercase tracking-widest">Terminate Session</span>
+                      <span className="text-[11px] font-semibold uppercase tracking-widest">Terminate Session</span>
                     </div>
                     <ChevronRight size={14} className="opacity-0 group-hover:opacity-100 transition-all" />
                   </button>
@@ -146,7 +146,7 @@ function MenuButton({ icon: Icon, label, onClick }) {
     >
       <div className="flex items-center gap-3">
         <Icon size={16} />
-        <span className="text-[11px] font-black uppercase tracking-widest">{label}</span>
+        <span className="text-[11px] font-semibold uppercase tracking-widest">{label}</span>
       </div>
       <ChevronRight size={14} className="opacity-0 group-hover:opacity-100 transition-all translate-x-[-4px] group-hover:translate-x-0 transition-transform" />
     </button>

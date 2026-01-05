@@ -129,7 +129,7 @@ export default function AdvertisingHub() {
             <div className="min-h-screen flex items-center justify-center p-8 bg-[#F8FAFC]">
                 <div className="flex flex-col items-center gap-4">
                     <div className="w-12 h-12 border-4 border-violet-600 border-t-transparent rounded-full animate-spin" />
-                    <p className="text-xs font-black uppercase tracking-widest text-slate-400">Booting Ad Engine...</p>
+                    <p className="text-xs font-semibold uppercase tracking-widest text-slate-400">Booting Ad Engine...</p>
                 </div>
             </div>
         )
@@ -154,14 +154,14 @@ export default function AdvertisingHub() {
                             <Target size={28} />
                         </div>
                         <div>
-                            <h1 className="text-4xl font-black text-slate-900 tracking-tight">Growth Hub <span className="text-violet-600">.</span></h1>
-                            <p className="text-slate-500 font-bold text-sm mt-1">Accelerate sales with AI-optimized smart campaigns.</p>
+                            <h1 className="text-4xl font-semibold text-slate-900 tracking-tight">Growth Hub <span className="text-violet-600">.</span></h1>
+                            <p className="text-slate-500 font-semibold text-sm mt-1">Accelerate sales with AI-optimized smart campaigns.</p>
                         </div>
                     </div>
                     <div className="flex items-center gap-3">
                         <button
                             onClick={() => setShowCreateModal(true)}
-                            className="flex items-center gap-2 px-8 py-4 bg-slate-900 text-white rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-black transition-all shadow-xl shadow-slate-200 active:scale-95"
+                            className="flex items-center gap-2 px-8 py-4 bg-slate-900 text-white rounded-2xl text-xs font-semibold uppercase tracking-widest hover:bg-black transition-all shadow-xl shadow-slate-200 active:scale-95"
                         >
                             <Plus size={16} /> New Campaign
                         </button>
@@ -214,13 +214,13 @@ export default function AdvertisingHub() {
                         <div className="bg-white rounded-[2.5rem] border border-slate-100 p-8 shadow-xl shadow-slate-200/20 overflow-hidden relative">
                             <div className="flex items-center justify-between mb-10">
                                 <div>
-                                    <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest flex items-center gap-2">
+                                    <h3 className="text-sm font-semibold text-slate-900 uppercase tracking-widest flex items-center gap-2">
                                         Performance Waterfall <Info size={14} className="text-slate-300" />
                                     </h3>
-                                    <p className="text-[10px] font-bold text-slate-400 uppercase mt-1">Visualizing Ad spend to Revenue conversion</p>
+                                    <p className="text-[10px] font-semibold text-slate-400 uppercase mt-1">Visualizing Ad spend to Revenue conversion</p>
                                 </div>
                                 <div className="flex gap-2">
-                                    <span className="px-4 py-1.5 bg-violet-50 text-violet-600 rounded-full text-[9px] font-black uppercase tracking-widest">Real-time</span>
+                                    <span className="px-4 py-1.5 bg-violet-50 text-violet-600 rounded-full text-[9px] font-semibold uppercase tracking-widest">Real-time</span>
                                 </div>
                             </div>
 
@@ -246,8 +246,8 @@ export default function AdvertisingHub() {
                                                 if (active && payload && payload.length) {
                                                     return (
                                                         <div className="bg-slate-900 p-4 rounded-2xl shadow-2xl border border-white/10">
-                                                            <p className="text-[10px] font-black text-slate-400 uppercase mb-1">{payload[0].payload.name}</p>
-                                                            <p className="text-xl font-black text-white">₹{payload[0].value.toLocaleString()}</p>
+                                                            <p className="text-[10px] font-semibold text-slate-400 uppercase mb-1">{payload[0].payload.name}</p>
+                                                            <p className="text-xl font-semibold text-white">₹{payload[0].value.toLocaleString()}</p>
                                                         </div>
                                                     )
                                                 }
@@ -274,11 +274,11 @@ export default function AdvertisingHub() {
                         {/* Active Campaigns List */}
                         <div className="bg-white rounded-[2.5rem] border border-slate-100 p-8 shadow-xl shadow-slate-200/20">
                             <div className="flex items-center justify-between mb-8">
-                                <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest">Active Campaigns</h3>
+                                <h3 className="text-sm font-semibold text-slate-900 uppercase tracking-widest">Active Campaigns</h3>
                                 <div className="flex bg-slate-50 p-1 rounded-2xl border border-slate-100">
-                                    <button className="px-6 py-2 bg-white text-slate-900 rounded-xl text-[10px] font-black uppercase shadow-sm">All</button>
-                                    <button className="px-6 py-2 text-slate-400 text-[10px] font-black uppercase">Active</button>
-                                    <button className="px-6 py-2 text-slate-400 text-[10px] font-black uppercase">Paused</button>
+                                    <button className="px-6 py-2 bg-white text-slate-900 rounded-xl text-[10px] font-semibold uppercase shadow-sm">All</button>
+                                    <button className="px-6 py-2 text-slate-400 text-[10px] font-semibold uppercase">Active</button>
+                                    <button className="px-6 py-2 text-slate-400 text-[10px] font-semibold uppercase">Paused</button>
                                 </div>
                             </div>
 
@@ -292,23 +292,23 @@ export default function AdvertisingHub() {
                                                         {ad.status === 'active' ? <Flame size={20} /> : <Pause size={20} />}
                                                     </div>
                                                     <div>
-                                                        <h4 className="text-sm font-black text-slate-900 group-hover:text-violet-600 transition-colors uppercase tracking-tight">{ad.campaignName}</h4>
-                                                        <p className="text-[10px] font-bold text-slate-400 uppercase mt-0.5">{ad.campaignType.replace('_', ' ')}</p>
+                                                        <h4 className="text-sm font-semibold text-slate-900 group-hover:text-violet-600 transition-colors uppercase tracking-tight">{ad.campaignName}</h4>
+                                                        <p className="text-[10px] font-semibold text-slate-400 uppercase mt-0.5">{ad.campaignType.replace('_', ' ')}</p>
                                                     </div>
                                                 </div>
 
                                                 <div className="grid grid-cols-3 gap-8 lg:gap-16">
                                                     <div>
-                                                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">ROAS</p>
-                                                        <p className="text-xs font-black text-slate-900">{(ad.metrics.revenue / (ad.budget.spent || 1)).toFixed(2)}x</p>
+                                                        <p className="text-[9px] font-semibold text-slate-400 uppercase tracking-widest mb-1">ROAS</p>
+                                                        <p className="text-xs font-semibold text-slate-900">{(ad.metrics.revenue / (ad.budget.spent || 1)).toFixed(2)}x</p>
                                                     </div>
                                                     <div>
-                                                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Budget</p>
-                                                        <p className="text-xs font-black text-slate-900">₹{ad.budget.amount}/day</p>
+                                                        <p className="text-[9px] font-semibold text-slate-400 uppercase tracking-widest mb-1">Budget</p>
+                                                        <p className="text-xs font-semibold text-slate-900">₹{ad.budget.amount}/day</p>
                                                     </div>
                                                     <div>
-                                                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Spent</p>
-                                                        <p className="text-xs font-black text-slate-900">₹{ad.budget.spent}</p>
+                                                        <p className="text-[9px] font-semibold text-slate-400 uppercase tracking-widest mb-1">Spent</p>
+                                                        <p className="text-xs font-semibold text-slate-900">₹{ad.budget.spent}</p>
                                                     </div>
                                                 </div>
 
@@ -349,10 +349,10 @@ export default function AdvertisingHub() {
                                         <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center grayscale opacity-50">
                                             <Target size={32} className="text-slate-300" />
                                         </div>
-                                        <p className="text-xs font-black text-slate-400 uppercase tracking-widest">No active campaigns</p>
+                                        <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest">No active campaigns</p>
                                         <button
                                             onClick={() => setShowCreateModal(true)}
-                                            className="text-[10px] font-black text-violet-600 uppercase tracking-widest hover:underline"
+                                            className="text-[10px] font-semibold text-violet-600 uppercase tracking-widest hover:underline"
                                         >
                                             Launch your first ad
                                         </button>
@@ -370,28 +370,28 @@ export default function AdvertisingHub() {
                             <div className="relative z-10 space-y-8">
                                 <div className="flex items-center gap-2 text-violet-400">
                                     <Zap size={18} fill="currentColor" />
-                                    <span className="text-[10px] font-black uppercase tracking-[0.2em]">Smart Bid Advisor</span>
+                                    <span className="text-[10px] font-semibold uppercase tracking-[0.2em]">Smart Bid Advisor</span>
                                 </div>
 
                                 <div>
-                                    <h4 className="text-xl font-black tracking-tight mb-2">Maximize Peak-Hour Traffic</h4>
+                                    <h4 className="text-xl font-semibold tracking-tight mb-2">Maximize Peak-Hour Traffic</h4>
                                     <p className="text-slate-400 text-xs font-medium leading-relaxed">
-                                        Your category sees a <span className="text-emerald-400 font-bold">45% spike</span> in conversion between <span className="text-white font-bold">8 PM - 11 PM</span>.
+                                        Your category sees a <span className="text-emerald-400 font-semibold">45% spike</span> in conversion between <span className="text-white font-semibold">8 PM - 11 PM</span>.
                                     </p>
                                 </div>
 
                                 <div className="bg-white/5 border border-white/10 rounded-3xl p-6 space-y-4">
                                     <div className="flex items-center justify-between">
-                                        <p className="text-[10px] font-black text-slate-400 uppercase">Recommended Bid</p>
-                                        <p className="text-sm font-black text-emerald-400">₹12.50 (+₹2.00)</p>
+                                        <p className="text-[10px] font-semibold text-slate-400 uppercase">Recommended Bid</p>
+                                        <p className="text-sm font-semibold text-emerald-400">₹12.50 (+₹2.00)</p>
                                     </div>
                                     <div className="flex items-center justify-between">
-                                        <p className="text-[10px] font-black text-slate-400 uppercase">Est. Click Growth</p>
-                                        <p className="text-sm font-black text-blue-400">+2.4k / wk</p>
+                                        <p className="text-[10px] font-semibold text-slate-400 uppercase">Est. Click Growth</p>
+                                        <p className="text-sm font-semibold text-blue-400">+2.4k / wk</p>
                                     </div>
                                 </div>
 
-                                <button className="w-full py-4 bg-violet-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-violet-700 transition-all shadow-xl shadow-violet-500/20 active:scale-95">
+                                <button className="w-full py-4 bg-violet-600 text-white rounded-2xl text-[10px] font-semibold uppercase tracking-widest hover:bg-violet-700 transition-all shadow-xl shadow-violet-500/20 active:scale-95">
                                     Apply Optimization
                                 </button>
                             </div>
@@ -403,7 +403,7 @@ export default function AdvertisingHub() {
 
                         {/* Inventory Placement Insight */}
                         <div className="bg-white rounded-[2.5rem] border border-slate-100 p-8 shadow-xl shadow-slate-200/20">
-                            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-8">Visual Heatmap Preview</h3>
+                            <h3 className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest mb-8">Visual Heatmap Preview</h3>
                             
                             {/* Grid Heatmap Visual */}
                             <div className="grid grid-cols-4 gap-2 mb-8 bg-slate-50 p-4 rounded-3xl border border-slate-100">
@@ -424,7 +424,7 @@ export default function AdvertisingHub() {
                                 <PlacementRow label="Category Footer" score={12} />
                             </div>
 
-                            <button className="w-full py-4 border border-violet-100 mt-8 rounded-2xl text-[10px] font-black text-violet-600 uppercase tracking-widest hover:bg-violet-50 transition-all">
+                            <button className="w-full py-4 border border-violet-100 mt-8 rounded-2xl text-[10px] font-semibold text-violet-600 uppercase tracking-widest hover:bg-violet-50 transition-all">
                                 Adjust Placements
                             </button>
                         </div>
@@ -433,12 +433,12 @@ export default function AdvertisingHub() {
                         <div className="bg-emerald-600 rounded-[2.5rem] p-8 text-white">
                             <div className="flex items-center gap-3 mb-4">
                                 <AlertCircle size={24} />
-                                <h4 className="font-black tracking-tight">AI Audit Complete</h4>
+                                <h4 className="font-semibold tracking-tight">AI Audit Complete</h4>
                             </div>
                             <p className="text-emerald-100 text-xs font-medium mb-6 leading-relaxed">
                                 We found 3 draft campaigns with high potential CTR. Launch them now to capture untapped weekend traffic.
                             </p>
-                            <button className="w-full py-4 bg-black/20 backdrop-blur-md text-white border border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-black/30 transition-all">
+                            <button className="w-full py-4 bg-black/20 backdrop-blur-md text-white border border-white/10 rounded-2xl text-[10px] font-semibold uppercase tracking-widest hover:bg-black/30 transition-all">
                                 Launch Audited Ads
                             </button>
                         </div>
@@ -466,8 +466,8 @@ export default function AdvertisingHub() {
                                 <div className="p-8 lg:p-12 overflow-y-auto space-y-10">
                                     <div className="flex justify-between items-start">
                                         <div>
-                                            <h2 className="text-3xl font-black text-slate-900 tracking-tight">Launch Campaign <span className="text-violet-600">.</span></h2>
-                                            <p className="text-slate-500 font-bold text-sm mt-1">Configure your smart targeting and budget.</p>
+                                            <h2 className="text-3xl font-semibold text-slate-900 tracking-tight">Launch Campaign <span className="text-violet-600">.</span></h2>
+                                            <p className="text-slate-500 font-semibold text-sm mt-1">Configure your smart targeting and budget.</p>
                                         </div>
                                         <button onClick={() => setShowCreateModal(false)} className="p-3 hover:bg-slate-50 rounded-2xl text-slate-400">
                                             <AlertCircle size={24} />
@@ -477,38 +477,38 @@ export default function AdvertisingHub() {
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                                         <div className="space-y-6">
                                             <div className="space-y-2">
-                                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-2">Campaign Name</label>
+                                                <label className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest pl-2">Campaign Name</label>
                                                 <input
                                                     type="text"
                                                     placeholder="e.g. Weekend Electronics Sale"
                                                     value={newCampaign.campaignName}
                                                     onChange={e => setNewCampaign({ ...newCampaign, campaignName: e.target.value })}
-                                                    className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold focus:ring-4 focus:ring-violet-50 transition-all outline-none"
+                                                    className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-semibold focus:ring-4 focus:ring-violet-50 transition-all outline-none"
                                                 />
                                             </div>
 
                                             <div className="grid grid-cols-2 gap-4">
                                                 <div className="space-y-2">
-                                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-2">Daily Budget</label>
+                                                    <label className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest pl-2">Daily Budget</label>
                                                     <div className="relative">
-                                                        <span className="absolute left-6 top-1/2 -translate-y-1/2 font-black text-slate-400">₹</span>
+                                                        <span className="absolute left-6 top-1/2 -translate-y-1/2 font-semibold text-slate-400">₹</span>
                                                         <input
                                                             type="number"
                                                             value={newCampaign.budget.amount}
                                                             onChange={e => setNewCampaign({ ...newCampaign, budget: { ...newCampaign.budget, amount: e.target.value } })}
-                                                            className="w-full pl-10 pr-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold focus:ring-4 focus:ring-violet-50 transition-all outline-none"
+                                                            className="w-full pl-10 pr-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-semibold focus:ring-4 focus:ring-violet-50 transition-all outline-none"
                                                         />
                                                     </div>
                                                 </div>
                                                 <div className="space-y-2">
-                                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-2">Bid Amount</label>
+                                                    <label className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest pl-2">Bid Amount</label>
                                                     <div className="relative">
-                                                        <span className="absolute left-6 top-1/2 -translate-y-1/2 font-black text-slate-400">₹</span>
+                                                        <span className="absolute left-6 top-1/2 -translate-y-1/2 font-semibold text-slate-400">₹</span>
                                                         <input
                                                             type="number"
                                                             value={newCampaign.bidding.bidAmount}
                                                             onChange={e => setNewCampaign({ ...newCampaign, bidding: { ...newCampaign.bidding, bidAmount: e.target.value } })}
-                                                            className="w-full pl-10 pr-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold focus:ring-4 focus:ring-violet-50 transition-all outline-none"
+                                                            className="w-full pl-10 pr-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-semibold focus:ring-4 focus:ring-violet-50 transition-all outline-none"
                                                         />
                                                     </div>
                                                 </div>
@@ -516,7 +516,7 @@ export default function AdvertisingHub() {
                                         </div>
 
                                         <div className="space-y-6">
-                                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-2">Select Products</label>
+                                            <label className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest pl-2">Select Products</label>
                                             <div className="grid grid-cols-1 gap-2 max-h-[250px] overflow-y-auto pr-2 custom-scrollbar">
                                                 {products.map(product => (
                                                     <button
@@ -536,8 +536,8 @@ export default function AdvertisingHub() {
                                                     >
                                                         <img src={product.images[0]?.url} className="w-10 h-10 rounded-xl object-cover" />
                                                         <div className="flex-1 min-w-0">
-                                                            <p className="text-[11px] font-black text-slate-900 truncate uppercase tracking-tight">{product.name}</p>
-                                                            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">₹{product.pricing.basePrice}</p>
+                                                            <p className="text-[11px] font-semibold text-slate-900 truncate uppercase tracking-tight">{product.name}</p>
+                                                            <p className="text-[9px] font-semibold text-slate-400 uppercase tracking-widest">₹{product.pricing.basePrice}</p>
                                                         </div>
                                                         {newCampaign.products.includes(product._id) && (
                                                             <CheckCircle2 size={16} className="text-violet-600" />
@@ -551,7 +551,7 @@ export default function AdvertisingHub() {
                                     <div className="pt-8 border-t border-slate-50 flex items-center justify-end gap-4">
                                         <button
                                             onClick={() => setShowCreateModal(false)}
-                                            className="px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-slate-600 transition-all"
+                                            className="px-8 py-4 text-[10px] font-semibold text-slate-400 uppercase tracking-widest hover:text-slate-600 transition-all"
                                         >
                                             Cancel
                                         </button>
@@ -570,7 +570,7 @@ export default function AdvertisingHub() {
                                                     toast.error('Launch failed')
                                                 }
                                             }}
-                                            className="px-12 py-4 bg-violet-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-violet-700 transition-all shadow-xl shadow-violet-200 active:scale-95"
+                                            className="px-12 py-4 bg-violet-600 text-white rounded-2xl text-[10px] font-semibold uppercase tracking-widest hover:bg-violet-700 transition-all shadow-xl shadow-violet-200 active:scale-95"
                                         >
                                             Launch Now
                                         </button>
@@ -600,12 +600,12 @@ function AdMetric({ label, value, sub, trend, icon: Icon, color }) {
                 <div className={`p-4 rounded-2xl ${colors[color]} group-hover:scale-110 transition-transform`}>
                     <Icon size={24} />
                 </div>
-                <div className="px-3 py-1 bg-emerald-50 text-emerald-600 rounded-full text-[9px] font-black">
+                <div className="px-3 py-1 bg-emerald-50 text-emerald-600 rounded-full text-[9px] font-semibold">
                     {trend}
                 </div>
             </div>
-            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{label}</p>
-            <p className="text-3xl font-black text-slate-900 tracking-tight leading-none mb-1">{value}</p>
+            <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest mb-1">{label}</p>
+            <p className="text-3xl font-semibold text-slate-900 tracking-tight leading-none mb-1">{value}</p>
             <p className="text-[10px] font-semibold text-slate-400">{sub}</p>
         </div>
     )
@@ -614,7 +614,7 @@ function AdMetric({ label, value, sub, trend, icon: Icon, color }) {
 function PlacementRow({ label, score }) {
     return (
         <div className="space-y-2">
-            <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-tight">
+            <div className="flex justify-between items-center text-[10px] font-semibold uppercase tracking-tight">
                 <span className="text-slate-600">{label}</span>
                 <span className={score > 80 ? 'text-emerald-500' : score > 40 ? 'text-amber-500' : 'text-slate-400'}>
                     {score}% Effectiveness

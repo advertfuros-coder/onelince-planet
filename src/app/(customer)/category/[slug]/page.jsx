@@ -313,19 +313,19 @@ export default function CategoryLandingPage() {
                     <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-6 md:p-12">
                         <div className="flex items-center gap-2 mb-6">
                             <div className="bg-white rounded-xl p-3 flex items-center gap-4 shadow-xl">
-                                <span className="text-blue-900 font-black italic tracking-tighter text-lg uppercase">{categoryData.hero.logos[0]}</span>
+                                <span className="text-blue-900 font-semibold italic tracking-tighter text-lg uppercase">{categoryData.hero.logos[0]}</span>
                                 <div className="w-px h-6 bg-gray-200"></div>
-                                <span className="text-black font-black italic tracking-tighter text-lg uppercase flex items-center gap-1">
+                                <span className="text-black font-semibold italic tracking-tighter text-lg uppercase flex items-center gap-1">
                                     {categoryData.hero.logos[1]}
                                 </span>
                             </div>
-                            <div className="bg-white/40 backdrop-blur-md px-2 py-1 rounded-md text-[8px] font-bold text-white uppercase">& More</div>
+                            <div className="bg-white/40 backdrop-blur-md px-2 py-1 rounded-md text-[8px] font-semibold text-white uppercase">& More</div>
                         </div>
-                        <h1 className="text-4xl md:text-6xl font-black text-white italic tracking-tighter leading-none mb-2 uppercase">
+                        <h1 className="text-4xl md:text-6xl font-semibold text-white italic tracking-tighter leading-none mb-2 uppercase">
                             {categoryData.hero.title}
                         </h1>
-                        <p className="text-xl md:text-2xl font-bold text-white mb-2">{categoryData.hero.subtitle}</p>
-                        <p className="text-sm font-bold text-white/70 italic">{categoryData.hero.tag}</p>
+                        <p className="text-xl md:text-2xl font-semibold text-white mb-2">{categoryData.hero.subtitle}</p>
+                        <p className="text-sm font-semibold text-white/70 italic">{categoryData.hero.tag}</p>
                     </div>
                     <button className="absolute bottom-8 right-8 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-2xl hover:bg-blue-600 hover:text-white transition-all transform group-hover:translate-x-1">
                         <FiChevronRight className="w-6 h-6" />
@@ -352,14 +352,14 @@ export default function CategoryLandingPage() {
                                 <div className={`w-20 h-24 rounded-3xl overflow-hidden shadow-sm border border-gray-100 flex items-center justify-center ${sub.bg || 'bg-gray-100'}`}>
                                     {sub.premium ? (
                                         <div className="flex flex-col items-center text-center px-2">
-                                            <span className="text-[10px] font-black uppercase text-black leading-none mb-1">SALE</span>
-                                            <span className="text-xl font-black text-black tracking-tighter">DRIP</span>
+                                            <span className="text-[10px] font-semibold uppercase text-black leading-none mb-1">SALE</span>
+                                            <span className="text-xl font-semibold text-black tracking-tighter">DRIP</span>
                                         </div>
                                     ) : (
                                         <img src={sub.icon} alt={sub.name} className="w-full h-full object-cover" />
                                     )}
                                 </div>
-                                <span className="text-[11px] font-bold text-gray-800 tracking-tight text-center max-w-[80px] line-clamp-1">{sub.name}</span>
+                                <span className="text-[11px] font-semibold text-gray-800 tracking-tight text-center max-w-[80px] line-clamp-1">{sub.name}</span>
                             </Link>
                         ))}
                     </div>
@@ -368,8 +368,8 @@ export default function CategoryLandingPage() {
                 {/* 3. Branding Bar */}
                 <div className="bg-yellow-50/50 rounded-2xl flex items-center justify-between p-4 border border-yellow-100">
                     <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Powered By</span>
-                        <span className="text-red-600 font-black italic text-xl tracking-tighter">Bata</span>
+                        <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Powered By</span>
+                        <span className="text-red-600 font-semibold italic text-xl tracking-tighter">Bata</span>
                         <div className="w-5 h-5 bg-black rounded-full flex items-center justify-center text-[8px] text-white"><FiChevronRight /></div>
                     </div>
                 </div>
@@ -378,18 +378,18 @@ export default function CategoryLandingPage() {
                 <div className="bg-gradient-to-r from-yellow-50 to-white rounded-2xl p-4 border border-yellow-50 flex items-center justify-between shadow-sm">
                     <div className="flex items-center gap-6">
                         <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 bg-gray-900 rounded-md flex items-center justify-center text-white text-[8px] font-bold">CRED</div>
-                            <div className="w-12 h-6 bg-blue-500 rounded flex items-center justify-center text-white text-[8px] font-black uppercase">paytm</div>
+                            <div className="w-8 h-8 bg-gray-900 rounded-md flex items-center justify-center text-white text-[8px] font-semibold">CRED</div>
+                            <div className="w-12 h-6 bg-blue-500 rounded flex items-center justify-center text-white text-[8px] font-semibold uppercase">paytm</div>
                         </div>
                         <div className="w-px h-8 bg-gray-200"></div>
-                        <span className="text-sm font-black italic uppercase tracking-tighter text-gray-800">Assured Cashback*</span>
+                        <span className="text-sm font-semibold italic uppercase tracking-tighter text-gray-800">Assured Cashback*</span>
                     </div>
                 </div>
 
                 {/* 5. Highlights of the Day */}
                 <section>
                     <div className="text-center mb-8">
-                        <h2 className="text-3xl font-black italic uppercase tracking-tighter text-gray-900 leading-none">Highlights Of The Day</h2>
+                        <h2 className="text-3xl font-semibold italic uppercase tracking-tighter text-gray-900 leading-none">Highlights Of The Day</h2>
                     </div>
                     <div className="flex gap-4 overflow-x-auto no-scrollbar pb-6 px-1">
                         {categoryData.highlights.map((item, idx) => (
@@ -398,7 +398,7 @@ export default function CategoryLandingPage() {
                                 <div className="absolute inset-x-0 bottom-6 px-6">
                                     <div className="bg-white rounded-2xl p-4 shadow-2xl transform group-hover:-translate-y-2 transition-transform duration-500">
                                         <div className="flex items-center justify-center gap-3">
-                                            <span className="text-gray-900 font-black italic tracking-tighter text-lg uppercase italic">{item.title}</span>
+                                            <span className="text-gray-900 font-semibold italic tracking-tighter text-lg uppercase italic">{item.title}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -417,10 +417,10 @@ export default function CategoryLandingPage() {
                 {/* 6. Top-Rated Brands Grid */}
                 <section className="space-y-6">
                     <div>
-                        <h2 className="text-2xl md:text-3xl font-black italic uppercase tracking-tighter text-gray-900">Top-Rated Brands</h2>
+                        <h2 className="text-2xl md:text-3xl font-semibold italic uppercase tracking-tighter text-gray-900">Top-Rated Brands</h2>
                         <div className="flex items-center gap-2 text-green-600 mt-1">
                             <FiCheckCircle className="w-5 h-5 fill-auto" />
-                            <span className="text-xs font-bold uppercase tracking-widest">100% Original Selection</span>
+                            <span className="text-xs font-semibold uppercase tracking-widest">100% Original Selection</span>
                         </div>
                     </div>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -431,7 +431,7 @@ export default function CategoryLandingPage() {
                                     <div className="h-px w-8 bg-gray-100"></div>
                                 </div>
                                 <div className="bg-pink-50/50 py-3 text-center border-t border-gray-50">
-                                    <span className={`text-xs font-black italic uppercase ${slug === 'women' ? 'text-pink-900' : 'text-blue-900'}`}>{brand.offer}</span>
+                                    <span className={`text-xs font-semibold italic uppercase ${slug === 'women' ? 'text-pink-900' : 'text-blue-900'}`}>{brand.offer}</span>
                                 </div>
                             </div>
                         ))}
@@ -441,8 +441,8 @@ export default function CategoryLandingPage() {
                 {/* 6.2 Occasion-Ready Fits Section */}
                 <section className="space-y-6">
                     <div>
-                        <h2 className="text-2xl md:text-3xl font-black italic uppercase tracking-tighter text-gray-900 leading-none">Occasion-Ready Fits</h2>
-                        <p className="text-sm font-bold text-gray-400 uppercase tracking-widest mt-2">Picks To Make An Impression</p>
+                        <h2 className="text-2xl md:text-3xl font-semibold italic uppercase tracking-tighter text-gray-900 leading-none">Occasion-Ready Fits</h2>
+                        <p className="text-sm font-semibold text-gray-400 uppercase tracking-widest mt-2">Picks To Make An Impression</p>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                         {categoryData.occasions.map((fit, idx) => (
@@ -455,7 +455,7 @@ export default function CategoryLandingPage() {
                                     ))}
                                 </div>
                                 <div className="p-4 text-center">
-                                    <span className="text-sm font-bold text-gray-700 tracking-tight">{fit.name}</span>
+                                    <span className="text-sm font-semibold text-gray-700 tracking-tight">{fit.name}</span>
                                 </div>
                             </div>
                         ))}
@@ -466,10 +466,10 @@ export default function CategoryLandingPage() {
                 <section className="space-y-6">
                     <div className="flex items-center justify-between">
                         <div>
-                            <h2 className="text-2xl md:text-3xl font-black italic uppercase tracking-tighter text-gray-900">Featured Brands</h2>
-                            <p className="text-sm font-bold text-gray-400 uppercase tracking-widest mt-1">Spotlight your style with brands</p>
+                            <h2 className="text-2xl md:text-3xl font-semibold italic uppercase tracking-tighter text-gray-900">Featured Brands</h2>
+                            <p className="text-sm font-semibold text-gray-400 uppercase tracking-widest mt-1">Spotlight your style with brands</p>
                         </div>
-                        <div className="px-2 py-0.5 bg-gray-100 rounded text-[10px] font-bold text-gray-400 uppercase tracking-widest">AD</div>
+                        <div className="px-2 py-0.5 bg-gray-100 rounded text-[10px] font-semibold text-gray-400 uppercase tracking-widest">AD</div>
                     </div>
 
                     <div className="flex gap-6 overflow-x-auto no-scrollbar pb-4 -mx-4 px-4 sm:mx-0 sm:px-0">
@@ -481,16 +481,16 @@ export default function CategoryLandingPage() {
                                     className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-80"
                                 />
                                 <div className="absolute top-8 left-8 space-y-1">
-                                    <p className="text-2xl font-black italic uppercase leading-none tracking-tighter">UNBEATABLE <br /> COMFORT,</p>
+                                    <p className="text-2xl font-semibold italic uppercase leading-none tracking-tighter">UNBEATABLE <br /> COMFORT,</p>
                                     <p className="text-2xl font-normal opacity-80 italic uppercase tracking-tighter">UNMATCHABLE <br /> DISCOUNT</p>
                                 </div>
                                 <div className="relative z-10 text-center space-y-1 mt-auto">
-                                    <p className="text-3xl font-black italic uppercase tracking-tighter">Up To 50% Off</p>
-                                    <p className="text-sm font-bold opacity-80 uppercase tracking-widest italic">The Best A Man Can Get</p>
+                                    <p className="text-3xl font-semibold italic uppercase tracking-tighter">Up To 50% Off</p>
+                                    <p className="text-sm font-semibold opacity-80 uppercase tracking-widest italic">The Best A Man Can Get</p>
                                 </div>
                             </div>
                             <div className="p-6 flex justify-center items-center bg-white h-24">
-                                <span className="text-blue-900 font-black italic text-4xl tracking-tighter uppercase italic">Gillette</span>
+                                <span className="text-blue-900 font-semibold italic text-4xl tracking-tighter uppercase italic">Gillette</span>
                             </div>
                         </div>
 
@@ -503,12 +503,12 @@ export default function CategoryLandingPage() {
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent"></div>
                                 <div className="relative z-10 space-y-1 mt-auto">
-                                    <p className="text-3xl font-black italic uppercase tracking-tighter">Min. 65% Off</p>
-                                    <p className="text-sm font-bold opacity-80 uppercase tracking-widest italic">Own Your Unique Style</p>
+                                    <p className="text-3xl font-semibold italic uppercase tracking-tighter">Min. 65% Off</p>
+                                    <p className="text-sm font-semibold opacity-80 uppercase tracking-widest italic">Own Your Unique Style</p>
                                 </div>
                             </div>
                             <div className="p-6 flex justify-center items-center bg-white h-24">
-                                <div className="px-10 py-3 bg-red-600 rounded-md text-white font-black italic text-xl tracking-tighter uppercase italic">
+                                <div className="px-10 py-3 bg-red-600 rounded-md text-white font-semibold italic text-xl tracking-tighter uppercase italic">
                                     Bene kleed
                                 </div>
                             </div>
@@ -523,12 +523,12 @@ export default function CategoryLandingPage() {
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent"></div>
                                 <div className="relative z-10 space-y-1 mt-auto">
-                                    <p className="text-3xl font-black italic uppercase tracking-tighter">Flat 40% Off</p>
-                                    <p className="text-sm font-bold opacity-80 uppercase tracking-widest italic">Go with the Flow</p>
+                                    <p className="text-3xl font-semibold italic uppercase tracking-tighter">Flat 40% Off</p>
+                                    <p className="text-sm font-semibold opacity-80 uppercase tracking-widest italic">Go with the Flow</p>
                                 </div>
                             </div>
                             <div className="p-6 flex justify-center items-center bg-white h-24">
-                                <div className="px-10 py-3 bg-gray-900 rounded-md text-white font-black italic text-xl tracking-tighter uppercase italic">
+                                <div className="px-10 py-3 bg-gray-900 rounded-md text-white font-semibold italic text-xl tracking-tighter uppercase italic">
                                     Roadster
                                 </div>
                             </div>
@@ -541,8 +541,8 @@ export default function CategoryLandingPage() {
                     <div className="bg-stone-900 rounded-[40px] p-12 text-white relative overflow-hidden h-[500px] flex flex-col justify-center">
                         <img src="https://images.unsplash.com/photo-1444491741275-3747c53c99b4?auto=format&fit=crop&q=80" className="absolute right-0 top-0 h-full w-1/2 object-cover opacity-60 hidden md:block" />
                         <div className="relative z-10 space-y-4">
-                            <h2 className="text-4xl md:text-5xl font-black uppercase italic leading-none tracking-tighter">Winter <br /> Specials</h2>
-                            <p className="text-gray-400 font-bold uppercase text-sm tracking-widest">Gear Up For Early Winter!</p>
+                            <h2 className="text-4xl md:text-5xl font-semibold uppercase italic leading-none tracking-tighter">Winter <br /> Specials</h2>
+                            <p className="text-gray-400 font-semibold uppercase text-sm tracking-widest">Gear Up For Early Winter!</p>
                             <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-black shadow-2xl">
                                 <FiChevronRight className="w-6 h-6" />
                             </div>
@@ -553,34 +553,34 @@ export default function CategoryLandingPage() {
                         <div className="relative rounded-[40px] overflow-hidden aspect-square shadow-2xl group flex-shrink-0 w-[40vw] md:w-auto">
                             <img src="https://images.unsplash.com/photo-1544022613-e87ca75a784a?auto=format&fit=crop&q=80" className="absolute inset-0 w-full h-full object-cover" />
                             <div className="absolute inset-x-0 bottom-0 p-4 md:p-8 bg-gradient-to-t from-black/80 to-transparent">
-                                <p className="text-xl md:text-3xl font-black text-white italic uppercase mb-1 md:mb-2">UPTO 60% OFF</p>
-                                <p className="text-[10px] md:text-sm font-bold text-white/70 uppercase mb-3 md:mb-6 tracking-widest">Padded Jackets</p>
+                                <p className="text-xl md:text-3xl font-semibold text-white italic uppercase mb-1 md:mb-2">UPTO 60% OFF</p>
+                                <p className="text-[10px] md:text-sm font-semibold text-white/70 uppercase mb-3 md:mb-6 tracking-widest">Padded Jackets</p>
                                 <div className="bg-white rounded-lg md:rounded-xl p-1.5 md:p-3 flex items-center gap-2 md:gap-4 w-fit">
-                                    <span className="text-black font-black italic tracking-tighter text-[9px] md:text-sm uppercase">Allen Solly</span>
+                                    <span className="text-black font-semibold italic tracking-tighter text-[9px] md:text-sm uppercase">Allen Solly</span>
                                     <div className="w-px h-3 md:h-4 bg-gray-200"></div>
-                                    <span className="text-blue-900 font-black italic tracking-tighter text-[9px] md:text-sm uppercase whitespace-nowrap">U.S. Polo Assn.</span>
+                                    <span className="text-blue-900 font-semibold italic tracking-tighter text-[9px] md:text-sm uppercase whitespace-nowrap">U.S. Polo Assn.</span>
                                 </div>
                             </div>
                         </div>
                         <div className="relative rounded-[40px] overflow-hidden aspect-square shadow-2xl group flex-shrink-0 w-[40vw] md:w-auto">
                             <img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&q=80" className="absolute inset-0 w-full h-full object-cover" />
                             <div className="absolute inset-x-0 bottom-0 p-4 md:p-8 bg-gradient-to-t from-black/80 to-transparent">
-                                <p className="text-xl md:text-3xl font-black text-white italic uppercase mb-1 md:mb-2">Up To 10% OFF</p>
-                                <p className="text-[10px] md:text-sm font-bold text-white/70 uppercase mb-3 md:mb-6 tracking-widest">Built For Outdoors</p>
+                                <p className="text-xl md:text-3xl font-semibold text-white italic uppercase mb-1 md:mb-2">Up To 10% OFF</p>
+                                <p className="text-[10px] md:text-sm font-semibold text-white/70 uppercase mb-3 md:mb-6 tracking-widest">Built For Outdoors</p>
                                 <div className="bg-white rounded-lg md:rounded-xl p-1.5 md:p-3 flex items-center gap-2 md:gap-4 w-fit">
-                                    <span className="text-blue-600 font-black italic tracking-tighter text-[9px] md:text-sm uppercase flex items-center gap-1 italic"><div className="w-3 h-3 bg-blue-600 rotate-45 flex items-center justify-center text-[5px] text-white">C</div> Columbia</span>
+                                    <span className="text-blue-600 font-semibold italic tracking-tighter text-[9px] md:text-sm uppercase flex items-center gap-1 italic"><div className="w-3 h-3 bg-blue-600 rotate-45 flex items-center justify-center text-[5px] text-white">C</div> Columbia</span>
                                 </div>
                             </div>
                         </div>
                         <div className="relative rounded-[40px] overflow-hidden aspect-square shadow-2xl group flex-shrink-0 w-[40vw] md:w-auto">
                             <img src="https://images.unsplash.com/photo-1539185441755-769473a23570?auto=format&fit=crop&q=80" className="absolute inset-0 w-full h-full object-cover" />
                             <div className="absolute inset-x-0 bottom-0 p-4 md:p-8 bg-gradient-to-t from-black/80 to-transparent">
-                                <p className="text-xl md:text-3xl font-black text-white italic uppercase mb-1 md:mb-2">Flat 15% OFF</p>
-                                <p className="text-[10px] md:text-sm font-bold text-white/70 uppercase mb-3 md:mb-6 tracking-widest">Urban Edge</p>
+                                <p className="text-xl md:text-3xl font-semibold text-white italic uppercase mb-1 md:mb-2">Flat 15% OFF</p>
+                                <p className="text-[10px] md:text-sm font-semibold text-white/70 uppercase mb-3 md:mb-6 tracking-widest">Urban Edge</p>
                                 <div className="bg-white rounded-lg md:rounded-xl p-1.5 md:p-3 flex items-center gap-2 md:gap-4 w-fit">
-                                    <span className="text-red-600 font-black italic tracking-tighter text-[9px] md:text-sm uppercase italic">Levis</span>
+                                    <span className="text-red-600 font-semibold italic tracking-tighter text-[9px] md:text-sm uppercase italic">Levis</span>
                                     <div className="w-px h-3 md:h-4 bg-gray-200"></div>
-                                    <span className="text-black font-black italic tracking-tighter text-[9px] md:text-sm uppercase">Puma</span>
+                                    <span className="text-black font-semibold italic tracking-tighter text-[9px] md:text-sm uppercase">Puma</span>
                                 </div>
                             </div>
                         </div>
@@ -591,22 +591,22 @@ export default function CategoryLandingPage() {
                 <section className="pt-12">
                     <div className="flex flex-col items-center gap-2 mb-12">
                         <div className="relative">
-                            <h2 className="text-5xl font-black italic uppercase tracking-tighter text-gray-900 leading-none flex items-center gap-2 relative z-10">
+                            <h2 className="text-5xl font-semibold italic uppercase tracking-tighter text-gray-900 leading-none flex items-center gap-2 relative z-10">
                                 WHAT'S <span className="text-pink-500">NEW</span>
                             </h2>
                             <div className="absolute -top-4 -left-4 w-6 h-6 text-pink-500 animate-pulse">✦</div>
                         </div>
-                        <p className="text-xs font-bold text-gray-500 uppercase tracking-[0.3em]">100% Original Products</p>
+                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-[0.3em]">100% Original Products</p>
                     </div>
 
                     <div className="relative rounded-[48px] overflow-hidden bg-orange-50/50 p-12 flex flex-col items-center">
-                        <div className="absolute top-6 right-6 bg-orange-500 text-white px-4 py-1.5 rounded-md text-[10px] font-black uppercase tracking-widest">Collection Launch</div>
+                        <div className="absolute top-6 right-6 bg-orange-500 text-white px-4 py-1.5 rounded-md text-[10px] font-semibold uppercase tracking-widest">Collection Launch</div>
                         <img src="https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&q=80" className="w-full max-w-2xl h-auto rounded-[32px] shadow-2xl transform hover:scale-[1.02] transition-transform duration-500" />
                         <div className="mt-8 flex flex-col items-center gap-4">
-                            <div className="flex items-center gap-1 font-black italic text-4xl uppercase tracking-tighter">
+                            <div className="flex items-center gap-1 font-semibold italic text-4xl uppercase tracking-tighter">
                                 PLIX
                             </div>
-                            <p className="text-gray-500 font-bold uppercase tracking-widest text-sm">Flaxseed Ultra Smooth</p>
+                            <p className="text-gray-500 font-semibold uppercase tracking-widest text-sm">Flaxseed Ultra Smooth</p>
                         </div>
                         <div className="absolute bottom-12 right-12 w-16 h-16 bg-black rounded-full flex items-center justify-center text-white shadow-2xl cursor-pointer hover:scale-110 transition-transform">
                             <FiPlay className="w-6 h-6 fill-current ml-1" />

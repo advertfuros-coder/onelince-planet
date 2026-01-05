@@ -79,7 +79,7 @@ export default function ShippingActions({ order, onUpdate }) {
 
     return (
         <div className="bg-white rounded-lg border p-6">
-            <h3 className="text-lg font-bold text-gray-900 mb-4">Ship Order</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Ship Order</h3>
 
             <div className="space-y-4">
                 {/* Provider Selection */}

@@ -37,7 +37,7 @@ export default function Step4BankDetails({ formData, updateFormData, errors }) {
 
             {/* Account Holder Name */}
             <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Account Holder Name <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -53,7 +53,7 @@ export default function Step4BankDetails({ formData, updateFormData, errors }) {
 
             {/* Bank Name */}
             <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Bank Name <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -70,7 +70,7 @@ export default function Step4BankDetails({ formData, updateFormData, errors }) {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Account Number */}
                 <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
                         Account Number <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -86,7 +86,7 @@ export default function Step4BankDetails({ formData, updateFormData, errors }) {
 
                 {/* IFSC/IBAN Code */}
                 <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
                         IFSC Code / IBAN <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -103,7 +103,7 @@ export default function Step4BankDetails({ formData, updateFormData, errors }) {
 
             {/* Account Type */}
             <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Account Type
                 </label>
                 <div className="grid grid-cols-2 gap-4">
@@ -125,7 +125,7 @@ export default function Step4BankDetails({ formData, updateFormData, errors }) {
 
             {/* Branch */}
             <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Branch Name
                 </label>
                 <input
@@ -139,7 +139,7 @@ export default function Step4BankDetails({ formData, updateFormData, errors }) {
 
             {/* UPI ID (Optional) */}
             <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
                     UPI ID <span className="text-gray-500 text-xs">(Optional)</span>
                 </label>
                 <input
@@ -153,7 +153,7 @@ export default function Step4BankDetails({ formData, updateFormData, errors }) {
 
             {/* Cancelled Cheque Upload */}
             <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Cancelled Cheque / Bank Statement
                 </label>
                 <div className="relative">

@@ -68,12 +68,12 @@ export default function DocumentsPage() {
             {/* Minimal Header */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div>
-                    <h1 className="text-3xl font-bold text-slate-900">Documents & Compliance</h1>
+                    <h1 className="text-3xl font-semibold text-slate-900">Documents & Compliance</h1>
                     <p className="text-slate-500 mt-1 font-medium">Verify your identity and business credentials</p>
                 </div>
                 <button
                     onClick={() => setShowUploadModal(true)}
-                    className="px-6 py-3 bg-indigo-600 text-white rounded-xl font-bold text-sm shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition-all flex items-center gap-2"
+                    className="px-6 py-3 bg-indigo-600 text-white rounded-xl font-semibold text-sm shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition-all flex items-center gap-2"
                 >
                     <Plus size={18} /> Upload New
                 </button>
@@ -84,23 +84,23 @@ export default function DocumentsPage() {
                 <div className="bg-amber-50 rounded-2xl border border-amber-100 p-8 space-y-6">
                     <div className="flex items-center gap-2 text-amber-800">
                         <AlertTriangle size={20} />
-                        <h2 className="text-lg font-bold">Action Required from Admin</h2>
+                        <h2 className="text-lg font-semibold">Action Required from Admin</h2>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {requestedDocs.filter(d => d.status === 'pending' || d.status === 'rejected').map(req => (
                             <div key={req._id} className="bg-white p-6 rounded-xl border border-amber-200 flex flex-col justify-between">
                                 <div>
-                                    <h4 className="font-bold text-slate-900 mb-2 uppercase text-sm tracking-tight">{req.title}</h4>
+                                    <h4 className="font-semibold text-slate-900 mb-2 uppercase text-sm tracking-tight">{req.title}</h4>
                                     <p className="text-slate-500 text-xs mb-4">{req.description}</p>
                                     {req.status === 'rejected' && (
-                                        <div className="mb-4 p-3 bg-rose-50 border border-rose-100 rounded-lg text-rose-700 text-[10px] font-bold">
+                                        <div className="mb-4 p-3 bg-rose-50 border border-rose-100 rounded-lg text-rose-700 text-[10px] font-semibold">
                                             REJECTED: {req.rejectionReason}
                                         </div>
                                     )}
                                 </div>
                                 <button
                                     onClick={() => { setActiveRequest(req); setShowUploadModal(true); }}
-                                    className="w-full py-3 bg-indigo-600 text-white rounded-lg font-bold text-xs uppercase tracking-widest hover:bg-indigo-700"
+                                    className="w-full py-3 bg-indigo-600 text-white rounded-lg font-semibold text-xs uppercase tracking-widest hover:bg-indigo-700"
                                 >
                                     Upload Now
                                 </button>
@@ -117,8 +117,8 @@ export default function DocumentsPage() {
                         <ShieldCheck size={24} />
                     </div>
                     <div>
-                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Verification</p>
-                        <p className="text-lg font-bold text-slate-900">{status.status?.toUpperCase() || 'UNKNOWN'}</p>
+                        <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest">Verification</p>
+                        <p className="text-lg font-semibold text-slate-900">{status.status?.toUpperCase() || 'UNKNOWN'}</p>
                     </div>
                 </div>
                 <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
@@ -126,8 +126,8 @@ export default function DocumentsPage() {
                         <Check size={24} />
                     </div>
                     <div>
-                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Approved</p>
-                        <p className="text-lg font-bold text-slate-900">{status.approved || 0} Critical</p>
+                        <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest">Approved</p>
+                        <p className="text-lg font-semibold text-slate-900">{status.approved || 0} Critical</p>
                     </div>
                 </div>
                 <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
@@ -135,8 +135,8 @@ export default function DocumentsPage() {
                         <Clock size={24} />
                     </div>
                     <div>
-                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Completion</p>
-                        <p className="text-lg font-bold text-slate-900">{status.completionPercentage || 0}% Matrix</p>
+                        <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest">Completion</p>
+                        <p className="text-lg font-semibold text-slate-900">{status.completionPercentage || 0}% Matrix</p>
                     </div>
                 </div>
             </div>
@@ -145,7 +145,7 @@ export default function DocumentsPage() {
             <div className="space-y-6">
                 <div className="flex gap-2 overflow-x-auto no-scrollbar">
                     {['all', 'approved', 'pending', 'rejected'].map(f => (
-                        <button key={f} onClick={() => setFilter(f)} className={`px-5 py-2 rounded-lg text-xs font-bold uppercase tracking-widest border transition-all ${filter === f ? 'bg-indigo-600 border-indigo-600 text-white' : 'bg-white border-slate-100 text-slate-400'}`}>
+                        <button key={f} onClick={() => setFilter(f)} className={`px-5 py-2 rounded-lg text-xs font-semibold uppercase tracking-widest border transition-all ${filter === f ? 'bg-indigo-600 border-indigo-600 text-white' : 'bg-white border-slate-100 text-slate-400'}`}>
                             {f}
                         </button>
                     ))}
@@ -159,17 +159,17 @@ export default function DocumentsPage() {
                                     <div className="p-3 bg-slate-50 rounded-xl text-slate-400">
                                         <FileText size={20} />
                                     </div>
-                                    <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase ${doc.status === 'approved' ? 'bg-emerald-100 text-emerald-700' :
+                                    <span className={`px-3 py-1 rounded-full text-[10px] font-semibold uppercase ${doc.status === 'approved' ? 'bg-emerald-100 text-emerald-700' :
                                             doc.status === 'pending' ? 'bg-amber-100 text-amber-700' : 'bg-rose-100 text-rose-700'
                                         }`}>
                                         {doc.status}
                                     </span>
                                 </div>
-                                <h4 className="font-bold text-slate-900 text-lg mb-1 leading-none">{doc.documentName}</h4>
-                                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6">{doc.documentType?.replace('_', ' ')}</p>
+                                <h4 className="font-semibold text-slate-900 text-lg mb-1 leading-none">{doc.documentName}</h4>
+                                <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-6">{doc.documentType?.replace('_', ' ')}</p>
 
                                 <div className="space-y-3 mb-8">
-                                    <div className="flex justify-between text-[10px] font-bold uppercase text-slate-400">
+                                    <div className="flex justify-between text-[10px] font-semibold uppercase text-slate-400">
                                         <span>Uploaded</span>
                                         <span className="text-slate-600">{new Date(doc.createdAt).toLocaleDateString()}</span>
                                     </div>
@@ -179,7 +179,7 @@ export default function DocumentsPage() {
                                 </div>
                             </div>
                             <div className="flex gap-3">
-                                <a href={doc.fileUrl} target="_blank" className="flex-1 py-3 bg-indigo-600 text-white rounded-xl text-[10px] font-bold uppercase tracking-widest text-center">Inspect</a>
+                                <a href={doc.fileUrl} target="_blank" className="flex-1 py-3 bg-indigo-600 text-white rounded-xl text-[10px] font-semibold uppercase tracking-widest text-center">Inspect</a>
                                 <button className="p-3 bg-rose-50 text-rose-500 rounded-xl hover:bg-rose-100"><Trash2 size={16} /></button>
                             </div>
                         </div>
@@ -187,7 +187,7 @@ export default function DocumentsPage() {
                     {documents.length === 0 && (
                         <div className="lg:col-span-3 py-20 text-center bg-slate-50 rounded-2xl border border-dashed border-slate-200">
                             <FileText size={48} className="mx-auto text-slate-200 mb-4" />
-                            <p className="text-slate-400 font-bold uppercase text-[10px] tracking-[.2em]">No Credentials Found</p>
+                            <p className="text-slate-400 font-semibold uppercase text-[10px] tracking-[.2em]">No Credentials Found</p>
                         </div>
                     )}
                 </div>
@@ -214,7 +214,7 @@ export default function DocumentsPage() {
                         } catch (err) { toast.error('Upload failed') }
                     }} className="relative bg-white w-full max-w-md rounded-2xl p-8 space-y-6">
                         <div>
-                            <h3 className="text-xl font-bold text-slate-900">{activeRequest ? 'Fulfill Request' : 'Upload Document'}</h3>
+                            <h3 className="text-xl font-semibold text-slate-900">{activeRequest ? 'Fulfill Request' : 'Upload Document'}</h3>
                             <p className="text-slate-400 text-xs font-medium mt-1">
                                 {activeRequest ? activeRequest.title : 'Add new credential to your vault'}
                             </p>
@@ -222,17 +222,17 @@ export default function DocumentsPage() {
                         <div className="space-y-4">
                             {!activeRequest && (
                                 <>
-                                    <select name="documentType" className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl font-bold text-sm outline-none">
+                                    <select name="documentType" className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl font-semibold text-sm outline-none">
                                         {Object.entries(DOCUMENT_TYPES).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
                                     </select>
-                                    <input name="documentName" placeholder="Document Name (e.g. My PAN)" className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl font-bold text-sm outline-none" required />
+                                    <input name="documentName" placeholder="Document Name (e.g. My PAN)" className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl font-semibold text-sm outline-none" required />
                                 </>
                             )}
-                            <input name="fileUrl" type="url" placeholder="Resource URL (HTTP link to document)" className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl font-bold text-sm outline-none" required />
+                            <input name="fileUrl" type="url" placeholder="Resource URL (HTTP link to document)" className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl font-semibold text-sm outline-none" required />
                         </div>
                         <div className="flex gap-4">
-                            <button type="button" onClick={() => { setShowUploadModal(false); setActiveRequest(null); }} className="flex-1 py-3 text-slate-400 font-bold text-xs uppercase hover:bg-slate-50 rounded-xl">Cancel</button>
-                            <button type="submit" className="flex-1 py-3 bg-indigo-600 text-white rounded-xl font-bold text-xs uppercase shadow-lg shadow-indigo-100">Upload Doc</button>
+                            <button type="button" onClick={() => { setShowUploadModal(false); setActiveRequest(null); }} className="flex-1 py-3 text-slate-400 font-semibold text-xs uppercase hover:bg-slate-50 rounded-xl">Cancel</button>
+                            <button type="submit" className="flex-1 py-3 bg-indigo-600 text-white rounded-xl font-semibold text-xs uppercase shadow-lg shadow-indigo-100">Upload Doc</button>
                         </div>
                     </form>
                 </div>

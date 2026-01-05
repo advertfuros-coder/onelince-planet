@@ -18,10 +18,14 @@ import {
   FiLock,
   FiPackage,
   FiInfo,
-  FiGlobe
+  FiGlobe,
+  FiArrowLeft,
+  FiHeart,
+  FiShieldOff,
+  FiRefreshCw
 } from 'react-icons/fi'
 import { FaRegMoneyBillAlt } from 'react-icons/fa'
-import { BiWallet, BiBarcodeReader, BiLeaf } from 'react-icons/bi'
+import { BiWallet, BiBarcodeReader, BiLeaf, BiTagAlt } from 'react-icons/bi'
 import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
 import { useCart } from '@/lib/context/CartContext'
@@ -35,7 +39,7 @@ export default function CheckoutPage() {
   const router = useRouter()
   const { items, subtotal, shipping, total, clearCart } = useCart()
   const { user } = useAuth()
-  const { formatPrice } = useCurrency()
+  const { formatPrice, currencyConfig } = useCurrency()
   const [loading, setLoading] = useState(false)
 
   // Steps: 1=Address, 2=Delivery, 3=Payment
@@ -64,7 +68,11 @@ export default function CheckoutPage() {
 
   // Donation
   const [isDonationChecked, setIsDonationChecked] = useState(false)
-  const DONATION_AMOUNT = 20 // Base amount in INR
+  const [donationAmount, setDonationAmount] = useState(20)
+  const { country, exchangeRates } = useCurrency()
+  
+  // Base donation options in INR
+  const donationOptions = [10, 20, 50, 100]
 
   // Delivery dates
   const [deliveryDates, setDeliveryDates] = useState({
@@ -72,52 +80,32 @@ export default function CheckoutPage() {
     express: '2-3 business days'
   })
 
-
-
   useEffect(() => {
     if (items.length === 0) {
       router.push('/cart')
     } else {
-      // Fetch delivery estimates for the first item
       fetchDeliveryEstimates()
     }
   }, [items, router])
 
   const fetchDeliveryEstimates = async () => {
     const pincode = localStorage.getItem('userPincode')
-    console.log('Fetching delivery estimates:', { pincode, itemsLength: items.length })
-
-    if (!pincode || items.length === 0) {
-      console.log('Missing pincode or no items')
-      return
-    }
+    if (!pincode || items.length === 0) return
 
     try {
       const productId = items[0].productId || items[0]._id || items[0].id
-      console.log('Using productId:', productId)
-
       const response = await axios.post('/api/shipping/estimate', {
         productId: productId,
         deliveryPincode: pincode
       })
-
-      console.log('Delivery estimate response:', response.data)
-
       if (response.data.success && response.data.estimate) {
         const { etd, express_days } = response.data.estimate
-
-        // Calculate standard delivery date
         const edd = new Date(etd)
         const standardDate = edd.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-
-        // Calculate express delivery date
         const today = new Date()
         const expressEdd = new Date(today)
         expressEdd.setDate(today.getDate() + (express_days || 2))
         const expressDate = expressEdd.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-
-        console.log('Setting delivery dates:', { standard: `By ${standardDate}`, express: `By ${expressDate}` })
-
         setDeliveryDates({
           standard: `By ${standardDate}`,
           express: `By ${expressDate}`
@@ -136,14 +124,11 @@ export default function CheckoutPage() {
         return false
       }
     }
-
-    // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(shippingInfo.email)) {
       toast.error('Please enter a valid email address')
       return false
     }
-
     return true
   }
 
@@ -157,37 +142,28 @@ export default function CheckoutPage() {
     }
   }
 
-  // Delivery cost in INR (will be converted by Price component)
-  const deliveryCost = deliveryMethod === 'express' ? 99 : 0 // 99 INR for express
-  const donationTotal = isDonationChecked ? DONATION_AMOUNT : 0
-  const finalTotal = subtotal + deliveryCost - discount + donationTotal
+  const deliveryCost = deliveryMethod === 'express' ? 99 : 0
+  const donationTotal = isDonationChecked ? donationAmount : 0
+  const totalMRP = subtotal * 1.4
+  const discountOnMRP = totalMRP - subtotal
+  const platformFee = items.length > 0 ? 20 : 0
   const tax = subtotal * 0.05
+  const finalTotal = subtotal + deliveryCost - discount + donationTotal + platformFee
 
-  // Handle Razorpay Payment
   const handleRazorpayPayment = async () => {
-    // Check if Razorpay is available
     if (typeof window.Razorpay === 'undefined') {
       toast.error('Payment gateway not available. Please refresh the page.')
       return
     }
-
     setLoading(true)
-
     try {
-      // Create Razorpay order
       const orderResponse = await axios.post('/api/payment/razorpay/create-order', {
         amount: finalTotal,
         currency: 'INR',
         receipt: `order_${Date.now()}`
       })
-
-      if (!orderResponse.data.success) {
-        throw new Error('Failed to create payment order')
-      }
-
+      if (!orderResponse.data.success) throw new Error('Failed to create payment order')
       const { orderId, amount, currency } = orderResponse.data
-
-      // Razorpay options
       const options = {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
         amount: amount,
@@ -200,27 +176,21 @@ export default function CheckoutPage() {
           email: shippingInfo.email || user?.email,
           contact: shippingInfo.phone
         },
-        theme: {
-          color: '#2563eb'
-        },
+        theme: { color: '#FF3F6C' },
         handler: async function (response) {
           try {
-            // Verify payment signature
             const verifyResponse = await axios.post('/api/payment/razorpay/verify', {
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature
             })
-
             if (verifyResponse.data.success) {
-              // Place order after successful payment - use the selected payment method
               await placeOrder(response.razorpay_payment_id, paymentMethod)
             } else {
               toast.error('Payment verification failed')
               setLoading(false)
             }
           } catch (error) {
-            console.error('Payment verification error:', error)
             toast.error('Payment verification failed')
             setLoading(false)
           }
@@ -232,18 +202,14 @@ export default function CheckoutPage() {
           }
         }
       }
-
       const razorpay = new window.Razorpay(options)
       razorpay.open()
-
     } catch (error) {
-      console.error('Razorpay error:', error)
       toast.error('Failed to initialize payment')
       setLoading(false)
     }
   }
 
-  // Place Order Backend Call
   const placeOrder = async (paymentId = null, method = 'cod') => {
     try {
       const orderData = {
@@ -265,52 +231,27 @@ export default function CheckoutPage() {
         paymentMethod: method,
         transactionId: paymentId,
         couponCode: appliedCoupon?.code || null,
-        customerId: user?._id || user?.id || null, // null for guest orders
-        guestEmail: !user ? (shippingInfo.email || '') : null, // Track guest email
-        isGuestOrder: !user, // Flag for guest orders
+        customerId: user?._id || user?.id || null,
+        guestEmail: !user ? (shippingInfo.email || '') : null,
+        isGuestOrder: !user,
         subtotal,
         tax,
         shipping: deliveryCost,
         donation: donationTotal,
         total: finalTotal
       }
-
-      // Get auth token from localStorage
       const token = localStorage.getItem('token')
-
-      const endpoint = '/api/customer/orders'
-
-      const headers = {
-        'Content-Type': 'application/json'
-      }
-
-      // Add authorization header if token exists
-      if (token) {
-        headers['Authorization'] = `Bearer ${token}`
-      }
-
-      const response = await axios.post(endpoint, orderData, { headers })
-
+      const headers = { 'Content-Type': 'application/json' }
+      if (token) headers['Authorization'] = `Bearer ${token}`
+      const response = await axios.post('/api/customer/orders', orderData, { headers })
       if (response.data.success) {
         clearCart()
         toast.success('Order placed successfully!')
-
-        // Redirect to success page with order details and guest flag
         const orderNumber = response.data.orderNumber || 'OP-' + Date.now()
-        const isGuest = !user
-        const successUrl = `/orders/success?orderNumber=${orderNumber}&total=${finalTotal}&donation=${donationTotal}&email=${encodeURIComponent(shippingInfo.email || user?.email || '')}&guest=${isGuest}`
-        router.push(successUrl)
+        router.push(`/orders/success?orderNumber=${orderNumber}&total=${finalTotal}&donation=${donationTotal}&email=${encodeURIComponent(shippingInfo.email || user?.email || '')}&guest=${!user}`)
       }
     } catch (error) {
-      console.error('Order error:', error)
-
-      // Improved error messaging - don't redirect to login for guest checkout
-      if (error.response?.status === 401) {
-        // Instead of redirecting, show a helpful message
-        toast.error('Unable to place order. Please try again or contact support.')
-      } else {
-        toast.error(error.response?.data?.message || 'Failed to place order')
-      }
+      toast.error(error.response?.data?.message || 'Failed to place order')
       setLoading(false)
     }
   }
@@ -320,572 +261,272 @@ export default function CheckoutPage() {
       setLoading(true)
       await placeOrder(null, 'cod')
     } else {
-      // For online payments (UPI, Card, Net Banking) - use Razorpay
       await handleRazorpayPayment()
     }
   }
 
-  // --- Components ---
+  return (
+    <div className="min-h-screen bg-[#F1F3F6] pb-24">
+      {/* Mobile Header */}
+      <div className="bg-white border-b border-gray-100 px-4 py-3 flex items-center justify-between sticky top-0 z-30">
+        <div className="flex items-center gap-4">
+          <button onClick={() => router.back()} className="p-1">
+            <FiArrowLeft className="w-6 h-6 text-gray-800" />
+          </button>
+          <h1 className="text-sm font-semibold text-gray-800 tracking-tight uppercase">Checkout</h1>
+        </div>
+        <FiShield className="w-6 h-6 text-[#14C2AD]" />
+      </div>
 
-  const StepIndicator = ({ step, title, current, completed, onClick, children }) => (
-    <div className={`relative transition-all duration-500 ease-in-out ${current ? 'opacity-100' : completed ? 'opacity-60 hover:opacity-100' : 'opacity-40'}`}>
-      <div
-        className={`bg-white rounded-2xl border transition-all duration-300 overflow-hidden ${current
-          ? 'shadow-lg border-blue-600 ring-1 ring-blue-100'
-          : completed
-            ? 'border-green-100'
-            : 'border-gray-100'
-          }`}
-      >
-        <div className={`p-6 ${current ? 'bg-gradient-to-br from-white to-blue-50/20' : ''}`}>
-          <div className="flex items-start gap-5">
-            {/* Icon Bubble */}
-            <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold shrink-0 shadow-sm transition-colors duration-300 ${completed
-              ? 'bg-green-500 text-white ring-4 ring-green-100'
-              : current
-                ? 'bg-blue-600 text-white ring-4 ring-blue-100'
-                : 'bg-gray-100 text-gray-400'
-              }`}>
-              {completed ? <FiCheck className="w-5 h-5" /> : step}
-            </div>
+      {/* Stepper */}
+      <div className="bg-white px-4 py-3 border-b border-gray-100 mb-2">
+        <div className="flex items-center justify-between max-w-xs mx-auto text-[10px] font-semibold uppercase tracking-widest text-gray-400">
+           <div className="flex flex-col items-center gap-1.5 opacity-50">
+              <div className="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
+              <span>Bag</span>
+           </div>
+           <div className="flex-1 h-[1px] bg-emerald-500 mx-2 -mt-4"></div>
+           <div className="flex flex-col items-center gap-1.5 ">
+              <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 ring-4 ring-emerald-50"></div>
+              <span className="text-emerald-600">Address</span>
+           </div>
+           <div className="flex-1 h-[1px] bg-gray-200 mx-2 -mt-4"></div>
+           <div className="flex flex-col items-center gap-1.5 opacity-50">
+              <div className="w-2.5 h-2.5 rounded-full bg-gray-300"></div>
+              <span>Payment</span>
+           </div>
+        </div>
+      </div>
 
-            <div className="flex-1">
-              {/* Header */}
-              <div className="flex justify-between items-center mb-2 h-10">
-                <h3 className={`text-lg font-bold tracking-tight ${current ? 'text-gray-900' : 'text-gray-700'}`}>
-                  {title}
-                </h3>
-                {completed && (
-                  <button onClick={onClick} className="group flex items-center gap-1 text-sm font-semibold text-blue-600 hover:text-blue-700 px-3 py-1 rounded-full hover:bg-blue-50 transition-all">
-                    Edit <FiEdit2 className="w-3 h-3 group-hover:scale-110 transition-transform" />
+      <div className="max-w-4xl mx-auto px-4 lg:py-8 lg:bg-white lg:rounded-2xl lg:shadow-sm lg:mt-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          
+          {/* Main Area */}
+          <div className="lg:col-span-8">
+            {currentStep === 1 && (
+              <div className="bg-white p-6 rounded-xl border border-gray-100 mb-6 lg:border-none lg:p-0">
+                <div className="flex items-center gap-2 mb-6">
+                   <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-widest">Shipping Address</h3>
+                </div>
+                <div className="space-y-4">
+                  <Input label="Full Name" value={shippingInfo.name} onChange={e => setShippingInfo({ ...shippingInfo, name: e.target.value })} placeholder="John Doe" />
+                  <Input label="Email Address" type="email" value={shippingInfo.email} onChange={e => setShippingInfo({ ...shippingInfo, email: e.target.value })} placeholder="john@example.com" />
+                  <Input label="Phone Number" value={shippingInfo.phone} onChange={e => setShippingInfo({ ...shippingInfo, phone: e.target.value })} placeholder="+91 98765 43210" />
+                  <Input label="Address Line 1" value={shippingInfo.addressLine1} onChange={e => setShippingInfo({ ...shippingInfo, addressLine1: e.target.value })} placeholder="Flat No, House Name" />
+                  <Input label="Address Line 2 (Optional)" value={shippingInfo.addressLine2} onChange={e => setShippingInfo({ ...shippingInfo, addressLine2: e.target.value })} placeholder="Landmark/Area" />
+                  <div className="grid grid-cols-2 gap-4">
+                    <Input label="City" value={shippingInfo.city} onChange={e => setShippingInfo({ ...shippingInfo, city: e.target.value })} />
+                    <Input label="State" value={shippingInfo.state} onChange={e => setShippingInfo({ ...shippingInfo, state: e.target.value })} />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <Input label="Pincode" value={shippingInfo.pincode} onChange={e => setShippingInfo({ ...shippingInfo, pincode: e.target.value })} />
+                    <Input label="Country" value={shippingInfo.country} onChange={e => setShippingInfo({ ...shippingInfo, country: e.target.value })} />
+                  </div>
+                  <button 
+                    onClick={() => { if (validateShipping()) setCurrentStep(2) }}
+                    className="w-full py-4 bg-[#FF3F6C] text-white font-semibold rounded uppercase tracking-widest shadow-lg shadow-[#FF3F6C]/20 active:scale-95 transition-all mt-4"
+                  >
+                    CONTINUE
                   </button>
-                )}
+                </div>
               </div>
+            )}
 
-              {/* Content Area */}
-              <div className={`transition-all duration-300 ${current ? 'opacity-100 mt-4' : completed ? 'opacity-80 mt-1' : 'h-0 opacity-0 overflow-hidden'}`}>
-                {children}
+            {currentStep === 2 && (
+              <div className="bg-white p-6 rounded-xl border border-gray-100 mb-6 lg:border-none lg:p-0">
+                <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-widest mb-6">Delivery Method</h3>
+                <div className="space-y-4">
+                  {[
+                    { id: 'standard', name: 'Standard Delivery', time: deliveryDates.standard, price: 'FREE', icon: FiTruck },
+                    { id: 'express', name: 'Express Delivery', time: deliveryDates.express, price: formatPrice(99), icon: FiZap }
+                  ].map(method => (
+                    <div 
+                      key={method.id}
+                      onClick={() => setDeliveryMethod(method.id)}
+                      className={`p-4 rounded-xl border cursor-pointer transition-all ${deliveryMethod === method.id ? 'border-[#FF3F6C] bg-pink-50/30' : 'border-gray-100 hover:bg-gray-50'}`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <method.icon className={deliveryMethod === method.id ? 'text-[#FF3F6C]' : 'text-gray-400'} />
+                          <div>
+                            <p className="text-sm font-semibold text-gray-900">{method.name}</p>
+                            <p className="text-[11px] text-gray-500 font-medium">{method.time}</p>
+                          </div>
+                        </div>
+                        <span className={`text-sm font-semibold ${method.price === 'FREE' ? 'text-emerald-600' : 'text-gray-900'}`}>{method.price}</span>
+                      </div>
+                    </div>
+                  ))}
+                  <button 
+                    onClick={() => setCurrentStep(3)}
+                    className="w-full py-4 bg-[#FF3F6C] text-white font-semibold rounded uppercase tracking-widest shadow-lg active:scale-95 transition-all mt-6"
+                  >
+                    PROCEED TO PAYMENT
+                  </button>
+                </div>
               </div>
-            </div>
+            )}
+
+            {currentStep === 3 && (
+              <div className="bg-white p-6 rounded-xl border border-gray-100 mb-6 lg:border-none lg:p-0">
+                <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-widest mb-6">Payment Options</h3>
+                <div className="space-y-3">
+                  {[
+                    { id: 'online', name: 'Online Payment', sub: 'Cards, Netbanking, Wallets', icon: FiCreditCard },
+                    { id: 'upi', name: 'UPI (GPay/PhonePe)', sub: 'Instant & Secure', icon: FiSmartphone },
+                    { id: 'cod', name: 'Cash On Delivery', sub: 'Pay when you receive', icon: FaRegMoneyBillAlt }
+                  ].map(opt => (
+                    <div 
+                      key={opt.id}
+                      onClick={() => setPaymentMethod(opt.id)}
+                      className={`p-4 rounded-xl border cursor-pointer transition-all ${paymentMethod === opt.id ? 'border-[#FF3F6C] bg-pink-50/30' : 'border-gray-100 hover:bg-gray-50'}`}
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${paymentMethod === opt.id ? 'bg-[#FF3F6C] text-white' : 'bg-gray-50 text-gray-400'}`}>
+                           <opt.icon className="w-5 h-5" />
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-sm font-semibold text-gray-900 tracking-tight">{opt.name}</p>
+                          <p className="text-[11px] text-gray-400 font-medium">{opt.sub}</p>
+                        </div>
+                        <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${paymentMethod === opt.id ? 'border-[#FF3F6C]' : 'border-gray-200'}`}>
+                           {paymentMethod === opt.id && <div className="w-2.5 h-2.5 bg-[#FF3F6C] rounded-full"></div>}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Sidebar Area */}
+          <div className="lg:col-span-4">
+             {/* Donation Section */}
+             <div className="bg-white p-6 rounded-xl border border-gray-100 mb-4">
+                <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-widest mb-4">Support Social Work</h3>
+                <label className="flex items-center gap-3 cursor-pointer group mb-4">
+                   <div className="relative">
+                      <input 
+                        type="checkbox" 
+                        checked={isDonationChecked}
+                        onChange={() => setIsDonationChecked(!isDonationChecked)}
+                        className="w-5 h-5 rounded border-gray-300 text-[#FF3F6C] focus:ring-[#FF3F6C]" 
+                      />
+                   </div>
+                   <span className="text-[13px] font-semibold text-gray-800">Donate and make a difference</span>
+                </label>
+                <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-2">
+                   {donationOptions.map(amt => (
+                      <button 
+                        key={amt}
+                        onClick={() => {
+                           setDonationAmount(amt)
+                           setIsDonationChecked(true)
+                        }}
+                        className={`min-w-[50px] px-3 py-2 rounded-full border text-[11px] font-black transition-all ${isDonationChecked && donationAmount === amt ? 'border-[#FF3F6C] bg-white text-[#FF3F6C]' : 'border-gray-200 bg-white text-gray-600'}`}
+                      >
+                         {currencyConfig.symbol}{amt}
+                      </button>
+                   ))}
+                   <span className="text-[10px] font-semibold text-[#FF3F6C] uppercase min-w-fit ml-auto">Know More</span>
+                </div>
+             </div>
+
+             {/* Coupons */}
+             <div className="bg-white p-4 rounded-xl border border-gray-100 mb-4 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                   <BiTagAlt className="w-5 h-5 text-gray-700" />
+                   <span className="text-[13px] font-semibold text-gray-800 uppercase tracking-widest">Coupons</span>
+                </div>
+                <button className="text-[11px] font-bold text-[#FF3F6C] border border-[#FF3F6C] px-3 py-1.5 rounded uppercase active:scale-95 transition-all">Apply</button>
+             </div>
+
+             {/* Price Details */}
+             <div className="bg-white p-6 rounded-xl border border-gray-100">
+                <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-widest mb-4">Price Details</h3>
+                <div className="space-y-4 text-[13px]">
+                   <div className="flex justify-between items-center text-gray-600">
+                      <span>Total MRP</span>
+                      <span className="text-gray-900 font-medium">{currencyConfig.symbol}{Math.round(totalMRP).toLocaleString()}</span>
+                   </div>
+                   <div className="flex justify-between items-center text-gray-600">
+                      <span>Discount on MRP</span>
+                      <span className="text-emerald-500 font-semibold">-{currencyConfig.symbol}{Math.round(discountOnMRP).toLocaleString()}</span>
+                   </div>
+                   <div className="flex justify-between items-center text-gray-600">
+                      <span>Platform Fee</span>
+                      <span className="text-gray-900 font-medium">+{currencyConfig.symbol}{platformFee}</span>
+                   </div>
+                   <div className="flex justify-between items-center text-gray-600">
+                      <span>Shipping Fee</span>
+                      <span className="text-emerald-500 font-semibold uppercase">{deliveryCost > 0 ? formatPrice(deliveryCost) : 'FREE'}</span>
+                   </div>
+                   {isDonationChecked && (
+                      <div className="flex justify-between items-center text-gray-600">
+                         <span>Donation</span>
+                         <span className="text-gray-900 font-medium">+{currencyConfig.symbol}{donationAmount}</span>
+                      </div>
+                   )}
+                   <div className="pt-4 border-t border-gray-100 flex justify-between items-center text-[16px] font-semibold text-gray-900">
+                      <span>Total Amount</span>
+                      <span>{currencyConfig.symbol}{Math.round(finalTotal).toLocaleString()}</span>
+                   </div>
+                </div>
+
+                <button 
+                  onClick={handlePlaceOrder}
+                  disabled={loading || currentStep < 3}
+                  className={`w-full py-4 mt-8 bg-[#FF3F6C] text-white font-semibold rounded shadow-xl uppercase tracking-widest transition-all ${loading || currentStep < 3 ? 'opacity-50 cursor-not-allowed' : 'active:scale-95 shadow-[#FF3F6C]/20'}`}
+                >
+                   {loading ? 'Processing...' : 'Confirm Order'}
+                </button>
+             </div>
+
+             {/* Trust Markers */}
+             <div className="mt-8 grid grid-cols-3 gap-2 px-2 pb-10">
+                <div className="flex flex-col items-center gap-2">
+                   <FiShieldOff className="w-8 h-8 text-gray-300" />
+                   <span className="text-[9px] font-semibold text-gray-400 text-center uppercase">100% Genuine<br/>Products</span>
+                </div>
+                <div className="flex flex-col items-center gap-2">
+                   <FiRefreshCw className="w-8 h-8 text-gray-300" />
+                   <span className="text-[9px] font-semibold text-gray-400 text-center uppercase">Secure<br/>Payments</span>
+                </div>
+                <div className="flex flex-col items-center gap-2">
+                   <FiTruck className="w-8 h-8 text-gray-300" />
+                   <span className="text-[9px] font-semibold text-gray-400 text-center uppercase">Contactless<br/>Delivery</span>
+                </div>
+             </div>
           </div>
         </div>
       </div>
-      {/* Connecting Line */}
-      {step < 3 && (
-        <div className={`absolute left-[29px] top-[74px] bottom-[-24px] w-[2px] -z-10 transition-colors duration-500 ${completed ? 'bg-green-200' : 'bg-gray-100'}`} />
-      )}
+
+      <style jsx global>{`
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      `}</style>
     </div>
   )
+}
 
+function FiTagAlt(props) {
   return (
-    <div className="min-h-screen bg-[#F8F9FA] pb-12 font- ">
-      {/* Top Gradient Bar */}
-      <div className="h-2 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 w-full" />
-
-      <div className="max-w-7xl mx-auto px-4 md:px-8 py-8">
-
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
-          <div>
-            <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Secure Checkout</h1>
-            <div className="flex items-center gap-2 mt-2 text-sm text-gray-500">
-              <span className="flex items-center gap-1"><FiLock className="w-3 h-3" /> SSL Encrypted</span>
-              <span className="w-1 h-1 rounded-full bg-gray-300" />
-              <span>Step {currentStep} of 3</span>
-            </div>
-          </div>
-          <div className="flex gap-2">
-            <div className="h-1 w-12 rounded-full bg-blue-600"></div>
-            <div className={`h-1 w-12 rounded-full transition-colors ${currentStep >= 2 ? 'bg-blue-600' : 'bg-gray-200'}`}></div>
-            <div className={`h-1 w-12 rounded-full transition-colors ${currentStep >= 3 ? 'bg-blue-600' : 'bg-gray-200'}`}></div>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-
-          {/* Left Column - Main Stepper */}
-          <div className="lg:col-span-8 space-y-6">
-
-            {/* --- STEP 1: ADDRESS --- */}
-            <StepIndicator
-              step={1}
-              title="Shipping Address"
-              current={currentStep === 1}
-              completed={currentStep > 1}
-              onClick={() => setCurrentStep(1)}
-            >
-              {currentStep === 1 ? (
-                <div className="space-y-6 animate-fadeIn">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    <Input label="Full Name" value={shippingInfo.name} onChange={e => setShippingInfo({ ...shippingInfo, name: e.target.value })} placeholder="John Doe" className="bg-gray-50 border-gray-200 focus:bg-white transition-all" />
-                    <Input label="Email Address" type="email" value={shippingInfo.email} onChange={e => setShippingInfo({ ...shippingInfo, email: e.target.value })} placeholder="john@example.com" className="bg-gray-50 border-gray-200 focus:bg-white transition-all" />
-                  </div>
-                  <Input label="Phone Number" value={shippingInfo.phone} onChange={e => setShippingInfo({ ...shippingInfo, phone: e.target.value })} placeholder="+971 50 123 4567" className="bg-gray-50 border-gray-200 focus:bg-white transition-all" />
-                  <Input label="Address Line 1" value={shippingInfo.addressLine1} onChange={e => setShippingInfo({ ...shippingInfo, addressLine1: e.target.value })} placeholder="Apartment, Studio, or Floor" className="bg-gray-50 border-gray-200 focus:bg-white transition-all" />
-                  <Input label="Address Line 2 (Optional)" value={shippingInfo.addressLine2} onChange={e => setShippingInfo({ ...shippingInfo, addressLine2: e.target.value })} placeholder="Landmark" className="bg-gray-50 border-gray-200 focus:bg-white transition-all" />
-                  <div className="grid grid-cols-2 gap-5">
-                    <Input label="City" value={shippingInfo.city} onChange={e => setShippingInfo({ ...shippingInfo, city: e.target.value })} className="bg-gray-50 border-gray-200 focus:bg-white transition-all" />
-                    <Input label="State/Emirate" value={shippingInfo.state} onChange={e => setShippingInfo({ ...shippingInfo, state: e.target.value })} placeholder="Dubai" className="bg-gray-50 border-gray-200 focus:bg-white transition-all" />
-                  </div>
-                  <div className="grid grid-cols-2 gap-5">
-                    <Input label="Pincode/Postal Code" value={shippingInfo.pincode} onChange={e => setShippingInfo({ ...shippingInfo, pincode: e.target.value })} placeholder="00000" className="bg-gray-50 border-gray-200 focus:bg-white transition-all" />
-                    <Input label="Country" value={shippingInfo.country} onChange={e => setShippingInfo({ ...shippingInfo, country: e.target.value })} className="bg-gray-50 border-gray-200 focus:bg-white transition-all" />
-                  </div>
-                  <div className="flex justify-end pt-2">
-                    <Button onClick={() => { if (validateShipping()) setCurrentStep(2) }} className="w-full md:w-auto px-8 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg shadow-blue-200 transform hover:-translate-y-0.5 transition-all">
-                      Proceed to Delivery
-                    </Button>
-                  </div>
-                </div>
-              ) : (
-                <div className="flex items-center gap-4 text-gray-600 mt-2 p-3 bg-gray-50 rounded-xl border border-gray-100">
-                  <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-blue-500 shadow-sm">
-                    <FiMapPin className="w-5 h-5" />
-                  </div>
-                  <div className="text-sm">
-                    <p className="font-bold text-gray-900">{shippingInfo.name}</p>
-                    <p className="text-gray-500">{shippingInfo.addressLine1}, {shippingInfo.city}</p>
-                  </div>
-                </div>
-              )}
-            </StepIndicator>
-
-            {/* --- STEP 2: DELIVERY --- */}
-            <StepIndicator
-              step={2}
-              title="Delivery Method"
-              current={currentStep === 2}
-              completed={currentStep > 2}
-              onClick={() => setCurrentStep(2)}
-            >
-              {currentStep === 2 ? (
-                <div className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {[
-                      { id: 'standard', title: 'Standard Delivery', price: 'Free', sub: deliveryDates.standard, icon: FiTruck, color: 'blue' },
-                      { id: 'express', title: 'Express Delivery', price: formatPrice(99), sub: deliveryDates.express, icon: FiZap, color: 'orange' }
-                    ].map((opt) => (
-                      <div
-                        key={opt.id}
-                        onClick={() => setDeliveryMethod(opt.id)}
-                        className={`relative p-5 rounded-xl border-2 cursor-pointer transition-all duration-200 flex items-start gap-4 ${deliveryMethod === opt.id
-                          ? `border-${opt.color}-500 bg-${opt.color}-50/30 ring-1 ring-${opt.color}-500`
-                          : 'border-gray-100 hover:border-gray-300 hover:bg-gray-50'
-                          }`}
-                      >
-                        {deliveryMethod === opt.id && (
-                          <div className={`absolute top-0 right-0 p-1.5 bg-${opt.color}-500 rounded-bl-xl text-white`}>
-                            <FiCheck className="w-3 h-3" />
-                          </div>
-                        )}
-                        <div className={`mt-1 p-2 rounded-lg ${deliveryMethod === opt.id ? `bg-${opt.color}-100 text-${opt.color}-600` : 'bg-gray-100 text-gray-400'}`}>
-                          <opt.icon className="w-5 h-5" />
-                        </div>
-                        <div>
-                          <span className="block font-bold text-gray-900">{opt.title}</span>
-                          <span className="block text-xs text-gray-500 mt-1 mb-2">{opt.sub}</span>
-                          <span className={`text-sm font-bold ${opt.id === 'standard' ? 'text-green-600' : 'text-gray-900'}`}>{opt.price}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="flex justify-end pt-2">
-                    <Button onClick={() => setCurrentStep(3)} className="w-full md:w-auto px-8 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg shadow-blue-200 transform hover:-translate-y-0.5 transition-all">
-                      Continue to Payment
-                    </Button>
-                  </div>
-                </div>
-              ) : (
-                <div className="flex items-center gap-4 text-gray-600 mt-2 p-3 bg-gray-50 rounded-xl border border-gray-100">
-                  <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-blue-500 shadow-sm">
-                    {deliveryMethod === 'standard' ? <FiTruck className="w-5 h-5" /> : <FiZap className="w-5 h-5 text-orange-500" />}
-                  </div>
-                  <div className="text-sm">
-                    <p className="font-bold text-gray-900 capitalize">{deliveryMethod} Delivery</p>
-                    <p className="text-gray-500">{deliveryMethod === 'standard' ? 'Expected by Wed, 24 Jan' : 'Expected Tomorrow'}</p>
-                  </div>
-                </div>
-              )}
-            </StepIndicator>
-
-            {/* --- STEP 3: PAYMENT --- */}
-            <StepIndicator
-              step={3}
-              title="Payment Details"
-              current={currentStep === 3}
-              completed={false}
-              onClick={() => { }}
-            >
-              {currentStep === 3 ? (
-                <div className="space-y-5">
-                  {/* Payment Method Cards */}
-                  <div className="space-y-3">
-                    {[
-                      {
-                        id: 'online',
-                        title: 'Online Payment',
-                        subtitle: 'Credit/Debit Cards, NetBanking, Wallets',
-                        icon: FiCreditCard,
-                        color: 'blue',
-                        badge: 'Recommended',
-                        bgColor: 'bg-blue-50',
-                        borderColor: 'border-blue-500',
-                        textColor: 'text-blue-600'
-                      },
-                      {
-                        id: 'upi',
-                        title: 'UPI / QR Code',
-                        subtitle: 'Google Pay, PhonePe, Paytm, BHIM',
-                        icon: FiSmartphone,
-                        color: 'green',
-                        badge: 'Instant',
-                        bgColor: 'bg-green-50',
-                        borderColor: 'border-green-500',
-                        textColor: 'text-green-600'
-                      },
-                      {
-                        id: 'cod',
-                        title: 'Cash on Delivery',
-                        subtitle: 'Pay when you receive',
-                        icon: FaRegMoneyBillAlt,
-                        color: 'gray',
-                        badge: null,
-                        bgColor: 'bg-gray-50',
-                        borderColor: 'border-gray-400',
-                        textColor: 'text-gray-600'
-                      }
-                    ].map((method) => (
-                      <div
-                        key={method.id}
-                        onClick={() => setPaymentMethod(method.id)}
-                        className={`relative p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 ${paymentMethod === method.id
-                          ? `${method.borderColor} ${method.bgColor} shadow-sm`
-                          : 'border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm'
-                          }`}
-                      >
-                        <div className="flex items-center gap-4">
-                          {/* Icon */}
-                          <div className={`w-12 h-12 rounded-lg flex items-center justify-center shrink-0 ${paymentMethod === method.id
-                            ? `${method.bgColor} ${method.textColor}`
-                            : 'bg-gray-100 text-gray-400'
-                            }`}>
-                            <method.icon className="w-6 h-6" />
-                          </div>
-
-                          {/* Content */}
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-0.5">
-                              <h4 className="font-bold text-gray-900">{method.title}</h4>
-                              {method.badge && (
-                                <span className={`px-2 py-0.5 text-[10px] font-bold rounded-full ${method.color === 'blue' ? 'bg-blue-100 text-blue-700' : 'bg-green-100 text-green-700'
-                                  }`}>
-                                  {method.badge}
-                                </span>
-                              )}
-                            </div>
-                            <p className="text-sm text-gray-500">{method.subtitle}</p>
-                          </div>
-
-                          {/* Radio Button */}
-                          <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${paymentMethod === method.id
-                            ? `${method.borderColor} ${method.bgColor.replace('50', '500')}`
-                            : 'border-gray-300 bg-white'
-                            }`}>
-                            {paymentMethod === method.id && (
-                              <div className="w-2 h-2 bg-white rounded-full"></div>
-                            )}
-                          </div>
-                        </div>
-
-                        {/* Expanded Details - Only for selected */}
-                        {paymentMethod === method.id && (
-                          <div className="mt-4 pt-4 border-t border-gray-200">
-                            {method.id === 'online' && (
-                              <div>
-                                <p className="text-xs text-gray-500 mb-3 font-medium">Accepted Payment Methods</p>
-                                <div className="flex flex-wrap gap-3 items-center">
-                                  {/* Card Logos */}
-                                  <img
-                                    src="https://logo.clearbit.com/visa.com"
-                                    alt="Visa"
-                                    className="h-6 w-auto opacity-70 hover:opacity-100 transition-all"
-                                    onError={(e) => {
-                                      e.target.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 16"><text x="0" y="12" font-size="10" fill="%231434CB" font-weight="bold">VISA</text></svg>'
-                                    }}
-                                  />
-                                  <img
-                                    src="https://logo.clearbit.com/mastercard.com"
-                                    alt="Mastercard"
-                                    className="h-8 w-auto opacity-70 hover:opacity-100 transition-all"
-                                    onError={(e) => {
-                                      e.target.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 32"><circle cx="14" cy="16" r="12" fill="%23EB001B"/><circle cx="34" cy="16" r="12" fill="%23F79E1B"/></svg>'
-                                    }}
-                                  />
-                                  <img
-                                    src="https://logo.clearbit.com/americanexpress.com"
-                                    alt="Amex"
-                                    className="h-6 w-auto opacity-70 hover:opacity-100 transition-all"
-                                    onError={(e) => {
-                                      e.target.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 16"><text x="0" y="12" font-size="8" fill="%23006FCF" font-weight="bold">AMEX</text></svg>'
-                                    }}
-                                  />
-                                  <div className="px-3 py-1 bg-gradient-to-r from-orange-500 to-green-500 text-white rounded text-xs font-bold">
-                                    RuPay
-                                  </div>
-                                </div>
-                                <div className="mt-3 flex flex-wrap gap-2">
-                                  {['NetBanking', 'Wallets'].map(type => (
-                                    <span key={type} className="px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-xs font-semibold text-gray-700">
-                                      {type}
-                                    </span>
-                                  ))}
-                                </div>
-                              </div>
-                            )}
-                            {method.id === 'upi' && (
-                              <div>
-                                <p className="text-xs text-gray-500 mb-3 font-medium">Pay with any UPI App</p>
-                                <div className="flex flex-wrap gap-3 items-center">
-                                  {/* UPI App Logos - Using fallback SVGs */}
-                                  <div className="h-8 px-3 py-1 bg-white border border-gray-200 rounded-lg flex items-center gap-2">
-                                    <svg className="w-6 h-6" viewBox="0 0 24 24">
-                                      <defs>
-                                        <linearGradient id="gpay" x1="0%" y1="0%" x2="100%" y2="100%">
-                                          <stop offset="0%" style={{ stopColor: '#4285F4' }} />
-                                          <stop offset="100%" style={{ stopColor: '#34A853' }} />
-                                        </linearGradient>
-                                      </defs>
-                                      <circle cx="12" cy="12" r="10" fill="url(#gpay)" />
-                                      <text x="12" y="16" fontSize="10" fill="white" textAnchor="middle" fontWeight="bold">G</text>
-                                    </svg>
-                                    <span className="text-xs font-semibold text-gray-700">Google Pay</span>
-                                  </div>
-
-                                  <div className="h-8 px-3 py-1 bg-white border border-gray-200 rounded-lg flex items-center gap-2">
-                                    <svg className="w-6 h-6" viewBox="0 0 24 24">
-                                      <defs>
-                                        <linearGradient id="phonepe" x1="0%" y1="0%" x2="100%" y2="100%">
-                                          <stop offset="0%" style={{ stopColor: '#5F259F' }} />
-                                          <stop offset="100%" style={{ stopColor: '#3E1F7D' }} />
-                                        </linearGradient>
-                                      </defs>
-                                      <circle cx="12" cy="12" r="10" fill="url(#phonepe)" />
-                                      <text x="12" y="16" fontSize="10" fill="white" textAnchor="middle" fontWeight="bold">P</text>
-                                    </svg>
-                                    <span className="text-xs font-semibold text-gray-700">PhonePe</span>
-                                  </div>
-
-                                  <div className="h-8 px-3 py-1 bg-white border border-gray-200 rounded-lg flex items-center gap-2">
-                                    <svg className="w-6 h-6" viewBox="0 0 24 24">
-                                      <defs>
-                                        <linearGradient id="paytm" x1="0%" y1="0%" x2="100%" y2="100%">
-                                          <stop offset="0%" style={{ stopColor: '#00BAF2' }} />
-                                          <stop offset="100%" style={{ stopColor: '#002E6E' }} />
-                                        </linearGradient>
-                                      </defs>
-                                      <circle cx="12" cy="12" r="10" fill="url(#paytm)" />
-                                      <text x="12" y="16" fontSize="10" fill="white" textAnchor="middle" fontWeight="bold">P</text>
-                                    </svg>
-                                    <span className="text-xs font-semibold text-gray-700">Paytm</span>
-                                  </div>
-
-                                  <div className="px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-xs font-semibold text-gray-700 flex items-center">
-                                    BHIM UPI
-                                  </div>
-                                </div>
-                              </div>
-                            )}
-                            {method.id === 'cod' && (
-                              <p className="text-sm text-gray-600 bg-amber-50 border border-amber-200 rounded-lg p-3">
-                                <span className="font-semibold text-gray-800">Note:</span> Please keep exact change handy.
-                              </p>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Security Badge */}
-                  <div className="flex items-center justify-center gap-2 p-3 bg-green-50 rounded-lg border border-green-200 text-xs text-green-800">
-                    <FiShield className="text-green-600 w-4 h-4" />
-                    <span className="font-medium">Payments processed securely by Razorpay. We do not store your card details.</span>
-                  </div>
-                </div>
-              ) : (
-                <div className="text-sm text-gray-500">
-                  Complete previous steps to select payment method
-                </div>
-              )}
-            </StepIndicator>
-
-          </div>
-
-          {/* Right Column - Order Summary Sidebar */}
-          <div className="lg:col-span-4 pl-0 lg:pl-4">
-            <div className="bg-white rounded-2xl shadow-xl shadow-gray-200/50 border border-gray-100 p-6 sticky top-8">
-              <h2 className="text-xl font-extrabold text-gray-900 mb-6">Order Summary</h2>
-
-              <div className="space-y-4 mb-6 custom-scrollbar max-h-[300px] overflow-y-auto pr-1">
-                {items.map(item => (
-                  <div key={item.productId} className="flex gap-4 group">
-                    <div className="w-20 h-20 bg-gray-50 rounded-xl overflow-hidden border border-gray-100 relative">
-                      <img
-                        src={item.image?.startsWith('http') ? item.image : item.image || '/placeholder-product.png'}
-                        alt={item.name}
-                        className="w-full h-full object-contain p-2 mix-blend-multiply group-hover:scale-105 transition-transform duration-300"
-                        onError={(e) => {
-                          e.target.src = '/placeholder-product.png'
-                        }}
-                      />
-                    </div>
-                    <div className="flex-1 py-1">
-                      <h4 className="text-sm font-bold text-gray-900 line-clamp-2 leading-tight mb-1">{item.name}</h4>
-                      <p className="text-xs text-gray-500 mb-2">Variant: {Object.values(item.variant || {}).join(', ') || 'Standard'}</p>
-                      <div className="flex justify-between items-end">
-                        <span className="text-xs font-semibold px-2 py-0.5 bg-gray-100 rounded text-gray-600">x{item.quantity}</span>
-                        <Price amount={item.price * item.quantity} className="font-bold text-gray-900" />
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Promo Input */}
-              <div className="relative mb-6">
-                <input
-                  type="text"
-                  placeholder="Discount code"
-                  value={couponCode}
-                  onChange={(e) => setCouponCode(e.target.value)}
-                  className="w-full pl-4 pr-24 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all placeholder:text-gray-400 font-medium"
-                />
-                <button
-                  onClick={handleApplyCoupon}
-                  className="absolute right-1.5 top-1.5 bottom-1.5 px-4 bg-white text-gray-900 text-xs font-bold rounded-lg shadow-sm border border-gray-100 hover:bg-gray-50 transition-colors"
-                >
-                  Apply
-                </button>
-              </div>
-
-              {/* --- Green Planet Donation --- */}
-              <div className="mb-6 rounded-2xl border border-green-200 bg-white relative overflow-hidden shadow-sm">
-                <div className="flex items-stretch">
-                  {/* Left Side - Image */}
-                  {/* <div className="w-1/3 relative overflow-hidden">
-                      <img
-                        src="https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?w=400&h=300&fit=crop"
-                        alt="Planting Tree"
-                        className="w-full h-full object-cover"
-                      />
-                    </div> */}
-
-                  {/* Right Side - Content */}
-                  <div className="flex-1 p-6 bg-gradient-to-br from-green-50/50 to-white">
-                    {/* Header with Icon */}
-                    <div className="flex items-center gap-2 mb-3">
-                      <div className="w-7 h-7 bg-gradient-to-br from-blue-400 to-green-500 rounded-full flex items-center justify-center">
-                        <span className="text-white text-base">🌍</span>
-                      </div>
-                      <h3 className="text-base font-bold text-gray-800">
-                        Make Our Planet Greener <span className="text-gray-500 font-normal text-sm">(Optional)</span>
-                      </h3>
-                    </div>
-
-                    {/* Description */}
-                    <p className="text-sm text-gray-600 mb-4 leading-relaxed">
-                      Your small contribution helps plant trees and support verified green initiatives.
-                    </p>
-
-                    {/* Price Badge */}
-                    <div className="flex gap-3 mb-4">
-                      <div className="px-6 py-2 bg-green-700 text-white rounded-full font-bold text-base shadow-sm">
-                        <Price amount={DONATION_AMOUNT} />
-                      </div>
-                    </div>
-
-                    {/* Checkbox */}
-                    <label className="flex items-center gap-3 mb-4 cursor-pointer group">
-                      <div className="relative flex items-center justify-center">
-                        <input
-                          type="checkbox"
-                          checked={isDonationChecked}
-                          onChange={() => setIsDonationChecked(!isDonationChecked)}
-                          className="w-5 h-5 border-2 border-gray-400 rounded appearance-none checked:bg-green-600 checked:border-green-600 cursor-pointer transition-all"
-                        />
-                        {isDonationChecked && (
-                          <svg className="w-3.5 h-3.5 absolute text-white pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" d="M5 13l4 4L19 7" />
-                          </svg>
-                        )}
-                      </div>
-                      <span className="text-base font-medium text-gray-700 group-hover:text-gray-900 transition-colors">
-                        Yes, I'd like to contribute
-                      </span>
-                    </label>
-
-                    {/* Verification Badge */}
-                    <div className="flex items-center gap-2 text-sm text-gray-600 bg-white/60 rounded-lg px-3 py-2 border border-green-100">
-                      <BiLeaf className="w-4 h-4 text-green-600" />
-                      <span className="font-medium">100% used for verified initiatives</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Pricing Breakdown */}
-              <div className="space-y-3 py-6 border-t border-dashed border-gray-200 text-sm">
-                <div className="flex justify-between text-gray-600">
-                  <span>Subtotal</span>
-                  <Price amount={subtotal} className="font-semibold text-gray-900" />
-                </div>
-                <div className="flex justify-between text-gray-600">
-                  <span className="flex items-center gap-1">Shipping <FiInfo className="w-3 h-3 text-gray-400" /></span>
-                  <span className={`font-semibold ${deliveryCost === 0 ? 'text-green-600' : 'text-gray-900'}`}>
-                    {deliveryCost === 0 ? 'Free' : <Price amount={deliveryCost} />}
-                  </span>
-                </div>
-                {discount > 0 && (
-                  <div className="flex justify-between text-green-600">
-                    <span>Discount</span>
-                    <span className="font-bold">-<Price amount={discount} /></span>
-                  </div>
-                )}
-                {isDonationChecked && (
-                  <div className="flex justify-between text-green-700">
-                    <span className="flex items-center gap-1"><BiLeaf className="w-3 h-3" /> Green Donation</span>
-                    <Price amount={DONATION_AMOUNT} className="font-bold" />
-                  </div>
-                )}
-                <div className="flex justify-between text-gray-600">
-                  <span>Estimated Tax</span>
-                  <Price amount={tax} className="font-semibold text-gray-900" />
-                </div>
-              </div>
-
-              {/* Total */}
-              <div className="flex justify-between items-end pt-4 border-t border-gray-100 mb-8">
-                <div className="flex flex-col">
-                  <span className="text-sm font-medium text-gray-500">Total Amount</span>
-                  <span className="text-xs text-gray-400">Including Taxes</span>
-                </div>
-                <Price amount={finalTotal} className="text-3xl font-extrabold text-blue-600 tracking-tight" />
-              </div>
-
-              {/* Main Action Button */}
-              <Button
-                onClick={handlePlaceOrder}
-                className={`w-full py-4 text-base font-bold rounded-xl shadow-xl shadow-blue-200 flex items-center justify-center gap-2 group transition-all duration-300 ${currentStep < 3 ? 'bg-gray-100 text-gray-400 cursor-not-allowed shadow-none' : 'bg-blue-600 hover:bg-blue-700 text-white transform hover:-translate-y-1'
-                  }`}
-                disabled={currentStep < 3}
-              >
-                {currentStep < 3 ? `Complete Steps ${currentStep}/3` : 'Confirm Order'}
-                {currentStep === 3 && <FiArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />}
-              </Button>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </div>
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M7 7h.01" />
+      <path d="M15.59 3.41a2 2 0 0 1 2.82 0l2.18 2.18a2 2 0 0 1 0 2.82L12 17l-9-9 9-9 8.59 8.59" />
+      <path d="M5 19h14" />
+    </svg>
   )
 }

@@ -59,7 +59,7 @@ export default function CompetitorsPage() {
             <div className="bg-gradient-to-r from-red-600 to-orange-600 rounded-xl shadow-lg p-6 text-white">
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-3xl font-bold">🎯 Competitor Price Tracking</h1>
+                        <h1 className="text-3xl font-semibold">🎯 Competitor Price Tracking</h1>
                         <p className="mt-2 text-red-100">Monitor competitor prices and stay competitive</p>
                     </div>
                     <button
@@ -104,7 +104,7 @@ export default function CompetitorsPage() {
             {trackings.length === 0 ? (
                 <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
                     <FiTarget className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">No Competitor Tracking Yet</h3>
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">No Competitor Tracking Yet</h3>
                     <p className="text-gray-600 mb-6">
                         Start tracking competitor prices to optimize your pricing strategy
                     </p>
@@ -144,7 +144,7 @@ function TrackingCard({ tracking, onUpdate }) {
                         />
                     )}
                     <div>
-                        <h3 className="text-lg font-bold text-gray-900">{tracking.productId?.name}</h3>
+                        <h3 className="text-lg font-semibold text-gray-900">{tracking.productId?.name}</h3>
                         <p className="text-sm text-gray-600">{tracking.competitors.length} competitors tracked</p>
                     </div>
                 </div>
@@ -161,25 +161,25 @@ function TrackingCard({ tracking, onUpdate }) {
             <div className="grid grid-cols-4 gap-4 mb-4">
                 <div className="text-center">
                     <p className="text-xs text-gray-500 mb-1">Your Price</p>
-                    <p className="text-xl font-bold text-gray-900">
+                    <p className="text-xl font-semibold text-gray-900">
                         ₹{(position.myPrice || 0).toLocaleString()}
                     </p>
                 </div>
                 <div className="text-center">
                     <p className="text-xs text-gray-500 mb-1">Lowest</p>
-                    <p className="text-xl font-bold text-red-600">
+                    <p className="text-xl font-semibold text-red-600">
                         ₹{(position.lowestCompetitorPrice || 0).toLocaleString()}
                     </p>
                 </div>
                 <div className="text-center">
                     <p className="text-xs text-gray-500 mb-1">Average</p>
-                    <p className="text-xl font-bold text-blue-600">
+                    <p className="text-xl font-semibold text-blue-600">
                         ₹{(position.averageCompetitorPrice || 0).toLocaleString()}
                     </p>
                 </div>
                 <div className="text-center">
                     <p className="text-xs text-gray-500 mb-1">Your Rank</p>
-                    <p className={`text-xl font-bold ${isCompetitive ? 'text-green-600' : 'text-orange-600'}`}>
+                    <p className={`text-xl font-semibold ${isCompetitive ? 'text-green-600' : 'text-orange-600'}`}>
                         #{position.priceRank || '-'}
                     </p>
                 </div>
@@ -240,7 +240,7 @@ function StatCard({ icon, label, value, color }) {
                 </div>
                 <div>
                     <p className="text-sm text-gray-600">{label}</p>
-                    <p className="text-2xl font-bold text-gray-900">{value}</p>
+                    <p className="text-2xl font-semibold text-gray-900">{value}</p>
                 </div>
             </div>
         </div>

@@ -125,7 +125,7 @@ export default function ReviewDetail() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Review Details</h1>
+          <h1 className="text-2xl font-semibold text-gray-900">Review Details</h1>
           <p className="text-gray-600">Review for {review.product.name}</p>
         </div>
         <Button variant="outline" onClick={() => router.push('/seller/reviews')}>

@@ -52,8 +52,8 @@ export default function BecomeASellerPage() {
                 <div className="relative w-full h-full flex items-center justify-center p-8 bg-white/50 backdrop-blur-xl">
                     <div className="w-full max-w-sm space-y-6">
                         <div className="flex items-center justify-between">
-                            <h4 className="text-xl font-bold">Onboarding Checklist</h4>
-                            <span className="text-xs font-black text-blue-600">80% COMPLETE</span>
+                            <h4 className="text-xl font-semibold">Onboarding Checklist</h4>
+                            <span className="text-xs font-semibold text-blue-600">80% COMPLETE</span>
                         </div>
                         <div className="space-y-4">
                             {[
@@ -67,7 +67,7 @@ export default function BecomeASellerPage() {
                                             {item.c && <Check size={12} className="text-white" />}
                                         </div>
                                         <div>
-                                            <p className="text-sm font-bold text-gray-900">{item.t}</p>
+                                            <p className="text-sm font-semibold text-gray-900">{item.t}</p>
                                             <p className="text-[10px] text-gray-400 font-medium">{item.d}</p>
                                         </div>
                                     </div>
@@ -90,29 +90,29 @@ export default function BecomeASellerPage() {
                             <div className="w-12 h-12 bg-indigo-500 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(99,102,241,0.5)]">
                                 <Zap className="text-white w-6 h-6" />
                             </div>
-                            <h4 className="text-white text-xl font-bold tracking-tight">AI Predictive Engine</h4>
+                            <h4 className="text-white text-xl font-semibold tracking-tight">AI Predictive Engine</h4>
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
                             <div className="bg-white/5 backdrop-blur-md border border-white/10 p-5 rounded-3xl">
-                                <p className="text-[10px] text-indigo-300 font-black uppercase mb-2">Demand Forecast</p>
-                                <p className="text-2xl font-bold text-white">+12.4%</p>
+                                <p className="text-[10px] text-indigo-300 font-semibold uppercase mb-2">Demand Forecast</p>
+                                <p className="text-2xl font-semibold text-white">+12.4%</p>
                                 <div className="w-full h-1 bg-white/10 rounded-full mt-4 overflow-hidden">
                                     <div className="w-3/4 h-full bg-indigo-500" />
                                 </div>
                             </div>
                             <div className="bg-white/5 backdrop-blur-md border border-white/10 p-5 rounded-3xl">
-                                <p className="text-[10px] text-indigo-300 font-black uppercase mb-2">Inventory Alert</p>
-                                <p className="text-sm font-bold text-white">Stock up on "Electronics"</p>
+                                <p className="text-[10px] text-indigo-300 font-semibold uppercase mb-2">Inventory Alert</p>
+                                <p className="text-sm font-semibold text-white">Stock up on "Electronics"</p>
                                 <div className="mt-4 flex gap-2">
-                                    <span className="px-2 py-1 bg-red-500/20 text-red-500 text-[8px] font-black rounded uppercase">Urgent</span>
+                                    <span className="px-2 py-1 bg-red-500/20 text-red-500 text-[8px] font-semibold rounded uppercase">Urgent</span>
                                 </div>
                             </div>
                         </div>
 
                         <div className="p-6 bg-indigo-500/10 border border-indigo-500/20 rounded-[2rem]">
                             <div className="flex items-center justify-between mb-4">
-                                <span className="text-xs font-bold text-white/50">Next 30 Days Forecast</span>
+                                <span className="text-xs font-semibold text-white/50">Next 30 Days Forecast</span>
                                 <TrendingUp className="text-indigo-400 w-4 h-4" />
                             </div>
                             <div className="flex items-end gap-2 h-20">
@@ -164,12 +164,12 @@ export default function BecomeASellerPage() {
 
                     <div className="absolute bottom-8 left-8 right-8 grid grid-cols-2 gap-4">
                         <div className="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/20">
-                            <p className="text-[8px] font-black text-white/60 uppercase">System Status</p>
-                            <p className="text-xs font-bold text-white mt-1">Synced Everywhere</p>
+                            <p className="text-[8px] font-semibold text-white/60 uppercase">System Status</p>
+                            <p className="text-xs font-semibold text-white mt-1">Synced Everywhere</p>
                         </div>
                         <div className="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/20">
-                            <p className="text-[8px] font-black text-white/60 uppercase">Last Sync</p>
-                            <p className="text-xs font-bold text-white mt-1">2s ago</p>
+                            <p className="text-[8px] font-semibold text-white/60 uppercase">Last Sync</p>
+                            <p className="text-xs font-semibold text-white mt-1">2s ago</p>
                         </div>
                     </div>
                 </div>
@@ -192,7 +192,7 @@ export default function BecomeASellerPage() {
                         className="space-y-10"
                     >
                         <div className="inline-flex items-center gap-3 px-4 py-2 bg-white border border-gray-100 shadow-sm rounded-full">
-                            <div className="w-6 h-6 bg-blue-600 rounded-md flex items-center justify-center text-white text-[10px] font-bold">OP</div>
+                            <div className="w-6 h-6 bg-blue-600 rounded-md flex items-center justify-center text-white text-[10px] font-semibold">OP</div>
                             <span className="text-sm font-semibold text-gray-600">The Ultimate Multivendor Marketplace</span>
                         </div>
 
@@ -208,11 +208,11 @@ export default function BecomeASellerPage() {
                         <div className="flex flex-col sm:flex-row gap-5 pt-4">
                             <Link
                                 href="/seller/onboarding"
-                                className="px-10 py-5 bg-blue-600 text-white rounded-2xl font-bold text-lg hover:bg-blue-700 transition-all shadow-2xl shadow-blue-200 flex items-center justify-center"
+                                className="px-10 py-5 bg-blue-600 text-white rounded-2xl font-semibold text-lg hover:bg-blue-700 transition-all shadow-2xl shadow-blue-200 flex items-center justify-center"
                             >
                                 Become a Seller
                             </Link>
-                            <button className="px-10 py-5 bg-white border border-gray-100 rounded-2xl font-bold text-lg hover:bg-gray-50 transition-all flex items-center justify-center gap-3 text-gray-700 shadow-sm">
+                            <button className="px-10 py-5 bg-white border border-gray-100 rounded-2xl font-semibold text-lg hover:bg-gray-50 transition-all flex items-center justify-center gap-3 text-gray-700 shadow-sm">
                                 <div className="w-6 h-6 bg-blue-50 rounded-full flex items-center justify-center">
                                     <Play className="w-3 h-3 text-blue-600 fill-current" />
                                 </div>
@@ -249,15 +249,15 @@ export default function BecomeASellerPage() {
                                                 style={{ opacity: bar.opacity }}
                                             />
                                         </div>
-                                        <span className="text-[10px] font-bold text-gray-400 uppercase">M{i + 1}</span>
+                                        <span className="text-[10px] font-semibold text-gray-400 uppercase">M{i + 1}</span>
                                     </div>
                                 ))}
                             </div>
 
                             {/* Dashboard Overlay Stats */}
                             <div className="absolute top-8 right-8 flex flex-col gap-1 items-end">
-                                <div className="text-3xl font-bold text-gray-900">$48.2k</div>
-                                <div className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Revenue Growth</div>
+                                <div className="text-3xl font-semibold text-gray-900">$48.2k</div>
+                                <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Revenue Growth</div>
                             </div>
                         </div>
 
@@ -278,8 +278,8 @@ export default function BecomeASellerPage() {
                                 </div>
                             </div>
                             <div>
-                                <div className="text-[10px] font-black text-gray-400 uppercase tracking-widest">India</div>
-                                <div className="font-bold text-gray-900">8.4k <span className="text-[10px] text-gray-400 font-medium">items</span></div>
+                                <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">India</div>
+                                <div className="font-semibold text-gray-900">8.4k <span className="text-[10px] text-gray-400 font-medium">items</span></div>
                             </div>
                         </motion.div>
 
@@ -297,7 +297,7 @@ export default function BecomeASellerPage() {
                                 </div>
                             </div>
                             <div>
-                                <div className="text-xs font-bold text-gray-400 uppercase tracking-wider">Spain</div>
+                                <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Spain</div>
                                 <div className="font-medium text-gray-900">1.2k <span className="text-[10px] text-gray-400 font-medium">products</span></div>
                             </div>
                         </motion.div>
@@ -345,7 +345,7 @@ export default function BecomeASellerPage() {
             <section className="py-40 bg-white relative overflow-hidden">
                 {/* Decorative Side Text */}
                 <div className="absolute left-[-5%] top-1/2 -translate-y-1/2 rotate-[-90deg] hidden xl:block">
-                    <span className="text-[12rem] font-black text-gray-50 leading-none select-none">PLANET</span>
+                    <span className="text-[12rem] font-semibold text-gray-50 leading-none select-none">PLANET</span>
                 </div>
 
                 <div className="max-w-7xl mx-auto px-4 relative z-10">
@@ -354,7 +354,7 @@ export default function BecomeASellerPage() {
                             <motion.span
                                 initial={{ opacity: 0, x: -20 }}
                                 whileInView={{ opacity: 1, x: 0 }}
-                                className="text-blue-600 font-bold uppercase tracking-[0.3em] text-sm mb-6 block"
+                                className="text-blue-600 font-semibold uppercase tracking-[0.3em] text-sm mb-6 block"
                             >
                                 Seller Ecosystem
                             </motion.span>
@@ -414,12 +414,12 @@ export default function BecomeASellerPage() {
                                     <div className={`w-16 h-16 bg-${feature.color}-600 rounded-2xl flex items-center justify-center mb-10 shadow-lg shadow-${feature.color}-100 group-hover:rotate-[10deg] transition-transform`}>
                                         <div className="text-white">{feature.icon}</div>
                                     </div>
-                                    <h3 className="text-2xl font-bold mb-6 text-gray-900">{feature.title}</h3>
+                                    <h3 className="text-2xl font-semibold mb-6 text-gray-900">{feature.title}</h3>
                                     <p className="text-gray-500 leading-relaxed font-normal">{feature.desc}</p>
                                 </div>
 
                                 <div className="mt-12 pt-8 border-t border-gray-50 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <button className="flex items-center gap-2 text-sm font-bold text-blue-600">
+                                    <button className="flex items-center gap-2 text-sm font-semibold text-blue-600">
                                         Learn More <ArrowRight size={14} />
                                     </button>
                                 </div>
@@ -462,14 +462,14 @@ export default function BecomeASellerPage() {
                                             whileHover={{ x: 10 }}
                                             className={`relative pl-20 transition-all duration-500 cursor-pointer group`}
                                         >
-                                            <div className={`absolute left-0 top-0 w-14 h-14 rounded-full border-2 flex items-center justify-center font-bold text-sm transition-all duration-500 ${activeWorkflowStep === idx
+                                            <div className={`absolute left-0 top-0 w-14 h-14 rounded-full border-2 flex items-center justify-center font-semibold text-sm transition-all duration-500 ${activeWorkflowStep === idx
                                                 ? 'bg-blue-600 border-blue-600 text-white shadow-xl shadow-blue-200'
                                                 : 'bg-white border-gray-100 text-gray-400 group-hover:border-blue-200 group-hover:text-blue-600'
                                                 }`}>
                                                 {item.step}
                                             </div>
                                             <div className="space-y-2">
-                                                <h3 className={`text-2xl font-bold transition-colors ${activeWorkflowStep === idx ? 'text-gray-900' : 'text-gray-400 group-hover:text-gray-600'}`}>
+                                                <h3 className={`text-2xl font-semibold transition-colors ${activeWorkflowStep === idx ? 'text-gray-900' : 'text-gray-400 group-hover:text-gray-600'}`}>
                                                     {item.title}
                                                 </h3>
                                                 {activeWorkflowStep === idx && (
@@ -510,8 +510,8 @@ export default function BecomeASellerPage() {
                                             <TrendingUp className="text-green-600 w-4 h-4" />
                                         </div>
                                         <div>
-                                            <p className="text-[10px] font-black text-gray-400 uppercase">System</p>
-                                            <p className="text-sm font-bold text-gray-900">Optimal</p>
+                                            <p className="text-[10px] font-semibold text-gray-400 uppercase">System</p>
+                                            <p className="text-sm font-semibold text-gray-900">Optimal</p>
                                         </div>
                                     </div>
                                 </motion.div>
@@ -563,20 +563,20 @@ export default function BecomeASellerPage() {
                                 <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mb-10 shadow-lg shadow-blue-200">
                                     <Cloud className="text-white w-8 h-8" />
                                 </div>
-                                <h3 className="text-4xl font-bold text-gray-900 mb-6">Fulfillment by Online Planet</h3>
+                                <h3 className="text-4xl font-semibold text-gray-900 mb-6">Fulfillment by Online Planet</h3>
                                 <p className="text-xl text-gray-500 max-w-md leading-relaxed">
                                     Offload your logistics to us. We store, pack, and ship your products in record time, so you can focus on building your brand.
                                 </p>
                             </div>
                             <div className="relative z-10 flex items-center gap-4">
-                                <button className="px-8 py-4 bg-gray-900 text-white rounded-xl font-bold hover:bg-black transition-all">Explore Logistics</button>
+                                <button className="px-8 py-4 bg-gray-900 text-white rounded-xl font-semibold hover:bg-black transition-all">Explore Logistics</button>
                                 <div className="flex -space-x-3">
                                     {[1, 2, 3].map(i => (
                                         <div key={i} className="w-10 h-10 rounded-full border-2 border-white bg-gray-100 overflow-hidden">
                                             <img src={`https://i.pravatar.cc/100?u=${i + 10}`} alt="" />
                                         </div>
                                     ))}
-                                    <div className="w-10 h-10 rounded-full border-2 border-white bg-blue-50 flex items-center justify-center text-[10px] font-bold text-blue-600">
+                                    <div className="w-10 h-10 rounded-full border-2 border-white bg-blue-50 flex items-center justify-center text-[10px] font-semibold text-blue-600">
                                         +2k
                                     </div>
                                 </div>
@@ -594,7 +594,7 @@ export default function BecomeASellerPage() {
                             <div className="absolute bottom-0 right-0 w-32 h-32 bg-white/10 rounded-full translate-x-10 translate-y-10 group-hover:scale-150 transition-transform duration-700" />
                             <div>
                                 <TrendingUp className="w-10 h-10 mb-6 opacity-80" />
-                                <h3 className="text-2xl font-bold mb-4">Precision Marketing</h3>
+                                <h3 className="text-2xl font-semibold mb-4">Precision Marketing</h3>
                                 <p className="text-indigo-100 text-sm leading-relaxed">
                                     Target the right audience with machine-learning driven ad placements.
                                 </p>
@@ -615,12 +615,12 @@ export default function BecomeASellerPage() {
                                 <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-6 shadow-sm">
                                     <ShoppingBag className="text-orange-600 w-6 h-6" />
                                 </div>
-                                <h3 className="text-2xl font-bold text-gray-900 mb-4">Market Festivals</h3>
+                                <h3 className="text-2xl font-semibold text-gray-900 mb-4">Market Festivals</h3>
                                 <p className="text-gray-600 text-sm leading-relaxed">
                                     Early access to high-traffic shopping events globally.
                                 </p>
                             </div>
-                            <span className="text-orange-600 text-xs font-black uppercase tracking-widest">Get Invited</span>
+                            <span className="text-orange-600 text-xs font-semibold uppercase tracking-widest">Get Invited</span>
                         </motion.div>
 
                         {/* 4. Academy */}
@@ -632,11 +632,11 @@ export default function BecomeASellerPage() {
                             className="md:col-span-6 lg:col-span-6 bg-white border border-gray-100 rounded-[2.5rem] p-10 flex gap-8 items-center shadow-sm"
                         >
                             <div className="flex-1 space-y-4">
-                                <h3 className="text-2xl font-bold text-gray-900">Seller Academy</h3>
+                                <h3 className="text-2xl font-semibold text-gray-900">Seller Academy</h3>
                                 <p className="text-gray-500 text-sm leading-relaxed">
                                     Master the art of online selling with our pro courses and live webinars.
                                 </p>
-                                <div className="flex items-center gap-2 text-blue-600 text-sm font-bold">
+                                <div className="flex items-center gap-2 text-blue-600 text-sm font-semibold">
                                     <span>Start Learning</span>
                                     <ArrowRight size={14} />
                                 </div>
@@ -656,11 +656,11 @@ export default function BecomeASellerPage() {
                             className="md:col-span-6 lg:col-span-6 bg-white border border-gray-100 rounded-[2.5rem] p-10 flex gap-8 items-center shadow-sm"
                         >
                             <div className="flex-1 space-y-4">
-                                <h3 className="text-2xl font-bold text-gray-900">White-Glove Support</h3>
+                                <h3 className="text-2xl font-semibold text-gray-900">White-Glove Support</h3>
                                 <p className="text-gray-500 text-sm leading-relaxed">
                                     Dedicated account managers help you navigate strategy and growth.
                                 </p>
-                                <div className="flex items-center gap-2 text-blue-600 text-sm font-bold">
+                                <div className="flex items-center gap-2 text-blue-600 text-sm font-semibold">
                                     <span>Meet your Manager</span>
                                     <ArrowRight size={14} />
                                 </div>
@@ -699,8 +699,8 @@ export default function BecomeASellerPage() {
                         >
                             <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                             <div className="p-12 pb-0 relative z-10">
-                                <span className="inline-block px-4 py-1.5 bg-blue-50 text-blue-600 text-[10px] font-black uppercase tracking-[0.2em] rounded-full mb-6">Efficiency</span>
-                                <h3 className="text-4xl font-bold text-gray-900 mb-6 tracking-tight">Sell Faster</h3>
+                                <span className="inline-block px-4 py-1.5 bg-blue-50 text-blue-600 text-[10px] font-semibold uppercase tracking-[0.2em] rounded-full mb-6">Efficiency</span>
+                                <h3 className="text-4xl font-semibold text-gray-900 mb-6 tracking-tight">Sell Faster</h3>
                                 <p className="text-gray-500 text-lg max-w-md mb-12">
                                     Put your items on the market in seconds. Our automated engine handles everything from localized pricing to global shipping rules.
                                 </p>
@@ -730,7 +730,7 @@ export default function BecomeASellerPage() {
                                         <div className="w-14 h-14 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center mb-10 border border-white/10 group-hover:scale-110 transition-transform">
                                             <Clock className="text-blue-400 w-7 h-7" />
                                         </div>
-                                        <h3 className="text-3xl font-bold mb-6">Track Better</h3>
+                                        <h3 className="text-3xl font-semibold mb-6">Track Better</h3>
                                         <p className="text-gray-400 text-lg leading-relaxed">
                                             See exactly where your orders are globally. Real-time updates for you and your customers, no manual entry required.
                                         </p>
@@ -757,11 +757,11 @@ export default function BecomeASellerPage() {
                                 <div className="w-20 h-20 bg-blue-600 rounded-3xl flex items-center justify-center mb-10 shadow-xl shadow-blue-100">
                                     <TrendingUp className="text-white w-10 h-10" />
                                 </div>
-                                <h3 className="text-4xl font-bold text-gray-900 mb-6 tracking-tight">Grow Bigger</h3>
+                                <h3 className="text-4xl font-semibold text-gray-900 mb-6 tracking-tight">Grow Bigger</h3>
                                 <p className="text-gray-500 text-xl max-w-md leading-relaxed">
                                     Use our simple "Growth Multiplier" reports to see how much revenue you are generating across every region in real-time.
                                 </p>
-                                <button className="mt-10 px-8 py-4 bg-gray-900 text-white rounded-2xl font-bold flex items-center gap-3 hover:bg-black transition-all">
+                                <button className="mt-10 px-8 py-4 bg-gray-900 text-white rounded-2xl font-semibold flex items-center gap-3 hover:bg-black transition-all">
                                     View Sample Report <ArrowRight size={18} />
                                 </button>
                             </div>
@@ -782,7 +782,7 @@ export default function BecomeASellerPage() {
                             whileTap={{ scale: 0.95 }}
                             className="inline-block"
                         >
-                            <button className="px-12 py-6 bg-blue-600 text-white rounded-3xl font-bold text-xl hover:bg-blue-700 transition-all shadow-2xl shadow-blue-200">
+                            <button className="px-12 py-6 bg-blue-600 text-white rounded-3xl font-semibold text-xl hover:bg-blue-700 transition-all shadow-2xl shadow-blue-200">
                                 Request a Private Demo
                             </button>
                         </motion.div>
@@ -801,7 +801,7 @@ export default function BecomeASellerPage() {
                         <p className="text-lg text-gray-500 leading-relaxed font-normal">
                             Discover tools and platforms that integrate seamlessly with our dashboard. Simplify workflows and boost efficiency.
                         </p>
-                        <button className="px-7 py-4 bg-blue-600 text-white rounded-xl font-bold text-sm hover:bg-blue-700 transition-all shadow-lg shadow-blue-100">
+                        <button className="px-7 py-4 bg-blue-600 text-white rounded-xl font-semibold text-sm hover:bg-blue-700 transition-all shadow-lg shadow-blue-100">
                             Full Integrations List
                         </button>
                     </div>
@@ -850,7 +850,7 @@ export default function BecomeASellerPage() {
                                     </div>
                                 ))}
                                 <div className="flex items-center bg-gray-900 px-6 py-3 rounded-xl shadow-md">
-                                    <span className="text-sm font-bold text-white tracking-wide">+14 more</span>
+                                    <span className="text-sm font-semibold text-white tracking-wide">+14 more</span>
                                 </div>
                             </div>
                         </div>
@@ -868,7 +868,7 @@ export default function BecomeASellerPage() {
                         </p>
 
                         <div className="flex items-center justify-center gap-4">
-                            <span className={`text-sm font-bold ${!isYearly ? 'text-gray-900' : 'text-gray-400'}`}>Monthly</span>
+                            <span className={`text-sm font-semibold ${!isYearly ? 'text-gray-900' : 'text-gray-400'}`}>Monthly</span>
                             <button
                                 onClick={() => setIsYearly(!isYearly)}
                                 className="w-16 h-8 bg-blue-600 rounded-full relative p-1 transition-colors"
@@ -879,7 +879,7 @@ export default function BecomeASellerPage() {
                                 />
                             </button>
                             <div className="flex items-center gap-2">
-                                <span className={`text-sm font-bold ${isYearly ? 'text-gray-900' : 'text-gray-400'}`}>Yearly</span>
+                                <span className={`text-sm font-semibold ${isYearly ? 'text-gray-900' : 'text-gray-400'}`}>Yearly</span>
                                 <span className="px-2 py-0.5 bg-green-100 text-green-700 text-xs font-medium rounded-full uppercase">Save 20%</span>
                             </div>
                         </div>
@@ -924,14 +924,14 @@ export default function BecomeASellerPage() {
                                 )}
                                 <div className="space-y-6">
                                     <div>
-                                        <h3 className="text-xl font-bold">{plan.name}</h3>
+                                        <h3 className="text-xl font-semibold">{plan.name}</h3>
                                         <p className="text-gray-400 mt-2">{plan.desc}</p>
                                     </div>
                                     <div className="flex items-baseline gap-1">
                                         <span className="text-4xl font-medium">${plan.price}</span>
                                         {plan.price !== 'Custom' && <span className="text-gray-400 font-medium">/per month</span>}
                                     </div>
-                                    <button className={`w-full py-4 rounded-xl font-bold transition-all ${plan.featured
+                                    <button className={`w-full py-4 rounded-xl font-semibold transition-all ${plan.featured
                                         ? 'bg-blue-600 text-white hover:bg-blue-700'
                                         : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
                                         }`}>
@@ -964,7 +964,7 @@ export default function BecomeASellerPage() {
                         <motion.span 
                             initial={{ opacity: 0, y: 10 }}
                             whileInView={{ opacity: 1, y: 0 }}
-                            className="text-blue-600 font-bold uppercase tracking-[0.3em] text-sm block"
+                            className="text-blue-600 font-semibold uppercase tracking-[0.3em] text-sm block"
                         >
                             Assistance
                         </motion.span>
@@ -992,7 +992,7 @@ export default function BecomeASellerPage() {
                                     onClick={() => setActiveFaq(activeFaq === idx ? null : idx)}
                                     className="w-full p-10 flex items-center justify-between text-left transition-all"
                                 >
-                                    <span className={`text-2xl font-bold transition-colors ${activeFaq === idx ? 'text-gray-900' : 'text-gray-900 group-hover:text-blue-600'}`}>{faq.q}</span>
+                                    <span className={`text-2xl font-semibold transition-colors ${activeFaq === idx ? 'text-gray-900' : 'text-gray-900 group-hover:text-blue-600'}`}>{faq.q}</span>
                                     <div className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${activeFaq === idx ? 'bg-blue-600 rotate-180' : 'bg-gray-50 group-hover:bg-blue-50'}`}>
                                         {activeFaq === idx ? <Minus className="w-6 h-6 text-white" /> : <Plus className={`w-6 h-6 transition-colors ${activeFaq === idx ? 'text-white' : 'text-gray-400 group-hover:text-blue-600'}`} />}
                                     </div>
@@ -1050,7 +1050,7 @@ export default function BecomeASellerPage() {
                             </div>
 
                             <div className="pt-6">
-                                <button className="px-10 py-5 bg-white text-gray-900 rounded-2xl font-bold text-lg hover:shadow-2xl hover:scale-105 transition-all">
+                                <button className="px-10 py-5 bg-white text-gray-900 rounded-2xl font-semibold text-lg hover:shadow-2xl hover:scale-105 transition-all">
                                     Request a Demo
                                 </button>
                             </div>
@@ -1070,7 +1070,7 @@ export default function BecomeASellerPage() {
                                         <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
                                             <div className="w-4 h-4 border-2 border-white rounded-full border-t-transparent" />
                                         </div>
-                                        <span className="font-bold text-lg text-blue-900">Online Planet</span>
+                                        <span className="font-semibold text-lg text-blue-900">Online Planet</span>
                                     </div>
 
                                     <div className="relative">
@@ -1079,11 +1079,11 @@ export default function BecomeASellerPage() {
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                             </svg>
                                         </div>
-                                        <div className="w-full bg-gray-50 rounded-lg py-2 pl-8 text-[10px] text-gray-400 font-bold">Search</div>
+                                        <div className="w-full bg-gray-50 rounded-lg py-2 pl-8 text-[10px] text-gray-400 font-semibold">Search</div>
                                     </div>
 
                                     <div className="space-y-4">
-                                        <p className="text-[9px] font-black text-gray-300 uppercase tracking-widest">Menu</p>
+                                        <p className="text-[9px] font-semibold text-gray-300 uppercase tracking-widest">Menu</p>
                                         <div className="space-y-1">
                                             {[
                                                 { name: 'Dashboard', icon: Layout, active: true },
@@ -1093,7 +1093,7 @@ export default function BecomeASellerPage() {
                                             ].map((item, i) => (
                                                 <div key={i} className={`flex items-center gap-3 p-2.5 rounded-xl transition-colors ${item.active ? 'bg-gray-50 text-blue-600' : 'text-gray-400 hover:bg-gray-50'}`}>
                                                     <item.icon size={14} />
-                                                    <span className="text-[10px] font-bold">{item.name}</span>
+                                                    <span className="text-[10px] font-semibold">{item.name}</span>
                                                     {item.active && <div className="ml-auto w-1 h-1 bg-red-500 rounded-full" />}
                                                 </div>
                                             ))}
@@ -1101,25 +1101,25 @@ export default function BecomeASellerPage() {
                                     </div>
 
                                     <div className="space-y-4 pt-4">
-                                        <p className="text-[9px] font-black text-gray-300 uppercase tracking-widest">Stores</p>
+                                        <p className="text-[9px] font-semibold text-gray-300 uppercase tracking-widest">Stores</p>
                                         <div className="flex items-center gap-3 p-2 rounded-xl text-gray-600">
                                             <div className="w-5 h-5 bg-cyan-100 rounded flex items-center justify-center">
                                                 <ShoppingBag size={10} className="text-cyan-600" />
                                             </div>
-                                            <span className="text-[10px] font-bold">Fashion Hive</span>
+                                            <span className="text-[10px] font-semibold">Fashion Hive</span>
                                         </div>
                                         <div className="flex items-center gap-3 p-2 bg-red-50 rounded-xl text-red-600">
                                             <div className="w-5 h-5 bg-red-100 rounded flex items-center justify-center">
                                                 <Layout size={10} className="text-red-500" />
                                             </div>
-                                            <span className="text-[10px] font-bold">HealthMart</span>
+                                            <span className="text-[10px] font-semibold">HealthMart</span>
                                         </div>
                                     </div>
                                 </div>
 
                                 {/* Dashboard Main Content */}
                                 <div className="flex-1 bg-white p-6 overflow-hidden">
-                                    <div className="flex items-center gap-2 text-[8px] font-bold text-gray-400 mb-6 uppercase tracking-widest">
+                                    <div className="flex items-center gap-2 text-[8px] font-semibold text-gray-400 mb-6 uppercase tracking-widest">
                                         <span>Home</span>
                                         <ChevronRight size={8} />
                                         <span>Store</span>
@@ -1134,43 +1134,43 @@ export default function BecomeASellerPage() {
 
                                     <div className="flex items-center gap-4 mb-8">
                                         <div className="w-14 h-14 bg-red-50 border border-red-100 rounded-2xl flex items-center justify-center">
-                                            <div className="w-8 h-8 rounded-lg bg-red-500 text-white flex items-center justify-center uppercase font-black">H</div>
+                                            <div className="w-8 h-8 rounded-lg bg-red-500 text-white flex items-center justify-center uppercase font-semibold">H</div>
                                         </div>
                                         <div>
-                                            <h3 className="text-2xl font-bold text-gray-900">HealthMart</h3>
-                                            <p className="text-[10px] text-gray-400 font-bold">24 members</p>
+                                            <h3 className="text-2xl font-semibold text-gray-900">HealthMart</h3>
+                                            <p className="text-[10px] text-gray-400 font-semibold">24 members</p>
                                         </div>
                                     </div>
 
                                     <div className="grid grid-cols-2 gap-4 mb-8">
                                         <div className="p-5 bg-gray-50 rounded-[1.5rem] border border-gray-100">
-                                            <p className="text-[9px] font-bold text-gray-400 uppercase mb-4">Orders Provided</p>
+                                            <p className="text-[9px] font-semibold text-gray-400 uppercase mb-4">Orders Provided</p>
                                             <div className="flex items-baseline gap-6">
                                                 <div>
-                                                    <p className="text-2xl font-black">210</p>
-                                                    <p className="text-[8px] font-bold text-gray-400 mt-1 uppercase">Processing</p>
+                                                    <p className="text-2xl font-semibold">210</p>
+                                                    <p className="text-[8px] font-semibold text-gray-400 mt-1 uppercase">Processing</p>
                                                 </div>
                                                 <div>
-                                                    <p className="text-2xl font-black text-gray-300">109</p>
-                                                    <p className="text-[8px] font-bold text-gray-400 mt-1 uppercase">Processed</p>
+                                                    <p className="text-2xl font-semibold text-gray-300">109</p>
+                                                    <p className="text-[8px] font-semibold text-gray-400 mt-1 uppercase">Processed</p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div className="p-5 bg-gray-50 rounded-[1.5rem] border border-gray-100">
                                             <div className="flex justify-between items-start mb-4">
-                                                <p className="text-[9px] font-bold text-gray-400 uppercase">Store Product</p>
+                                                <p className="text-[9px] font-semibold text-gray-400 uppercase">Store Product</p>
                                                 <div className="w-6 h-6 bg-blue-500 rounded-lg flex items-center justify-center">
                                                     <ShoppingBag size={10} className="text-white" />
                                                 </div>
                                             </div>
                                             <div className="flex items-baseline gap-6">
                                                 <div>
-                                                    <p className="text-2xl font-black">3.4k</p>
-                                                    <p className="text-[8px] font-bold text-gray-400 mt-1 uppercase">Total</p>
+                                                    <p className="text-2xl font-semibold">3.4k</p>
+                                                    <p className="text-[8px] font-semibold text-gray-400 mt-1 uppercase">Total</p>
                                                 </div>
                                                 <div>
-                                                    <p className="text-2xl font-black text-gray-300">352</p>
-                                                    <p className="text-[8px] font-bold text-gray-400 mt-1 uppercase">Sold out</p>
+                                                    <p className="text-2xl font-semibold text-gray-300">352</p>
+                                                    <p className="text-[8px] font-semibold text-gray-400 mt-1 uppercase">Sold out</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -1179,8 +1179,8 @@ export default function BecomeASellerPage() {
                                     {/* Sales by Country Small View */}
                                     <div className="space-y-4">
                                         <div className="flex justify-between items-center">
-                                            <h4 className="text-xs font-bold uppercase tracking-widest text-gray-400">Sales by Country</h4>
-                                            <span className="text-[8px] font-bold text-blue-600 underline cursor-pointer uppercase">View All</span>
+                                            <h4 className="text-xs font-semibold uppercase tracking-widest text-gray-400">Sales by Country</h4>
+                                            <span className="text-[8px] font-semibold text-blue-600 underline cursor-pointer uppercase">View All</span>
                                         </div>
                                         <div className="grid grid-cols-3 gap-3">
                                             {[
@@ -1189,12 +1189,12 @@ export default function BecomeASellerPage() {
                                                 { c: 'Italy', v: '3.1k', flag: 'IT' }
                                             ].map((country, idx) => (
                                                 <div key={idx} className="p-3 bg-white border border-gray-100 rounded-xl flex items-center gap-3">
-                                                    <div className="w-6 h-4 rounded-sm bg-gray-100 overflow-hidden text-[6px] font-black flex items-center justify-center">
+                                                    <div className="w-6 h-4 rounded-sm bg-gray-100 overflow-hidden text-[6px] font-semibold flex items-center justify-center">
                                                         {country.flag}
                                                     </div>
                                                     <div>
-                                                        <p className="text-[8px] font-bold text-gray-900">{country.c}</p>
-                                                        <p className="text-[7px] text-gray-400 font-bold">{country.v} <span className="font-normal">products</span></p>
+                                                        <p className="text-[8px] font-semibold text-gray-900">{country.c}</p>
+                                                        <p className="text-[7px] text-gray-400 font-semibold">{country.v} <span className="font-normal">products</span></p>
                                                     </div>
                                                 </div>
                                             ))}
@@ -1247,7 +1247,7 @@ export default function BecomeASellerPage() {
                         ))}
                     </div>
 
-                    <div className="mt-20 pt-8 border-t border-gray-100 flex flex-col md:row-reverse md:flex-row justify-between items-center gap-4 text-sm font-bold text-gray-400">
+                    <div className="mt-20 pt-8 border-t border-gray-100 flex flex-col md:row-reverse md:flex-row justify-between items-center gap-4 text-sm font-semibold text-gray-400">
                         <div className="flex gap-8">
                             <Link href="#" className="hover:text-gray-600">Privacy Policy</Link>
                             <Link href="#" className="hover:text-gray-600">Terms of Service</Link>

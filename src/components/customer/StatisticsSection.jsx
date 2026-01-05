@@ -81,13 +81,13 @@ export default function StatisticsSection() {
             <div className="relative z-10">
               <div className="w-20 h-20 mb-10 border border-white/30 rounded-full flex items-center justify-center backdrop-blur-sm">
                 <div className="text-center group-hover:scale-110 transition-transform duration-500">
-                  <div className="text-[10px] text-white/60 font-black uppercase tracking-widest">Trusted</div>
-                  <div className="text-2xl text-white font-black italic tracking-tighter">OP</div>
-                  <div className="text-[10px] text-white/60 font-black uppercase tracking-widest">Advisors</div>
+                  <div className="text-[10px] text-white/60 font-semibold uppercase tracking-widest">Trusted</div>
+                  <div className="text-2xl text-white font-semibold italic tracking-tighter">OP</div>
+                  <div className="text-[10px] text-white/60 font-semibold uppercase tracking-widest">Advisors</div>
                 </div>
               </div>
 
-              <h2 className="text-4xl md:text-6xl font-black text-white tracking-tighter mb-6 leading-[0.9]">
+              <h2 className="text-4xl md:text-6xl font-semibold text-white tracking-tighter mb-6 leading-[0.9]">
                 Your Reliable Partners
               </h2>
               <p className="text-lg md:text-xl text-white/70 max-w-md font-medium leading-tight">
@@ -96,7 +96,7 @@ export default function StatisticsSection() {
             </div>
 
             <div className="relative z-10">
-              <button className="px-8 py-3.5 bg-white text-black font-black uppercase tracking-widest text-[11px] rounded-full hover:bg-gray-200 transition-all transform hover:scale-105 active:scale-95">
+              <button className="px-8 py-3.5 bg-white text-black font-semibold uppercase tracking-widest text-[11px] rounded-full hover:bg-gray-200 transition-all transform hover:scale-105 active:scale-95">
                 Explore Our story
               </button>
             </div>
@@ -120,7 +120,7 @@ export default function StatisticsSection() {
                 </div>
               </div>
 
-              <h3 className="text-2xl md:text-3xl font-black text-white tracking-tighter leading-[1.1] mb-8">
+              <h3 className="text-2xl md:text-3xl font-semibold text-white tracking-tighter leading-[1.1] mb-8">
                 Unlock perks—your gateway to exclusive loyalty points
               </h3>
 
@@ -131,10 +131,10 @@ export default function StatisticsSection() {
                     placeholder="Mobile Number"
                     value={mobileNumber}
                     onChange={(e) => setMobileNumber(e.target.value)}
-                    className="w-full h-14 bg-white/10 border border-white/20 rounded-2xl px-6 text-white placeholder:text-white/50 focus:outline-none focus:bg-white/20 transition-all font-bold"
+                    className="w-full h-14 bg-white/10 border border-white/20 rounded-2xl px-6 text-white placeholder:text-white/50 focus:outline-none focus:bg-white/20 transition-all font-semibold"
                   />
                 </div>
-                <button className="w-full h-14 bg-black text-white font-black uppercase tracking-widest text-[11px] rounded-full hover:bg-gray-900 transition-all transform active:scale-95 leading-none">
+                <button className="w-full h-14 bg-black text-white font-semibold uppercase tracking-widest text-[11px] rounded-full hover:bg-gray-900 transition-all transform active:scale-95 leading-none">
                   Verify Number
                 </button>
               </div>
@@ -144,15 +144,15 @@ export default function StatisticsSection() {
           {/* Right Card - Warranty White */}
           <div className="md:col-span-3 bg-white border border-gray-100 rounded-[40px] p-10 flex flex-col justify-center relative group overflow-hidden shadow-sm">
             <div className="absolute top-10 left-10 flex items-center gap-1.5">
-              <span className="text-2xl font-black text-[#e40000] tracking-tighter italic">OP</span>
-              <span className="text-2xl font-black text-blue-500 italic">+</span>
+              <span className="text-2xl font-semibold text-[#e40000] tracking-tighter italic">OP</span>
+              <span className="text-2xl font-semibold text-blue-500 italic">+</span>
             </div>
 
             <div className="mt-12">
-              <h3 className="text-2xl font-black text-gray-900 tracking-tighter leading-[1.1] mb-6">
+              <h3 className="text-2xl font-semibold text-gray-900 tracking-tighter leading-[1.1] mb-6">
                 Do not forget to include the OP+ Extended Warranty with your purchase
               </h3>
-              <p className="text-gray-500 font-bold text-sm leading-tight mb-8">
+              <p className="text-gray-500 font-semibold text-sm leading-tight mb-8">
                 Protect your electronics and appliances beyond the standard coverage
               </p>
             </div>
@@ -164,36 +164,36 @@ export default function StatisticsSection() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-12 md:gap-8 px-4">
 
           <div className="flex-1 flex flex-col md:flex-row items-center md:items-start gap-6">
-            <div className="text-7xl md:text-8xl font-black text-gray-900 tracking-tighter flex items-start">
+            <div className="text-7xl md:text-8xl font-semibold text-gray-900 tracking-tighter flex items-start">
               <AnimatedCounter value={stats.showrooms} />
               <span className="text-gray-800">+</span>
             </div>
             <div className="max-w-[200px] text-center md:text-left">
-              <p className="text-sm font-bold text-gray-500 leading-tight">
+              <p className="text-sm font-semibold text-gray-500 leading-tight">
                 {stats.showroomsLabel}
               </p>
             </div>
           </div>
 
           <div className="flex-1 flex flex-col md:flex-row items-center md:items-start gap-6">
-            <div className="text-7xl md:text-8xl font-black text-gray-900 tracking-tighter flex items-start">
+            <div className="text-7xl md:text-8xl font-semibold text-gray-900 tracking-tighter flex items-start">
               <AnimatedCounter value={stats.customers} />
               <span className="text-gray-800">{stats.customersSuffix}</span>
             </div>
             <div className="max-w-[200px] text-center md:text-left">
-              <p className="text-sm font-bold text-gray-500 leading-tight">
+              <p className="text-sm font-semibold text-gray-500 leading-tight">
                 Happy Customers
               </p>
             </div>
           </div>
 
           <div className="flex-1 flex flex-col md:flex-row items-center md:items-start gap-6">
-            <div className="text-7xl md:text-8xl font-black text-gray-900 tracking-tighter flex items-start">
+            <div className="text-7xl md:text-8xl font-semibold text-gray-900 tracking-tighter flex items-start">
               <AnimatedCounter value={stats.delivery} />
               <span className="text-gray-800">+</span>
             </div>
             <div className="max-w-[200px] text-center md:text-left">
-              <p className="text-sm font-bold text-gray-500 leading-tight">
+              <p className="text-sm font-semibold text-gray-500 leading-tight">
                 {stats.deliveryLabel}
               </p>
             </div>

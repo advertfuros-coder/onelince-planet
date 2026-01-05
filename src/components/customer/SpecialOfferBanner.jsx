@@ -129,13 +129,13 @@ export default function SpecialOfferBanner() {
 
                             <div className="relative z-10">
                                 <p className="text-white text-xs font-medium mb-1 opacity-90 tracking-wide">SAVE UP TO</p>
-                                <h3 className="text-white text-7xl font-black mb-1 leading-none">
+                                <h3 className="text-white text-7xl font-semibold mb-1 leading-none">
                                     <span className="text-5xl align-top">↓</span>80%
                                 </h3>
                                 <p className="text-white text-xs mb-8 opacity-75 tracking-wide">On selected items</p>
 
                                 <div className="bg-white rounded-xl px-8 py-4 shadow-lg">
-                                    <p className="text-green-700 text-5xl font-black tracking-tight leading-none">12.12</p>
+                                    <p className="text-green-700 text-5xl font-semibold tracking-tight leading-none">12.12</p>
                                 </div>
                             </div>
                         </div>

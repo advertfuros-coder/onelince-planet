@@ -48,7 +48,7 @@ export default function QuickBuyModal({ product, isOpen, onClose }) {
       <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden animate-scale-up">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b bg-gradient-to-r from-blue-50 to-indigo-50">
-          <h2 className="text-xl font-bold text-gray-900">Quick Buy</h2>
+          <h2 className="text-xl font-semibold text-gray-900">Quick Buy</h2>
           <button
             onClick={onClose}
             className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-200 transition"
@@ -65,7 +65,7 @@ export default function QuickBuyModal({ product, isOpen, onClose }) {
               {/* Main Image */}
               <div className="relative bg-gray-50 rounded-xl overflow-hidden aspect-square">
                 {discount > 0 && (
-                  <div className="absolute top-3 left-3 z-10 bg-red-600 text-white px-3 py-1 rounded-full text-sm font-bold">
+                  <div className="absolute top-3 left-3 z-10 bg-red-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
                     {discount}% OFF
                   </div>
                 )}
@@ -115,7 +115,7 @@ export default function QuickBuyModal({ product, isOpen, onClose }) {
             <div className="space-y-4">
               {/* Title */}
               <div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">{product.name}</h3>
+                <h3 className="text-2xl font-semibold text-gray-900 mb-2">{product.name}</h3>
                 {product.brand && (
                   <p className="text-gray-600 text-sm">
                     Brand: <span className="font-semibold">{product.brand}</span>
@@ -127,7 +127,7 @@ export default function QuickBuyModal({ product, isOpen, onClose }) {
               {product.ratings && (
                 <div className="flex items-center gap-3">
                   <div className="flex items-center gap-1 bg-green-600 text-white px-2 py-1 rounded-lg">
-                    <span className="font-bold">{product.ratings.average?.toFixed(1) || 0}</span>
+                    <span className="font-semibold">{product.ratings.average?.toFixed(1) || 0}</span>
                     <FiStar className="text-sm fill-current" />
                   </div>
                   <span className="text-sm text-gray-600">
@@ -139,7 +139,7 @@ export default function QuickBuyModal({ product, isOpen, onClose }) {
               {/* Price */}
               <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-xl">
                 <div className="flex items-baseline gap-3 mb-1">
-                  <span className="text-3xl font-bold text-gray-900">
+                  <span className="text-3xl font-semibold text-gray-900">
                     ₹{currentPrice?.toLocaleString()}
                   </span>
                   {product.pricing?.salePrice && (
@@ -236,7 +236,7 @@ export default function QuickBuyModal({ product, isOpen, onClose }) {
                 <button
                   onClick={handleAddToCart}
                   disabled={product.inventory?.stock < 1}
-                  className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 rounded-xl font-bold hover:from-blue-700 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-105 active:scale-95 shadow-lg"
+                  className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 rounded-xl font-semibold hover:from-blue-700 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-105 active:scale-95 shadow-lg"
                 >
                   <FiShoppingCart className="text-xl" />
                   Add to Cart
@@ -245,7 +245,7 @@ export default function QuickBuyModal({ product, isOpen, onClose }) {
                 <button
                   onClick={handleBuyNow}
                   disabled={product.inventory?.stock < 1}
-                  className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-orange-500 to-red-500 text-white py-3 rounded-xl font-bold hover:from-orange-600 hover:to-red-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-105 active:scale-95 shadow-lg"
+                  className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-orange-500 to-red-500 text-white py-3 rounded-xl font-semibold hover:from-orange-600 hover:to-red-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-105 active:scale-95 shadow-lg"
                 >
                   Buy Now
                 </button>

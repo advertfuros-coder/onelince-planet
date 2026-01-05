@@ -57,7 +57,7 @@ export default function StealDeals() {
                                 STEAL DEALS
                             </h2>
                             <div className="bg-[#7C3AED] p-2 rounded-xl rotate-12 shadow-lg">
-                                <span className="text-white text-2xl font-black">%</span>
+                                <span className="text-white text-2xl font-semibold">%</span>
                             </div>
 
                             {/* Decorative Sparkle */}

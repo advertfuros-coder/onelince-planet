@@ -104,7 +104,7 @@ export default function InventoryMasterPage() {
         return (
             <div className="flex flex-col items-center justify-center min-h-screen space-y-4">
                 <div className="w-12 h-12 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin" />
-                <p className="text-gray-400 font-black uppercase tracking-widest text-[10px]">Loading Inventory...</p>
+                <p className="text-gray-400 font-semibold uppercase tracking-widest text-[10px]">Loading Inventory...</p>
             </div>
         )
     }
@@ -120,19 +120,19 @@ export default function InventoryMasterPage() {
                             <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center text-white shadow-lg shadow-emerald-500/20">
                                 <Database size={18} />
                             </div>
-                            <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest bg-emerald-50 px-3 py-1 rounded-full border border-emerald-100">Stock Management</span>
+                            <span className="text-[10px] font-semibold text-emerald-600 uppercase tracking-widest bg-emerald-50 px-3 py-1 rounded-full border border-emerald-100">Stock Management</span>
                         </div>
-                        <h1 className="text-4xl font-black text-gray-900 tracking-tighter">Inventory Manager <span className="text-emerald-600">.</span></h1>
+                        <h1 className="text-4xl font-semibold text-gray-900 tracking-tighter">Inventory Manager <span className="text-emerald-600">.</span></h1>
                         <p className="text-gray-500 font-medium mt-1 uppercase text-[10px] tracking-widest">Track and manage your stock levels across all warehouses</p>
                     </div>
 
                     <div className="flex items-center gap-4">
-                        <button className="hidden md:flex items-center gap-2 px-6 py-4 bg-white border border-gray-100 rounded-[1.5rem] font-black uppercase tracking-widest text-[11px] text-gray-600 hover:bg-gray-50 transition-all">
+                        <button className="hidden md:flex items-center gap-2 px-6 py-4 bg-white border border-gray-100 rounded-[1.5rem] font-semibold uppercase tracking-widest text-[11px] text-gray-600 hover:bg-gray-50 transition-all">
                             <Download size={18} />
                             Export Report
                         </button>
                         <button
-                            className="px-8 py-4 bg-emerald-600 text-white rounded-[1.5rem] font-black uppercase text-[11px] tracking-widest shadow-2xl shadow-emerald-500/20 hover:bg-emerald-700 transition-all active:scale-95 flex items-center justify-center gap-2"
+                            className="px-8 py-4 bg-emerald-600 text-white rounded-[1.5rem] font-semibold uppercase text-[11px] tracking-widest shadow-2xl shadow-emerald-500/20 hover:bg-emerald-700 transition-all active:scale-95 flex items-center justify-center gap-2"
                         >
                             <Plus size={18} />
                             Add Stock
@@ -162,7 +162,7 @@ export default function InventoryMasterPage() {
                                     placeholder="Search by SKU, Name or Batch..."
                                     value={search}
                                     onChange={(e) => setSearch(e.target.value)}
-                                    className="w-full pl-12 pr-4 py-3.5 bg-gray-50 border-none rounded-2xl text-[13px] font-bold focus:ring-2 focus:ring-emerald-100 transition-all"
+                                    className="w-full pl-12 pr-4 py-3.5 bg-gray-50 border-none rounded-2xl text-[13px] font-semibold focus:ring-2 focus:ring-emerald-100 transition-all"
                                 />
                             </div>
 
@@ -170,7 +170,7 @@ export default function InventoryMasterPage() {
                                 <select
                                     value={selectedWarehouse}
                                     onChange={(e) => setSelectedWarehouse(e.target.value)}
-                                    className="flex-1 lg:w-56 px-4 py-3.5 bg-gray-50 border-none rounded-2xl text-[10px] font-black uppercase tracking-widest focus:ring-2 focus:ring-emerald-100"
+                                    className="flex-1 lg:w-56 px-4 py-3.5 bg-gray-50 border-none rounded-2xl text-[10px] font-semibold uppercase tracking-widest focus:ring-2 focus:ring-emerald-100"
                                 >
                                     <option value="all">All Warehouses</option>
                                     {warehouses.map(wh => (
@@ -192,11 +192,11 @@ export default function InventoryMasterPage() {
                                 <table className="w-full">
                                     <thead>
                                         <tr className="border-b border-gray-50 bg-gray-50/30">
-                                            <th className="px-8 py-5 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">Product Details</th>
-                                            <th className="px-6 py-5 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">SKU</th>
-                                            <th className="px-6 py-5 text-center text-[10px] font-black text-gray-400 uppercase tracking-widest">Total Stock</th>
-                                            <th className="px-6 py-5 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">Warehouse Locations</th>
-                                            <th className="px-8 py-5 text-right text-[10px] font-black text-gray-400 uppercase tracking-widest">Actions</th>
+                                            <th className="px-8 py-5 text-left text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Product Details</th>
+                                            <th className="px-6 py-5 text-left text-[10px] font-semibold text-gray-400 uppercase tracking-widest">SKU</th>
+                                            <th className="px-6 py-5 text-center text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Total Stock</th>
+                                            <th className="px-6 py-5 text-left text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Warehouse Locations</th>
+                                            <th className="px-8 py-5 text-right text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-gray-50">
@@ -212,16 +212,16 @@ export default function InventoryMasterPage() {
                                                             )}
                                                         </div>
                                                         <div className="min-w-0">
-                                                            <p className="text-sm font-black text-gray-900 truncate tracking-tight">{item.name}</p>
-                                                            <p className="text-[10px] font-black text-emerald-600 uppercase tracking-tighter">{item.category}</p>
+                                                            <p className="text-sm font-semibold text-gray-900 truncate tracking-tight">{item.name}</p>
+                                                            <p className="text-[10px] font-semibold text-emerald-600 uppercase tracking-tighter">{item.category}</p>
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td className="px-6 py-6 font-bold text-xs text-slate-400">{item.sku}</td>
+                                                <td className="px-6 py-6 font-semibold text-xs text-slate-400">{item.sku}</td>
                                                 <td className="px-6 py-6 text-center">
                                                     <div className={`inline-flex flex-col items-center px-4 py-2 rounded-2xl ${item.totalStock <= item.lowStockThreshold ? 'bg-orange-50 text-orange-600' : 'bg-emerald-50 text-emerald-600'}`}>
-                                                        <span className="text-lg font-black leading-none">{item.totalStock}</span>
-                                                        <span className="text-[8px] font-black uppercase tracking-widest mt-1">Units</span>
+                                                        <span className="text-lg font-semibold leading-none">{item.totalStock}</span>
+                                                        <span className="text-[8px] font-semibold uppercase tracking-widest mt-1">Units</span>
                                                     </div>
                                                 </td>
                                                 <td className="px-6 py-6">
@@ -230,7 +230,7 @@ export default function InventoryMasterPage() {
                                                             <div
                                                                 key={wh.warehouseId}
                                                                 title={`${wh.warehouseName}: ${wh.quantity} units`}
-                                                                className={`w-8 h-8 rounded-full border-2 border-white flex items-center justify-center text-[10px] font-black ${wh.quantity > 0 ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-400'}`}
+                                                                className={`w-8 h-8 rounded-full border-2 border-white flex items-center justify-center text-[10px] font-semibold ${wh.quantity > 0 ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-400'}`}
                                                             >
                                                                 {wh.warehouseName.charAt(0)}
                                                             </div>
@@ -271,10 +271,10 @@ export default function InventoryMasterPage() {
 
                         <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100/50">
                             <div className="flex items-center justify-between mb-8">
-                                <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest flex items-center gap-2">
+                                <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-widest flex items-center gap-2">
                                     <History size={16} className="text-indigo-600" /> Movement Logs
                                 </h3>
-                                <button className="text-[10px] font-black text-indigo-600 uppercase hover:underline">Full Audit</button>
+                                <button className="text-[10px] font-semibold text-indigo-600 uppercase hover:underline">Full Audit</button>
                             </div>
 
                             <div className="space-y-6">
@@ -286,8 +286,8 @@ export default function InventoryMasterPage() {
                                             {log.type === 'addition' ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />}
                                         </div>
                                         <div className="min-w-0">
-                                            <p className="text-[11px] font-black text-gray-900 uppercase leading-none tracking-tight">{log.productId?.name}</p>
-                                            <p className="text-[9px] font-bold text-gray-500 mt-1">
+                                            <p className="text-[11px] font-semibold text-gray-900 uppercase leading-none tracking-tight">{log.productId?.name}</p>
+                                            <p className="text-[9px] font-semibold text-gray-500 mt-1">
                                                 {log.type.toUpperCase()} • {log.quantity} units @ {log.warehouseId?.name}
                                             </p>
                                             <p className="text-[8px] font-medium text-gray-400 mt-1">{new Date(log.createdAt).toLocaleString()}</p>
@@ -300,11 +300,11 @@ export default function InventoryMasterPage() {
                         <div className="bg-[#1E3A8A] rounded-[2.5rem] p-8 text-white relative overflow-hidden group">
                             <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 blur-3xl -mr-16 -mt-16 group-hover:scale-125 transition-transform duration-700" />
                             <Zap className="text-amber-400 mb-4" />
-                            <h4 className="text-lg font-black tracking-tight leading-tight">Smart Stock Alerts</h4>
+                            <h4 className="text-lg font-semibold tracking-tight leading-tight">Smart Stock Alerts</h4>
                             <p className="text-blue-100/60 text-xs font-medium mt-2 leading-relaxed">
                                 Demand for "Spectral Entity X1" is up 40%. Recommend increasing buffer stock at Bangalore Hub by 200 units.
                             </p>
-                            <button className="w-full mt-6 py-4 bg-white/10 hover:bg-white text-white hover:text-indigo-900 rounded-2xl text-[10px] font-black uppercase tracking-widest border border-white/20 hover:border-white transition-all">
+                            <button className="w-full mt-6 py-4 bg-white/10 hover:bg-white text-white hover:text-indigo-900 rounded-2xl text-[10px] font-semibold uppercase tracking-widest border border-white/20 hover:border-white transition-all">
                                 Restock Automatically
                             </button>
                         </div>
@@ -360,10 +360,10 @@ function InvStatCard({ label, value, trend, icon: Icon, color, alert }) {
                     <Icon size={22} />
                 </div>
                 <div>
-                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1.5">{label}</p>
+                    <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest leading-none mb-1.5">{label}</p>
                     <div className="flex items-baseline gap-2">
-                        <p className="text-2xl font-black text-gray-900 tracking-tight">{value}</p>
-                        <span className={`text-[10px] font-black ${alert ? 'text-rose-500' : 'text-emerald-500'}`}>{trend}</span>
+                        <p className="text-2xl font-semibold text-gray-900 tracking-tight">{value}</p>
+                        <span className={`text-[10px] font-semibold ${alert ? 'text-rose-500' : 'text-emerald-500'}`}>{trend}</span>
                     </div>
                 </div>
             </div>
@@ -416,8 +416,8 @@ function TransferModal({ item, warehouses, onClose, onSuccess }) {
             >
                 <div className="p-10 bg-indigo-50/50 border-b border-gray-100 flex items-center justify-between">
                     <div>
-                        <h2 className="text-2xl font-black text-gray-900 tracking-tight">Transfer Stock</h2>
-                        <p className="text-[10px] font-black text-indigo-400 uppercase tracking-widest mt-1">Move stock between warehouses</p>
+                        <h2 className="text-2xl font-semibold text-gray-900 tracking-tight">Transfer Stock</h2>
+                        <p className="text-[10px] font-semibold text-indigo-400 uppercase tracking-widest mt-1">Move stock between warehouses</p>
                     </div>
                     <button onClick={onClose} className="w-10 h-10 bg-white border border-gray-100 rounded-full flex items-center justify-center text-gray-400 hover:text-rose-500 transition-colors">
                         <Plus size={20} className="rotate-45" />
@@ -428,31 +428,31 @@ function TransferModal({ item, warehouses, onClose, onSuccess }) {
                     <div className="flex items-center gap-4 p-4 bg-indigo-50 rounded-2xl border border-indigo-100">
                         <img src={item.image} className="w-12 h-12 object-cover rounded-lg" alt="" />
                         <div>
-                            <p className="text-[11px] font-black text-gray-900 uppercase leading-none">{item.name}</p>
-                            <p className="text-[9px] font-bold text-indigo-600 mt-1">Total Stock: {item.totalStock} Units</p>
+                            <p className="text-[11px] font-semibold text-gray-900 uppercase leading-none">{item.name}</p>
+                            <p className="text-[9px] font-semibold text-indigo-600 mt-1">Total Stock: {item.totalStock} Units</p>
                         </div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">From Warehouse</label>
+                            <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest ml-1">From Warehouse</label>
                             <select
                                 value={formData.fromWarehouseId}
                                 onChange={(e) => setFormData({ ...formData, fromWarehouseId: e.target.value })}
-                                className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-xs font-bold focus:ring-2 focus:ring-indigo-100 transition-all"
+                                className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-xs font-semibold focus:ring-2 focus:ring-indigo-100 transition-all"
                             >
                                 {warehouses.map(wh => (
                                     <option key={wh._id} value={wh._id}>{wh.name}</option>
                                 ))}
                             </select>
-                            <p className="text-[8px] font-black text-indigo-600 uppercase ml-1">Available: {maxAvailable} Units</p>
+                            <p className="text-[8px] font-semibold text-indigo-600 uppercase ml-1">Available: {maxAvailable} Units</p>
                         </div>
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">To Warehouse</label>
+                            <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest ml-1">To Warehouse</label>
                             <select
                                 value={formData.toWarehouseId}
                                 onChange={(e) => setFormData({ ...formData, toWarehouseId: e.target.value })}
-                                className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-xs font-bold focus:ring-2 focus:ring-indigo-100 transition-all"
+                                className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-xs font-semibold focus:ring-2 focus:ring-indigo-100 transition-all"
                             >
                                 {warehouses.map(wh => (
                                     <option key={wh._id} value={wh._id}>{wh.name} {wh._id === formData.fromWarehouseId ? '(Source)' : ''}</option>
@@ -462,27 +462,27 @@ function TransferModal({ item, warehouses, onClose, onSuccess }) {
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Transfer Quantity</label>
+                        <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest ml-1">Transfer Quantity</label>
                         <input
                             type="number"
                             required
                             max={maxAvailable}
                             value={formData.quantity}
                             onChange={(e) => setFormData({ ...formData, quantity: parseInt(e.target.value) })}
-                            className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-lg font-black focus:ring-2 focus:ring-indigo-100 transition-all"
+                            className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-lg font-semibold focus:ring-2 focus:ring-indigo-100 transition-all"
                             placeholder="0"
                         />
-                        <p className="text-[8px] font-bold text-gray-400 ml-1">Units will be moved from source to destination warehouse.</p>
+                        <p className="text-[8px] font-semibold text-gray-400 ml-1">Units will be moved from source to destination warehouse.</p>
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Transfer Reason</label>
+                        <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest ml-1">Transfer Reason</label>
                         <input
                             type="text"
                             required
                             value={formData.reason}
                             onChange={(e) => setFormData({ ...formData, reason: e.target.value })}
-                            className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-xs font-bold focus:ring-2 focus:ring-indigo-100 transition-all"
+                            className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-xs font-semibold focus:ring-2 focus:ring-indigo-100 transition-all"
                             placeholder="e.g. Regional demand balancing"
                         />
                     </div>
@@ -491,14 +491,14 @@ function TransferModal({ item, warehouses, onClose, onSuccess }) {
                         <button
                             type="button"
                             onClick={onClose}
-                            className="flex-1 px-8 py-5 border-2 border-gray-100 text-gray-400 rounded-3xl text-[11px] font-black uppercase tracking-widest hover:bg-gray-50 transition-all"
+                            className="flex-1 px-8 py-5 border-2 border-gray-100 text-gray-400 rounded-3xl text-[11px] font-semibold uppercase tracking-widest hover:bg-gray-50 transition-all"
                         >
                             Abort
                         </button>
                         <button
                             type="submit"
                             disabled={loading || formData.quantity <= 0 || formData.quantity > maxAvailable}
-                            className="flex-1 px-8 py-5 bg-indigo-600 text-white rounded-3xl text-[11px] font-black uppercase tracking-widest hover:bg-indigo-700 shadow-xl shadow-indigo-500/20 disabled:opacity-50 transition-all"
+                            className="flex-1 px-8 py-5 bg-indigo-600 text-white rounded-3xl text-[11px] font-semibold uppercase tracking-widest hover:bg-indigo-700 shadow-xl shadow-indigo-500/20 disabled:opacity-50 transition-all"
                         >
                             {loading ? 'Transferring...' : 'Transfer Stock'}
                         </button>
@@ -558,8 +558,8 @@ function AdjustmentModal({ item, warehouses, onClose, onSuccess }) {
             >
                 <div className="p-10 bg-gray-50/50 border-b border-gray-100 flex items-center justify-between">
                     <div>
-                        <h2 className="text-2xl font-black text-gray-900 tracking-tight">Stock Adjustment</h2>
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1">Update Stock Levels</p>
+                        <h2 className="text-2xl font-semibold text-gray-900 tracking-tight">Stock Adjustment</h2>
+                        <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mt-1">Update Stock Levels</p>
                     </div>
                     <button onClick={onClose} className="w-10 h-10 bg-white border border-gray-100 rounded-full flex items-center justify-center text-gray-400 hover:text-rose-500 transition-colors">
                         <Plus size={20} className="rotate-45" />
@@ -570,18 +570,18 @@ function AdjustmentModal({ item, warehouses, onClose, onSuccess }) {
                     <div className="flex items-center gap-4 p-4 bg-emerald-50 rounded-2xl border border-emerald-100">
                         <img src={item.image} className="w-12 h-12 object-cover rounded-lg" alt="" />
                         <div>
-                            <p className="text-[11px] font-black text-gray-900 uppercase leading-none">{item.name}</p>
-                            <p className="text-[9px] font-bold text-emerald-600 mt-1">Global Stock: {item.totalStock} Units</p>
+                            <p className="text-[11px] font-semibold text-gray-900 uppercase leading-none">{item.name}</p>
+                            <p className="text-[9px] font-semibold text-emerald-600 mt-1">Global Stock: {item.totalStock} Units</p>
                         </div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Warehouse</label>
+                            <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest ml-1">Warehouse</label>
                             <select
                                 value={formData.warehouseId}
                                 onChange={(e) => setFormData({ ...formData, warehouseId: e.target.value })}
-                                className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-xs font-bold focus:ring-2 focus:ring-emerald-100 transition-all"
+                                className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-xs font-semibold focus:ring-2 focus:ring-emerald-100 transition-all"
                                 required
                             >
                                 <option value="">Select Warehouse</option>
@@ -591,11 +591,11 @@ function AdjustmentModal({ item, warehouses, onClose, onSuccess }) {
                             </select>
                         </div>
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Operation</label>
+                            <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest ml-1">Operation</label>
                             <select
                                 value={formData.type}
                                 onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                                className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-xs font-bold focus:ring-2 focus:ring-emerald-100 transition-all"
+                                className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-xs font-semibold focus:ring-2 focus:ring-emerald-100 transition-all"
                             >
                                 <option value="addition">Addition (+)</option>
                                 <option value="subtraction">Removal (-)</option>
@@ -605,25 +605,25 @@ function AdjustmentModal({ item, warehouses, onClose, onSuccess }) {
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Quantity</label>
+                        <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest ml-1">Quantity</label>
                         <input
                             type="number"
                             required
                             value={formData.quantity}
                             onChange={(e) => setFormData({ ...formData, quantity: parseInt(e.target.value) })}
-                            className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-lg font-black focus:ring-2 focus:ring-emerald-100 transition-all"
+                            className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-lg font-semibold focus:ring-2 focus:ring-emerald-100 transition-all"
                             placeholder="0"
                         />
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Adjustment Reason</label>
+                        <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest ml-1">Adjustment Reason</label>
                         <input
                             type="text"
                             required
                             value={formData.reason}
                             onChange={(e) => setFormData({ ...formData, reason: e.target.value })}
-                            className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-xs font-bold focus:ring-2 focus:ring-emerald-100 transition-all"
+                            className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-xs font-semibold focus:ring-2 focus:ring-emerald-100 transition-all"
                             placeholder="e.g. Restock from supplier, Damage in transit"
                         />
                     </div>
@@ -632,14 +632,14 @@ function AdjustmentModal({ item, warehouses, onClose, onSuccess }) {
                         <button
                             type="button"
                             onClick={onClose}
-                            className="flex-1 px-8 py-5 border-2 border-gray-100 text-gray-400 rounded-3xl text-[11px] font-black uppercase tracking-widest hover:bg-gray-50 transition-all"
+                            className="flex-1 px-8 py-5 border-2 border-gray-100 text-gray-400 rounded-3xl text-[11px] font-semibold uppercase tracking-widest hover:bg-gray-50 transition-all"
                         >
                             Cancel
                         </button>
                         <button
                             type="submit"
                             disabled={loading || formData.quantity <= 0}
-                            className="flex-1 px-8 py-5 bg-emerald-600 text-white rounded-3xl text-[11px] font-black uppercase tracking-widest hover:bg-emerald-700 shadow-xl shadow-emerald-500/20 disabled:opacity-50 transition-all"
+                            className="flex-1 px-8 py-5 bg-emerald-600 text-white rounded-3xl text-[11px] font-semibold uppercase tracking-widest hover:bg-emerald-700 shadow-xl shadow-emerald-500/20 disabled:opacity-50 transition-all"
                         >
                             {loading ? 'Processing...' : 'Update Stock'}
                         </button>

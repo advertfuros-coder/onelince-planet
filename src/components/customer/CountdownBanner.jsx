@@ -48,32 +48,32 @@ export default function CountdownBanner() {
                     <div className="flex flex-col md:flex-row items-center justify-between gap-4 px-6 md:px-8 py-4">
                         {/* Left Side - Text */}
                         <div className="flex items-center gap-3">
-                            <h3 className="text-gray-900 text-base md:text-lg font-bold whitespace-nowrap">
+                            <h3 className="text-gray-900 text-base md:text-lg font-semibold whitespace-nowrap">
                                 Flash Sale ends in:
                             </h3>
 
                             {/* Countdown Timer */}
                             <div className="flex items-center gap-2">
                                 <div className="bg-white rounded-lg px-3 py-2 min-w-[50px] text-center shadow-sm">
-                                    <span className="text-gray-900 text-xl md:text-2xl font-black leading-none">
+                                    <span className="text-gray-900 text-xl md:text-2xl font-semibold leading-none">
                                         {String(timeLeft.days).padStart(2, '0')}
                                     </span>
                                 </div>
-                                <span className="text-gray-900 font-black text-xl">:</span>
+                                <span className="text-gray-900 font-semibold text-xl">:</span>
                                 <div className="bg-white rounded-lg px-3 py-2 min-w-[50px] text-center shadow-sm">
-                                    <span className="text-gray-900 text-xl md:text-2xl font-black leading-none">
+                                    <span className="text-gray-900 text-xl md:text-2xl font-semibold leading-none">
                                         {String(timeLeft.hours).padStart(2, '0')}
                                     </span>
                                 </div>
-                                <span className="text-gray-900 font-black text-xl">:</span>
+                                <span className="text-gray-900 font-semibold text-xl">:</span>
                                 <div className="bg-white rounded-lg px-3 py-2 min-w-[50px] text-center shadow-sm">
-                                    <span className="text-gray-900 text-xl md:text-2xl font-black leading-none">
+                                    <span className="text-gray-900 text-xl md:text-2xl font-semibold leading-none">
                                         {String(timeLeft.minutes).padStart(2, '0')}
                                     </span>
                                 </div>
-                                <span className="text-gray-900 font-black text-xl">:</span>
+                                <span className="text-gray-900 font-semibold text-xl">:</span>
                                 <div className="bg-white rounded-lg px-3 py-2 min-w-[50px] text-center shadow-sm">
-                                    <span className="text-gray-900 text-xl md:text-2xl font-black leading-none">
+                                    <span className="text-gray-900 text-xl md:text-2xl font-semibold leading-none">
                                         {String(timeLeft.seconds).padStart(2, '0')}
                                     </span>
                                 </div>
@@ -87,7 +87,7 @@ export default function CountdownBanner() {
                             </p>
                             <Link
                                 href="/products?sale=true"
-                                className="bg-gray-900 hover:bg-black text-white font-bold text-sm px-6 py-2.5 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl whitespace-nowrap"
+                                className="bg-gray-900 hover:bg-black text-white font-semibold text-sm px-6 py-2.5 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl whitespace-nowrap"
                             >
                                 Shop Now →
                             </Link>

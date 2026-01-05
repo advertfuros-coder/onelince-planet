@@ -359,7 +359,7 @@ export default function IntegrationsPage() {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen">
         <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
-        <p className="mt-4 text-gray-500 font-bold">Loading Integrations...</p>
+        <p className="mt-4 text-gray-500 font-semibold">Loading Integrations...</p>
       </div>
     )
   }
@@ -374,11 +374,11 @@ export default function IntegrationsPage() {
             <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white shadow-lg">
               <Zap size={18} />
             </div>
-            <span className="text-[10px] font-black text-blue-600 uppercase tracking-widest bg-blue-50 px-3 py-1 rounded-full border border-blue-100">
+            <span className="text-[10px] font-semibold text-blue-600 uppercase tracking-widest bg-blue-50 px-3 py-1 rounded-full border border-blue-100">
               Connected Apps
             </span>
           </div>
-          <h1 className="text-4xl font-black text-gray-900 tracking-tighter">
+          <h1 className="text-4xl font-semibold text-gray-900 tracking-tighter">
             Integrations <span className="text-blue-600">.</span>
           </h1>
           <p className="text-gray-500 font-medium mt-1 text-sm">
@@ -395,7 +395,7 @@ export default function IntegrationsPage() {
                   <ShoppingBag className="w-8 h-8 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-black text-gray-900">Shopify</h2>
+                  <h2 className="text-2xl font-semibold text-gray-900">Shopify</h2>
                   <p className="text-sm text-gray-500 font-medium">
                     Sync products, inventory, and orders from your Shopify store
                   </p>
@@ -404,12 +404,12 @@ export default function IntegrationsPage() {
               {shopifyData?.isConnected ? (
                 <div className="flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-600 rounded-full">
                   <CheckCircle2 size={16} />
-                  <span className="text-xs font-black uppercase">Connected</span>
+                  <span className="text-xs font-semibold uppercase">Connected</span>
                 </div>
               ) : (
                 <div className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-400 rounded-full">
                   <XCircle size={16} />
-                  <span className="text-xs font-black uppercase">Not Connected</span>
+                  <span className="text-xs font-semibold uppercase">Not Connected</span>
                 </div>
               )}
             </div>
@@ -422,10 +422,10 @@ export default function IntegrationsPage() {
                   <div className="p-6 bg-gray-50 rounded-2xl">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div>
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">
+                        <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-1">
                           Store Domain
                         </p>
-                        <p className="text-sm font-bold text-gray-900 flex items-center gap-2">
+                        <p className="text-sm font-semibold text-gray-900 flex items-center gap-2">
                           {shopifyData.shopDomain}
                           <a href={`https://${shopifyData.shopDomain}`} target="_blank" rel="noopener noreferrer">
                             <ExternalLink size={14} className="text-blue-600" />
@@ -433,10 +433,10 @@ export default function IntegrationsPage() {
                         </p>
                       </div>
                       <div>
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">
+                        <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-1">
                           Last Synced
                         </p>
-                        <p className="text-sm font-bold text-gray-900">
+                        <p className="text-sm font-semibold text-gray-900">
                           {shopifyData.lastSyncAt
                             ? new Date(shopifyData.lastSyncAt).toLocaleString()
                             : 'Never'
@@ -444,23 +444,23 @@ export default function IntegrationsPage() {
                         </p>
                       </div>
                       <div>
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">
+                        <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-1">
                           Sync Status
                         </p>
-                        <p className="text-sm font-bold text-emerald-600">Active</p>
+                        <p className="text-sm font-semibold text-emerald-600">Active</p>
                       </div>
                     </div>
                   </div>
 
                   {/* Sync Settings */}
                   <div className="p-6 bg-blue-50/50 rounded-2xl border border-blue-100">
-                    <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest mb-4 flex items-center gap-2">
+                    <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-widest mb-4 flex items-center gap-2">
                       <Settings size={16} className="text-blue-600" />
                       Sync Settings
                     </h3>
                     <div className="space-y-4">
                       <label className="flex items-center justify-between">
-                        <span className="text-sm font-bold text-gray-700">Auto-sync Products</span>
+                        <span className="text-sm font-semibold text-gray-700">Auto-sync Products</span>
                         <input
                           type="checkbox"
                           checked={syncSettings.autoSyncProducts}
@@ -469,7 +469,7 @@ export default function IntegrationsPage() {
                         />
                       </label>
                       <label className="flex items-center justify-between">
-                        <span className="text-sm font-bold text-gray-700">Auto-sync Inventory</span>
+                        <span className="text-sm font-semibold text-gray-700">Auto-sync Inventory</span>
                         <input
                           type="checkbox"
                           checked={syncSettings.autoSyncInventory}
@@ -478,7 +478,7 @@ export default function IntegrationsPage() {
                         />
                       </label>
                       <label className="flex items-center justify-between">
-                        <span className="text-sm font-bold text-gray-700">Auto-sync Orders</span>
+                        <span className="text-sm font-semibold text-gray-700">Auto-sync Orders</span>
                         <input
                           type="checkbox"
                           checked={syncSettings.autoSyncOrders}
@@ -487,11 +487,11 @@ export default function IntegrationsPage() {
                         />
                       </label>
                       <div>
-                        <label className="text-sm font-bold text-gray-700 block mb-2">Sync Frequency</label>
+                        <label className="text-sm font-semibold text-gray-700 block mb-2">Sync Frequency</label>
                         <select
                           value={syncSettings.syncInterval}
                           onChange={(e) => setSyncSettings({ ...syncSettings, syncInterval: e.target.value })}
-                          className="w-full px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-bold focus:ring-2 focus:ring-blue-100"
+                          className="w-full px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-semibold focus:ring-2 focus:ring-blue-100"
                         >
                           <option value="hourly">Every Hour</option>
                           <option value="daily">Once Daily</option>
@@ -500,7 +500,7 @@ export default function IntegrationsPage() {
                       </div>
                       <button
                         onClick={updateSyncSettings}
-                        className="w-full px-6 py-3 bg-blue-600 text-white rounded-xl font-black text-xs uppercase tracking-widest hover:bg-blue-700 transition-all"
+                        className="w-full px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold text-xs uppercase tracking-widest hover:bg-blue-700 transition-all"
                       >
                         Save Settings
                       </button>
@@ -512,7 +512,7 @@ export default function IntegrationsPage() {
                     <button
                       onClick={syncProducts}
                       disabled={syncing}
-                      className="flex items-center justify-center gap-3 px-6 py-4 bg-white border-2 border-gray-200 rounded-2xl font-black text-sm hover:border-blue-600 hover:bg-blue-50 transition-all disabled:opacity-50"
+                      className="flex items-center justify-center gap-3 px-6 py-4 bg-white border-2 border-gray-200 rounded-2xl font-semibold text-sm hover:border-blue-600 hover:bg-blue-50 transition-all disabled:opacity-50"
                     >
                       <Package size={20} className="text-blue-600" />
                       <span>{syncing ? 'Syncing...' : 'Sync Products Now'}</span>
@@ -520,7 +520,7 @@ export default function IntegrationsPage() {
                     <button
                       onClick={syncInventory}
                       disabled={syncing}
-                      className="flex items-center justify-center gap-3 px-6 py-4 bg-white border-2 border-gray-200 rounded-2xl font-black text-sm hover:border-emerald-600 hover:bg-emerald-50 transition-all disabled:opacity-50"
+                      className="flex items-center justify-center gap-3 px-6 py-4 bg-white border-2 border-gray-200 rounded-2xl font-semibold text-sm hover:border-emerald-600 hover:bg-emerald-50 transition-all disabled:opacity-50"
                     >
                       <TrendingUp size={20} className="text-emerald-600" />
                       <span>{syncing ? 'Syncing...' : 'Sync Inventory Now'}</span>
@@ -530,7 +530,7 @@ export default function IntegrationsPage() {
                   {/* Disconnect Button */}
                   <button
                     onClick={disconnectShopify}
-                    className="w-full px-6 py-4 bg-rose-50 text-rose-600 rounded-2xl font-black text-sm hover:bg-rose-100 transition-all flex items-center justify-center gap-2"
+                    className="w-full px-6 py-4 bg-rose-50 text-rose-600 rounded-2xl font-semibold text-sm hover:bg-rose-100 transition-all flex items-center justify-center gap-2"
                   >
                     <Unlink size={18} />
                     Disconnect Shopify Store
@@ -544,13 +544,13 @@ export default function IntegrationsPage() {
                   <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
                     <LinkIcon className="w-10 h-10 text-gray-400" />
                   </div>
-                  <h3 className="text-xl font-black text-gray-900 mb-2">Connect Your Shopify Store</h3>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Connect Your Shopify Store</h3>
                   <p className="text-gray-500 font-medium mb-8 max-w-md mx-auto">
                     Import your products, sync inventory levels, and manage orders from your Shopify store all in one place.
                   </p>
                   <button
                     onClick={connectShopify}
-                    className="inline-flex items-center gap-3 px-8 py-4 bg-[#96BF48] text-white rounded-2xl font-black text-sm hover:bg-[#7da83a] transition-all shadow-lg"
+                    className="inline-flex items-center gap-3 px-8 py-4 bg-[#96BF48] text-white rounded-2xl font-semibold text-sm hover:bg-[#7da83a] transition-all shadow-lg"
                   >
                     <ShoppingBag size={20} />
                     Connect Shopify Store
@@ -563,21 +563,21 @@ export default function IntegrationsPage() {
                     <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center mx-auto mb-3">
                       <Package className="w-6 h-6 text-blue-600" />
                     </div>
-                    <h4 className="font-black text-sm text-gray-900 mb-1">Product Sync</h4>
+                    <h4 className="font-semibold text-sm text-gray-900 mb-1">Product Sync</h4>
                     <p className="text-xs text-gray-500">Import all products with images and details</p>
                   </div>
                   <div className="text-center">
                     <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center mx-auto mb-3">
                       <TrendingUp className="w-6 h-6 text-emerald-600" />
                     </div>
-                    <h4 className="font-black text-sm text-gray-900 mb-1">Inventory Sync</h4>
+                    <h4 className="font-semibold text-sm text-gray-900 mb-1">Inventory Sync</h4>
                     <p className="text-xs text-gray-500">Keep stock levels updated automatically</p>
                   </div>
                   <div className="text-center">
                     <div className="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center mx-auto mb-3">
                       <Clock className="w-6 h-6 text-purple-600" />
                     </div>
-                    <h4 className="font-black text-sm text-gray-900 mb-1">Save Time</h4>
+                    <h4 className="font-semibold text-sm text-gray-900 mb-1">Save Time</h4>
                     <p className="text-xs text-gray-500">Automated syncing saves hours of manual work</p>
                   </div>
                 </div>
@@ -595,7 +595,7 @@ export default function IntegrationsPage() {
                   <ShoppingBag className="w-8 h-8 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-black text-gray-900">WooCommerce</h2>
+                  <h2 className="text-2xl font-semibold text-gray-900">WooCommerce</h2>
                   <p className="text-sm text-gray-500 font-medium">
                     Sync products and inventory from your WooCommerce store
                   </p>
@@ -604,12 +604,12 @@ export default function IntegrationsPage() {
               {wooCommerceData?.isConnected ? (
                 <div className="flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-600 rounded-full">
                   <CheckCircle2 size={16} />
-                  <span className="text-xs font-black uppercase">Connected</span>
+                  <span className="text-xs font-semibold uppercase">Connected</span>
                 </div>
               ) : (
                 <div className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-400 rounded-full">
                   <XCircle size={16} />
-                  <span className="text-xs font-black uppercase">Not Connected</span>
+                  <span className="text-xs font-semibold uppercase">Not Connected</span>
                 </div>
               )}
             </div>
@@ -622,10 +622,10 @@ export default function IntegrationsPage() {
                   <div className="p-6 bg-gray-50 rounded-2xl">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div>
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">
+                        <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-1">
                           Store URL
                         </p>
-                        <p className="text-sm font-bold text-gray-900 flex items-center gap-2">
+                        <p className="text-sm font-semibold text-gray-900 flex items-center gap-2">
                           {wooCommerceData.storeUrl}
                           <a href={wooCommerceData.storeUrl} target="_blank" rel="noopener noreferrer">
                             <ExternalLink size={14} className="text-purple-600" />
@@ -633,10 +633,10 @@ export default function IntegrationsPage() {
                         </p>
                       </div>
                       <div>
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">
+                        <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-1">
                           Last Synced
                         </p>
-                        <p className="text-sm font-bold text-gray-900">
+                        <p className="text-sm font-semibold text-gray-900">
                           {wooCommerceData.lastSyncAt
                             ? new Date(wooCommerceData.lastSyncAt).toLocaleString()
                             : 'Never'
@@ -644,23 +644,23 @@ export default function IntegrationsPage() {
                         </p>
                       </div>
                       <div>
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">
+                        <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-1">
                           Sync Status
                         </p>
-                        <p className="text-sm font-bold text-emerald-600">Active</p>
+                        <p className="text-sm font-semibold text-emerald-600">Active</p>
                       </div>
                     </div>
                   </div>
 
                   {/* Sync Settings */}
                   <div className="p-6 bg-purple-50/50 rounded-2xl border border-purple-100">
-                    <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest mb-4 flex items-center gap-2">
+                    <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-widest mb-4 flex items-center gap-2">
                       <Settings size={16} className="text-purple-600" />
                       Sync Settings
                     </h3>
                     <div className="space-y-4">
                       <label className="flex items-center justify-between">
-                        <span className="text-sm font-bold text-gray-700">Auto-sync Products</span>
+                        <span className="text-sm font-semibold text-gray-700">Auto-sync Products</span>
                         <input
                           type="checkbox"
                           checked={wooSyncSettings.autoSyncProducts}
@@ -669,7 +669,7 @@ export default function IntegrationsPage() {
                         />
                       </label>
                       <label className="flex items-center justify-between">
-                        <span className="text-sm font-bold text-gray-700">Auto-sync Inventory</span>
+                        <span className="text-sm font-semibold text-gray-700">Auto-sync Inventory</span>
                         <input
                           type="checkbox"
                           checked={wooSyncSettings.autoSyncInventory}
@@ -678,7 +678,7 @@ export default function IntegrationsPage() {
                         />
                       </label>
                       <label className="flex items-center justify-between">
-                        <span className="text-sm font-bold text-gray-700">Auto-sync Orders</span>
+                        <span className="text-sm font-semibold text-gray-700">Auto-sync Orders</span>
                         <input
                           type="checkbox"
                           checked={wooSyncSettings.autoSyncOrders}
@@ -687,11 +687,11 @@ export default function IntegrationsPage() {
                         />
                       </label>
                       <div>
-                        <label className="text-sm font-bold text-gray-700 block mb-2">Sync Frequency</label>
+                        <label className="text-sm font-semibold text-gray-700 block mb-2">Sync Frequency</label>
                         <select
                           value={wooSyncSettings.syncInterval}
                           onChange={(e) => setWooSyncSettings({ ...wooSyncSettings, syncInterval: e.target.value })}
-                          className="w-full px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-bold focus:ring-2 focus:ring-purple-100"
+                          className="w-full px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-semibold focus:ring-2 focus:ring-purple-100"
                         >
                           <option value="hourly">Every Hour</option>
                           <option value="daily">Once Daily</option>
@@ -700,7 +700,7 @@ export default function IntegrationsPage() {
                       </div>
                       <button
                         onClick={updateWooSyncSettings}
-                        className="w-full px-6 py-3 bg-purple-600 text-white rounded-xl font-black text-xs uppercase tracking-widest hover:bg-purple-700 transition-all"
+                        className="w-full px-6 py-3 bg-purple-600 text-white rounded-xl font-semibold text-xs uppercase tracking-widest hover:bg-purple-700 transition-all"
                       >
                         Save Settings
                       </button>
@@ -712,14 +712,14 @@ export default function IntegrationsPage() {
                     <button
                       onClick={syncWooProducts}
                       disabled={syncing}
-                      className="flex items-center justify-center gap-3 px-6 py-4 bg-white border-2 border-gray-200 rounded-2xl font-black text-sm hover:border-purple-600 hover:bg-purple-50 transition-all disabled:opacity-50"
+                      className="flex items-center justify-center gap-3 px-6 py-4 bg-white border-2 border-gray-200 rounded-2xl font-semibold text-sm hover:border-purple-600 hover:bg-purple-50 transition-all disabled:opacity-50"
                     >
                       <Package size={20} className="text-purple-600" />
                       <span>{syncing ? 'Syncing...' : 'Sync Products Now'}</span>
                     </button>
                     <button
                       disabled={syncing}
-                      className="flex items-center justify-center gap-3 px-6 py-4 bg-white border-2 border-gray-200 rounded-2xl font-black text-sm hover:border-emerald-600 hover:bg-emerald-50 transition-all disabled:opacity-50"
+                      className="flex items-center justify-center gap-3 px-6 py-4 bg-white border-2 border-gray-200 rounded-2xl font-semibold text-sm hover:border-emerald-600 hover:bg-emerald-50 transition-all disabled:opacity-50"
                     >
                       <TrendingUp size={20} className="text-emerald-600" />
                       <span>{syncing ? 'Syncing...' : 'Sync Inventory Now'}</span>
@@ -729,7 +729,7 @@ export default function IntegrationsPage() {
                   {/* Disconnect Button */}
                   <button
                     onClick={disconnectWooCommerce}
-                    className="w-full px-6 py-4 bg-rose-50 text-rose-600 rounded-2xl font-black text-sm hover:bg-rose-100 transition-all flex items-center justify-center gap-2"
+                    className="w-full px-6 py-4 bg-rose-50 text-rose-600 rounded-2xl font-semibold text-sm hover:bg-rose-100 transition-all flex items-center justify-center gap-2"
                   >
                     <Unlink size={18} />
                     Disconnect WooCommerce Store
@@ -743,13 +743,13 @@ export default function IntegrationsPage() {
                   <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
                     <LinkIcon className="w-10 h-10 text-gray-400" />
                   </div>
-                  <h3 className="text-xl font-black text-gray-900 mb-2">Connect Your WooCommerce Store</h3>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Connect Your WooCommerce Store</h3>
                   <p className="text-gray-500 font-medium mb-8 max-w-md mx-auto">
                     Import your products, sync inventory levels, and manage orders from your WooCommerce store.
                   </p>
                   <button
                     onClick={connectWooCommerce}
-                    className="inline-flex items-center gap-3 px-8 py-4 bg-[#7F54B3] text-white rounded-2xl font-black text-sm hover:bg-[#6a4699] transition-all shadow-lg"
+                    className="inline-flex items-center gap-3 px-8 py-4 bg-[#7F54B3] text-white rounded-2xl font-semibold text-sm hover:bg-[#6a4699] transition-all shadow-lg"
                   >
                     <ShoppingBag size={20} />
                     Connect WooCommerce Store
@@ -762,21 +762,21 @@ export default function IntegrationsPage() {
                     <div className="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center mx-auto mb-3">
                       <Package className="w-6 h-6 text-purple-600" />
                     </div>
-                    <h4 className="font-black text-sm text-gray-900 mb-1">Product Sync</h4>
+                    <h4 className="font-semibold text-sm text-gray-900 mb-1">Product Sync</h4>
                     <p className="text-xs text-gray-500">Import all products with images and details</p>
                   </div>
                   <div className="text-center">
                     <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center mx-auto mb-3">
                       <TrendingUp className="w-6 h-6 text-emerald-600" />
                     </div>
-                    <h4 className="font-black text-sm text-gray-900 mb-1">Inventory Sync</h4>
+                    <h4 className="font-semibold text-sm text-gray-900 mb-1">Inventory Sync</h4>
                     <p className="text-xs text-gray-500">Keep stock levels updated automatically</p>
                   </div>
                   <div className="text-center">
                     <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center mx-auto mb-3">
                       <Clock className="w-6 h-6 text-blue-600" />
                     </div>
-                    <h4 className="font-black text-sm text-gray-900 mb-1">Save Time</h4>
+                    <h4 className="font-semibold text-sm text-gray-900 mb-1">Save Time</h4>
                     <p className="text-xs text-gray-500">Automated syncing saves hours of manual work</p>
                   </div>
                 </div>
@@ -794,7 +794,7 @@ export default function IntegrationsPage() {
                   <ShoppingBag className="w-8 h-8 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-black text-gray-900">Amazon Seller Central</h2>
+                  <h2 className="text-2xl font-semibold text-gray-900">Amazon Seller Central</h2>
                   <p className="text-sm text-gray-500 font-medium">
                     Sync products and inventory from your Amazon store
                   </p>
@@ -803,12 +803,12 @@ export default function IntegrationsPage() {
               {amazonData?.isConnected ? (
                 <div className="flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-600 rounded-full">
                   <CheckCircle2 size={16} />
-                  <span className="text-xs font-black uppercase">Connected</span>
+                  <span className="text-xs font-semibold uppercase">Connected</span>
                 </div>
               ) : (
                 <div className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-400 rounded-full">
                   <XCircle size={16} />
-                  <span className="text-xs font-black uppercase">Not Connected</span>
+                  <span className="text-xs font-semibold uppercase">Not Connected</span>
                 </div>
               )}
             </div>
@@ -821,26 +821,26 @@ export default function IntegrationsPage() {
                   <div className="p-6 bg-gray-50 rounded-2xl">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div>
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">
+                        <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-1">
                           Seller ID
                         </p>
-                        <p className="text-sm font-bold text-gray-900">
+                        <p className="text-sm font-semibold text-gray-900">
                           {amazonData.sellerId}
                         </p>
                       </div>
                       <div>
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">
+                        <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-1">
                           Region
                         </p>
-                        <p className="text-sm font-bold text-gray-900">
+                        <p className="text-sm font-semibold text-gray-900">
                           {amazonData.region?.toUpperCase()}
                         </p>
                       </div>
                       <div>
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">
+                        <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-1">
                           Last Synced
                         </p>
-                        <p className="text-sm font-bold text-gray-900">
+                        <p className="text-sm font-semibold text-gray-900">
                           {amazonData.lastSyncAt
                             ? new Date(amazonData.lastSyncAt).toLocaleString()
                             : 'Never'
@@ -852,13 +852,13 @@ export default function IntegrationsPage() {
 
                   {/* Sync Settings */}
                   <div className="p-6 bg-orange-50/50 rounded-2xl border border-orange-100">
-                    <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest mb-4 flex items-center gap-2">
+                    <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-widest mb-4 flex items-center gap-2">
                       <Settings size={16} className="text-orange-600" />
                       Sync Settings
                     </h3>
                     <div className="space-y-4">
                       <label className="flex items-center justify-between">
-                        <span className="text-sm font-bold text-gray-700">Auto-sync Products</span>
+                        <span className="text-sm font-semibold text-gray-700">Auto-sync Products</span>
                         <input
                           type="checkbox"
                           checked={amazonSyncSettings.autoSyncProducts}
@@ -867,7 +867,7 @@ export default function IntegrationsPage() {
                         />
                       </label>
                       <label className="flex items-center justify-between">
-                        <span className="text-sm font-bold text-gray-700">Auto-sync Inventory</span>
+                        <span className="text-sm font-semibold text-gray-700">Auto-sync Inventory</span>
                         <input
                           type="checkbox"
                           checked={amazonSyncSettings.autoSyncInventory}
@@ -876,7 +876,7 @@ export default function IntegrationsPage() {
                         />
                       </label>
                       <label className="flex items-center justify-between">
-                        <span className="text-sm font-bold text-gray-700">Auto-sync Orders</span>
+                        <span className="text-sm font-semibold text-gray-700">Auto-sync Orders</span>
                         <input
                           type="checkbox"
                           checked={amazonSyncSettings.autoSyncOrders}
@@ -885,11 +885,11 @@ export default function IntegrationsPage() {
                         />
                       </label>
                       <div>
-                        <label className="text-sm font-bold text-gray-700 block mb-2">Sync Frequency</label>
+                        <label className="text-sm font-semibold text-gray-700 block mb-2">Sync Frequency</label>
                         <select
                           value={amazonSyncSettings.syncInterval}
                           onChange={(e) => setAmazonSyncSettings({ ...amazonSyncSettings, syncInterval: e.target.value })}
-                          className="w-full px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-bold focus:ring-2 focus:ring-orange-100"
+                          className="w-full px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-semibold focus:ring-2 focus:ring-orange-100"
                         >
                           <option value="hourly">Every Hour</option>
                           <option value="daily">Once Daily</option>
@@ -898,7 +898,7 @@ export default function IntegrationsPage() {
                       </div>
                       <button
                         onClick={updateAmazonSyncSettings}
-                        className="w-full px-6 py-3 bg-orange-600 text-white rounded-xl font-black text-xs uppercase tracking-widest hover:bg-orange-700 transition-all"
+                        className="w-full px-6 py-3 bg-orange-600 text-white rounded-xl font-semibold text-xs uppercase tracking-widest hover:bg-orange-700 transition-all"
                       >
                         Save Settings
                       </button>
@@ -908,7 +908,7 @@ export default function IntegrationsPage() {
                   {/* Disconnect Button */}
                   <button
                     onClick={disconnectAmazon}
-                    className="w-full px-6 py-4 bg-rose-50 text-rose-600 rounded-2xl font-black text-sm hover:bg-rose-100 transition-all flex items-center justify-center gap-2"
+                    className="w-full px-6 py-4 bg-rose-50 text-rose-600 rounded-2xl font-semibold text-sm hover:bg-rose-100 transition-all flex items-center justify-center gap-2"
                   >
                     <Unlink size={18} />
                     Disconnect Amazon Account
@@ -922,13 +922,13 @@ export default function IntegrationsPage() {
                   <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
                     <LinkIcon className="w-10 h-10 text-gray-400" />
                   </div>
-                  <h3 className="text-xl font-black text-gray-900 mb-2">Connect Your Amazon Seller Account</h3>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Connect Your Amazon Seller Account</h3>
                   <p className="text-gray-500 font-medium mb-8 max-w-md mx-auto">
                     Sync products and inventory from Amazon Seller Central using SP-API credentials.
                   </p>
                   <button
                     onClick={connectAmazon}
-                    className="inline-flex items-center gap-3 px-8 py-4 bg-[#FF9900] text-white rounded-2xl font-black text-sm hover:bg-[#e68a00] transition-all shadow-lg"
+                    className="inline-flex items-center gap-3 px-8 py-4 bg-[#FF9900] text-white rounded-2xl font-semibold text-sm hover:bg-[#e68a00] transition-all shadow-lg"
                   >
                     <ShoppingBag size={20} />
                     Connect Amazon Account
@@ -941,21 +941,21 @@ export default function IntegrationsPage() {
                     <div className="w-12 h-12 bg-orange-50 rounded-xl flex items-center justify-center mx-auto mb-3">
                       <Package className="w-6 h-6 text-orange-600" />
                     </div>
-                    <h4 className="font-black text-sm text-gray-900 mb-1">Product Sync</h4>
+                    <h4 className="font-semibold text-sm text-gray-900 mb-1">Product Sync</h4>
                     <p className="text-xs text-gray-500">Import products with ASINs and details</p>
                   </div>
                   <div className="text-center">
                     <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center mx-auto mb-3">
                       <TrendingUp className="w-6 h-6 text-emerald-600" />
                     </div>
-                    <h4 className="font-black text-sm text-gray-900 mb-1">FBA Inventory</h4>
+                    <h4 className="font-semibold text-sm text-gray-900 mb-1">FBA Inventory</h4>
                     <p className="text-xs text-gray-500">Track Fulfillment by Amazon stock</p>
                   </div>
                   <div className="text-center">
                     <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center mx-auto mb-3">
                       <Clock className="w-6 h-6 text-blue-600" />
                     </div>
-                    <h4 className="font-black text-sm text-gray-900 mb-1">Multi-Marketplace</h4>
+                    <h4 className="font-semibold text-sm text-gray-900 mb-1">Multi-Marketplace</h4>
                     <p className="text-xs text-gray-500">Support for US, UK, EU, and more</p>
                   </div>
                 </div>
@@ -966,14 +966,14 @@ export default function IntegrationsPage() {
 
         {/* Coming Soon Integrations */}
         <div className="bg-white rounded-[2.5rem] shadow-sm border border-gray-100/50 p-10">
-          <h2 className="text-xl font-black text-gray-900 mb-6">More Integrations Coming Soon</h2>
+          <h2 className="text-xl font-semibold text-gray-900 mb-6">More Integrations Coming Soon</h2>
           <div className="grid grid-cols-1 gap-6">
             {['eBay'].map((platform) => (
               <div key={platform} className="p-6 bg-gray-50 rounded-2xl text-center opacity-50">
                 <div className="w-12 h-12 bg-gray-200 rounded-xl flex items-center justify-center mx-auto mb-3">
                   <ShoppingBag className="w-6 h-6 text-gray-400" />
                 </div>
-                <h4 className="font-black text-sm text-gray-900 mb-1">{platform}</h4>
+                <h4 className="font-semibold text-sm text-gray-900 mb-1">{platform}</h4>
                 <p className="text-xs text-gray-500">Coming Soon</p>
               </div>
             ))}
@@ -992,7 +992,7 @@ export default function IntegrationsPage() {
               <div className="p-10 bg-gradient-to-br from-[#96BF48]/10 to-blue-50 border-b border-gray-100">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h2 className="text-3xl font-black text-gray-900 tracking-tight">Connect Shopify Store</h2>
+                    <h2 className="text-3xl font-semibold text-gray-900 tracking-tight">Connect Shopify Store</h2>
                     <p className="text-sm text-gray-600 mt-2">Enter your Shopify store credentials to sync products and inventory</p>
                   </div>
                   <button
@@ -1007,7 +1007,7 @@ export default function IntegrationsPage() {
               <div className="p-10 space-y-6">
                 {/* Instructions */}
                 <div className="p-6 bg-blue-50 rounded-2xl border border-blue-100">
-                  <h3 className="text-sm font-black text-blue-900 mb-3 flex items-center gap-2">
+                  <h3 className="text-sm font-semibold text-blue-900 mb-3 flex items-center gap-2">
                     <AlertCircle size={16} />
                     How to Get Your Credentials
                   </h3>
@@ -1023,7 +1023,7 @@ export default function IntegrationsPage() {
                 {/* Form */}
                 <div className="space-y-4">
                   <div>
-                    <label className="text-sm font-black text-gray-700 mb-2 block">
+                    <label className="text-sm font-semibold text-gray-700 mb-2 block">
                       Shop Domain
                     </label>
                     <input
@@ -1031,13 +1031,13 @@ export default function IntegrationsPage() {
                       placeholder="yourstore.myshopify.com"
                       value={connectForm.shopDomain}
                       onChange={(e) => setConnectForm({ ...connectForm, shopDomain: e.target.value })}
-                      className="w-full px-6 py-4 bg-gray-50 border-2 border-gray-200 rounded-2xl text-sm font-bold focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all"
+                      className="w-full px-6 py-4 bg-gray-50 border-2 border-gray-200 rounded-2xl text-sm font-semibold focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all"
                     />
                     <p className="text-xs text-gray-500 mt-2">Enter your Shopify store URL (e.g., mystore.myshopify.com)</p>
                   </div>
 
                   <div>
-                    <label className="text-sm font-black text-gray-700 mb-2 block">
+                    <label className="text-sm font-semibold text-gray-700 mb-2 block">
                       Admin API Access Token
                     </label>
                     <input
@@ -1063,14 +1063,14 @@ export default function IntegrationsPage() {
                 <div className="flex gap-4 pt-4">
                   <button
                     onClick={() => setShowConnectModal(false)}
-                    className="flex-1 px-8 py-4 border-2 border-gray-200 text-gray-600 rounded-2xl font-black text-sm hover:bg-gray-50 transition-all"
+                    className="flex-1 px-8 py-4 border-2 border-gray-200 text-gray-600 rounded-2xl font-semibold text-sm hover:bg-gray-50 transition-all"
                   >
                     Cancel
                   </button>
                   <button
                     onClick={handleConnect}
                     disabled={connecting || !connectForm.shopDomain || !connectForm.accessToken}
-                    className="flex-1 px-8 py-4 bg-[#96BF48] text-white rounded-2xl font-black text-sm hover:bg-[#7da83a] transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    className="flex-1 px-8 py-4 bg-[#96BF48] text-white rounded-2xl font-semibold text-sm hover:bg-[#7da83a] transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   >
                     {connecting ? (
                       <>
@@ -1101,7 +1101,7 @@ export default function IntegrationsPage() {
               <div className="p-10 bg-gradient-to-br from-[#7F54B3]/10 to-purple-50 border-b border-gray-100">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h2 className="text-3xl font-black text-gray-900 tracking-tight">Connect WooCommerce Store</h2>
+                    <h2 className="text-3xl font-semibold text-gray-900 tracking-tight">Connect WooCommerce Store</h2>
                     <p className="text-sm text-gray-600 mt-2">Enter your WooCommerce REST API credentials</p>
                   </div>
                   <button
@@ -1116,7 +1116,7 @@ export default function IntegrationsPage() {
               <div className="p-10 space-y-6">
                 {/* Instructions */}
                 <div className="p-6 bg-purple-50 rounded-2xl border border-purple-100">
-                  <h3 className="text-sm font-black text-purple-900 mb-3 flex items-center gap-2">
+                  <h3 className="text-sm font-semibold text-purple-900 mb-3 flex items-center gap-2">
                     <AlertCircle size={16} />
                     How to Get Your Credentials
                   </h3>
@@ -1133,19 +1133,19 @@ export default function IntegrationsPage() {
                 {/* Form */}
                 <div className="space-y-4">
                   <div>
-                    <label className="text-sm font-black text-gray-700 mb-2 block">Store URL</label>
+                    <label className="text-sm font-semibold text-gray-700 mb-2 block">Store URL</label>
                     <input
                       type="text"
                       placeholder="https://mystore.com"
                       value={wooConnectForm.storeUrl}
                       onChange={(e) => setWooConnectForm({ ...wooConnectForm, storeUrl: e.target.value })}
-                      className="w-full px-6 py-4 bg-gray-50 border-2 border-gray-200 rounded-2xl text-sm font-bold focus:border-purple-500 focus:ring-2 focus:ring-purple-100 transition-all"
+                      className="w-full px-6 py-4 bg-gray-50 border-2 border-gray-200 rounded-2xl text-sm font-semibold focus:border-purple-500 focus:ring-2 focus:ring-purple-100 transition-all"
                     />
                     <p className="text-xs text-gray-500 mt-2">Enter your WooCommerce store URL</p>
                   </div>
 
                   <div>
-                    <label className="text-sm font-black text-gray-700 mb-2 block">Consumer Key</label>
+                    <label className="text-sm font-semibold text-gray-700 mb-2 block">Consumer Key</label>
                     <input
                       type="text"
                       placeholder="ck_xxxxxxxxxxxxx"
@@ -1157,7 +1157,7 @@ export default function IntegrationsPage() {
                   </div>
 
                   <div>
-                    <label className="text-sm font-black text-gray-700 mb-2 block">Consumer Secret</label>
+                    <label className="text-sm font-semibold text-gray-700 mb-2 block">Consumer Secret</label>
                     <input
                       type="password"
                       placeholder="cs_xxxxxxxxxxxxx"
@@ -1181,14 +1181,14 @@ export default function IntegrationsPage() {
                 <div className="flex gap-4 pt-4">
                   <button
                     onClick={() => setShowWooModal(false)}
-                    className="flex-1 px-8 py-4 border-2 border-gray-200 text-gray-600 rounded-2xl font-black text-sm hover:bg-gray-50 transition-all"
+                    className="flex-1 px-8 py-4 border-2 border-gray-200 text-gray-600 rounded-2xl font-semibold text-sm hover:bg-gray-50 transition-all"
                   >
                     Cancel
                   </button>
                   <button
                     onClick={handleWooConnect}
                     disabled={connecting || !wooConnectForm.storeUrl || !wooConnectForm.consumerKey || !wooConnectForm.consumerSecret}
-                    className="flex-1 px-8 py-4 bg-[#7F54B3] text-white rounded-2xl font-black text-sm hover:bg-[#6a4699] transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    className="flex-1 px-8 py-4 bg-[#7F54B3] text-white rounded-2xl font-semibold text-sm hover:bg-[#6a4699] transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   >
                     {connecting ? (
                       <>
@@ -1219,7 +1219,7 @@ export default function IntegrationsPage() {
               <div className="p-10 bg-gradient-to-br from-[#FF9900]/10 to-orange-50 border-b border-gray-100 sticky top-0 bg-white/95 backdrop-blur-sm z-10">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h2 className="text-3xl font-black text-gray-900 tracking-tight">Connect Amazon Seller Central</h2>
+                    <h2 className="text-3xl font-semibold text-gray-900 tracking-tight">Connect Amazon Seller Central</h2>
                     <p className="text-sm text-gray-600 mt-2">Enter your SP-API credentials</p>
                   </div>
                   <button
@@ -1234,7 +1234,7 @@ export default function IntegrationsPage() {
               <div className="p-10 space-y-6">
                 {/* Instructions */}
                 <div className="p-6 bg-orange-50 rounded-2xl border border-orange-100">
-                  <h3 className="text-sm font-black text-orange-900 mb-3 flex items-center gap-2">
+                  <h3 className="text-sm font-semibold text-orange-900 mb-3 flex items-center gap-2">
                     <AlertCircle size={16} />
                     How to Get Your SP-API Credentials
                   </h3>
@@ -1250,19 +1250,19 @@ export default function IntegrationsPage() {
                 {/* Form */}
                 <div className="space-y-4">
                   <div>
-                    <label className="text-sm font-black text-gray-700 mb-2 block">Seller ID</label>
+                    <label className="text-sm font-semibold text-gray-700 mb-2 block">Seller ID</label>
                     <input
                       type="text"
                       placeholder="A1BCDEFGHIJK2"
                       value={amazonConnectForm.sellerId}
                       onChange={(e) => setAmazonConnectForm({ ...amazonConnectForm, sellerId: e.target.value })}
-                      className="w-full px-6 py-4 bg-gray-50 border-2 border-gray-200 rounded-2xl text-sm font-bold focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition-all"
+                      className="w-full px-6 py-4 bg-gray-50 border-2 border-gray-200 rounded-2xl text-sm font-semibold focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition-all"
                     />
                     <p className="text-xs text-gray-500 mt-2">Your Amazon Seller ID</p>
                   </div>
 
                   <div>
-                    <label className="text-sm font-black text-gray-700 mb-2 block">AWS Access Key ID</label>
+                    <label className="text-sm font-semibold text-gray-700 mb-2 block">AWS Access Key ID</label>
                     <input
                       type="text"
                       placeholder="AKIAIOSFODNN7EXAMPLE"
@@ -1274,7 +1274,7 @@ export default function IntegrationsPage() {
                   </div>
 
                   <div>
-                    <label className="text-sm font-black text-gray-700 mb-2 block">AWS Secret Access Key</label>
+                    <label className="text-sm font-semibold text-gray-700 mb-2 block">AWS Secret Access Key</label>
                     <input
                       type="password"
                       placeholder="wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
@@ -1286,7 +1286,7 @@ export default function IntegrationsPage() {
                   </div>
 
                   <div>
-                    <label className="text-sm font-black text-gray-700 mb-2 block">SP-API Refresh Token</label>
+                    <label className="text-sm font-semibold text-gray-700 mb-2 block">SP-API Refresh Token</label>
                     <input
                       type="password"
                       placeholder="Atzr|IwEBIA..."
@@ -1299,11 +1299,11 @@ export default function IntegrationsPage() {
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="text-sm font-black text-gray-700 mb-2 block">AWS Region</label>
+                      <label className="text-sm font-semibold text-gray-700 mb-2 block">AWS Region</label>
                       <select
                         value={amazonConnectForm.region}
                         onChange={(e) => setAmazonConnectForm({ ...amazonConnectForm, region: e.target.value })}
-                        className="w-full px-6 py-4 bg-gray-50 border-2 border-gray-200 rounded-2xl text-sm font-bold focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition-all"
+                        className="w-full px-6 py-4 bg-gray-50 border-2 border-gray-200 rounded-2xl text-sm font-semibold focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition-all"
                       >
                         <option value="us-east-1">US East (North America)</option>
                         <option value="eu-west-1">EU West (Europe)</option>
@@ -1313,11 +1313,11 @@ export default function IntegrationsPage() {
                     </div>
 
                     <div>
-                      <label className="text-sm font-black text-gray-700 mb-2 block">Marketplace</label>
+                      <label className="text-sm font-semibold text-gray-700 mb-2 block">Marketplace</label>
                       <select
                         value={amazonConnectForm.marketplaceId}
                         onChange={(e) => setAmazonConnectForm({ ...amazonConnectForm, marketplaceId: e.target.value })}
-                        className="w-full px-6 py-4 bg-gray-50 border-2 border-gray-200 rounded-2xl text-sm font-bold focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition-all"
+                        className="w-full px-6 py-4 bg-gray-50 border-2 border-gray-200 rounded-2xl text-sm font-semibold focus:border-orange-500 focus:ring-2 focus:ring-orange-100 transition-all"
                       >
                         <option value="ATVPDKIKX0DER">United States</option>
                         <option value="A2EUQ1WTGCTBG2">Canada</option>
@@ -1342,7 +1342,7 @@ export default function IntegrationsPage() {
                 <div className="flex gap-4 pt-4">
                   <button
                     onClick={() => setShowAmazonModal(false)}
-                    className="flex-1 px-8 py-4 border-2 border-gray-200 text-gray-600 rounded-2xl font-black text-sm hover:bg-gray-50 transition-all"
+                    className="flex-1 px-8 py-4 border-2 border-gray-200 text-gray-600 rounded-2xl font-semibold text-sm hover:bg-gray-50 transition-all"
                   >
                     Cancel
                   </button>
@@ -1350,7 +1350,7 @@ export default function IntegrationsPage() {
                     onClick={handleAmazonConnect}
                     disabled={connecting || !amazonConnectForm.sellerId || !amazonConnectForm.awsAccessKey ||
                       !amazonConnectForm.awsSecretKey || !amazonConnectForm.refreshToken}
-                    className="flex-1 px-8 py-4 bg-[#FF9900] text-white rounded-2xl font-black text-sm hover:bg-[#e68a00] transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    className="flex-1 px-8 py-4 bg-[#FF9900] text-white rounded-2xl font-semibold text-sm hover:bg-[#e68a00] transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   >
                     {connecting ? (
                       <>

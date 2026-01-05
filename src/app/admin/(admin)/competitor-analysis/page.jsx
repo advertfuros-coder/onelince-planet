@@ -73,9 +73,9 @@ export default function AdminCompetitorAnalysisPage() {
     }
 
     const getDiffBadge = (diff) => {
-        if (diff < -5) return <span className="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold">Best Price</span>
-        if (diff > 5) return <span className="px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs font-bold">Overpriced</span>
-        return <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-bold">Competitive</span>
+        if (diff < -5) return <span className="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-semibold">Best Price</span>
+        if (diff > 5) return <span className="px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs font-semibold">Overpriced</span>
+        return <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-semibold">Competitive</span>
     }
 
     const chartData = [
@@ -87,7 +87,7 @@ export default function AdminCompetitorAnalysisPage() {
         <div className="space-y-6">
             <div className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-900">Competitor Intelligence</h1>
+                    <h1 className="text-3xl font-semibold text-gray-900">Competitor Intelligence</h1>
                     <p className="text-gray-600 mt-1">Real-time market analysis and price monitoring</p>
                 </div>
                 <button
@@ -121,7 +121,7 @@ export default function AdminCompetitorAnalysisPage() {
 
                 {/* Chart */}
                 <div className="md:col-span-3 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                    <h3 className="text-lg font-bold text-gray-900 mb-4">Price Competitiveness Breakdown</h3>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Price Competitiveness Breakdown</h3>
                     <div className="h-48">
                         <ResponsiveContainer width="100%" height="100%">
                             <BarChart layout="vertical" data={chartData} margin={{ top: 5, right: 30, left: 40, bottom: 5 }}>
@@ -215,7 +215,7 @@ export default function AdminCompetitorAnalysisPage() {
                                             </td>
                                             <td className="px-6 py-4 text-right">
                                                 <div className="text-sm">
-                                                    <p className="font-bold text-gray-700">
+                                                    <p className="font-semibold text-gray-700">
                                                         ₹{(item.currentPosition?.lowestCompetitorPrice || 0).toLocaleString()}
                                                     </p>
                                                     <p className="text-xs text-gray-500">Lowest Found</p>
@@ -223,7 +223,7 @@ export default function AdminCompetitorAnalysisPage() {
                                             </td>
                                             <td className="px-6 py-4 text-right">
                                                 <div className={`flex flex-col items-end ${getDiffColor(item.currentPosition?.percentageDifference)}`}>
-                                                    <div className="flex items-center space-x-1 font-bold">
+                                                    <div className="flex items-center space-x-1 font-semibold">
                                                         {item.currentPosition?.percentageDifference < 0 ? <FiArrowDown /> : item.currentPosition?.percentageDifference > 0 ? <FiArrowUp /> : <FiMinus />}
                                                         <span>{Math.abs(item.currentPosition?.percentageDifference || 0).toFixed(1)}%</span>
                                                     </div>
@@ -269,7 +269,7 @@ function StatCard({ label, value, subValue, icon, color, bgColor }) {
                 <div>
                     <p className="text-sm text-gray-600">{label}</p>
                     <div className="flex items-baseline space-x-2">
-                        <p className="text-2xl font-bold text-gray-900">{value}</p>
+                        <p className="text-2xl font-semibold text-gray-900">{value}</p>
                         {subValue && <span className="text-sm font-medium text-gray-500">{subValue}</span>}
                     </div>
                 </div>

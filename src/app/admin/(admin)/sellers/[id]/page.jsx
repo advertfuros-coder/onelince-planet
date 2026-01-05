@@ -295,8 +295,8 @@ export default function SellerDetailsPage({ params }) {
                         </div>
                         <div>
                             <div className="flex items-center gap-3">
-                                <h1 className="text-2xl font-bold text-slate-900">{seller.storeInfo?.storeName || seller.businessInfo?.businessName}</h1>
-                                <span className={`px-2 py-0.5 rounded-lg text-[10px] font-bold ${(seller.verificationStatus === 'approved' || seller.verificationStatus === 'verified') ? 'bg-emerald-100 text-emerald-700' : (seller.verificationStatus === 'pending' || seller.verificationStatus === 'under_review') ? 'bg-amber-100 text-amber-700' : 'bg-rose-100 text-rose-700'}`}>
+                                <h1 className="text-2xl font-semibold text-slate-900">{seller.storeInfo?.storeName || seller.businessInfo?.businessName}</h1>
+                                <span className={`px-2 py-0.5 rounded-lg text-[10px] font-semibold ${(seller.verificationStatus === 'approved' || seller.verificationStatus === 'verified') ? 'bg-emerald-100 text-emerald-700' : (seller.verificationStatus === 'pending' || seller.verificationStatus === 'under_review') ? 'bg-amber-100 text-amber-700' : 'bg-rose-100 text-rose-700'}`}>
                                     {seller.verificationStatus}
                                 </span>
                             </div>
@@ -306,15 +306,15 @@ export default function SellerDetailsPage({ params }) {
                     <div className="flex gap-2">
                         {(seller.verificationStatus === 'pending' || seller.verificationStatus === 'under_review') ? (
                             <>
-                                <button onClick={() => handleAction('verify')} className="px-4 py-2 bg-emerald-600 text-white rounded-lg font-bold text-sm"><FiCheckCircle className="inline mr-1" /> Verify</button>
-                                <button onClick={() => handleAction('reject')} className="px-4 py-2 bg-rose-100 text-rose-700 rounded-lg font-bold text-sm">Reject</button>
+                                <button onClick={() => handleAction('verify')} className="px-4 py-2 bg-emerald-600 text-white rounded-lg font-semibold text-sm"><FiCheckCircle className="inline mr-1" /> Verify</button>
+                                <button onClick={() => handleAction('reject')} className="px-4 py-2 bg-rose-100 text-rose-700 rounded-lg font-semibold text-sm">Reject</button>
                             </>
                         ) : (
-                            <button onClick={() => handleAction(seller.isActive ? 'suspend' : 'activate')} className={`px-4 py-2 rounded-lg font-bold text-sm ${seller.isActive ? 'bg-rose-100 text-rose-700' : 'bg-indigo-600 text-white'}`}>
+                            <button onClick={() => handleAction(seller.isActive ? 'suspend' : 'activate')} className={`px-4 py-2 rounded-lg font-semibold text-sm ${seller.isActive ? 'bg-rose-100 text-rose-700' : 'bg-indigo-600 text-white'}`}>
                                 {seller.isActive ? 'Suspend' : 'Activate'}
                             </button>
                         )}
-                        <button onClick={() => setShowRequestModal(true)} className="px-4 py-2 bg-indigo-50 text-indigo-600 rounded-lg font-bold text-sm">Request Doc</button>
+                        <button onClick={() => setShowRequestModal(true)} className="px-4 py-2 bg-indigo-50 text-indigo-600 rounded-lg font-semibold text-sm">Request Doc</button>
                     </div>
                 </div>
 
@@ -324,9 +324,9 @@ export default function SellerDetailsPage({ params }) {
                     <div className={`${healthColor.bg} border-2 ${healthColor.border} p-6 rounded-2xl`}>
                         <div className="flex items-center justify-between">
                             <div>
-                                <h3 className="text-sm font-bold text-slate-500 uppercase tracking-wide mb-2">Seller Health Score</h3>
+                                <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-2">Seller Health Score</h3>
                                 <div className="flex items-baseline gap-3">
-                                    <span className={`text-5xl font-bold ${healthColor.text}`}>{healthScore}</span>
+                                    <span className={`text-5xl font-semibold ${healthColor.text}`}>{healthScore}</span>
                                     <span className="text-2xl text-slate-400 font-medium">/100</span>
                                 </div>
                                 <p className="text-xs text-slate-500 mt-2">
@@ -352,22 +352,22 @@ export default function SellerDetailsPage({ params }) {
                     <div className="grid grid-cols-4 gap-4">
                         <div className="bg-indigo-50 p-4 rounded-xl border border-indigo-100">
                             <div className="flex items-center gap-2 text-indigo-600 mb-2"><FiDollarSign className="w-5 h-5" /></div>
-                            <p className="text-2xl font-bold text-slate-900">₹{(stats?.totalRevenue || 0).toLocaleString()}</p>
+                            <p className="text-2xl font-semibold text-slate-900">₹{(stats?.totalRevenue || 0).toLocaleString()}</p>
                             <p className="text-xs text-slate-500 font-medium">Total Revenue</p>
                         </div>
                         <div className="bg-emerald-50 p-4 rounded-xl border border-emerald-100">
                             <div className="flex items-center gap-2 text-emerald-600 mb-2"><FiPackage className="w-5 h-5" /></div>
-                            <p className="text-2xl font-bold text-slate-900">{stats?.orderCount || 0}</p>
+                            <p className="text-2xl font-semibold text-slate-900">{stats?.orderCount || 0}</p>
                             <p className="text-xs text-slate-500 font-medium">Total Orders</p>
                         </div>
                         <div className="bg-amber-50 p-4 rounded-xl border border-amber-100">
                             <div className="flex items-center gap-2 text-amber-600 mb-2"><FiStar className="w-5 h-5" /></div>
-                            <p className="text-2xl font-bold text-slate-900">{seller.ratings?.average || 0}</p>
+                            <p className="text-2xl font-semibold text-slate-900">{seller.ratings?.average || 0}</p>
                             <p className="text-xs text-slate-500 font-medium">Avg Rating</p>
                         </div>
                         <div className="bg-blue-50 p-4 rounded-xl border border-blue-100">
                             <div className="flex items-center gap-2 text-blue-600 mb-2"><FiLayers className="w-5 h-5" /></div>
-                            <p className="text-2xl font-bold text-slate-900">{stats?.productCount || 0}</p>
+                            <p className="text-2xl font-semibold text-slate-900">{stats?.productCount || 0}</p>
                             <p className="text-xs text-slate-500 font-medium">Products</p>
                         </div>
                     </div>
@@ -376,22 +376,22 @@ export default function SellerDetailsPage({ params }) {
                     <div className="grid grid-cols-4 gap-4">
                         <div className="bg-cyan-50 p-4 rounded-xl border border-cyan-100">
                             <div className="flex items-center gap-2 text-cyan-600 mb-2"><FiCheckCircle className="w-5 h-5" /></div>
-                            <p className="text-2xl font-bold text-slate-900">{fulfillmentRate}%</p>
+                            <p className="text-2xl font-semibold text-slate-900">{fulfillmentRate}%</p>
                             <p className="text-xs text-slate-500 font-medium">Fulfillment Rate</p>
                         </div>
                         <div className="bg-rose-50 p-4 rounded-xl border border-rose-100">
                             <div className="flex items-center gap-2 text-rose-600 mb-2"><FiRefreshCw className="w-5 h-5" /></div>
-                            <p className="text-2xl font-bold text-slate-900">{returnRate}%</p>
+                            <p className="text-2xl font-semibold text-slate-900">{returnRate}%</p>
                             <p className="text-xs text-slate-500 font-medium">Return Rate</p>
                         </div>
                         <div className="bg-purple-50 p-4 rounded-xl border border-purple-100">
                             <div className="flex items-center gap-2 text-purple-600 mb-2"><FiClock className="w-5 h-5" /></div>
-                            <p className="text-2xl font-bold text-slate-900">{responseTime}</p>
+                            <p className="text-2xl font-semibold text-slate-900">{responseTime}</p>
                             <p className="text-xs text-slate-500 font-medium">Avg Response Time</p>
                         </div>
                         <div className="bg-violet-50 p-4 rounded-xl border border-violet-100">
                             <div className="flex items-center gap-2 text-violet-600 mb-2"><FiUsers className="w-5 h-5" /></div>
-                            <p className="text-2xl font-bold text-slate-900">{seller.ratings?.count || 0}</p>
+                            <p className="text-2xl font-semibold text-slate-900">{seller.ratings?.count || 0}</p>
                             <p className="text-xs text-slate-500 font-medium">Total Reviews</p>
                         </div>
                     </div>
@@ -401,7 +401,7 @@ export default function SellerDetailsPage({ params }) {
             {/* Tabs */}
             <div className="flex gap-2 overflow-x-auto no-scrollbar">
                 {tabs.map(tab => (
-                    <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`flex items-center gap-2 px-4 py-2.5 rounded-lg font-bold text-sm whitespace-nowrap ${activeTab === tab.id ? 'bg-indigo-600 text-white' : 'bg-white text-slate-600 border border-slate-200'}`}>
+                    <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`flex items-center gap-2 px-4 py-2.5 rounded-lg font-semibold text-sm whitespace-nowrap ${activeTab === tab.id ? 'bg-indigo-600 text-white' : 'bg-white text-slate-600 border border-slate-200'}`}>
                         <tab.icon className="w-4 h-4" /> {tab.label}
                     </button>
                 ))}
@@ -413,7 +413,7 @@ export default function SellerDetailsPage({ params }) {
                     {/* Charts Row */}
                     <div className="grid grid-cols-3 gap-6">
                         <div className="col-span-2 bg-white p-6 rounded-2xl border border-slate-200">
-                            <h3 className="text-lg font-bold mb-4 flex items-center gap-2"><FiTrendingUp className="text-indigo-600" /> Revenue Trend</h3>
+                            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2"><FiTrendingUp className="text-indigo-600" /> Revenue Trend</h3>
                             <ResponsiveContainer width="100%" height={300}>
                                 <AreaChart data={salesData}>
                                     <defs><linearGradient id="colorAmt" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#6366f1" stopOpacity={0.1} /><stop offset="95%" stopColor="#6366f1" stopOpacity={0} /></linearGradient></defs>
@@ -426,7 +426,7 @@ export default function SellerDetailsPage({ params }) {
                             </ResponsiveContainer>
                         </div>
                         <div className="bg-white p-6 rounded-2xl border border-slate-200">
-                            <h3 className="text-lg font-bold mb-4">Category Split</h3>
+                            <h3 className="text-lg font-semibold mb-4">Category Split</h3>
                             <ResponsiveContainer width="100%" height={300}>
                                 <PieChart><Pie data={pieData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} label>{pieData.map((_, i) => <Cell key={`cell-${i}`} fill={COLORS[i % COLORS.length]} />)}</Pie><Tooltip /></PieChart>
                             </ResponsiveContainer>
@@ -436,7 +436,7 @@ export default function SellerDetailsPage({ params }) {
                     {/* Smart Alerts */}
                     {smartAlerts.length > 0 && (
                         <div className="bg-white p-6 rounded-2xl border border-slate-200">
-                            <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+                            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
                                 <FiAlertCircle className="text-amber-600" /> Smart Alerts & Insights
                             </h3>
                             <div className="grid grid-cols-2 gap-4">
@@ -459,9 +459,9 @@ export default function SellerDetailsPage({ params }) {
                                                     }`} />
                                             </div>
                                             <div className="flex-1">
-                                                <h4 className="font-bold text-slate-900 mb-1">{alert.title}</h4>
+                                                <h4 className="font-semibold text-slate-900 mb-1">{alert.title}</h4>
                                                 <p className="text-sm text-slate-600 mb-2">{alert.message}</p>
-                                                <button className={`text-xs font-bold ${alert.type === 'critical' ? 'text-rose-700' :
+                                                <button className={`text-xs font-semibold ${alert.type === 'critical' ? 'text-rose-700' :
                                                         alert.type === 'warning' ? 'text-amber-700' :
                                                             alert.type === 'success' ? 'text-emerald-700' :
                                                                 'text-blue-700'
@@ -478,7 +478,7 @@ export default function SellerDetailsPage({ params }) {
 
                     {/* Comparative Analytics */}
                     <div className="bg-white p-6 rounded-2xl border border-slate-200">
-                        <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+                        <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
                             <FiBarChart2 className="text-indigo-600" /> Performance vs. Category Average
                         </h3>
                         <div className="grid grid-cols-3 gap-6">
@@ -488,7 +488,7 @@ export default function SellerDetailsPage({ params }) {
                                     <span className="text-sm font-medium text-slate-700">Health Score</span>
                                     <div className="flex items-center gap-2">
                                         <span className="text-sm text-slate-500">{categoryBenchmarks.avgHealthScore}</span>
-                                        <span className="text-lg font-bold text-slate-900">{healthScore}</span>
+                                        <span className="text-lg font-semibold text-slate-900">{healthScore}</span>
                                         {healthScore > categoryBenchmarks.avgHealthScore ? (
                                             <FiTrendingUp className="w-4 h-4 text-emerald-600" />
                                         ) : (
@@ -514,7 +514,7 @@ export default function SellerDetailsPage({ params }) {
                                     <span className="text-sm font-medium text-slate-700">Fulfillment Rate</span>
                                     <div className="flex items-center gap-2">
                                         <span className="text-sm text-slate-500">{categoryBenchmarks.avgFulfillmentRate}%</span>
-                                        <span className="text-lg font-bold text-slate-900">{fulfillmentRate}%</span>
+                                        <span className="text-lg font-semibold text-slate-900">{fulfillmentRate}%</span>
                                         {fulfillmentRate > categoryBenchmarks.avgFulfillmentRate ? (
                                             <FiTrendingUp className="w-4 h-4 text-emerald-600" />
                                         ) : (
@@ -540,7 +540,7 @@ export default function SellerDetailsPage({ params }) {
                                     <span className="text-sm font-medium text-slate-700">Customer Rating</span>
                                     <div className="flex items-center gap-2">
                                         <span className="text-sm text-slate-500">{categoryBenchmarks.avgRating}</span>
-                                        <span className="text-lg font-bold text-slate-900">{seller.ratings?.average || 0}</span>
+                                        <span className="text-lg font-semibold text-slate-900">{seller.ratings?.average || 0}</span>
                                         {(seller.ratings?.average || 0) > categoryBenchmarks.avgRating ? (
                                             <FiTrendingUp className="w-4 h-4 text-emerald-600" />
                                         ) : (
@@ -568,7 +568,7 @@ export default function SellerDetailsPage({ params }) {
                                     <FiBarChart2 className="w-6 h-6 text-indigo-600" />
                                 </div>
                                 <div className="flex-1">
-                                    <h4 className="font-bold text-indigo-900 mb-1">Performance Summary</h4>
+                                    <h4 className="font-semibold text-indigo-900 mb-1">Performance Summary</h4>
                                     <p className="text-sm text-indigo-700">
                                         {healthScore > categoryBenchmarks.avgHealthScore && fulfillmentRate > categoryBenchmarks.avgFulfillmentRate
                                             ? '🎉 This seller is outperforming the category average across multiple metrics!'
@@ -584,7 +584,7 @@ export default function SellerDetailsPage({ params }) {
 
                     {/* Seller Journey Timeline */}
                     <div className="bg-white p-6 rounded-2xl border border-slate-200">
-                        <h3 className="text-lg font-bold mb-6 flex items-center gap-2"><FiCalendar className="text-indigo-600" /> Seller Journey Timeline</h3>
+                        <h3 className="text-lg font-semibold mb-6 flex items-center gap-2"><FiCalendar className="text-indigo-600" /> Seller Journey Timeline</h3>
                         <div className="relative">
                             {/* Timeline Line */}
                             <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gradient-to-b from-indigo-500 via-emerald-500 to-slate-300"></div>
@@ -598,7 +598,7 @@ export default function SellerDetailsPage({ params }) {
                                     </div>
                                     <div className="flex-1 bg-indigo-50 border border-indigo-200 p-4 rounded-xl">
                                         <div className="flex items-center justify-between mb-1">
-                                            <h4 className="font-bold text-slate-900">Account Created</h4>
+                                            <h4 className="font-semibold text-slate-900">Account Created</h4>
                                             <span className="text-xs text-slate-500">{new Date(seller.createdAt).toLocaleDateString()}</span>
                                         </div>
                                         <p className="text-sm text-slate-600">Seller registered on the platform</p>
@@ -613,7 +613,7 @@ export default function SellerDetailsPage({ params }) {
                                         </div>
                                         <div className="flex-1 bg-emerald-50 border border-emerald-200 p-4 rounded-xl">
                                             <div className="flex items-center justify-between mb-1">
-                                                <h4 className="font-bold text-slate-900">Verified</h4>
+                                                <h4 className="font-semibold text-slate-900">Verified</h4>
                                                 <span className="text-xs text-slate-500">{new Date(seller.approvedAt).toLocaleDateString()}</span>
                                             </div>
                                             <p className="text-sm text-slate-600">Account verification completed</p>
@@ -629,7 +629,7 @@ export default function SellerDetailsPage({ params }) {
                                         </div>
                                         <div className="flex-1 bg-blue-50 border border-blue-200 p-4 rounded-xl">
                                             <div className="flex items-center justify-between mb-1">
-                                                <h4 className="font-bold text-slate-900">First Product Listed</h4>
+                                                <h4 className="font-semibold text-slate-900">First Product Listed</h4>
                                                 <span className="text-xs text-slate-500">{new Date(products[products.length - 1]?.createdAt || seller.createdAt).toLocaleDateString()}</span>
                                             </div>
                                             <p className="text-sm text-slate-600">Started selling on the platform</p>
@@ -645,7 +645,7 @@ export default function SellerDetailsPage({ params }) {
                                         </div>
                                         <div className="flex-1 bg-amber-50 border border-amber-200 p-4 rounded-xl">
                                             <div className="flex items-center justify-between mb-1">
-                                                <h4 className="font-bold text-slate-900">First Sale</h4>
+                                                <h4 className="font-semibold text-slate-900">First Sale</h4>
                                                 <span className="text-xs text-slate-500">{new Date(orders[orders.length - 1]?.createdAt || seller.createdAt).toLocaleDateString()}</span>
                                             </div>
                                             <p className="text-sm text-slate-600">Made their first sale</p>
@@ -661,7 +661,7 @@ export default function SellerDetailsPage({ params }) {
                                         </div>
                                         <div className="flex-1 bg-purple-50 border border-purple-200 p-4 rounded-xl">
                                             <div className="flex items-center justify-between mb-1">
-                                                <h4 className="font-bold text-slate-900">🎉 100+ Orders Milestone</h4>
+                                                <h4 className="font-semibold text-slate-900">🎉 100+ Orders Milestone</h4>
                                                 <span className="text-xs text-slate-500">Achievement Unlocked</span>
                                             </div>
                                             <p className="text-sm text-slate-600">Reached 100 orders - Growing seller!</p>
@@ -676,7 +676,7 @@ export default function SellerDetailsPage({ params }) {
                                         </div>
                                         <div className="flex-1 bg-rose-50 border border-rose-200 p-4 rounded-xl">
                                             <div className="flex items-center justify-between mb-1">
-                                                <h4 className="font-bold text-slate-900">🏆 ₹1L+ Revenue Milestone</h4>
+                                                <h4 className="font-semibold text-slate-900">🏆 ₹1L+ Revenue Milestone</h4>
                                                 <span className="text-xs text-slate-500">Achievement Unlocked</span>
                                             </div>
                                             <p className="text-sm text-slate-600">Crossed ₹1 Lakh in total revenue!</p>
@@ -691,7 +691,7 @@ export default function SellerDetailsPage({ params }) {
                                     </div>
                                     <div className={`flex-1 ${seller.isActive ? 'bg-emerald-50 border-emerald-200' : 'bg-slate-50 border-slate-200'} border p-4 rounded-xl`}>
                                         <div className="flex items-center justify-between mb-1">
-                                            <h4 className="font-bold text-slate-900">Current Status</h4>
+                                            <h4 className="font-semibold text-slate-900">Current Status</h4>
                                             <span className="text-xs text-slate-500">Now</span>
                                         </div>
                                         <p className="text-sm text-slate-600">
@@ -708,7 +708,7 @@ export default function SellerDetailsPage({ params }) {
             {activeTab === 'business' && (
                 <div className="grid grid-cols-2 gap-6">
                     <div className="bg-white p-6 rounded-2xl border border-slate-200 space-y-6">
-                        <h3 className="text-lg font-bold flex items-center gap-2"><FiBriefcase className="text-indigo-600" /> Business Details</h3>
+                        <h3 className="text-lg font-semibold flex items-center gap-2"><FiBriefcase className="text-indigo-600" /> Business Details</h3>
                         <div className="grid grid-cols-2 gap-4">
                             <InfoItem label="Business Name" value={seller.businessInfo?.businessName} />
                             <InfoItem label="Business Type" value={seller.businessInfo?.businessType} />
@@ -719,7 +719,7 @@ export default function SellerDetailsPage({ params }) {
                         </div>
                     </div>
                     <div className="bg-white p-6 rounded-2xl border border-slate-200 space-y-6">
-                        <h3 className="text-lg font-bold flex items-center gap-2"><FiMapPin className="text-emerald-600" /> Pickup Address</h3>
+                        <h3 className="text-lg font-semibold flex items-center gap-2"><FiMapPin className="text-emerald-600" /> Pickup Address</h3>
                         <div className="space-y-3">
                             <InfoItem label="Address" value={seller.pickupAddress?.addressLine1} />
                             <InfoItem label="City" value={seller.pickupAddress?.city} />
@@ -729,7 +729,7 @@ export default function SellerDetailsPage({ params }) {
                         </div>
                     </div>
                     <div className="col-span-2 bg-white p-6 rounded-2xl border border-slate-200 space-y-6">
-                        <h3 className="text-lg font-bold flex items-center gap-2"><FiShoppingBag className="text-blue-600" /> Store Information</h3>
+                        <h3 className="text-lg font-semibold flex items-center gap-2"><FiShoppingBag className="text-blue-600" /> Store Information</h3>
                         <div className="grid grid-cols-3 gap-4">
                             <InfoItem label="Store Name" value={seller.storeInfo?.storeName} />
                             <InfoItem label="Store URL" value={seller.storeInfo?.website} icon={FiGlobe} />
@@ -778,11 +778,11 @@ export default function SellerDetailsPage({ params }) {
                     <table className="w-full">
                         <thead className="bg-slate-50 border-b border-slate-200">
                             <tr>
-                                <th className="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Product</th>
-                                <th className="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Price</th>
-                                <th className="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Stock</th>
-                                <th className="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Rating</th>
-                                <th className="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Status</th>
+                                <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Product</th>
+                                <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Price</th>
+                                <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Stock</th>
+                                <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Rating</th>
+                                <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Status</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
@@ -800,10 +800,10 @@ export default function SellerDetailsPage({ params }) {
                                             <span className="font-medium text-slate-900">{p.name}</span>
                                         </div>
                                     </td>
-                                    <td className="px-6 py-4 font-bold">₹{p.price}</td>
+                                    <td className="px-6 py-4 font-semibold">₹{p.price}</td>
                                     <td className="px-6 py-4 text-slate-600">{p.stock}</td>
                                     <td className="px-6 py-4"><span className="flex items-center gap-1 text-amber-500"><FiStar className="fill-current" /> {p.ratings?.average || 0}</span></td>
-                                    <td className="px-6 py-4"><span className={`px-2 py-1 rounded-lg text-[10px] font-bold ${p.isActive ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600'}`}>{p.isActive ? 'ACTIVE' : 'INACTIVE'}</span></td>
+                                    <td className="px-6 py-4"><span className={`px-2 py-1 rounded-lg text-[10px] font-semibold ${p.isActive ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600'}`}>{p.isActive ? 'ACTIVE' : 'INACTIVE'}</span></td>
                                 </tr>
                             ))}
                         </tbody>
@@ -865,11 +865,11 @@ export default function SellerDetailsPage({ params }) {
                     <table className="w-full">
                         <thead className="bg-slate-50 border-b border-slate-200">
                             <tr>
-                                <th className="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Order ID</th>
-                                <th className="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Date</th>
-                                <th className="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Customer</th>
-                                <th className="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Amount</th>
-                                <th className="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Status</th>
+                                <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Order ID</th>
+                                <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Date</th>
+                                <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Customer</th>
+                                <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Amount</th>
+                                <th className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Status</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
@@ -880,12 +880,12 @@ export default function SellerDetailsPage({ params }) {
                                 return matchesSearch && matchesFilter
                             }).map(o => (
                                 <tr key={o._id} className="hover:bg-slate-50">
-                                    <td className="px-6 py-4 font-mono text-sm font-bold">#{o._id.slice(-6)}</td>
+                                    <td className="px-6 py-4 font-mono text-sm font-semibold">#{o._id.slice(-6)}</td>
                                     <td className="px-6 py-4 text-sm text-slate-600">{new Date(o.createdAt).toLocaleDateString()}</td>
                                     <td className="px-6 py-4 text-sm">{o.customer?.name || 'N/A'}</td>
-                                    <td className="px-6 py-4 font-bold">₹{o.totalAmount}</td>
+                                    <td className="px-6 py-4 font-semibold">₹{o.totalAmount}</td>
                                     <td className="px-6 py-4">
-                                        <span className={`px-2 py-1 rounded-lg text-[10px] font-bold uppercase ${o.status === 'delivered' ? 'bg-emerald-50 text-emerald-600' :
+                                        <span className={`px-2 py-1 rounded-lg text-[10px] font-semibold uppercase ${o.status === 'delivered' ? 'bg-emerald-50 text-emerald-600' :
                                                 o.status === 'cancelled' || o.status === 'returned' ? 'bg-rose-50 text-rose-600' :
                                                     o.status === 'shipped' ? 'bg-blue-50 text-blue-600' :
                                                         'bg-amber-50 text-amber-600'
@@ -915,9 +915,9 @@ export default function SellerDetailsPage({ params }) {
                         <div key={r._id} className="bg-white p-6 rounded-2xl border border-slate-200">
                             <div className="flex items-center justify-between mb-4">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center font-bold">{r.customer?.name?.[0]}</div>
+                                    <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center font-semibold">{r.customer?.name?.[0]}</div>
                                     <div>
-                                        <p className="font-bold text-slate-900">{r.customer?.name}</p>
+                                        <p className="font-semibold text-slate-900">{r.customer?.name}</p>
                                         <p className="text-xs text-slate-400">{new Date(r.createdAt).toLocaleDateString()}</p>
                                     </div>
                                 </div>
@@ -932,7 +932,7 @@ export default function SellerDetailsPage({ params }) {
             {activeTab === 'documents' && (
                 <div className="space-y-6">
                     <div className="bg-white p-6 rounded-2xl border border-slate-200">
-                        <h3 className="text-lg font-bold mb-4 flex items-center gap-2"><FiShield className="text-indigo-600" /> Verification Documents</h3>
+                        <h3 className="text-lg font-semibold mb-4 flex items-center gap-2"><FiShield className="text-indigo-600" /> Verification Documents</h3>
                         <div className="grid grid-cols-4 gap-4">
                             <DocCard label="PAN Card" url={seller.documents?.panCard} />
                             <DocCard label="GST Certificate" url={seller.documents?.gstCertificate} />
@@ -942,16 +942,16 @@ export default function SellerDetailsPage({ params }) {
                     </div>
                     {seller.documents?.requestedDocuments?.length > 0 && (
                         <div className="bg-amber-50 p-6 rounded-2xl border border-amber-200">
-                            <h3 className="text-lg font-bold mb-4 text-amber-900">Requested Documents</h3>
+                            <h3 className="text-lg font-semibold mb-4 text-amber-900">Requested Documents</h3>
                             <div className="grid grid-cols-2 gap-4">
                                 {seller.documents.requestedDocuments.map(req => (
                                     <div key={req._id} className="bg-white p-4 rounded-xl border border-amber-200">
                                         <div className="flex justify-between items-start mb-2">
-                                            <h4 className="font-bold">{req.title}</h4>
-                                            <span className="px-2 py-0.5 bg-amber-100 text-amber-700 rounded text-[9px] font-bold uppercase">{req.status}</span>
+                                            <h4 className="font-semibold">{req.title}</h4>
+                                            <span className="px-2 py-0.5 bg-amber-100 text-amber-700 rounded text-[9px] font-semibold uppercase">{req.status}</span>
                                         </div>
                                         <p className="text-xs text-slate-500 mb-3">{req.description}</p>
-                                        {req.url && <a href={req.url} target="_blank" className="text-xs text-indigo-600 font-bold">View Document →</a>}
+                                        {req.url && <a href={req.url} target="_blank" className="text-xs text-indigo-600 font-semibold">View Document →</a>}
                                     </div>
                                 ))}
                             </div>
@@ -966,22 +966,22 @@ export default function SellerDetailsPage({ params }) {
                     <div className="grid grid-cols-4 gap-4">
                         <div className="bg-gradient-to-br from-indigo-500 to-indigo-600 p-6 rounded-2xl text-white">
                             <FiDollarSign className="w-8 h-8 mb-3 opacity-80" />
-                            <p className="text-3xl font-bold">₹{(stats?.totalRevenue || 0).toLocaleString()}</p>
+                            <p className="text-3xl font-semibold">₹{(stats?.totalRevenue || 0).toLocaleString()}</p>
                             <p className="text-sm opacity-90 mt-1">Total Revenue</p>
                         </div>
                         <div className="bg-gradient-to-br from-emerald-500 to-emerald-600 p-6 rounded-2xl text-white">
                             <FiTrendingUp className="w-8 h-8 mb-3 opacity-80" />
-                            <p className="text-3xl font-bold">₹{stats?.orderCount ? Math.round(stats.totalRevenue / stats.orderCount) : 0}</p>
+                            <p className="text-3xl font-semibold">₹{stats?.orderCount ? Math.round(stats.totalRevenue / stats.orderCount) : 0}</p>
                             <p className="text-sm opacity-90 mt-1">Avg Order Value</p>
                         </div>
                         <div className="bg-gradient-to-br from-amber-500 to-amber-600 p-6 rounded-2xl text-white">
                             <FiPercent className="w-8 h-8 mb-3 opacity-80" />
-                            <p className="text-3xl font-bold">{seller.commissionRate || 5}%</p>
+                            <p className="text-3xl font-semibold">{seller.commissionRate || 5}%</p>
                             <p className="text-sm opacity-90 mt-1">Commission Rate</p>
                         </div>
                         <div className="bg-gradient-to-br from-rose-500 to-rose-600 p-6 rounded-2xl text-white">
                             <FiCreditCard className="w-8 h-8 mb-3 opacity-80" />
-                            <p className="text-3xl font-bold">₹{Math.round((stats?.totalRevenue || 0) * ((seller.commissionRate || 5) / 100)).toLocaleString()}</p>
+                            <p className="text-3xl font-semibold">₹{Math.round((stats?.totalRevenue || 0) * ((seller.commissionRate || 5) / 100)).toLocaleString()}</p>
                             <p className="text-sm opacity-90 mt-1">Total Commission</p>
                         </div>
                     </div>
@@ -989,7 +989,7 @@ export default function SellerDetailsPage({ params }) {
                     <div className="grid grid-cols-2 gap-6">
                         {/* Bank Details */}
                         <div className="bg-white p-6 rounded-2xl border border-slate-200">
-                            <h3 className="text-lg font-bold mb-4 flex items-center gap-2"><FiCreditCard className="text-indigo-600" /> Bank Details</h3>
+                            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2"><FiCreditCard className="text-indigo-600" /> Bank Details</h3>
                             <div className="space-y-4">
                                 <InfoItem label="Bank Name" value={seller.bankDetails?.bankName} />
                                 <InfoItem label="Account Number" value={seller.bankDetails?.accountNumber} />
@@ -1002,32 +1002,32 @@ export default function SellerDetailsPage({ params }) {
 
                         {/* Commission Breakdown */}
                         <div className="bg-white p-6 rounded-2xl border border-slate-200">
-                            <h3 className="text-lg font-bold mb-4 flex items-center gap-2"><FiPercent className="text-emerald-600" /> Commission Breakdown</h3>
+                            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2"><FiPercent className="text-emerald-600" /> Commission Breakdown</h3>
                             <div className="space-y-4">
                                 <div className="p-4 bg-slate-50 rounded-xl">
                                     <div className="flex justify-between items-center mb-2">
                                         <span className="text-sm text-slate-600">Gross Revenue</span>
-                                        <span className="font-bold text-slate-900">₹{(stats?.totalRevenue || 0).toLocaleString()}</span>
+                                        <span className="font-semibold text-slate-900">₹{(stats?.totalRevenue || 0).toLocaleString()}</span>
                                     </div>
                                     <div className="flex justify-between items-center mb-2">
                                         <span className="text-sm text-slate-600">Platform Commission ({seller.commissionRate || 5}%)</span>
-                                        <span className="font-bold text-rose-600">- ₹{Math.round((stats?.totalRevenue || 0) * ((seller.commissionRate || 5) / 100)).toLocaleString()}</span>
+                                        <span className="font-semibold text-rose-600">- ₹{Math.round((stats?.totalRevenue || 0) * ((seller.commissionRate || 5) / 100)).toLocaleString()}</span>
                                     </div>
                                     <div className="border-t border-slate-200 pt-2 mt-2">
                                         <div className="flex justify-between items-center">
-                                            <span className="text-sm font-bold text-slate-700">Net Earnings</span>
-                                            <span className="font-bold text-lg text-emerald-600">₹{Math.round((stats?.totalRevenue || 0) * (1 - (seller.commissionRate || 5) / 100)).toLocaleString()}</span>
+                                            <span className="text-sm font-semibold text-slate-700">Net Earnings</span>
+                                            <span className="font-semibold text-lg text-emerald-600">₹{Math.round((stats?.totalRevenue || 0) * (1 - (seller.commissionRate || 5) / 100)).toLocaleString()}</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="grid grid-cols-2 gap-3">
                                     <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg text-center">
                                         <p className="text-xs text-blue-600 font-medium mb-1">Per Order Commission</p>
-                                        <p className="text-lg font-bold text-blue-700">₹{stats?.orderCount ? Math.round((stats.totalRevenue * ((seller.commissionRate || 5) / 100)) / stats.orderCount) : 0}</p>
+                                        <p className="text-lg font-semibold text-blue-700">₹{stats?.orderCount ? Math.round((stats.totalRevenue * ((seller.commissionRate || 5) / 100)) / stats.orderCount) : 0}</p>
                                     </div>
                                     <div className="p-3 bg-purple-50 border border-purple-200 rounded-lg text-center">
                                         <p className="text-xs text-purple-600 font-medium mb-1">Per Order Net</p>
-                                        <p className="text-lg font-bold text-purple-700">₹{stats?.orderCount ? Math.round((stats.totalRevenue * (1 - (seller.commissionRate || 5) / 100)) / stats.orderCount) : 0}</p>
+                                        <p className="text-lg font-semibold text-purple-700">₹{stats?.orderCount ? Math.round((stats.totalRevenue * (1 - (seller.commissionRate || 5) / 100)) / stats.orderCount) : 0}</p>
                                     </div>
                                 </div>
                             </div>
@@ -1037,14 +1037,14 @@ export default function SellerDetailsPage({ params }) {
                     {/* Pending Payouts & Transaction History */}
                     <div className="grid grid-cols-2 gap-6">
                         <div className="bg-white p-6 rounded-2xl border border-slate-200">
-                            <h3 className="text-lg font-bold mb-4 flex items-center gap-2"><FiClock className="text-amber-600" /> Pending Payouts</h3>
+                            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2"><FiClock className="text-amber-600" /> Pending Payouts</h3>
                             <div className="space-y-3">
                                 <div className="p-4 bg-amber-50 border-2 border-amber-200 rounded-xl">
                                     <div className="flex items-center justify-between mb-2">
-                                        <span className="text-sm font-bold text-amber-700">Current Cycle</span>
-                                        <span className="text-xs bg-amber-200 text-amber-800 px-2 py-1 rounded-full font-bold">PENDING</span>
+                                        <span className="text-sm font-semibold text-amber-700">Current Cycle</span>
+                                        <span className="text-xs bg-amber-200 text-amber-800 px-2 py-1 rounded-full font-semibold">PENDING</span>
                                     </div>
-                                    <p className="text-2xl font-bold text-amber-900">₹0</p>
+                                    <p className="text-2xl font-semibold text-amber-900">₹0</p>
                                     <p className="text-xs text-amber-600 mt-1">Next payout: End of month</p>
                                 </div>
                                 <div className="text-center py-6 text-slate-400 text-sm">
@@ -1055,23 +1055,23 @@ export default function SellerDetailsPage({ params }) {
                         </div>
 
                         <div className="bg-white p-6 rounded-2xl border border-slate-200">
-                            <h3 className="text-lg font-bold mb-4 flex items-center gap-2"><FiBarChart2 className="text-blue-600" /> Financial Summary</h3>
+                            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2"><FiBarChart2 className="text-blue-600" /> Financial Summary</h3>
                             <div className="space-y-3">
                                 <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
                                     <span className="text-sm text-slate-600">Total Orders</span>
-                                    <span className="font-bold text-slate-900">{stats?.orderCount || 0}</span>
+                                    <span className="font-semibold text-slate-900">{stats?.orderCount || 0}</span>
                                 </div>
                                 <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
                                     <span className="text-sm text-slate-600">Completed Orders</span>
-                                    <span className="font-bold text-emerald-600">{orders.filter(o => o.status === 'delivered').length}</span>
+                                    <span className="font-semibold text-emerald-600">{orders.filter(o => o.status === 'delivered').length}</span>
                                 </div>
                                 <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
                                     <span className="text-sm text-slate-600">Refunded Orders</span>
-                                    <span className="font-bold text-rose-600">{orders.filter(o => o.status === 'refunded' || o.status === 'returned').length}</span>
+                                    <span className="font-semibold text-rose-600">{orders.filter(o => o.status === 'refunded' || o.status === 'returned').length}</span>
                                 </div>
                                 <div className="flex justify-between items-center p-3 bg-indigo-50 rounded-lg border border-indigo-200">
-                                    <span className="text-sm font-bold text-indigo-700">Success Rate</span>
-                                    <span className="font-bold text-indigo-700">{orders.length > 0 ? Math.round((orders.filter(o => o.status === 'delivered').length / orders.length) * 100) : 0}%</span>
+                                    <span className="text-sm font-semibold text-indigo-700">Success Rate</span>
+                                    <span className="font-semibold text-indigo-700">{orders.length > 0 ? Math.round((orders.filter(o => o.status === 'delivered').length / orders.length) * 100) : 0}%</span>
                                 </div>
                             </div>
                         </div>
@@ -1082,17 +1082,17 @@ export default function SellerDetailsPage({ params }) {
                         <div className="bg-gradient-to-r from-purple-500 to-indigo-600 p-6 rounded-2xl text-white">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <h3 className="text-lg font-bold mb-2 flex items-center gap-2">
+                                    <h3 className="text-lg font-semibold mb-2 flex items-center gap-2">
                                         <FiShield className="w-5 h-5" /> Subscription Plan
                                     </h3>
-                                    <p className="text-3xl font-bold capitalize mb-1">{seller.subscriptionPlan} Plan</p>
+                                    <p className="text-3xl font-semibold capitalize mb-1">{seller.subscriptionPlan} Plan</p>
                                     {seller.subscriptionExpiry && (
                                         <p className="text-sm opacity-90">Expires: {new Date(seller.subscriptionExpiry).toLocaleDateString()}</p>
                                     )}
                                 </div>
                                 <div className="text-right">
                                     <p className="text-sm opacity-90 mb-1">Reduced Commission</p>
-                                    <p className="text-2xl font-bold">{seller.commissionRate}%</p>
+                                    <p className="text-2xl font-semibold">{seller.commissionRate}%</p>
                                 </div>
                             </div>
                         </div>
@@ -1107,33 +1107,33 @@ export default function SellerDetailsPage({ params }) {
                         <div className="bg-white p-6 rounded-2xl border-2 border-emerald-200">
                             <div className="flex items-center justify-between mb-3">
                                 <FiCheckCircle className="w-8 h-8 text-emerald-600" />
-                                <span className="text-3xl font-bold text-emerald-600">{Math.max(0, 100 - (orders.filter(o => o.status === 'cancelled' || o.status === 'returned').length * 5))}</span>
+                                <span className="text-3xl font-semibold text-emerald-600">{Math.max(0, 100 - (orders.filter(o => o.status === 'cancelled' || o.status === 'returned').length * 5))}</span>
                             </div>
-                            <p className="text-sm font-bold text-slate-700">Compliance Score</p>
+                            <p className="text-sm font-semibold text-slate-700">Compliance Score</p>
                             <p className="text-xs text-slate-500 mt-1">Out of 100</p>
                         </div>
                         <div className="bg-white p-6 rounded-2xl border border-slate-200">
                             <div className="flex items-center justify-between mb-3">
                                 <FiXCircle className="w-8 h-8 text-rose-600" />
-                                <span className="text-3xl font-bold text-slate-900">0</span>
+                                <span className="text-3xl font-semibold text-slate-900">0</span>
                             </div>
-                            <p className="text-sm font-bold text-slate-700">Policy Violations</p>
+                            <p className="text-sm font-semibold text-slate-700">Policy Violations</p>
                             <p className="text-xs text-slate-500 mt-1">Last 30 days</p>
                         </div>
                         <div className="bg-white p-6 rounded-2xl border border-slate-200">
                             <div className="flex items-center justify-between mb-3">
                                 <FiClock className="w-8 h-8 text-amber-600" />
-                                <span className="text-3xl font-bold text-slate-900">{orders.filter(o => o.status === 'pending' || o.status === 'processing').length}</span>
+                                <span className="text-3xl font-semibold text-slate-900">{orders.filter(o => o.status === 'pending' || o.status === 'processing').length}</span>
                             </div>
-                            <p className="text-sm font-bold text-slate-700">Late Shipments</p>
+                            <p className="text-sm font-semibold text-slate-700">Late Shipments</p>
                             <p className="text-xs text-slate-500 mt-1">Last 30 days</p>
                         </div>
                         <div className="bg-white p-6 rounded-2xl border border-slate-200">
                             <div className="flex items-center justify-between mb-3">
                                 <FiAlertCircle className="w-8 h-8 text-blue-600" />
-                                <span className="text-3xl font-bold text-slate-900">0</span>
+                                <span className="text-3xl font-semibold text-slate-900">0</span>
                             </div>
-                            <p className="text-sm font-bold text-slate-700">Customer Complaints</p>
+                            <p className="text-sm font-semibold text-slate-700">Customer Complaints</p>
                             <p className="text-xs text-slate-500 mt-1">Last 30 days</p>
                         </div>
                     </div>
@@ -1141,12 +1141,12 @@ export default function SellerDetailsPage({ params }) {
                     {/* Performance Metrics */}
                     <div className="grid grid-cols-2 gap-6">
                         <div className="bg-white p-6 rounded-2xl border border-slate-200">
-                            <h3 className="text-lg font-bold mb-4 flex items-center gap-2"><FiTrendingUp className="text-indigo-600" /> Performance Metrics</h3>
+                            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2"><FiTrendingUp className="text-indigo-600" /> Performance Metrics</h3>
                             <div className="space-y-4">
                                 <div className="space-y-2">
                                     <div className="flex justify-between items-center">
                                         <span className="text-sm text-slate-600">Order Fulfillment Rate</span>
-                                        <span className="text-sm font-bold text-slate-900">{fulfillmentRate}%</span>
+                                        <span className="text-sm font-semibold text-slate-900">{fulfillmentRate}%</span>
                                     </div>
                                     <div className="w-full bg-slate-200 rounded-full h-2">
                                         <div className="bg-emerald-500 h-2 rounded-full" style={{ width: `${fulfillmentRate}%` }}></div>
@@ -1155,7 +1155,7 @@ export default function SellerDetailsPage({ params }) {
                                 <div className="space-y-2">
                                     <div className="flex justify-between items-center">
                                         <span className="text-sm text-slate-600">On-Time Delivery Rate</span>
-                                        <span className="text-sm font-bold text-slate-900">{Math.max(0, 100 - returnRate)}%</span>
+                                        <span className="text-sm font-semibold text-slate-900">{Math.max(0, 100 - returnRate)}%</span>
                                     </div>
                                     <div className="w-full bg-slate-200 rounded-full h-2">
                                         <div className="bg-blue-500 h-2 rounded-full" style={{ width: `${Math.max(0, 100 - returnRate)}%` }}></div>
@@ -1164,7 +1164,7 @@ export default function SellerDetailsPage({ params }) {
                                 <div className="space-y-2">
                                     <div className="flex justify-between items-center">
                                         <span className="text-sm text-slate-600">Customer Satisfaction</span>
-                                        <span className="text-sm font-bold text-slate-900">{Math.round((seller.ratings?.average || 0) * 20)}%</span>
+                                        <span className="text-sm font-semibold text-slate-900">{Math.round((seller.ratings?.average || 0) * 20)}%</span>
                                     </div>
                                     <div className="w-full bg-slate-200 rounded-full h-2">
                                         <div className="bg-amber-500 h-2 rounded-full" style={{ width: `${Math.round((seller.ratings?.average || 0) * 20)}%` }}></div>
@@ -1173,7 +1173,7 @@ export default function SellerDetailsPage({ params }) {
                                 <div className="space-y-2">
                                     <div className="flex justify-between items-center">
                                         <span className="text-sm text-slate-600">Return Rate (Lower is Better)</span>
-                                        <span className="text-sm font-bold text-rose-600">{returnRate}%</span>
+                                        <span className="text-sm font-semibold text-rose-600">{returnRate}%</span>
                                     </div>
                                     <div className="w-full bg-slate-200 rounded-full h-2">
                                         <div className="bg-rose-500 h-2 rounded-full" style={{ width: `${returnRate}%` }}></div>
@@ -1183,35 +1183,35 @@ export default function SellerDetailsPage({ params }) {
                         </div>
 
                         <div className="bg-white p-6 rounded-2xl border border-slate-200">
-                            <h3 className="text-lg font-bold mb-4 flex items-center gap-2"><FiShield className="text-emerald-600" /> Compliance Status</h3>
+                            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2"><FiShield className="text-emerald-600" /> Compliance Status</h3>
                             <div className="space-y-3">
                                 <div className="flex items-center justify-between p-3 bg-emerald-50 border border-emerald-200 rounded-lg">
                                     <div className="flex items-center gap-2">
                                         <FiCheckCircle className="text-emerald-600" />
                                         <span className="text-sm font-medium text-slate-700">Documents Verified</span>
                                     </div>
-                                    <span className="text-xs font-bold text-emerald-700">COMPLIANT</span>
+                                    <span className="text-xs font-semibold text-emerald-700">COMPLIANT</span>
                                 </div>
                                 <div className="flex items-center justify-between p-3 bg-emerald-50 border border-emerald-200 rounded-lg">
                                     <div className="flex items-center gap-2">
                                         <FiCheckCircle className="text-emerald-600" />
                                         <span className="text-sm font-medium text-slate-700">Tax Compliance</span>
                                     </div>
-                                    <span className="text-xs font-bold text-emerald-700">COMPLIANT</span>
+                                    <span className="text-xs font-semibold text-emerald-700">COMPLIANT</span>
                                 </div>
                                 <div className="flex items-center justify-between p-3 bg-emerald-50 border border-emerald-200 rounded-lg">
                                     <div className="flex items-center gap-2">
                                         <FiCheckCircle className="text-emerald-600" />
                                         <span className="text-sm font-medium text-slate-700">Product Listings</span>
                                     </div>
-                                    <span className="text-xs font-bold text-emerald-700">COMPLIANT</span>
+                                    <span className="text-xs font-semibold text-emerald-700">COMPLIANT</span>
                                 </div>
                                 <div className="flex items-center justify-between p-3 bg-emerald-50 border border-emerald-200 rounded-lg">
                                     <div className="flex items-center gap-2">
                                         <FiCheckCircle className="text-emerald-600" />
                                         <span className="text-sm font-medium text-slate-700">Customer Service</span>
                                     </div>
-                                    <span className="text-xs font-bold text-emerald-700">COMPLIANT</span>
+                                    <span className="text-xs font-semibold text-emerald-700">COMPLIANT</span>
                                 </div>
                             </div>
                         </div>
@@ -1220,19 +1220,19 @@ export default function SellerDetailsPage({ params }) {
                     {/* Policy Violations & Complaints */}
                     <div className="grid grid-cols-2 gap-6">
                         <div className="bg-white p-6 rounded-2xl border border-slate-200">
-                            <h3 className="text-lg font-bold mb-4 flex items-center gap-2"><FiXCircle className="text-rose-600" /> Policy Violations</h3>
+                            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2"><FiXCircle className="text-rose-600" /> Policy Violations</h3>
                             <div className="text-center py-12">
                                 <FiCheckCircle className="w-16 h-16 text-emerald-500 mx-auto mb-3" />
-                                <p className="text-lg font-bold text-emerald-700">No Violations</p>
+                                <p className="text-lg font-semibold text-emerald-700">No Violations</p>
                                 <p className="text-sm text-slate-500 mt-2">This seller has a clean record</p>
                             </div>
                         </div>
 
                         <div className="bg-white p-6 rounded-2xl border border-slate-200">
-                            <h3 className="text-lg font-bold mb-4 flex items-center gap-2"><FiAlertCircle className="text-amber-600" /> Customer Complaints</h3>
+                            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2"><FiAlertCircle className="text-amber-600" /> Customer Complaints</h3>
                             <div className="text-center py-12">
                                 <FiCheckCircle className="w-16 h-16 text-emerald-500 mx-auto mb-3" />
-                                <p className="text-lg font-bold text-emerald-700">No Complaints</p>
+                                <p className="text-lg font-semibold text-emerald-700">No Complaints</p>
                                 <p className="text-sm text-slate-500 mt-2">Excellent customer service record</p>
                             </div>
                         </div>
@@ -1240,7 +1240,7 @@ export default function SellerDetailsPage({ params }) {
 
                     {/* Recommendations */}
                     <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 p-6 rounded-2xl">
-                        <h3 className="text-lg font-bold mb-3 flex items-center gap-2 text-blue-900">
+                        <h3 className="text-lg font-semibold mb-3 flex items-center gap-2 text-blue-900">
                             <FiTrendingUp className="text-blue-600" /> Performance Recommendations
                         </h3>
                         <div className="grid grid-cols-2 gap-4">
@@ -1250,7 +1250,7 @@ export default function SellerDetailsPage({ params }) {
                                         <FiCheckCircle className="w-4 h-4 text-emerald-600" />
                                     </div>
                                     <div>
-                                        <p className="font-bold text-sm text-slate-900 mb-1">Maintain Quality</p>
+                                        <p className="font-semibold text-sm text-slate-900 mb-1">Maintain Quality</p>
                                         <p className="text-xs text-slate-600">Continue providing excellent service to maintain high ratings</p>
                                     </div>
                                 </div>
@@ -1261,7 +1261,7 @@ export default function SellerDetailsPage({ params }) {
                                         <FiTrendingUp className="w-4 h-4 text-blue-600" />
                                     </div>
                                     <div>
-                                        <p className="font-bold text-sm text-slate-900 mb-1">Improve Response Time</p>
+                                        <p className="font-semibold text-sm text-slate-900 mb-1">Improve Response Time</p>
                                         <p className="text-xs text-slate-600">Respond to customer queries within 12 hours for better satisfaction</p>
                                     </div>
                                 </div>
@@ -1273,26 +1273,26 @@ export default function SellerDetailsPage({ params }) {
 
             {activeTab === 'settings' && (
                 <div className="bg-white p-6 rounded-2xl border border-slate-200">
-                    <h3 className="text-lg font-bold mb-6">Account Settings</h3>
+                    <h3 className="text-lg font-semibold mb-6">Account Settings</h3>
                     <div className="space-y-4">
                         <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
                             <div>
-                                <p className="font-bold text-slate-900">Account Status</p>
+                                <p className="font-semibold text-slate-900">Account Status</p>
                                 <p className="text-sm text-slate-500">Current status: {seller.isActive ? 'Active' : 'Suspended'}</p>
                             </div>
-                            <button onClick={() => handleAction(seller.isActive ? 'suspend' : 'activate')} className={`px-4 py-2 rounded-lg font-bold text-sm ${seller.isActive ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'}`}>
+                            <button onClick={() => handleAction(seller.isActive ? 'suspend' : 'activate')} className={`px-4 py-2 rounded-lg font-semibold text-sm ${seller.isActive ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'}`}>
                                 {seller.isActive ? 'Suspend Account' : 'Activate Account'}
                             </button>
                         </div>
                         <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
                             <div>
-                                <p className="font-bold text-slate-900">Verification Status</p>
+                                <p className="font-semibold text-slate-900">Verification Status</p>
                                 <p className="text-sm text-slate-500">Current: {seller.verificationStatus}</p>
                             </div>
                             {seller.verificationStatus === 'pending' && (
                                 <div className="flex gap-2">
-                                    <button onClick={() => handleAction('verify')} className="px-4 py-2 bg-emerald-600 text-white rounded-lg font-bold text-sm">Verify</button>
-                                    <button onClick={() => handleAction('reject')} className="px-4 py-2 bg-rose-100 text-rose-700 rounded-lg font-bold text-sm">Reject</button>
+                                    <button onClick={() => handleAction('verify')} className="px-4 py-2 bg-emerald-600 text-white rounded-lg font-semibold text-sm">Verify</button>
+                                    <button onClick={() => handleAction('reject')} className="px-4 py-2 bg-rose-100 text-rose-700 rounded-lg font-semibold text-sm">Reject</button>
                                 </div>
                             )}
                         </div>
@@ -1303,7 +1303,7 @@ export default function SellerDetailsPage({ params }) {
             {activeTab === 'activity-log' && (
                 <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
                     <div className="p-6 border-b border-slate-200">
-                        <h3 className="text-lg font-bold flex items-center gap-2"><FiClock className="text-indigo-600" /> Activity Log</h3>
+                        <h3 className="text-lg font-semibold flex items-center gap-2"><FiClock className="text-indigo-600" /> Activity Log</h3>
                         <p className="text-sm text-slate-500 mt-1">Chronological record of all seller and admin actions</p>
                     </div>
                     <div className="p-6">
@@ -1322,7 +1322,7 @@ export default function SellerDetailsPage({ params }) {
                                         <div className="flex-1">
                                             <div className="flex items-start justify-between">
                                                 <div>
-                                                    <p className="font-bold text-slate-900">{log.action}</p>
+                                                    <p className="font-semibold text-slate-900">{log.action}</p>
                                                     <p className="text-sm text-slate-600 mt-1">{log.description}</p>
                                                 </div>
                                                 <span className="text-xs text-slate-400 whitespace-nowrap ml-4">
@@ -1355,10 +1355,10 @@ export default function SellerDetailsPage({ params }) {
                     <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
                         <div className="p-6 border-b border-slate-200 flex items-center justify-between">
                             <div>
-                                <h3 className="text-lg font-bold flex items-center gap-2"><FiMessageSquare className="text-indigo-600" /> Internal Notes</h3>
+                                <h3 className="text-lg font-semibold flex items-center gap-2"><FiMessageSquare className="text-indigo-600" /> Internal Notes</h3>
                                 <p className="text-sm text-slate-500 mt-1">Private admin notes about this seller</p>
                             </div>
-                            <button onClick={() => setShowNoteModal(true)} className="px-4 py-2 bg-indigo-600 text-white rounded-lg font-bold text-sm flex items-center gap-2">
+                            <button onClick={() => setShowNoteModal(true)} className="px-4 py-2 bg-indigo-600 text-white rounded-lg font-semibold text-sm flex items-center gap-2">
                                 <FiPlus className="w-4 h-4" /> Add Note
                             </button>
                         </div>
@@ -1368,7 +1368,7 @@ export default function SellerDetailsPage({ params }) {
                                     {notes.map((note, idx) => (
                                         <div key={idx} className="p-4 bg-amber-50 border border-amber-200 rounded-xl">
                                             <div className="flex items-start justify-between mb-2">
-                                                <span className="text-xs font-bold text-amber-700 uppercase">Admin Note</span>
+                                                <span className="text-xs font-semibold text-amber-700 uppercase">Admin Note</span>
                                                 <span className="text-xs text-slate-400">
                                                     {new Date(note.createdAt).toLocaleString()}
                                                 </span>
@@ -1393,7 +1393,7 @@ export default function SellerDetailsPage({ params }) {
                     {/* Communication History */}
                     <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
                         <div className="p-6 border-b border-slate-200">
-                            <h3 className="text-lg font-bold flex items-center gap-2"><FiMail className="text-emerald-600" /> Communication History</h3>
+                            <h3 className="text-lg font-semibold flex items-center gap-2"><FiMail className="text-emerald-600" /> Communication History</h3>
                             <p className="text-sm text-slate-500 mt-1">Email and message exchanges with seller</p>
                         </div>
                         <div className="p-6 max-h-[600px] overflow-y-auto">
@@ -1401,16 +1401,16 @@ export default function SellerDetailsPage({ params }) {
                                 {/* Document Requests */}
                                 {seller.documents?.requestedDocuments?.length > 0 && (
                                     <>
-                                        <h4 className="text-sm font-bold text-slate-700 uppercase tracking-wide">Document Requests</h4>
+                                        <h4 className="text-sm font-semibold text-slate-700 uppercase tracking-wide">Document Requests</h4>
                                         {seller.documents.requestedDocuments.map((req, idx) => (
                                             <div key={idx} className="p-4 bg-blue-50 border border-blue-200 rounded-xl">
                                                 <div className="flex items-start justify-between mb-2">
-                                                    <span className="text-xs font-bold text-blue-700 uppercase">{req.status}</span>
+                                                    <span className="text-xs font-semibold text-blue-700 uppercase">{req.status}</span>
                                                     <span className="text-xs text-slate-400">
                                                         {new Date(req.requestedAt).toLocaleDateString()}
                                                     </span>
                                                 </div>
-                                                <p className="font-bold text-slate-900">{req.title}</p>
+                                                <p className="font-semibold text-slate-900">{req.title}</p>
                                                 <p className="text-sm text-slate-600 mt-1">{req.description}</p>
                                                 {req.url && (
                                                     <div className="mt-2 flex items-center gap-2 text-xs text-emerald-600">
@@ -1439,12 +1439,12 @@ export default function SellerDetailsPage({ params }) {
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
                     <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={() => setShowRequestModal(false)}></div>
                     <form onSubmit={handleRequestDocument} className="relative bg-white w-full max-w-md rounded-2xl p-8 space-y-6">
-                        <h3 className="text-xl font-bold">Request Document</h3>
+                        <h3 className="text-xl font-semibold">Request Document</h3>
                         <input placeholder="Title" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl" required value={requestData.title} onChange={e => setRequestData({ ...requestData, title: e.target.value })} />
                         <textarea placeholder="Description" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl h-32 resize-none" required value={requestData.description} onChange={e => setRequestData({ ...requestData, description: e.target.value })} />
                         <div className="flex gap-4">
-                            <button type="button" onClick={() => setShowRequestModal(false)} className="flex-1 py-3 text-slate-500 font-bold">Cancel</button>
-                            <button type="submit" className="flex-1 py-3 bg-indigo-600 text-white rounded-xl font-bold">Send Request</button>
+                            <button type="button" onClick={() => setShowRequestModal(false)} className="flex-1 py-3 text-slate-500 font-semibold">Cancel</button>
+                            <button type="submit" className="flex-1 py-3 bg-indigo-600 text-white rounded-xl font-semibold">Send Request</button>
                         </div>
                     </form>
                 </div>
@@ -1455,7 +1455,7 @@ export default function SellerDetailsPage({ params }) {
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
                     <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={() => setShowNoteModal(false)}></div>
                     <form onSubmit={handleAddNote} className="relative bg-white w-full max-w-md rounded-2xl p-8 space-y-6">
-                        <h3 className="text-xl font-bold">Add Internal Note</h3>
+                        <h3 className="text-xl font-semibold">Add Internal Note</h3>
                         <p className="text-sm text-slate-500">This note will only be visible to admin team members</p>
                         <textarea
                             placeholder="Enter your note here..."
@@ -1465,8 +1465,8 @@ export default function SellerDetailsPage({ params }) {
                             onChange={e => setNoteText(e.target.value)}
                         />
                         <div className="flex gap-4">
-                            <button type="button" onClick={() => setShowNoteModal(false)} className="flex-1 py-3 text-slate-500 font-bold">Cancel</button>
-                            <button type="submit" className="flex-1 py-3 bg-indigo-600 text-white rounded-xl font-bold">Add Note</button>
+                            <button type="button" onClick={() => setShowNoteModal(false)} className="flex-1 py-3 text-slate-500 font-semibold">Cancel</button>
+                            <button type="submit" className="flex-1 py-3 bg-indigo-600 text-white rounded-xl font-semibold">Add Note</button>
                         </div>
                     </form>
                 </div>
@@ -1478,7 +1478,7 @@ export default function SellerDetailsPage({ params }) {
 function InfoItem({ label, value, icon: Icon }) {
     return (
         <div>
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 flex items-center gap-1">{Icon && <Icon className="w-3 h-3" />} {label}</p>
+            <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest mb-1 flex items-center gap-1">{Icon && <Icon className="w-3 h-3" />} {label}</p>
             <p className="text-sm font-medium text-slate-900">{value || 'N/A'}</p>
         </div>
     )
@@ -1490,7 +1490,7 @@ function DocCard({ label, url: urlProp }) {
     return (
         <a href={url} target="_blank" className="bg-slate-50 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-300 p-4 rounded-xl text-center transition-all group">
             <FiFileText className="w-8 h-8 mx-auto text-slate-400 group-hover:text-indigo-600 mb-2" />
-            <p className="text-xs font-bold text-slate-700 group-hover:text-indigo-600">{label}</p>
+            <p className="text-xs font-semibold text-slate-700 group-hover:text-indigo-600">{label}</p>
         </a>
     )
 }

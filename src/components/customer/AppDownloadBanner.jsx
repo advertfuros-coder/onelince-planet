@@ -26,10 +26,10 @@ export default function AppDownloadBanner() {
                     <div className="text-center md:text-left">
                         <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-white mb-6">
                             <FiDownload className="w-4 h-4" />
-                            <span className="text-sm font-bold">Download Our App</span>
+                            <span className="text-sm font-semibold">Download Our App</span>
                         </div>
 
-                        <h2 className="text-4xl md:text-5xl font-black text-white mb-4">
+                        <h2 className="text-4xl md:text-5xl font-semibold text-white mb-4">
                             Shop Anytime, Anywhere
                         </h2>
                         <p className="text-xl text-white/90 mb-8">
@@ -65,7 +65,7 @@ export default function AppDownloadBanner() {
                                 </svg>
                                 <div className="text-left">
                                     <div className="text-xs">Download on the</div>
-                                    <div className="text-lg font-bold">App Store</div>
+                                    <div className="text-lg font-semibold">App Store</div>
                                 </div>
                             </a>
 
@@ -78,7 +78,7 @@ export default function AppDownloadBanner() {
                                 </svg>
                                 <div className="text-left">
                                     <div className="text-xs">GET IT ON</div>
-                                    <div className="text-lg font-bold">Google Play</div>
+                                    <div className="text-lg font-semibold">Google Play</div>
                                 </div>
                             </a>
                         </div>

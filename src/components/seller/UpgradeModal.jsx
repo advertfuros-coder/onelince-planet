@@ -131,7 +131,7 @@ export default function UpgradeModal({ isOpen, onClose, selectedTier, billingInt
                                 <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 mb-4">
                                     <Zap className="text-white" size={32} />
                                 </div>
-                                <h2 className="text-3xl font-black text-gray-900 mb-2">
+                                <h2 className="text-3xl font-semibold text-gray-900 mb-2">
                                     Upgrade to {orderData.tierName}
                                 </h2>
                                 <p className="text-gray-600">
@@ -143,10 +143,10 @@ export default function UpgradeModal({ isOpen, onClose, selectedTier, billingInt
                             <div className="grid md:grid-cols-2 gap-6 mb-8">
                                 {/* Current Plan */}
                                 <div className="bg-gray-50 rounded-2xl p-6 border border-gray-200">
-                                    <div className="text-xs font-black text-gray-400 uppercase tracking-wider mb-3">
+                                    <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
                                         Current Plan
                                     </div>
-                                    <h3 className="text-xl font-black text-gray-900 mb-4 capitalize">
+                                    <h3 className="text-xl font-semibold text-gray-900 mb-4 capitalize">
                                         {currentTier}
                                     </h3>
                                     <div className="space-y-2 text-sm text-gray-600">
@@ -160,10 +160,10 @@ export default function UpgradeModal({ isOpen, onClose, selectedTier, billingInt
                                 <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-6 border-2 border-blue-200 relative overflow-hidden">
                                     <div className="absolute top-0 right-0 w-32 h-32 bg-blue-200/30 rounded-full -mr-16 -mt-16" />
                                     <div className="relative">
-                                        <div className="text-xs font-black text-blue-600 uppercase tracking-wider mb-3">
+                                        <div className="text-xs font-semibold text-blue-600 uppercase tracking-wider mb-3">
                                             New Plan
                                         </div>
-                                        <h3 className="text-xl font-black text-gray-900 mb-4">
+                                        <h3 className="text-xl font-semibold text-gray-900 mb-4">
                                             {orderData.tierName}
                                         </h3>
                                         <div className="space-y-2 text-sm text-gray-700">
@@ -180,17 +180,17 @@ export default function UpgradeModal({ isOpen, onClose, selectedTier, billingInt
 
                             {/* Pricing Breakdown */}
                             <div className="bg-gray-50 rounded-2xl p-6 mb-8">
-                                <h3 className="font-black text-gray-900 mb-4">Pricing Breakdown</h3>
+                                <h3 className="font-semibold text-gray-900 mb-4">Pricing Breakdown</h3>
                                 <div className="space-y-3">
                                     <div className="flex justify-between text-sm">
                                         <span className="text-gray-600">Plan Price ({billingInterval})</span>
-                                        <span className="font-bold text-gray-900">₹{(orderData.originalAmount / 100).toLocaleString()}</span>
+                                        <span className="font-semibold text-gray-900">₹{(orderData.originalAmount / 100).toLocaleString()}</span>
                                     </div>
 
                                     {orderData.discount > 0 && (
                                         <div className="flex justify-between text-sm">
                                             <span className="text-green-600">Discount ({orderData.discount}%)</span>
-                                            <span className="font-bold text-green-600">
+                                            <span className="font-semibold text-green-600">
                                                 -₹{((orderData.originalAmount - orderData.amount) / 100).toLocaleString()}
                                             </span>
                                         </div>
@@ -199,15 +199,15 @@ export default function UpgradeModal({ isOpen, onClose, selectedTier, billingInt
                                     {orderData.proratedDays > 0 && (
                                         <div className="flex justify-between text-sm">
                                             <span className="text-blue-600">Prorated ({orderData.proratedDays} days)</span>
-                                            <span className="font-bold text-blue-600">
+                                            <span className="font-semibold text-blue-600">
                                                 ₹{(orderData.proratedAmount / 100).toLocaleString()}
                                             </span>
                                         </div>
                                     )}
 
                                     <div className="border-t border-gray-200 pt-3 flex justify-between">
-                                        <span className="font-black text-gray-900">Total Due Today</span>
-                                        <span className="text-2xl font-black text-gray-900">
+                                        <span className="font-semibold text-gray-900">Total Due Today</span>
+                                        <span className="text-2xl font-semibold text-gray-900">
                                             ₹{(orderData.proratedAmount / 100).toLocaleString()}
                                         </span>
                                     </div>
@@ -218,7 +218,7 @@ export default function UpgradeModal({ isOpen, onClose, selectedTier, billingInt
                             <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-8 flex gap-3">
                                 <AlertCircle size={20} className="text-blue-600 flex-shrink-0 mt-0.5" />
                                 <div className="text-sm text-blue-900">
-                                    <p className="font-bold mb-1">Instant Activation</p>
+                                    <p className="font-semibold mb-1">Instant Activation</p>
                                     <p>Your new plan will be activated immediately after payment. All features will be unlocked within 2 seconds!</p>
                                 </div>
                             </div>
@@ -227,13 +227,13 @@ export default function UpgradeModal({ isOpen, onClose, selectedTier, billingInt
                             <div className="flex gap-4">
                                 <button
                                     onClick={onClose}
-                                    className="flex-1 py-4 rounded-xl font-bold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors"
+                                    className="flex-1 py-4 rounded-xl font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     onClick={handlePayment}
-                                    className="flex-1 py-4 rounded-xl font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:shadow-xl hover:scale-105 transition-all flex items-center justify-center gap-2"
+                                    className="flex-1 py-4 rounded-xl font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:shadow-xl hover:scale-105 transition-all flex items-center justify-center gap-2"
                                 >
                                     <Zap size={20} />
                                     Proceed to Payment

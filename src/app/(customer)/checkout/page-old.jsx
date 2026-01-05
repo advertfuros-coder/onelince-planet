@@ -329,7 +329,7 @@ export default function CheckoutPage() {
         <div className={`p-6 ${current ? 'bg-gradient-to-br from-white to-blue-50/20' : ''}`}>
           <div className="flex items-start gap-5">
             {/* Icon Bubble */}
-            <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold shrink-0 shadow-sm transition-colors duration-300 ${completed
+            <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold shrink-0 shadow-sm transition-colors duration-300 ${completed
               ? 'bg-green-500 text-white ring-4 ring-green-100'
               : current
                 ? 'bg-blue-600 text-white ring-4 ring-blue-100'
@@ -341,7 +341,7 @@ export default function CheckoutPage() {
             <div className="flex-1">
               {/* Header */}
               <div className="flex justify-between items-center mb-2 h-10">
-                <h3 className={`text-lg font-bold tracking-tight ${current ? 'text-gray-900' : 'text-gray-700'}`}>
+                <h3 className={`text-lg font-semibold tracking-tight ${current ? 'text-gray-900' : 'text-gray-700'}`}>
                   {title}
                 </h3>
                 {completed && (
@@ -420,7 +420,7 @@ export default function CheckoutPage() {
                       <Input label="Country" value={shippingInfo.country} onChange={e => setShippingInfo({ ...shippingInfo, country: e.target.value })} className="bg-gray-50 border-gray-200 focus:bg-white transition-all" />
                     </div>
                     <div className="flex justify-end pt-2">
-                      <Button onClick={() => { if (validateShipping()) setCurrentStep(2) }} className="w-full md:w-auto px-8 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg shadow-blue-200 transform hover:-translate-y-0.5 transition-all">
+                      <Button onClick={() => { if (validateShipping()) setCurrentStep(2) }} className="w-full md:w-auto px-8 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow-lg shadow-blue-200 transform hover:-translate-y-0.5 transition-all">
                         Proceed to Delivery
                       </Button>
                     </div>
@@ -431,7 +431,7 @@ export default function CheckoutPage() {
                       <FiMapPin className="w-5 h-5" />
                     </div>
                     <div className="text-sm">
-                      <p className="font-bold text-gray-900">{shippingInfo.name}</p>
+                      <p className="font-semibold text-gray-900">{shippingInfo.name}</p>
                       <p className="text-gray-500">{shippingInfo.addressLine1}, {shippingInfo.city}</p>
                     </div>
                   </div>
@@ -470,15 +470,15 @@ export default function CheckoutPage() {
                             <opt.icon className="w-5 h-5" />
                           </div>
                           <div>
-                            <span className="block font-bold text-gray-900">{opt.title}</span>
+                            <span className="block font-semibold text-gray-900">{opt.title}</span>
                             <span className="block text-xs text-gray-500 mt-1 mb-2">{opt.sub}</span>
-                            <span className={`text-sm font-bold ${opt.id === 'standard' ? 'text-green-600' : 'text-gray-900'}`}>{opt.price}</span>
+                            <span className={`text-sm font-semibold ${opt.id === 'standard' ? 'text-green-600' : 'text-gray-900'}`}>{opt.price}</span>
                           </div>
                         </div>
                       ))}
                     </div>
                     <div className="flex justify-end pt-2">
-                      <Button onClick={() => setCurrentStep(3)} className="w-full md:w-auto px-8 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg shadow-blue-200 transform hover:-translate-y-0.5 transition-all">
+                      <Button onClick={() => setCurrentStep(3)} className="w-full md:w-auto px-8 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow-lg shadow-blue-200 transform hover:-translate-y-0.5 transition-all">
                         Continue to Payment
                       </Button>
                     </div>
@@ -489,7 +489,7 @@ export default function CheckoutPage() {
                       {deliveryMethod === 'standard' ? <FiTruck className="w-5 h-5" /> : <FiZap className="w-5 h-5 text-orange-500" />}
                     </div>
                     <div className="text-sm">
-                      <p className="font-bold text-gray-900 capitalize">{deliveryMethod} Delivery</p>
+                      <p className="font-semibold text-gray-900 capitalize">{deliveryMethod} Delivery</p>
                       <p className="text-gray-500">{deliveryMethod === 'standard' ? 'Expected by Wed, 24 Jan' : 'Expected Tomorrow'}</p>
                     </div>
                   </div>
@@ -563,9 +563,9 @@ export default function CheckoutPage() {
                             {/* Content */}
                             <div className="flex-1">
                               <div className="flex items-center gap-2 mb-1">
-                                <h4 className="font-bold text-gray-900">{method.title}</h4>
+                                <h4 className="font-semibold text-gray-900">{method.title}</h4>
                                 {method.badge && (
-                                  <span className={`px-2 py-0.5 text-[10px] font-bold rounded-full ${
+                                  <span className={`px-2 py-0.5 text-[10px] font-semibold rounded-full ${
                                     method.color === 'blue' ? 'bg-blue-100 text-blue-700' : 'bg-green-100 text-green-700'
                                   }`}>
                                     {method.badge}
@@ -653,11 +653,11 @@ export default function CheckoutPage() {
                         />
                       </div>
                       <div className="flex-1 py-1">
-                        <h4 className="text-sm font-bold text-gray-900 line-clamp-2 leading-tight mb-1">{item.name}</h4>
+                        <h4 className="text-sm font-semibold text-gray-900 line-clamp-2 leading-tight mb-1">{item.name}</h4>
                         <p className="text-xs text-gray-500 mb-2">Variant: {Object.values(item.variant || {}).join(', ') || 'Standard'}</p>
                         <div className="flex justify-between items-end">
                           <span className="text-xs font-semibold px-2 py-0.5 bg-gray-100 rounded text-gray-600">x{item.quantity}</span>
-                          <Price amount={item.price * item.quantity} className="font-bold text-gray-900" />
+                          <Price amount={item.price * item.quantity} className="font-semibold text-gray-900" />
                         </div>
                       </div>
                     </div>
@@ -675,7 +675,7 @@ export default function CheckoutPage() {
                   />
                   <button
                     onClick={handleApplyCoupon}
-                    className="absolute right-1.5 top-1.5 bottom-1.5 px-4 bg-white text-gray-900 text-xs font-bold rounded-lg shadow-sm border border-gray-100 hover:bg-gray-50 transition-colors"
+                    className="absolute right-1.5 top-1.5 bottom-1.5 px-4 bg-white text-gray-900 text-xs font-semibold rounded-lg shadow-sm border border-gray-100 hover:bg-gray-50 transition-colors"
                   >
                     Apply
                   </button>
@@ -700,7 +700,7 @@ export default function CheckoutPage() {
                         <div className="w-7 h-7 bg-gradient-to-br from-blue-400 to-green-500 rounded-full flex items-center justify-center">
                           <span className="text-white text-base">🌍</span>
                         </div>
-                        <h3 className="text-base font-bold text-gray-800">
+                        <h3 className="text-base font-semibold text-gray-800">
                           Make Our Planet Greener <span className="text-gray-500 font-normal text-sm">(Optional)</span>
                         </h3>
                       </div>
@@ -712,7 +712,7 @@ export default function CheckoutPage() {
 
                       {/* Price Badge */}
                       <div className="flex gap-3 mb-4">
-                        <div className="px-6 py-2 bg-green-700 text-white rounded-full font-bold text-base shadow-sm">
+                        <div className="px-6 py-2 bg-green-700 text-white rounded-full font-semibold text-base shadow-sm">
                           <Price amount={DONATION_AMOUNT} />
                         </div>
                       </div>
@@ -761,13 +761,13 @@ export default function CheckoutPage() {
                   {discount > 0 && (
                     <div className="flex justify-between text-green-600">
                       <span>Discount</span>
-                      <span className="font-bold">-<Price amount={discount} /></span>
+                      <span className="font-semibold">-<Price amount={discount} /></span>
                     </div>
                   )}
                   {isDonationChecked && (
                     <div className="flex justify-between text-green-700">
                       <span className="flex items-center gap-1"><BiLeaf className="w-3 h-3" /> Green Donation</span>
-                      <Price amount={DONATION_AMOUNT} className="font-bold" />
+                      <Price amount={DONATION_AMOUNT} className="font-semibold" />
                     </div>
                   )}
                   <div className="flex justify-between text-gray-600">
@@ -788,7 +788,7 @@ export default function CheckoutPage() {
                 {/* Main Action Button */}
                 <Button
                   onClick={handlePlaceOrder}
-                  className={`w-full py-4 text-base font-bold rounded-xl shadow-xl shadow-blue-200 flex items-center justify-center gap-2 group transition-all duration-300 ${currentStep < 3 ? 'bg-gray-100 text-gray-400 cursor-not-allowed shadow-none' : 'bg-blue-600 hover:bg-blue-700 text-white transform hover:-translate-y-1'
+                  className={`w-full py-4 text-base font-semibold rounded-xl shadow-xl shadow-blue-200 flex items-center justify-center gap-2 group transition-all duration-300 ${currentStep < 3 ? 'bg-gray-100 text-gray-400 cursor-not-allowed shadow-none' : 'bg-blue-600 hover:bg-blue-700 text-white transform hover:-translate-y-1'
                     }`}
                   disabled={currentStep < 3}
                 >

@@ -72,11 +72,11 @@ export default function AdminSidebar({ onNavigate, isMobile = false }) {
           onClick={handleClick}
         >
           <div className="w-11 h-11 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/20 group-hover:rotate-6 transition-transform duration-300">
-            <span className="text-white font-black text-xl tracking-tighter">OP</span>
+            <span className="text-white font-semibold text-xl tracking-tighter">OP</span>
           </div>
           <div>
-            <h1 className="text-lg font-black text-white leading-none tracking-tight">ONLINE PLANET</h1>
-            <p className="text-[10px] text-gray-400 font-black uppercase tracking-[0.2em] mt-1.5 opacity-60">Admin Terminal</p>
+            <h1 className="text-lg font-semibold text-white leading-none tracking-tight">ONLINE PLANET</h1>
+            <p className="text-[10px] text-gray-400 font-semibold uppercase tracking-[0.2em] mt-1.5 opacity-60">Admin Terminal</p>
           </div>
         </Link>
       </div>
@@ -104,7 +104,7 @@ export default function AdminSidebar({ onNavigate, isMobile = false }) {
                 )}>
                   <Icon size={18} />
                 </div>
-                <span className="text-[13px] font-bold tracking-tight">{label}</span>
+                <span className="text-[13px] font-semibold tracking-tight">{label}</span>
               </div>
 
               {isActive && (
@@ -121,8 +121,8 @@ export default function AdminSidebar({ onNavigate, isMobile = false }) {
       <div className="px-6 py-8 mt-auto border-t border-white/5 bg-white/[0.02]">
         <div className="flex items-center justify-between">
           <div className="space-y-1">
-            <p className="text-[10px] font-black text-white tracking-widest uppercase">System Core v4.2</p>
-            <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">© 2025 OnlinePlanet</p>
+            <p className="text-[10px] font-semibold text-white tracking-widest uppercase">System Core v4.2</p>
+            <p className="text-[10px] text-gray-500 font-semibold uppercase tracking-widest">© 2025 OnlinePlanet</p>
           </div>
           <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-gray-500">
             <Monitor size={14} />

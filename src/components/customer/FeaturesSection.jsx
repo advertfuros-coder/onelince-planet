@@ -69,9 +69,9 @@ export default function FeaturesSection() {
           <div className="max-w-2xl">
             <div className="flex items-center gap-2 mb-4">
               <FiMinus className="text-blue-600 w-8" />
-              <span className="text-blue-600 font-bold text-[10px] uppercase tracking-[0.3em]">Service Standards</span>
+              <span className="text-blue-600 font-semibold text-[10px] uppercase tracking-[0.3em]">Service Standards</span>
             </div>
-            <h2 className="text-4xl md:text-6xl font-black text-gray-900 tracking-tighter leading-none mb-6">
+            <h2 className="text-4xl md:text-6xl font-semibold text-gray-900 tracking-tighter leading-none mb-6">
               Why Choice <br /> Online Planet
             </h2>
             <p className="text-gray-500 text-sm md:text-base font-medium max-w-lg">
@@ -91,14 +91,14 @@ export default function FeaturesSection() {
                 <feature.icon className="w-6 h-6" />
               </div>
 
-              <h3 className="text-lg font-black text-gray-900 mb-3 tracking-tight">
+              <h3 className="text-lg font-semibold text-gray-900 mb-3 tracking-tight">
                 {feature.title}
               </h3>
               <p className="text-gray-500 text-xs font-medium leading-relaxed mb-6">
                 {feature.description}
               </p>
 
-              <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-gray-400 group-hover:text-blue-600 transition-colors">
+              <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-widest text-gray-400 group-hover:text-blue-600 transition-colors">
                 <span>Core Pillar</span>
                 <FiArrowUpRight className="w-3 h-3 transform translate-y-0.5 group-hover:-translate-y-0 group-hover:translate-x-0.5 transition-transform" />
               </div>
@@ -113,13 +113,13 @@ export default function FeaturesSection() {
         <div className="mt-20 flex flex-col sm:flex-row items-center justify-center gap-6">
           <a
             href="/products"
-            className="w-full sm:w-auto px-10 py-4 bg-gray-900 text-white font-black text-xs uppercase tracking-widest rounded-2xl hover:bg-blue-600 transition-all duration-500 text-center"
+            className="w-full sm:w-auto px-10 py-4 bg-gray-900 text-white font-semibold text-xs uppercase tracking-widest rounded-2xl hover:bg-blue-600 transition-all duration-500 text-center"
           >
             Enter The Marketplace
           </a>
           <a
             href="/seller/register"
-            className="w-full sm:w-auto px-10 py-4 bg-white border border-gray-200 text-gray-900 font-black text-xs uppercase tracking-widest rounded-2xl hover:border-blue-600 hover:text-blue-600 transition-all duration-500 text-center"
+            className="w-full sm:w-auto px-10 py-4 bg-white border border-gray-200 text-gray-900 font-semibold text-xs uppercase tracking-widest rounded-2xl hover:border-blue-600 hover:text-blue-600 transition-all duration-500 text-center"
           >
             Become A Partner
           </a>

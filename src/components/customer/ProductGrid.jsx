@@ -313,7 +313,7 @@ function ProductListItem({ product, isWishlisted, onToggleWishlist, onAddToCart 
           <div className="flex items-center justify-between">
             <div>
               <div className="flex items-center space-x-2 mb-1">
-                <span className="text-xl font-bold text-gray-900">
+                <span className="text-xl font-semibold text-gray-900">
                   {formatPrice(finalPrice)}
                 </span>
                 {product.pricing.basePrice && product.pricing.salePrice && (

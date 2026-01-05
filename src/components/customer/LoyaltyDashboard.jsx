@@ -94,7 +94,7 @@ export default function LoyaltyDashboard() {
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-900">Loyalty Program</h1>
+                    <h1 className="text-3xl font-semibold text-gray-900">Loyalty Program</h1>
                     <p className="text-gray-600 mt-1">Earn points, unlock rewards</p>
                 </div>
             </div>
@@ -110,7 +110,7 @@ export default function LoyaltyDashboard() {
                         <div className="flex items-center gap-3 mb-2">
                             <span className="text-5xl">{tierConfig.icon}</span>
                             <div>
-                                <h2 className="text-3xl font-bold">{tierConfig.name} Member</h2>
+                                <h2 className="text-3xl font-semibold">{tierConfig.name} Member</h2>
                                 <p className="text-white/80">Your current tier</p>
                             </div>
                         </div>
@@ -119,15 +119,15 @@ export default function LoyaltyDashboard() {
                         <div className="mt-6 grid grid-cols-3 gap-6">
                             <div>
                                 <p className="text-white/80 text-sm">Available Points</p>
-                                <p className="text-3xl font-bold">{loyalty.points.available.toLocaleString()}</p>
+                                <p className="text-3xl font-semibold">{loyalty.points.available.toLocaleString()}</p>
                             </div>
                             <div>
                                 <p className="text-white/80 text-sm">Total Earned</p>
-                                <p className="text-2xl font-bold">{loyalty.lifetimeStats.totalPointsEarned.toLocaleString()}</p>
+                                <p className="text-2xl font-semibold">{loyalty.lifetimeStats.totalPointsEarned.toLocaleString()}</p>
                             </div>
                             <div>
                                 <p className="text-white/80 text-sm">Points Multiplier</p>
-                                <p className="text-2xl font-bold">{loyalty.benefits.pointsMultiplier}x</p>
+                                <p className="text-2xl font-semibold">{loyalty.benefits.pointsMultiplier}x</p>
                             </div>
                         </div>
                     </div>
@@ -154,7 +154,7 @@ export default function LoyaltyDashboard() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Benefits */}
                 <div className="bg-white rounded-lg shadow-sm p-6">
-                    <h3 className="text-lg font-bold text-gray-900 mb-4">Your Benefits</h3>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Your Benefits</h3>
                     <div className="space-y-3">
                         {tierConfig.benefits.map((benefit, idx) => (
                             <div key={idx} className="flex items-center gap-3">
@@ -176,7 +176,7 @@ export default function LoyaltyDashboard() {
 
                 {/* Lifetime Stats */}
                 <div className="bg-white rounded-lg shadow-sm p-6">
-                    <h3 className="text-lg font-bold text-gray-900 mb-4">Lifetime Stats</h3>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Lifetime Stats</h3>
                     <div className="space-y-4">
                         <div className="flex justify-between">
                             <span className="text-gray-600">Total Orders</span>
@@ -203,7 +203,7 @@ export default function LoyaltyDashboard() {
             {/* Recent Transactions */}
             {loyalty.transactions.length > 0 && (
                 <div className="bg-white rounded-lg shadow-sm p-6">
-                    <h3 className="text-lg font-bold text-gray-900 mb-4">Recent Activity</h3>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h3>
                     <div className="space-y-3">
                         {loyalty.transactions.slice(0, 10).map((transaction, idx) => (
                             <div key={idx} className="flex items-center justify-between py-2 border-b last:border-b-0">
@@ -285,10 +285,10 @@ function RedeemPointsModal({ availablePoints, onClose, onSuccess }) {
                 animate={{ scale: 1, opacity: 1 }}
                 className="bg-white rounded-xl shadow-2xl max-w-md w-full p-6"
             >
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">Redeem Points</h2>
+                <h2 className="text-2xl font-semibold text-gray-900 mb-4">Redeem Points</h2>
 
                 <div className="mb-6">
-                    <p className="text-gray-600 mb-2">Available Points: <span className="font-bold text-blue-600">{availablePoints.toLocaleString()}</span></p>
+                    <p className="text-gray-600 mb-2">Available Points: <span className="font-semibold text-blue-600">{availablePoints.toLocaleString()}</span></p>
                     <p className="text-sm text-gray-500">1 Point = ₹1 Discount</p>
                 </div>
 

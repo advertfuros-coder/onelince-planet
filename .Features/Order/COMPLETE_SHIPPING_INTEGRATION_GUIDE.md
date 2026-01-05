@@ -1129,7 +1129,7 @@ export default async function TrackingPage({ params }) {
 
   return (
     <div className="container mx-auto p-8 max-w-4xl">
-      <h1 className="text-3xl font-bold mb-4">Track Your Order</h1>
+      <h1 className="text-3xl font-semibold mb-4">Track Your Order</h1>
 
       <div className="bg-gray-100 p-4 rounded mb-6">
         <p className="text-sm text-gray-600">Tracking ID</p>

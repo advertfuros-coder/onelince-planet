@@ -33,7 +33,7 @@ export default function AdminRegister() {
 
   return (
     <div className="max-w-md mx-auto p-6 bg-white rounded shadow mt-20">
-      <h1 className="text-2xl font-bold mb-6">Admin Register</h1>
+      <h1 className="text-2xl font-semibold mb-6">Admin Register</h1>
       {error && <p className="mb-4 text-red-600">{error}</p>}
       {success && <p className="mb-4 text-green-600">{success}</p>}
       <form onSubmit={handleSubmit} className="space-y-4">

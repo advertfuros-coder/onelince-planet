@@ -38,6 +38,20 @@ export async function POST(request) {
       );
     }
 
+    // Check if email is verified
+    if (!user.isVerified) {
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "Please verify your email before logging in. Check your email for verification code.",
+          requiresVerification: true,
+          email: user.email,
+        },
+        { status: 403 }
+      );
+    }
+
     // If seller, check verification status
     if (user.role === "seller") {
       const seller = await Seller.findOne({ userId: user._id });

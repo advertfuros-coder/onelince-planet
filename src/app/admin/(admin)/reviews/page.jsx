@@ -137,7 +137,7 @@ export default function AdminReviewsPage() {
         {/* Header */}
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Review Management</h1>
+            <h1 className="text-3xl font-semibold text-gray-900">Review Management</h1>
             <p className="text-gray-600 mt-1">Manage customer reviews and ratings</p>
           </div>
           <Link href="/admin/reviews/bulk" className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
@@ -179,7 +179,7 @@ export default function AdminReviewsPage() {
 
         {/* Rating Distribution */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h3 className="text-lg font-bold text-gray-900 mb-4">Rating Distribution</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Rating Distribution</h3>
           <div className="space-y-3">
             {[5, 4, 3, 2, 1].map((rating) => {
               const count = stats[`${['one', 'two', 'three', 'four', 'five'][rating - 1]}Star`] || 0
@@ -461,7 +461,7 @@ export default function AdminReviewsPage() {
           <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6">
               <div className="flex justify-between items-start mb-4">
-                <h3 className="text-xl font-bold text-gray-900">Review Details</h3>
+                <h3 className="text-xl font-semibold text-gray-900">Review Details</h3>
                 <button
                   onClick={() => setViewingReview(null)}
                   className="p-2 hover:bg-gray-100 rounded-lg"
@@ -592,7 +592,7 @@ function StatCard({ label, value, icon, color, bgColor }) {
         </div>
         <div>
           <p className="text-sm text-gray-600">{label}</p>
-          <p className="text-2xl font-bold text-gray-900">{value}</p>
+          <p className="text-2xl font-semibold text-gray-900">{value}</p>
         </div>
       </div>
     </div>

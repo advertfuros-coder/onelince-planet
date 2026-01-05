@@ -79,7 +79,7 @@ export default function ProductQA({ productId }) {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h3 className="text-xl font-bold text-gray-900">Questions & Answers</h3>
+        <h3 className="text-xl font-semibold text-gray-900">Questions & Answers</h3>
         <button
           onClick={() => setShowAskForm(!showAskForm)}
           className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-semibold"

@@ -208,7 +208,7 @@ export default function ShortcutsModal() {
         <div className="relative w-full max-w-2xl bg-white rounded-xl shadow-2xl">
           {/* Header */}
           <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-            <h2 className="text-xl font-bold text-gray-900">
+            <h2 className="text-xl font-semibold text-gray-900">
               Keyboard Shortcuts
             </h2>
             <button

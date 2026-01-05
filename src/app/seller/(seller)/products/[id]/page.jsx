@@ -211,7 +211,7 @@ export default function EditProductPage({ params }) {
       <div className="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-xl shadow-lg p-6 text-white">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold">
+            <h1 className="text-3xl font-semibold">
               {productId === 'new' ? '➕ Add New Product' : '✏️ Edit Product'}
             </h1>
             <p className="mt-2 text-purple-100">
@@ -233,7 +233,7 @@ export default function EditProductPage({ params }) {
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Basic Information */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center space-x-2">
+          <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center space-x-2">
             <FiPackage className="text-purple-600" />
             <span>Basic Information</span>
           </h3>
@@ -331,7 +331,7 @@ export default function EditProductPage({ params }) {
 
         {/* Pricing */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center space-x-2">
+          <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center space-x-2">
             <FiDollarSign className="text-green-600" />
             <span>Pricing</span>
           </h3>
@@ -410,7 +410,7 @@ export default function EditProductPage({ params }) {
 
         {/* Inventory */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center space-x-2">
+          <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center space-x-2">
             <FiPackage className="text-blue-600" />
             <span>Inventory</span>
           </h3>
@@ -484,7 +484,7 @@ export default function EditProductPage({ params }) {
 
         {/* Images */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center space-x-2">
+          <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center space-x-2">
             <FiImage className="text-pink-600" />
             <span>Product Images</span>
           </h3>
@@ -554,7 +554,7 @@ export default function EditProductPage({ params }) {
 
         {/* Specifications */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h3 className="text-xl font-bold text-gray-900 mb-4">Specifications</h3>
+          <h3 className="text-xl font-semibold text-gray-900 mb-4">Specifications</h3>
 
           <div className="space-y-4">
             <div className="flex space-x-2">
@@ -608,7 +608,7 @@ export default function EditProductPage({ params }) {
 
         {/* Shipping */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h3 className="text-xl font-bold text-gray-900 mb-4">Shipping</h3>
+          <h3 className="text-xl font-semibold text-gray-900 mb-4">Shipping</h3>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
@@ -676,7 +676,7 @@ export default function EditProductPage({ params }) {
 
         {/* Tags */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h3 className="text-xl font-bold text-gray-900 mb-4">Tags</h3>
+          <h3 className="text-xl font-semibold text-gray-900 mb-4">Tags</h3>
 
           <div className="space-y-4">
             <div className="flex space-x-2">
@@ -721,7 +721,7 @@ export default function EditProductPage({ params }) {
 
         {/* Status */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h3 className="text-xl font-bold text-gray-900 mb-4">Status</h3>
+          <h3 className="text-xl font-semibold text-gray-900 mb-4">Status</h3>
 
           <label className="flex items-center space-x-3 cursor-pointer">
             <input

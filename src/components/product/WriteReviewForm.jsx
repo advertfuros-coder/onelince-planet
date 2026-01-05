@@ -91,7 +91,7 @@ export default function WriteReviewForm({ productId, onSuccess, onCancel }) {
             animate={{ opacity: 1, y: 0 }}
             className="bg-white rounded-lg border p-6"
         >
-            <h3 className="text-xl font-bold text-gray-900 mb-6">Write a Review</h3>
+            <h3 className="text-xl font-semibold text-gray-900 mb-6">Write a Review</h3>
 
             <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Rating */}

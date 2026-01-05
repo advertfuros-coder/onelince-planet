@@ -283,7 +283,7 @@ export default function CheckoutPageRedesigned() {
                 {/* EXPRESS CHECKOUT BAR */}
                 <div className="bg-white rounded-2xl shadow-lg p-6 mb-6 border-2 border-blue-100">
                     <div className="flex items-center justify-between mb-4">
-                        <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                        <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
                             <FiZap className="w-5 h-5 text-yellow-500" />
                             Express Checkout
                         </h2>
@@ -335,8 +335,8 @@ export default function CheckoutPageRedesigned() {
                         {/* 1. DELIVERY INFORMATION */}
                         <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
                             <div className="flex items-center justify-between mb-6">
-                                <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                                    <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">
+                                <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
+                                    <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-semibold">
                                         1
                                     </div>
                                     Delivery Information
@@ -435,7 +435,7 @@ export default function CheckoutPageRedesigned() {
                                                 setShowPaymentMethods(true)
                                             }
                                         }}
-                                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition-all"
+                                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition-all"
                                     >
                                         Continue to Delivery
                                     </button>
@@ -458,8 +458,8 @@ export default function CheckoutPageRedesigned() {
 
                         {/* 2. DELIVERY METHOD */}
                         <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-                            <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2 mb-6">
-                                <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">
+                            <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2 mb-6">
+                                <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-semibold">
                                     2
                                 </div>
                                 Delivery Method
@@ -489,7 +489,7 @@ export default function CheckoutPageRedesigned() {
                                                 </p>
                                             </div>
                                         </div>
-                                        <p className="font-bold text-green-600">FREE</p>
+                                        <p className="font-semibold text-green-600">FREE</p>
                                     </div>
                                 </div>
 
@@ -511,7 +511,7 @@ export default function CheckoutPageRedesigned() {
                                             <div>
                                                 <p className="font-semibold text-gray-900 flex items-center gap-2">
                                                     Express Delivery
-                                                    <span className="text-xs bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full font-bold">
+                                                    <span className="text-xs bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full font-semibold">
                                                         FAST
                                                     </span>
                                                 </p>
@@ -521,7 +521,7 @@ export default function CheckoutPageRedesigned() {
                                                 </p>
                                             </div>
                                         </div>
-                                        <Price amount={99} className="font-bold text-gray-900" />
+                                        <Price amount={99} className="font-semibold text-gray-900" />
                                     </div>
                                 </div>
                             </div>
@@ -529,8 +529,8 @@ export default function CheckoutPageRedesigned() {
 
                         {/* 3. PAYMENT METHOD */}
                         <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-                            <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2 mb-6">
-                                <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">
+                            <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2 mb-6">
+                                <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-semibold">
                                     3
                                 </div>
                                 Payment Method
@@ -554,10 +554,10 @@ export default function CheckoutPageRedesigned() {
                                                 )}
                                             </div>
                                             <div className="flex-1">
-                                                <p className="font-bold text-gray-900 flex items-center gap-2">
+                                                <p className="font-semibold text-gray-900 flex items-center gap-2">
                                                     <FiCreditCard className="w-5 h-5 text-blue-600" />
                                                     Credit/Debit Card
-                                                    <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-bold">
+                                                    <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-semibold">
                                                         RECOMMENDED
                                                     </span>
                                                 </p>
@@ -589,10 +589,10 @@ export default function CheckoutPageRedesigned() {
                                                 )}
                                             </div>
                                             <div className="flex-1">
-                                                <p className="font-bold text-gray-900 flex items-center gap-2">
+                                                <p className="font-semibold text-gray-900 flex items-center gap-2">
                                                     <FiSmartphone className="w-5 h-5 text-green-600" />
                                                     UPI / QR Code
-                                                    <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-bold">
+                                                    <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-semibold">
                                                         INSTANT
                                                     </span>
                                                 </p>
@@ -624,7 +624,7 @@ export default function CheckoutPageRedesigned() {
                                                 )}
                                             </div>
                                             <div className="flex-1">
-                                                <p className="font-bold text-gray-900 flex items-center gap-2">
+                                                <p className="font-semibold text-gray-900 flex items-center gap-2">
                                                     <FaRegMoneyBillAlt className="w-5 h-5 text-gray-600" />
                                                     Cash on Delivery
                                                 </p>
@@ -641,7 +641,7 @@ export default function CheckoutPageRedesigned() {
                             <Button
                                 onClick={handlePlaceOrder}
                                 disabled={loading}
-                                className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold py-4 rounded-xl shadow-lg text-lg"
+                                className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold py-4 rounded-xl shadow-lg text-lg"
                             >
                                 {loading ? (
                                     <span className="flex items-center justify-center gap-2">
@@ -664,7 +664,7 @@ export default function CheckoutPageRedesigned() {
 
                             {/* Order Summary */}
                             <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-                                <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                                <h2 className="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
                                     <FiPackage className="w-5 h-5" />
                                     Order Summary
                                 </h2>
@@ -682,7 +682,7 @@ export default function CheckoutPageRedesigned() {
                                                 </p>
                                                 <p className="text-sm text-gray-600">Qty: {item.quantity}</p>
                                             </div>
-                                            <Price amount={item.price * item.quantity} className="font-bold text-gray-900" />
+                                            <Price amount={item.price * item.quantity} className="font-semibold text-gray-900" />
                                         </div>
                                     ))}
                                 </div>
@@ -742,7 +742,7 @@ export default function CheckoutPageRedesigned() {
                                             <Price amount={donationTotal} />
                                         </div>
                                     )}
-                                    <div className="border-t-2 border-gray-300 pt-3 flex justify-between text-xl font-bold text-gray-900">
+                                    <div className="border-t-2 border-gray-300 pt-3 flex justify-between text-xl font-semibold text-gray-900">
                                         <span>Total</span>
                                         <Price amount={finalTotal} />
                                     </div>
@@ -774,7 +774,7 @@ export default function CheckoutPageRedesigned() {
                                     <Button
                                         onClick={handlePlaceOrder}
                                         disabled={loading}
-                                        className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold py-4 rounded-xl shadow-lg text-lg"
+                                        className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold py-4 rounded-xl shadow-lg text-lg"
                                     >
                                         {loading ? (
                                             <span className="flex items-center justify-center gap-2">
@@ -793,7 +793,7 @@ export default function CheckoutPageRedesigned() {
 
                             {/* Trust Signals */}
                             <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-6 border border-green-200">
-                                <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
+                                <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
                                     <FiShield className="w-5 h-5 text-green-600" />
                                     Your Purchase is Protected
                                 </h3>
@@ -821,7 +821,7 @@ export default function CheckoutPageRedesigned() {
                             <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-2xl p-6 border border-purple-200">
                                 <div className="flex items-center gap-3 mb-3">
                                     <FiTrendingUp className="w-5 h-5 text-purple-600" />
-                                    <h3 className="font-bold text-gray-900">Live Activity</h3>
+                                    <h3 className="font-semibold text-gray-900">Live Activity</h3>
                                 </div>
                                 <div className="space-y-2 text-sm text-gray-700">
                                     <p className="flex items-center gap-2">

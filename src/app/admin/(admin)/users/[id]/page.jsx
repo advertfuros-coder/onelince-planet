@@ -137,7 +137,7 @@ export default function UserDetailPage({ params }) {
             <FiArrowLeft size={24} />
           </button>
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">User Details</h1>
+            <h1 className="text-3xl font-semibold text-gray-900">User Details</h1>
             <p className="text-gray-600 mt-1">View and manage user information</p>
           </div>
         </div>
@@ -166,9 +166,9 @@ export default function UserDetailPage({ params }) {
           <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
             <div className="flex flex-col items-center">
               <div className="w-24 h-24 bg-gradient-to-br from-blue-600 to-blue-800 rounded-full flex items-center justify-center mb-4">
-                <span className="text-white font-bold text-3xl">{user.name[0].toUpperCase()}</span>
+                <span className="text-white font-semibold text-3xl">{user.name[0].toUpperCase()}</span>
               </div>
-              <h2 className="text-xl font-bold text-gray-900">{user.name}</h2>
+              <h2 className="text-xl font-semibold text-gray-900">{user.name}</h2>
               <p className="text-gray-600">{user.email}</p>
 
               <div className="flex items-center space-x-2 mt-4">
@@ -212,7 +212,7 @@ export default function UserDetailPage({ params }) {
 
           {/* Stats Card */}
           <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
-            <h3 className="text-lg font-bold text-gray-900 mb-4">Activity Stats</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Activity Stats</h3>
             <div className="space-y-4">
               <StatItem label="Total Orders" value={stats.totalOrders || 0} icon={<FiShoppingBag />} />
               <StatItem label="Total Spent" value={`₹${(stats.totalSpent || 0).toLocaleString('en-IN')}`} icon={<FiDollarSign />} />
@@ -226,7 +226,7 @@ export default function UserDetailPage({ params }) {
           {/* Edit Form or Details */}
           {isEditing ? (
             <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
-              <h3 className="text-xl font-bold text-gray-900 mb-6">Edit User Information</h3>
+              <h3 className="text-xl font-semibold text-gray-900 mb-6">Edit User Information</h3>
               <form onSubmit={handleUpdate} className="space-y-4">
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Name</label>
@@ -314,7 +314,7 @@ export default function UserDetailPage({ params }) {
           {/* Order History */}
           <div className="bg-white rounded-lg shadow border border-gray-200">
             <div className="px-6 py-4 border-b">
-              <h3 className="text-xl font-bold text-gray-900">Order History</h3>
+              <h3 className="text-xl font-semibold text-gray-900">Order History</h3>
             </div>
             <div className="overflow-x-auto">
               {orders.length === 0 ? (
@@ -396,7 +396,7 @@ function StatItem({ label, value, icon }) {
         <div className="text-blue-600">{icon}</div>
         <span className="text-sm text-gray-600">{label}</span>
       </div>
-      <span className="text-lg font-bold text-gray-900">{value}</span>
+      <span className="text-lg font-semibold text-gray-900">{value}</span>
     </div>
   )
 }

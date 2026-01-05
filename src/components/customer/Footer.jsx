@@ -92,10 +92,10 @@ export default function Footer() {
           <div className="lg:col-span-2">
             <Link href="/" className="flex items-center space-x-2 mb-4">
               <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">OP</span>
+                <span className="text-white font-semibold text-lg">OP</span>
               </div>
               <div>
-                <span className="text-2xl font-bold text-white">OnlinePlanet</span>
+                <span className="text-2xl font-semibold text-white">OnlinePlanet</span>
                 <p className="text-xs text-gray-400 -mt-1">Empowering Indian Sellers</p>
               </div>
             </Link>

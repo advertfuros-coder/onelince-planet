@@ -122,7 +122,7 @@ export default function CouponsList() {
         <div className="bg-white rounded-2xl shadow-lg p-8 mb-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-4xl font-bold text-gray-900 flex items-center gap-3">
+              <h1 className="text-4xl font-semibold text-gray-900 flex items-center gap-3">
                 <FiTag className="text-blue-600" />
                 All Coupons
               </h1>
@@ -192,17 +192,17 @@ export default function CouponsList() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
             <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-4">
               <p className="text-sm text-blue-700 font-medium">Total Coupons</p>
-              <p className="text-3xl font-bold text-blue-900">{coupons.length}</p>
+              <p className="text-3xl font-semibold text-blue-900">{coupons.length}</p>
             </div>
             <div className="bg-green-50 border-2 border-green-200 rounded-lg p-4">
               <p className="text-sm text-green-700 font-medium">Active Coupons</p>
-              <p className="text-3xl font-bold text-green-900">
+              <p className="text-3xl font-semibold text-green-900">
                 {coupons.filter(c => isActive(c.startDate, c.endDate, c.isActive)).length}
               </p>
             </div>
             <div className="bg-red-50 border-2 border-red-200 rounded-lg p-4">
               <p className="text-sm text-red-700 font-medium">Expired Coupons</p>
-              <p className="text-3xl font-bold text-red-900">
+              <p className="text-3xl font-semibold text-red-900">
                 {coupons.filter(c => isExpired(c.endDate)).length}
               </p>
             </div>
@@ -226,14 +226,14 @@ export default function CouponsList() {
               <table className="w-full">
                 <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
                   <tr>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Code</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Type</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Discount</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Scope</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Usage</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Valid Period</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Status</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Actions</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Code</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Type</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Discount</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Scope</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Usage</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Valid Period</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Status</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
@@ -242,7 +242,7 @@ export default function CouponsList() {
                       {/* Code */}
                       <td className="px-6 py-4">
                         <div>
-                          <p className="font-bold text-gray-900 text-lg">{coupon.code}</p>
+                          <p className="font-semibold text-gray-900 text-lg">{coupon.code}</p>
                           <p className="text-sm text-gray-600 truncate max-w-xs">{coupon.description}</p>
                         </div>
                       </td>
@@ -259,7 +259,7 @@ export default function CouponsList() {
 
                       {/* Discount */}
                       <td className="px-6 py-4">
-                        <div className="font-bold text-green-600">
+                        <div className="font-semibold text-green-600">
                           {coupon.discountType === 'percentage' && `${coupon.discountValue}%`}
                           {coupon.discountType === 'fixed' && `₹${coupon.discountValue}`}
                           {coupon.discountType === 'free_shipping' && 'Free Shipping'}
