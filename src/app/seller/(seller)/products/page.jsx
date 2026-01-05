@@ -36,6 +36,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion'
 import { toast } from 'react-hot-toast'
 import BulkUploadModal from '@/components/seller/BulkUploadModal'
+import BulkRecategorizeModal from '@/components/seller/BulkRecategorizeModal'
 import { SellerBadges } from '@/components/seller/SellerBadge'
 
 export default function SellerProductsPage() {
@@ -54,6 +55,10 @@ export default function SellerProductsPage() {
   const [showBulkUpload, setShowBulkUpload] = useState(false)
   const [sellerBadges, setSellerBadges] = useState([])
   const [viewMode, setViewMode] = useState('list') // list or grid
+
+  // Bulk selection state
+  const [selectedProductIds, setSelectedProductIds] = useState([])
+  const [showBulkRecategorize, setShowBulkRecategorize] = useState(false)
 
   useEffect(() => {
     if (token) {
@@ -149,6 +154,23 @@ export default function SellerProductsPage() {
   }
 
   const formatCurrency = (value) => `₹${(value || 0).toLocaleString('en-IN')}`
+
+  // Bulk selection handlers
+  const handleSelectAll = () => {
+    if (selectedProductIds.length === products.length) {
+      setSelectedProductIds([])
+    } else {
+      setSelectedProductIds(products.map(p => p._id))
+    }
+  }
+
+  const handleSelectProduct = (productId) => {
+    setSelectedProductIds(prev =>
+      prev.includes(productId)
+        ? prev.filter(id => id !== productId)
+        : [...prev, productId]
+    )
+  }
 
   const categories = [...new Set(products.map((p) => p.category))]
 
@@ -327,6 +349,14 @@ export default function SellerProductsPage() {
                 <table className="w-full">
                   <thead>
                     <tr className="border-b border-gray-50 bg-gray-50/30">
+                      <th className="px-4 py-5 text-left">
+                        <input
+                          type="checkbox"
+                          checked={products.length > 0 && selectedProductIds.length === products.length}
+                          onChange={handleSelectAll}
+                          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                        />
+                      </th>
                       <th className="px-8 py-5 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">Product Information</th>
                       <th className="px-6 py-5 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">SKU & Category</th>
                       <th className="px-6 py-5 text-right text-[10px] font-black text-gray-400 uppercase tracking-widest">Pricing</th>
@@ -339,6 +369,14 @@ export default function SellerProductsPage() {
                   <tbody className="divide-y divide-gray-50">
                     {products.map((product) => (
                       <tr key={product._id} className="group hover:bg-gray-50/30 transition-all">
+                        <td className="px-4 py-6">
+                          <input
+                            type="checkbox"
+                            checked={selectedProductIds.includes(product._id)}
+                            onChange={() => handleSelectProduct(product._id)}
+                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                          />
+                        </td>
                         <td className="px-8 py-6">
                           <div className="flex items-center gap-4">
                             <div className="w-14 h-14 rounded-2xl bg-gray-50 overflow-hidden border border-gray-100 flex-shrink-0 p-1 group-hover:scale-105 transition-transform">
@@ -488,6 +526,42 @@ export default function SellerProductsPage() {
         </div>
       </div>
 
+      {/* Bulk Action Toolbar */}
+      {selectedProductIds.length > 0 && (
+        <div className="fixed bottom-0 left-0 right-0 bg-white border-t-2 border-blue-100 shadow-2xl p-6 z-40">
+          <div className="max-w-7xl mx-auto flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white font-black text-lg">
+                {selectedProductIds.length}
+              </div>
+              <div>
+                <p className="text-sm font-black text-slate-900">
+                  {selectedProductIds.length} product{selectedProductIds.length !== 1 ? 's' : ''} selected
+                </p>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                  Choose an action below
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setSelectedProductIds([])}
+                className="px-6 py-3 bg-slate-100 text-slate-700 rounded-2xl text-[11px] font-black uppercase tracking-widest hover:bg-slate-200 transition-all"
+              >
+                Clear Selection
+              </button>
+              <button
+                onClick={() => setShowBulkRecategorize(true)}
+                className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl text-[11px] font-black uppercase tracking-widest hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg shadow-blue-500/20"
+              >
+                <CheckCircle2 size={16} />
+                Recategorize
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Modals Container */}
       <AnimatePresence>
         {showBulkUpload && (
@@ -495,6 +569,19 @@ export default function SellerProductsPage() {
             onClose={() => setShowBulkUpload(false)}
             onSuccess={() => {
               setShowBulkUpload(false)
+              fetchProducts()
+            }}
+          />
+        )}
+        {showBulkRecategorize && (
+          <BulkRecategorizeModal
+            isOpen={showBulkRecategorize}
+            onClose={() => setShowBulkRecategorize(false)}
+            selectedProducts={products.filter(p => selectedProductIds.includes(p._id))}
+            token={token}
+            onSuccess={(result) => {
+              toast.success(`${result.updated} products recategorized successfully!`)
+              setSelectedProductIds([])
               fetchProducts()
             }}
           />

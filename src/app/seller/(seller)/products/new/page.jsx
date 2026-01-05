@@ -34,6 +34,7 @@ import {
 import { useAuth } from '@/lib/context/AuthContext'
 import { toast } from 'react-hot-toast'
 import ImageUpload from '@/components/ui/ImageUpload'
+import CategorySelector from '@/components/seller/CategorySelector'
 
 const CATEGORIES = [
   { name: 'Electronics', icon: <Zap size={16} /> },
@@ -71,8 +72,10 @@ export default function AddProductPage() {
     name: '',
     description: '',
     shortDescription: '',
-    category: '',
-    subCategory: '',
+    category: '', // Final category name (for display/backwards compat)
+    categoryId: '', // MongoDB ObjectId of selected category
+    categoryPath: '', // Full path (e.g., "fashion/men/t-shirts")
+    subCategory: '', // Deprecated but kept for backwards compat
     brand: '',
     sku: '',
     basePrice: '',
@@ -581,34 +584,53 @@ export default function AddProductPage() {
                         <InputField label="Brand" name="brand" value={form.brand} onChange={handleChange} placeholder="e.g., Apple" />
                         <InputField label="SKU (Optional)" name="sku" value={form.sku} onChange={handleChange} placeholder="Business tracking ID" />
                       </div>
+                    </div>
+                  </div>
 
-                      <div className="space-y-2">
-                        <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Category</label>
-                        <div className="grid grid-cols-3 gap-3">
-                          {CATEGORIES.map(cat => (
-                            <button
-                              type="button"
-                              key={cat.name}
-                              onClick={() => setForm(f => ({ ...f, category: cat.name }))}
-                              className={`py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest border transition-all ${form.category === cat.name ? 'bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-500/20' : 'bg-slate-50 border-slate-100 text-slate-400 hover:border-blue-200'}`}
-                            >
-                              {cat.name}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
+                  {/* Hierarchical Category Selector */}
+                  <CategorySelector
+                    selectedPath={form.categoryPath}
+                    productDetails={{
+                      name: form.name,
+                      description: form.description,
+                      brand: form.brand,
+                      keywords: form.keywords ? form.keywords.split(',').map(k => k.trim()) : []
+                    }}
+                    onChange={(categoryData) => {
+                      if (categoryData) {
+                        setForm(prev => ({
+                          ...prev,
+                          categoryId: categoryData.categoryId,
+                          categoryPath: categoryData.path,
+                          category: categoryData.name, // Store final category name
+                          // Store hierarchy for potential future use
+                          categoryHierarchy: categoryData.hierarchy
+                        }))
+                      } else {
+                        // Clear category selection
+                        setForm(prev => ({
+                          ...prev,
+                          categoryId: '',
+                          categoryPath: '',
+                          category: '',
+                          categoryHierarchy: null
+                        }))
+                      }
+                    }}
+                    required={true}
+                  />
 
-                      <div className="space-y-2">
-                        <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Description</label>
-                        <textarea
-                          name="description"
-                          value={form.description}
-                          onChange={handleChange}
-                          rows={4}
-                          className="w-full bg-slate-50/50 border border-slate-100 rounded-3xl px-6 py-5 text-sm font-bold text-slate-700 placeholder-slate-300 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 outline-none transition-all resize-none"
-                          placeholder="Tell customers about your product..."
-                        />
-                      </div>
+                  <div className="bg-white rounded-[2.5rem] border border-slate-100 p-10 shadow-xl shadow-slate-200/20">
+                    <div className="space-y-2">
+                      <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">Description</label>
+                      <textarea
+                        name="description"
+                        value={form.description}
+                        onChange={handleChange}
+                        rows={4}
+                        className="w-full bg-slate-50/50 border border-slate-100 rounded-3xl px-6 py-5 text-sm font-bold text-slate-700 placeholder-slate-300 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 outline-none transition-all resize-none"
+                        placeholder="Tell customers about your product..."
+                      />
                     </div>
                   </div>
 

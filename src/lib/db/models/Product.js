@@ -19,13 +19,15 @@ const ProductSchema = new mongoose.Schema(
     description: String,
     shortDescription: String,
 
+    // Category (supports both new hierarchical and old string-based)
     category: {
-      type: String, // Or ObjectId if using Category model
+      type: mongoose.Schema.Types.Mixed, // Can be ObjectId or String
       required: function () {
         return this.get("isDraft") !== true;
       },
     },
-    subCategory: String,
+    categoryPath: String, // e.g., "fashion/men/t-shirts" - for efficient filtering
+    subCategory: String, // Deprecated but kept for backwards compatibility
 
     brand: String,
     sku: {
@@ -122,6 +124,19 @@ const ProductSchema = new mongoose.Schema(
         default: false,
       },
       shippingFee: Number,
+    },
+
+    // Delivery Estimate (Pre-calculated, no API calls needed)
+    deliveryEstimate: {
+      domestic: {
+        min: { type: Number, default: 2 }, // Minimum days for domestic delivery
+        max: { type: Number, default: 5 }, // Maximum days for domestic delivery
+      },
+      international: {
+        min: { type: Number, default: 7 }, // Minimum days for international delivery
+        max: { type: Number, default: 14 }, // Maximum days for international delivery
+      },
+      lastUpdated: { type: Date, default: Date.now },
     },
 
     ratings: {

@@ -7,12 +7,14 @@ import {
   FiShoppingCart,
   FiStar,
   FiPlus,
-  FiLock
+  FiLock,
+  FiTruck
 } from 'react-icons/fi'
 import { FaHeart, FaStar } from 'react-icons/fa'
 import { createProductUrl } from '../../lib/utils/productUrl'
 import { useCart } from '../../lib/context/CartContext'
 import { useCurrency } from '../../lib/context/CurrencyContext'
+import { calculateDeliveryEstimate } from '../../lib/utils/deliveryEstimate'
 import Price, { StrikePrice } from '../ui/Price'
 
 export default function ProductCard({
@@ -24,11 +26,15 @@ export default function ProductCard({
 }) {
   const router = useRouter()
   const { addToCart } = useCart()
-  const { formatPrice } = useCurrency()
+  const { formatPrice, country } = useCurrency()
 
   const discount = product.pricing?.basePrice && product.pricing?.salePrice ?
     Math.round(((product.pricing.basePrice - product.pricing.salePrice) / product.pricing.basePrice) * 100) : 0
   const finalPrice = product.pricing?.salePrice || product.pricing?.basePrice || 0
+
+  // Calculate delivery estimate (zero API calls)
+  const sellerCountry = product.sellerId?.businessInfo?.country || product.sellerId?.country || 'AE'
+  const deliveryEstimate = calculateDeliveryEstimate(product, country, sellerCountry)
 
   // Mock badge for UI demonstration based on image
   const getBadge = () => {
@@ -57,7 +63,7 @@ export default function ProductCard({
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden group hover:shadow-xl hover:border-blue-100 transition-all duration-500 flex flex-col h-full ring-1 ring-black/5">
       {/* Product Image Section */}
-      <div className={`relative ${variant === 'steal' ? 'aspect-[4/5]' : 'aspect-square'} overflow-hidden bg-[#F8F9FA] ${variant === 'steal' ? 'p-6 rounded-[24px] border border-gray-50 shadow-inner' : 'p-4'}`}>
+      <div className={`relative ${variant === 'steal' ? 'aspect-[4/5]' : 'aspect-square'} overflow-hidden bg-[#F8F9FA] ${variant === 'steal' ? 'rounded-[24px] border border-gray-50 shadow-inner' : ''}`}>
         <Link href={createProductUrl(product)}>
           {product.images?.[0]?.url ? (
             <img
@@ -77,12 +83,12 @@ export default function ProductCard({
         {/* Floating Badges */}
         <div className="absolute top-2 left-2 flex flex-col gap-2 z-10">
           {badge && (
-            <span className={`${badge.color} text-white px-3 py-1 rounded-full text-[10px] font-black tracking-widest shadow-md transform -translate-x-1 group-hover:translate-x-0 transition-transform duration-300`}>
+            <span className={`${badge.color} text-white px-3 py-1 rounded-full text-[10px] font-semibold tracking-widest shadow-md transform -translate-x-1 group-hover:translate-x-0 transition-transform duration-300`}>
               {badge.text}
             </span>
           )}
           {discount > 0 && (
-            <span className="bg-red-50/90 font-medium backdrop-blur-sm text-red-600 px-3 py-1 rounded-full text-[10px] font-black tracking-widest border border-red-100 shadow-sm">
+            <span className="bg-red-50/90 font-medium backdrop-blur-sm text-red-600 px-3 py-1 rounded-full text-[10px] font-semibold tracking-widest border border-red-100 shadow-sm">
               {discount}% OFF
             </span>
           )}
@@ -115,7 +121,7 @@ export default function ProductCard({
         {/* Steal Deal Quantity Tag */}
         {variant === 'steal' && product.quantity && (
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white/90 backdrop-blur-sm px-4 py-1.5 rounded-full border border-gray-100 social-shadow min-w-[80px] text-center">
-            <span className="text-[11px] font-bold text-gray-400">{product.quantity}</span>
+            <span className="text-[11px] font-semibold text-gray-400">{product.quantity}</span>
           </div>
         )}
       </div>
@@ -199,15 +205,15 @@ export default function ProductCard({
             </div>
 
             <Link href={createProductUrl(product)}>
-              <h3 className="font-semibold text-[#1a1a1b] text-[15px] leading-[1.4] mb-3 line-clamp-2 min-h-[42px] hover:text-blue-600 transition-colors">
+              <h3 className="font-semibold text-[#1a1a1b] text-xs mb-1 min-h-[42px] hover:text-blue-600 transition-colors">
                 {product.name}
               </h3>
             </Link>
 
-            <div className="flex items-baseline gap-2 mb-4">
+            <div className="flex items-baseline gap-2 mb-2">
               <Price
                 amount={finalPrice}
-                className="text-[20px] font-black text-[#1a1a1b]"
+                className="text-md font-semibold  text-[#1a1a1b]"
               />
               {product.pricing?.basePrice && product.pricing?.salePrice && (
                 <StrikePrice
@@ -217,11 +223,19 @@ export default function ProductCard({
               )}
             </div>
 
-            <div className="grid grid-cols-2 gap-2 mb-4">
+            {/* Delivery Estimate */}
+            <div className="flex items-center gap-1.5 mb-3">
+              <FiTruck className="w-4 h-4 text-green-600" />
+              <span className="text-xs text-gray-600">
+                Delivery by <span className="font-semibold text-green-600">{deliveryEstimate.label}</span>
+              </span>
+            </div>
+
+            {/* <div className="grid md:grid-cols-2 gap-2 -4">
               <button
                 onClick={handleAddToCart}
                 disabled={product.inventory?.stock === 0}
-                className="px-3 py-2.5 bg-white border-2 border-blue-600 text-blue-600 rounded-xl hover:bg-blue-50 transition-all font-bold text-xs flex items-center justify-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-3 py-2.5 bg-white border-2 border-blue-600 text-blue-600 rounded-xl hover:bg-blue-50 transition-all font-semibold text-xs flex items-center justify-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <FiShoppingCart className="w-4 h-4" />
                 Add
@@ -229,29 +243,29 @@ export default function ProductCard({
               <button
                 onClick={handleBuyNow}
                 disabled={product.inventory?.stock === 0}
-                className="px-3 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all font-bold text-xs disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-3 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all font-semibold text-xs disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Buy Now
               </button>
-            </div>
+            </div> */}
 
-            <div className="mt-auto pt-4 border-t border-gray-50 flex items-center justify-between">
+            {/* <div className="mt-auto pt-4 border-t border-gray-50 flex items-center justify-between">
               <div className="flex items-center gap-1">
                 <span className="text-[11px] text-gray-400">Sold by</span>
-                <span className="text-[11px] font-bold text-gray-600 truncate max-w-[80px]">
+                <span className="text-[11px] font-semibold text-gray-600 truncate max-w-[80px]">
                   {product.sellerId?.storeInfo?.storeName || product.sellerId?.businessInfo?.businessName || ''}
                 </span>
               </div>
               <div className="flex items-center gap-1">
                 {product.isVerified ? (
-                  <div className="flex items-center gap-1 text-[10px] font-bold text-[#00B058]">
+                  <div className="flex items-center gap-1 text-[10px] font-semibold text-[#00B058]">
                     <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                     </svg>
                     Verified
                   </div>
                 ) : (
-                  <div className="flex items-center gap-1 text-[10px] font-bold text-blue-500">
+                  <div className="flex items-center gap-1 text-[10px] font-semibold text-blue-500">
                     <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M12 2L4.5 20.29L5.21 21L12 18L18.79 21L19.5 20.29L12 2Z" fill="currentColor" />
                     </svg>
@@ -259,7 +273,7 @@ export default function ProductCard({
                   </div>
                 )}
               </div>
-            </div>
+            </div> */}
           </>
         )}
       </div>

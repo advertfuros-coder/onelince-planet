@@ -137,57 +137,9 @@ export default function ProductGrid({
 
   return (
     <div className="space-y-6">
-      {/* Header with results count and view options */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <p className="text-sm text-gray-600">
-            Showing <span className="font-semibold">{products.length}</span> of{' '}
-            <span className="font-semibold">{totalPages * 20}</span> results
-          </p>
-        </div>
-
-        <div className="flex items-center gap-4">
-          {/* View Mode Toggle */}
-          <div className="flex items-center border border-gray-300 rounded-lg p-1">
-            <button
-              onClick={() => setViewMode('grid')}
-              className={`p-2 rounded ${viewMode === 'grid' ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100'}`}
-            >
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-              </svg>
-            </button>
-            <button
-              onClick={() => setViewMode('list')}
-              className={`p-2 rounded ${viewMode === 'list' ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100'}`}
-            >
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
-              </svg>
-            </button>
-          </div>
-
-          {/* Sort Options */}
-          <select
-            className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
-            onChange={(e) => {
-              const [sortBy, order] = e.target.value.split(':')
-              onPageChange && onPageChange(1, { sortBy, order })
-            }}
-          >
-            <option value="createdAt:desc">Newest First</option>
-            <option value="pricing.salePrice:asc">Price: Low to High</option>
-            <option value="pricing.salePrice:desc">Price: High to Low</option>
-            <option value="ratings.average:desc">Customer Rating</option>
-            <option value="name:asc">Name: A to Z</option>
-            <option value="name:desc">Name: Z to A</option>
-          </select>
-        </div>
-      </div>
-
-      {/* Products Grid/List */}
+      {/* Products Grid */}
       {viewMode === 'grid' ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {products.map((product) => (
             <ProductCard
               key={product._id}

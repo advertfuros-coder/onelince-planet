@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import {
   FiShoppingCart,
   FiUser,
@@ -50,9 +50,15 @@ export default function Header() {
   const { wishlist } = useWishlist()
   const { country, changeCountry, currencyConfig } = useCurrency()
   const router = useRouter()
+  const pathname = usePathname()
   const userMenuRef = useRef(null)
   const categoriesRef = useRef(null)
   const countryMenuRef = useRef(null)
+
+  // Check if current page is a product detail page or products listing page
+  const isProductDetailPage = pathname?.startsWith('/products/') && pathname.split('/').length === 3
+  const isProductsPage = pathname === '/products'
+  const hideHeaderExtras = isProductDetailPage || isProductsPage
 
   // Country configuration
   const countries = {
@@ -276,44 +282,12 @@ export default function Header() {
                 >
                   <FiMapPin className="w-4 h-4" />
                   <div className="text-left">
-                    <div className="text-gray-500">Delivering to {location}</div>
+                    <div className="text-gray-500 line-clamp-1 max-w-[150px]">
+                      Delivering to {location} {pincode && <span className="font-bold">{pincode}</span>}
+                    </div>
                     <div className="font-semibold text-gray-900">Update Location</div>
                   </div>
                 </button>
-                {isLocationModalOpen && (
-                  <>
-                    <div className="fixed inset-0 z-40" onClick={() => setIsLocationModalOpen(false)} />
-                    <div className="absolute top-full right-0 mt-2 z-50 bg-white rounded-2xl shadow-2xl w-96 p-6 border border-gray-100">
-                      <button onClick={() => setIsLocationModalOpen(false)} className="absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-full transition-colors">
-                        <FiX className="w-4 h-4" />
-                      </button>
-                      <div className="mb-5">
-                        <div className="flex items-center gap-3 mb-2">
-                          <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                            <FiMapPin className="w-5 h-5 text-blue-600" />
-                          </div>
-                          <div>
-                            <h3 className="text-lg font-bold text-gray-900">Select Delivery Location</h3>
-                            <p className="text-xs text-gray-500">Enter your pincode for delivery estimates</p>
-                          </div>
-                        </div>
-                      </div>
-                      <form onSubmit={handleLocationSubmit} className="space-y-4">
-                        <input
-                          type="text"
-                          value={pincode}
-                          onChange={(e) => setPincode(e.target.value.toUpperCase())}
-                          placeholder="e.g., 110001 or DXB123"
-                          className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none transition-colors text-sm font-mono"
-                          maxLength={6}
-                        />
-                        <button type="submit" disabled={loadingLocation} className="w-full py-2.5 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 disabled:bg-gray-300 transition-colors text-sm">
-                          {loadingLocation ? 'Detecting...' : 'Update Location'}
-                        </button>
-                      </form>
-                    </div>
-                  </>
-                )}
               </div>
 
               <div className="relative" ref={countryMenuRef}>
@@ -374,9 +348,43 @@ export default function Header() {
 
       {/* NEW Mobile Main Header */}
       <div className="lg:hidden bg-white border-b border-gray-100">
-        <div className="px-4 py-3">
+        <div className="">
+          {/* Row 0: Mobile Location Bar - Scalloped & Framed Design - Hide on product detail pages */}
+          {!hideHeaderExtras && (
+            <div className={`relative transition-all duration-300 ease-in-out z-20 ${showSecondaryHeader ? 'max-h-24 opacity-100 mb-4' : 'max-h-0 opacity-0 mb-0'}`}>
+              {/* Top Dark Strip as seen in screenshot */}
+              <div className="h-1 bg-[#2D313F] w-full"></div>
+
+              {/* Main Location Content */}
+              <div className="bg-[#FFD23F] px-4 py-2 relative z-10 sh adow-sm border-b border-[#FFD23F]/20">
+                <button
+                  onClick={() => setIsLocationModalOpen(true)}
+                  className="flex items-center gap-2 w-full text-left"
+                >
+                  <FiMapPin className="w-4 h-4 text-black shrink-0" />
+                  <div className="flex-1 min-w-0 flex items-center gap-1.5">
+                    <span className="text-[12px] text-gray-800 font-medium">Deliver to</span>
+                    <span className="text-[12px] text-black font-bold truncate">{location}, {pincode}</span>
+                    <FiChevronDown className="w-4 h-4 text-gray-800 shrink-0 ml-auto" />
+                  </div>
+                </button>
+              </div>
+
+              {/* Premium Scalloped Bottom Edge */}
+              <div className="absolute -bottom-2.5 left-0 w-full overflow-hidden leading-none z-0">
+                <svg
+                  viewBox="0 0 1200 24"
+                  preserveAspectRatio="none"
+                  className="relative block w-full h-3 fill-[#FFD23F]"
+                >
+                  <path d="M0,0 h1200 v10 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 v-10 h-1200 Z"></path>
+                </svg>
+              </div>
+            </div>
+          )}
+
           {/* Row 1: Logo and Icons */}
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-4 px-4 py-2">
             <Link href="/" className="flex items-center">
               <img src="/logo.png" alt="Logo" className="h-8 w-auto object-contain" />
             </Link>
@@ -398,109 +406,115 @@ export default function Header() {
             </div>
           </div>
 
-          {/* Row 2: Search Bar */}
-          <form onSubmit={handleSearch} className="relative mb-4">
-            <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center gap-1.5 opacity-60">
-              <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
-              <div className="w-1.5 h-1.5 rounded-full bg-yellow-500"></div>
-              <div className="w-1.5 h-1.5 rounded-full bg-red-500"></div>
-            </div>
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search products"
-              className="w-full pl-14 pr-12 py-2.5 bg-[#F0F2F5] rounded-full text-sm border-none focus:ring-1 focus:ring-blue-500 placeholder:text-gray-500 font-medium"
-            />
-            <button
-              type="submit"
-              className="absolute right-1 top-1/2 -translate-y-1/2 w-9 h-9 bg-[#003399] rounded-full flex items-center justify-center shadow-sm"
-            >
-              <FiSearch className="w-5 h-5 text-white" />
-            </button>
-          </form>
-
-          {/* Row 3: Categories Horizontal Scroll */}
-          <div className={`overflow-hidden transition-all duration-300 ease-in-out ${showSecondaryHeader ? 'max-h-12 opacity-100 py-1 mb-2' : 'max-h-0 opacity-0 py-0 mb-0'}`}>
-            <div className="flex items-center gap-3 overflow-x-auto no-scrollbar whitespace-nowrap">
-              <div className="flex items-center gap-2 shrink-0">
-                <span className="text-sm font-bold text-gray-900">Categories</span>
-                <div className="w-px h-4 bg-gray-300"></div>
+          {/* Row 2: Search Bar - Hide on product detail pages */}
+          {!hideHeaderExtras && (
+            <form onSubmit={handleSearch} className="relative mb-4">
+              <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center gap-1.5 opacity-60">
+                <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+                <div className="w-1.5 h-1.5 rounded-full bg-yellow-500"></div>
+                <div className="w-1.5 h-1.5 rounded-full bg-red-500"></div>
               </div>
-              {categories.map((category) => (
-                <Link
-                  key={category.name}
-                  href={category.href}
-                  className="text-sm font-semibold text-gray-500 hover:text-blue-600 transition-colors px-1"
-                >
-                  {category.name}
-                </Link>
-              ))}
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search products"
+                className="w-full pl-14 pr-12 py-2.5 bg-[#F0F2F5] rounded-full text-sm border-none focus:ring-1 focus:ring-blue-500 placeholder:text-gray-500 font-medium"
+              />
+              <button
+                type="submit"
+                className="absolute right-1 top-1/2 -translate-y-1/2 w-9 h-9 bg-[#003399] rounded-full flex items-center justify-center shadow-sm"
+              >
+                <FiSearch className="w-5 h-5 text-white" />
+              </button>
+            </form>
+          )}
+
+          {/* Row 3: Categories Horizontal Scroll - Hide on product detail pages */}
+          {!hideHeaderExtras && (
+            <div className={`overflow-hidden transition-all duration-300 ease-in-out ${showSecondaryHeader ? 'max-h-12 opacity-100 py-1 mb-2' : 'max-h-0 opacity-0 py-0 mb-0'}`}>
+              <div className="flex items-center gap-3 overflow-x-auto no-scrollbar whitespace-nowrap">
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className="text-sm font-bold text-gray-900">Categories</span>
+                  <div className="w-px h-4 bg-gray-300"></div>
+                </div>
+                {categories.map((category) => (
+                  <Link
+                    key={category.name}
+                    href={category.href}
+                    className="text-sm font-semibold text-gray-500 hover:text-blue-600 transition-colors px-1"
+                  >
+                    {category.name}
+                  </Link>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
 
 
-      {/* Navigation Bar */}
-      <div className={`hidden lg:block bg-gray-50 border-b border-gray-200 overflow-hidden transition-all duration-300 ${showSecondaryHeader ? 'max-h-12 opacity-100' : 'max-h-0 opacity-0'}`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-12">
-            {/* Categories */}
-            <div className="flex items-center gap-6">
-              {/* All Categories Dropdown */}
-              <div className="relative" ref={categoriesRef}>
-                <button
-                  onClick={() => setIsCategoriesOpen(!isCategoriesOpen)}
-                  className="flex items-center gap-2 px-4 py-1.5 bg-white border border-gray-200 rounded-md hover:border-gray-300 transition-colors"
-                >
-                  <FiMenu className="w-4 h-4" />
-                  <span className="text-sm font-semibold">All Categories</span>
-                  <FiChevronDown className="w-3 h-3" />
-                </button>
+      {/* Navigation Bar - Hide on product detail pages */}
+      {!hideHeaderExtras && (
+        <div className={`hidden lg:block bg-gray-50 border-b border-gray-200 overflow-hidden transition-all duration-300 ${showSecondaryHeader ? 'max-h-12 opacity-100' : 'max-h-0 opacity-0'}`}>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between h-12">
+              {/* Categories */}
+              <div className="flex items-center gap-6">
+                {/* All Categories Dropdown */}
+                <div className="relative" ref={categoriesRef}>
+                  <button
+                    onClick={() => setIsCategoriesOpen(!isCategoriesOpen)}
+                    className="flex items-center gap-2 px-4 py-1.5 bg-white border border-gray-200 rounded-md hover:border-gray-300 transition-colors"
+                  >
+                    <FiMenu className="w-4 h-4" />
+                    <span className="text-sm font-semibold">All Categories</span>
+                    <FiChevronDown className="w-3 h-3" />
+                  </button>
 
-                {isCategoriesOpen && (
-                  <div className="absolute left-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-100 py-2 max-h-96 overflow-y-auto">
-                    {categories.map((category) => (
-                      <Link
-                        key={category.name}
-                        href={category.href}
-                        className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors"
-                        onClick={() => setIsCategoriesOpen(false)}
-                      >
-                        <span className="text-sm font-medium">{category.name}</span>
-                      </Link>
-                    ))}
-                  </div>
-                )}
+                  {isCategoriesOpen && (
+                    <div className="absolute left-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-100 py-2 max-h-96 overflow-y-auto">
+                      {categories.map((category) => (
+                        <Link
+                          key={category.name}
+                          href={category.href}
+                          className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors"
+                          onClick={() => setIsCategoriesOpen(false)}
+                        >
+                          <span className="text-sm font-medium">{category.name}</span>
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Quick Categories */}
+                {categories.slice(0, 7).map((category) => (
+                  <Link
+                    key={category.name}
+                    href={category.href}
+                    className="text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
+                  >
+                    {category.name}
+                  </Link>
+                ))}
               </div>
 
-              {/* Quick Categories */}
-              {categories.slice(0, 7).map((category) => (
-                <Link
-                  key={category.name}
-                  href={category.href}
-                  className="text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
-                >
-                  {category.name}
+              {/* Right Side Links */}
+              <div className="flex items-center gap-6">
+                <Link href="/deals" className="flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors">
+                  <FiGift className="w-4 h-4" />
+                  Best Deals
                 </Link>
-              ))}
-            </div>
-
-            {/* Right Side Links */}
-            <div className="flex items-center gap-6">
-              <Link href="/deals" className="flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors">
-                <FiGift className="w-4 h-4" />
-                Best Deals
-              </Link>
-              <Link href="/live" className="flex items-center gap-2 text-sm font-semibold hover:text-blue-600 transition-colors">
-                <span>OnlinePlanet Live</span>
-                <FiZap className="w-4 h-4 text-red-500" />
-              </Link>
+                <Link href="/live" className="flex items-center gap-2 text-sm font-semibold hover:text-blue-600 transition-colors">
+                  <span>OnlinePlanet Live</span>
+                  <FiZap className="w-4 h-4 text-red-500" />
+                </Link>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Mobile Menu */}
       {isMenuOpen && (
@@ -556,6 +570,50 @@ export default function Header() {
           scrollbar-width: none;
         }
       `}</style>
+
+      {/* Global Responsive Location Modal */}
+      {isLocationModalOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onClick={() => setIsLocationModalOpen(false)} />
+          <div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-md p-6 border border-gray-100 animate-in fade-in zoom-in duration-300">
+            <button onClick={() => setIsLocationModalOpen(false)} className="absolute top-6 right-6 p-2 hover:bg-gray-100 rounded-full transition-colors">
+              <FiX className="w-5 h-5" />
+            </button>
+            <div className="mb-8">
+              <div className="flex items-center gap-4 mb-2">
+                <div className="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center flex-shrink-0 animate-bounce-subtle">
+                  <FiMapPin className="w-6 h-6 text-blue-600" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900">Select Location</h3>
+                  <p className="text-xs font-medium text-gray-400">Enter pincode for delivery estimates</p>
+                </div>
+              </div>
+            </div>
+            <form onSubmit={handleLocationSubmit} className="space-y-6">
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-1">Pincode</label>
+                <input
+                  type="text"
+                  value={pincode}
+                  onChange={(e) => setPincode(e.target.value.toUpperCase())}
+                  placeholder="e.g., 110001 or DXB123"
+                  className="w-full px-5 py-3.5 bg-gray-50 border-2 border-gray-100 rounded-2xl focus:border-blue-500 focus:bg-white focus:outline-none transition-all text-sm font-semibold"
+                  maxLength={6}
+                  autoFocus
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={loadingLocation}
+                className="w-full py-4 bg-blue-600 text-white font-bold rounded-2xl hover:bg-blue-700 disabled:bg-gray-200 transition-all shadow-lg"
+              >
+                {loadingLocation ? 'Detecting Location...' : 'Update Location'}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
     </header>
   )
 }
