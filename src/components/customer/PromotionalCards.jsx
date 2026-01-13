@@ -31,12 +31,20 @@ export default function PromotionalCards() {
     }
 
     const nextSlide = useCallback(() => {
-        setCurrentSlide((prev) => (prev + 1) % brands.length)
-    }, [brands.length])
+        setBrands(prevBrands => {
+            if (prevBrands.length === 0) return prevBrands;
+            const first = prevBrands[0];
+            return [...prevBrands.slice(1), first];
+        });
+    }, []);
 
     const prevSlide = useCallback(() => {
-        setCurrentSlide((prev) => (prev - 1 + brands.length) % brands.length)
-    }, [brands.length])
+        setBrands(prevBrands => {
+            if (prevBrands.length === 0) return prevBrands;
+            const last = prevBrands[prevBrands.length - 1];
+            return [last, ...prevBrands.slice(0, -1)];
+        });
+    }, []);
 
     useEffect(() => {
         if (isPaused) return
@@ -48,85 +56,77 @@ export default function PromotionalCards() {
     if (loading || brands.length === 0) return null
 
     return (
-        <section className="py-8 md:py-12 bg-white overflow-hidden">
-            <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8">
+        <section className="py-8 md:py-16 bg-white overflow-hidden">
+            <div className="max-w-8xl mx-auto px-4">
                 {/* Section Title */}
-                <div className="flex flex-col items-center mb-8">
-                    <h2
-                        className="text-4xl md:text-6xl font-black uppercase tracking-tight leading-none bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-600 bg-clip-text text-transparent"
-                        style={{
-                            textShadow: `
-                                3px 3px 0px #FF1493,
-                                6px 6px 0px #FF69B4,
-                                9px 9px 0px rgba(255,20,147,0.3)
-                            `
-                        }}
-                    >
-                        FEATURED BRANDS
-                    </h2>
-                </div>
-
-                {/* Desktop Grid Layout (Hidden on Mobile) - Show only first 3 brands */}
-                <div className="hidden md:grid grid-cols-3 gap-6">
-                    {brands.slice(0, 3).map((brand) => (
-                        <Card key={brand._id} brand={brand} />
-                    ))}
-                </div>
-
-                {/* Mobile Slider Layout - Show 1 card at a time */}
-                <div
-                    className="md:hidden relative"
-                    onMouseEnter={() => setIsPaused(true)}
-                    onMouseLeave={() => setIsPaused(false)}
-                    onTouchStart={() => setIsPaused(true)}
-                    onTouchEnd={() => setIsPaused(false)}
-                >
-                    <div className="overflow-hidden rounded-[32px]">
-                        <motion.div
-                            className="flex"
-                            drag="x"
-                            dragConstraints={{ left: 0, right: 0 }}
-                            dragElastic={0.4}
-                            onDragEnd={(e, { offset, velocity }) => {
-                                const swipeThreshold = 50;
-                                const velocityThreshold = 500;
-
-                                if (offset.x < -swipeThreshold || velocity.x < -velocityThreshold) {
-                                    nextSlide();
-                                } else if (offset.x > swipeThreshold || velocity.x > velocityThreshold) {
-                                    prevSlide();
-                                }
-                                // Reset pause state after interaction
-                                setTimeout(() => setIsPaused(false), 3000);
-                            }}
-                            animate={{ x: `-${currentSlide * 100}%` }}
-                            transition={{
-                                x: { type: "spring", stiffness: 200, damping: 25, mass: 0.8 }
+                <div className="flex flex-col items-center mb-10 overflow-visible relative">
+                    <div className="absolute top-0 left-0 w-full h-full opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#2D1B14 1px, transparent 1px)', size: '20px 20px' }} />
+                    <div className="relative flex items-center justify-center gap-8">
+                        <h2
+                            className="text-4xl md:text-8xl font-[1000] uppercase tracking-tighter leading-none text-[#FFF5E1] relative z-10 select-none"
+                            style={{ 
+                                textShadow: `
+                                    1px 1px 0px #2D1B14,
+                                    2px 2px 0px #2D1B14,
+                                    3px 3px 0px #2D1B14,
+                                    4px 4px 0px #2D1B14,
+                                    5px 5px 0px #2D1B14,
+                                    6px 6px 0px #2D1B14,
+                                    7px 7px 0px #2D1B14,
+                                    8px 8px 0px #2D1B14,
+                                    9px 9px 0px #2D1B14,
+                                    10px 10px 0px #2D1B14
+                                `,
+                                WebkitTextStroke: '2px #2D1B14'
                             }}
                         >
-                            {brands.map((brand) => (
-                                <div key={brand._id} className="min-w-full flex-shrink-0 px-1">
-                                    <Card brand={brand} />
-                                </div>
-                            ))}
-                        </motion.div>
+                            FEATURED BRANDS
+                        </h2>
+                        
+                        {/* Decorative Wavy Lines (Postmark style) */}
+                        <div className="hidden md:block opacity-40 select-none pointer-events-none">
+                            <svg width="120" height="60" viewBox="0 0 100 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M0 10C15 10 20 20 35 20C50 20 55 10 70 10C85 10 90 20 105 20" stroke="#2D1B14" strokeWidth="2.5" strokeLinecap="round" />
+                                <path d="M0 20C15 20 20 30 35 30C50 30 55 20 70 20C85 20 90 30 105 30" stroke="#2D1B14" strokeWidth="2.5" strokeLinecap="round" />
+                                <path d="M0 30C15 30 20 40 35 40C50 40 55 30 70 30C85 30 90 40 105 40" stroke="#2D1B14" strokeWidth="2.5" strokeLinecap="round" />
+                                <path d="M0 40C15 40 20 50 35 50C50 50 55 40 70 40C85 40 90 50 105 50" stroke="#2D1B14" strokeWidth="2.5" strokeLinecap="round" />
+                            </svg>
+                        </div>
                     </div>
+                </div>
 
-                    {/* Dot Indicators */}
-                    <div className="absolute bottom-4 left-0 right-0 z-20 flex justify-center gap-2">
-                        {brands.map((_, idx) => (
-                            <button
-                                key={idx}
-                                onClick={() => {
-                                    setCurrentSlide(idx);
-                                    setIsPaused(true);
-                                    setTimeout(() => setIsPaused(false), 5000);
-                                }}
-                                className={`h-1.5 transition-all duration-500 rounded-full shadow-lg ${currentSlide === idx ? 'w-8 bg-gray-800' : 'w-2 bg-gray-400 hover:bg-gray-600'
-                                    }`}
-                                aria-label={`Go to slide ${idx + 1}`}
-                            />
-                        ))}
+                {/* Unified Slider Layout */}
+                <div
+                    className="relative pr-6"
+                    onMouseEnter={() => setIsPaused(true)}
+                    onMouseLeave={() => setIsPaused(false)}
+                >
+                    <div className="overflow-visible">
+                        <motion.div 
+                            className="flex gap-6"
+                            initial={false}
+                        >
+                            <AnimatePresence mode='popLayout'>
+                                {brands.map((brand, index) => (
+                                    <motion.div
+                                        key={brand._id}
+                                        layout
+                                        initial={{ opacity: 0, scale: 0.9, x: 20 }}
+                                        animate={{ opacity: 1, scale: 1, x: 0 }}
+                                        exit={{ opacity: 0, scale: 0.9, x: -20 }}
+                                        transition={{ 
+                                            type: "spring", 
+                                            stiffness: 300, 
+                                            damping: 30,
+                                            opacity: { duration: 0.2 }
+                                        }}
+                                        className="min-w-full md:min-w-[calc(50%-12px)] flex-shrink-0"
+                                    >
+                                        <Card brand={brand} />
+                                    </motion.div>
+                                ))}
+                            </AnimatePresence>
+                        </motion.div>
                     </div>
                 </div>
             </div>
@@ -138,17 +138,31 @@ function Card({ brand }) {
     return (
         <Link
             href={brand.redirectUrl}
-            className="relative block w-full h-[100px] md:h-[300px] overflow-hidden rounded-[32px] group transition-transform duration-500 hover:scale-[1.01] shadow-lg"
+            className="group relative block w-full h-[200px] md:h-[450px] overflow-hidden rounded bg-stone-50 transition-all duration-700 hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)]"
         >
+            <div className="absolute inset-0 bg-gradient-to-tr from-black/20 via-transparent to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-10" />
+            
             <img
                 src={brand.image}
                 alt={brand.title}
-                className="absolute inset-0 w-full h-full object-cover"
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
             />
-            {/* Soft Overlay */}
-            <div className="absolute inset-0 bg-black/[0.04] group-hover:bg-black/[0.08] transition-colors duration-300"></div>
+            
+            {/* Soft Glass Overlay */}
+            <div className="absolute inset-0 bg-black/5 group-hover:bg-black/0 transition-colors duration-500" />
+            
+            {/* Bottom Glow */}
+            <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+            
+            {/* Branding Indicator (Subtle) */}
+            <div className="absolute bottom-8 left-8 z-20 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+                <div className="px-5 py-2 rounded-full bg-white/90 backdrop-blur-md text-black text-xs font-bold tracking-widest uppercase shadow-xl">
+                    Discover {brand.title}
+                </div>
+            </div>
 
-
+            {/* Edge Light */}
+            <div className="absolute inset-0 border border-white/0 group-hover:border-white/20 rounded-[40px] transition-colors duration-700 pointer-events-none z-30" />
         </Link>
     )
 }

@@ -52,25 +52,7 @@ export default function Home() {
         {/* Promotional Cards - Visual marketing banners */}
         <PromotionalCards />
 
-        {/* New Arrivals - Latest products */}
-        <NewArrivals />
-
-        {/* Special Offer Banner - Countdown timer with featured deals */}
-        <SpecialOfferBanner />
-
-        {/* Promotional Banners - Two colorful promotional sections */}
-        <PromotionalBanners />
-
-        {/* Best Sellers - Popular products */}
-        <BestSellers />
-
-
-
-        {/* Trending Products - Hot items */}
-        <TrendingProducts />
-
-        {/* Countdown Banner - Flash sale timer */}
-        <CountdownBanner />
+        
 
         {/* Features Bar - Key benefits */}
         <FeaturesBar />
