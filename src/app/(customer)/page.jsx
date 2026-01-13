@@ -94,7 +94,7 @@ export default function HomePage() {
               {/* Cart */}
               <Link href="/cart" className="relative p-3 bg-green-600 hover:bg-green-700 rounded-lg">
                 <FiShoppingBag className="w-6 h-6 text-white" />
-                {cart.length > 0 && (
+                {cart?.length > 0 && (
                   <span className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white text-xs font-semibold rounded-full flex items-center justify-center">
                     {cart.length}
                   </span>
