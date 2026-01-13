@@ -314,8 +314,6 @@ export default function ProductDetailPage() {
     if (!product) return
 
     addToCart(product, quantity, activeVariant || null)
-
-    toast.success('Added to cart!')
   }
 
   const handleBuyNow = () => {

@@ -281,12 +281,9 @@ export default function CheckoutPage() {
           <button onClick={() => router.back()} className="p-1 px-0 text-blue-600">
             <FiArrowLeft className="w-6 h-6" />
           </button>
-          <h1 className="text-sm font-semibold text-gray-800 tight">Secure Checkout</h1>
+          <h1 className="text-[14px] font-semibold text-gray-800 tighter">Secure Checkout</h1>
         </div>
-        <div className="flex items-center gap-2">
-          <FiShield className="w-5 h-5 text-blue-600" />
-          <span className="text-[10px] font-semibold text-blue-600">PlanetShield</span>
-        </div>
+       
       </div>
 
       {/* Stepper */}
@@ -330,7 +327,7 @@ export default function CheckoutPage() {
                       <FiMapPin className="w-6 h-6" />
                     </div>
                     <div>
-                      <h3 className="text-[14px] font-semibold text-gray-900">Delivery Address</h3>
+                      <h3 className="text-[13px] font-semibold text-gray-900 tighter">Delivery Address</h3>
                       {currentStep === 1 && (
                         <p className="text-[10px] text-gray-400 font-semibold">Where should we deliver your planet bag?</p>
                       )}
@@ -361,8 +358,8 @@ export default function CheckoutPage() {
 
                     <div className="pt-8 border-t border-gray-100">
                       <div className="flex items-center justify-between mb-6">
-                        <h4 className="text-[14px] font-semibold text-gray-900">Shipping Speed</h4>
-                        <span className="text-[11px] font-semibold text-blue-600 px-3 py-1 bg-blue-50 rounded-lg">Eco-Friendly Shipping</span>
+                        <h4 className="text-[13px] font-semibold text-gray-900 tighter">Shipping Speed</h4>
+                        <span className="text-[10px] font-semibold text-blue-600 px-3 py-1 bg-blue-50 rounded-lg wider">Eco-Friendly Shipping</span>
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {[
@@ -384,13 +381,13 @@ export default function CheckoutPage() {
                                 <method.icon className="w-6 h-6" />
                               </div>
                               <div>
-                                <p className="text-[14px] font-semibold text-gray-900">{method.name}</p>
+                                <p className="text-[13px] font-semibold text-gray-900 tighter">{method.name}</p>
                                 <p className="text-[10px] text-gray-400 font-semibold">{method.time} • {method.desc}</p>
                               </div>
                             </div>
                             <div className="mt-4 flex justify-between items-center">
-                              <span className={`text-[13px] font-semibold ${method.price === 'FREE' ? 'text-emerald-500' : 'text-gray-900'}`}>{method.price}</span>
-                              {method.id === 'express' && <span className="text-[10px] bg-blue-100 text-blue-600 px-2 py-1 rounded-md font-semibold">Recommended</span>}
+                              <span className={`text-[13px] font-semibold tighter ${method.price === 'FREE' ? 'text-emerald-500' : 'text-gray-900'}`}>{method.price}</span>
+                              {method.id === 'express' && <span className="text-[9px] bg-blue-100 text-blue-600 px-2 py-1 rounded-md font-semibold widest">Recommended</span>}
                             </div>
                           </div>
                         ))}
@@ -399,7 +396,7 @@ export default function CheckoutPage() {
 
                     <button
                       onClick={() => { if (validateShipping()) setCurrentStep(2) }}
-                      className="w-full py-5 bg-blue-600 text-white font-semibold rounded-[24px] shadow-xl shadow-blue-600/20 active:scale-[0.98] transition-all hidden md:block text-[15px]"
+                      className="w-full py-5 bg-blue-600 text-white font-semibold rounded-[24px] shadow-xl shadow-blue-600/20 active:scale-[0.98] transition-all hidden md:block text-[14px] wider"
                     >
                       Confirm Address & Choose Payment
                     </button>
@@ -411,9 +408,9 @@ export default function CheckoutPage() {
                         <FiCheckCircle className="w-6 h-6" />
                       </div>
                       <div>
-                        <p className="text-[15px] font-semibold text-gray-900">{shippingInfo.name}</p>
-                        <p className="text-xs text-blue-600/70 font-medium mt-1">{deliveryMethod.charAt(0).toUpperCase() + deliveryMethod.slice(1)} Delivery • {deliveryDates[deliveryMethod]}</p>
-                        <p className="text-xs text-gray-400 mt-1">{shippingInfo.addressLine1}, {shippingInfo.city}</p>
+                        <p className="text-[14px] font-semibold text-gray-900 tighter">{shippingInfo.name}</p>
+                        <p className="text-[10px] text-blue-600/70 font-semibold mt-1">{deliveryMethod.charAt(0).toUpperCase() + deliveryMethod.slice(1)} Delivery • {deliveryDates[deliveryMethod]}</p>
+                        <p className="text-[10px] text-gray-400 font-semibold mt-1">{shippingInfo.addressLine1}, {shippingInfo.city}</p>
                       </div>
                     </div>
                   </div>
@@ -435,7 +432,7 @@ export default function CheckoutPage() {
                           <BiTagAlt className="w-5 h-5" />
                         </div>
                         <div>
-                          <p className="text-[13px] font-semibold text-gray-900">Available Promotions</p>
+                          <p className="text-[13px] font-semibold text-gray-900 tighter">Available Promotions</p>
                           <p className="text-[10px] text-gray-400 font-semibold">Maximize your planet savings</p>
                         </div>
                       </div>
@@ -449,19 +446,19 @@ export default function CheckoutPage() {
                         placeholder="Enter Promo Code"
                         value={couponCode}
                         onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
-                        className="flex-1 px-6 py-2 bg-white border border-gray-100 rounded-2xl text-[14px] font-semibold focus:ring-2 focus:ring-blue-600/20 placeholder:text-gray-300 transition-all"
+                        className="flex-1 px-6 py-2 bg-white border border-gray-100 rounded-2xl text-[13px] font-semibold focus:ring-2 focus:ring-blue-600/20 placeholder:text-gray-300 transition-all"
                       />
                       <button
                         onClick={handleApplyCoupon}
-                        className="px-8 bg-blue-600 text-white text-[13px] font-semibold rounded-2xl shadow-lg shadow-blue-600/10 active:scale-95 transition-all"
+                        className="px-8 bg-blue-600 text-white text-[12px] font-semibold rounded-2xl shadow-lg shadow-blue-600/10 active:scale-95 transition-all wider"
                       >
                         Apply Code
                       </button>
                     </div>
                     {!appliedCoupon && (
                       <div className="mt-4 flex items-center gap-2 px-1">
-                        <span className="text-[10px] font-semibold text-blue-600 bg-blue-100 px-2 py-1 rounded">SAVE20</span>
-                        <p className="text-[10px] text-gray-400 font-medium">Use code <span className="text-blue-600">SAVE20</span> for 20% flat discount!</p>
+                        <span className="text-[9px] font-semibold text-blue-600 bg-blue-100 px-2 py-1 rounded widest">SAVE20</span>
+                        <p className="text-[10px] text-gray-400 font-semibold">Use code <span className="text-blue-600 font-semibold">SAVE20</span> for 20% flat discount!</p>
                       </div>
                     )}
                   </div>
@@ -477,8 +474,8 @@ export default function CheckoutPage() {
                           <BiLeaf className="text-[#FFD23F] w-7 h-7" />
                         </div>
                         <div>
-                          <p className="text-sm font-semibold">Green Orbit Contribution</p>
-                          <p className="text-xs text-blue-100/70 font-semibold italic">Empower your carbon neutrality</p>
+                          <p className="text-[13px] font-semibold tighter">Green Orbit Contribution</p>
+                          <p className="text-[10px] text-blue-100/70 font-semibold italic">Empower your carbon neutrality</p>
                         </div>
                       </div>
 
@@ -490,9 +487,8 @@ export default function CheckoutPage() {
                           className="w-6 h-6 rounded-lg border-2 border-white/20 bg-transparent text-[#FFD23F] focus:ring-0 checked:bg-[#FFD23F] transition-all"
                         />
                         <div>
-                          <span className="text-xs font-semibold block">Plant a tree with this package</span>
-                          <span className="text-xs text-blue-100 font-medium">Verified PlanetShield™ environmental asset</span>
-                        </div>
+                          <span className="text-[11px] font-semibold block tighter">Plant a tree with this package</span>
+                         </div>
                       </label>
 
 
@@ -504,7 +500,7 @@ export default function CheckoutPage() {
                               setDonationAmount(amt)
                               setIsDonationChecked(true)
                             }}
-                            className={`min-w-[70px] px-1 py-1 rounded-2xl border-2 text-[15px] font-semibold transition-all ${isDonationChecked && donationAmount === amt ? 'border-[#FFD23F] bg-[#FFD23F] text-blue-900 shadow-lg shadow-amber-400/20' : 'border-white/10 bg-white/5 text-white hover:bg-white/10'}`}
+                            className={`min-w-[70px] px-1 py-1 rounded-2xl border-2 text-[14px] font-semibold transition-all tighter ${isDonationChecked && donationAmount === amt ? 'border-[#FFD23F] bg-[#FFD23F] text-blue-900 shadow-lg shadow-amber-400/20' : 'border-white/10 bg-white/5 text-white hover:bg-white/10'}`}
                           >
                             {currencyConfig.symbol}{amt}
                           </button>
@@ -517,7 +513,7 @@ export default function CheckoutPage() {
 
                   {/* Payment Method UI - Third in Sequence */}
                   <div className="mb-8">
-                    <h4 className="text-sm font-semibold text-gray-700 mb-6 [3px]">Payment Method</h4>
+                    <h4 className="text-[13px] font-semibold text-gray-900 mb-6 wider tighter">Payment Method</h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                       {[
                         { id: 'online', name: 'Secure Online', sub: 'Cards, Wallet, Netbanking', icon: FiShield, highlight: 'Speedy & Secure', badge: 'Recommended', color: 'blue' },
@@ -536,8 +532,8 @@ export default function CheckoutPage() {
                               <opt.icon className="w-7 h-7" />
                             </div>
                             <div>
-                              <p className="text-sm font-semibold text-gray-900">{opt.name}</p>
-                              <p className="text-xs text-gray-400 font-medium mt-1">{opt.sub}</p>
+                              <p className="text-[13px] font-semibold text-gray-900 tighter">{opt.name}</p>
+                              <p className="text-[10px] text-gray-400 font-semibold mt-1">{opt.sub}</p>
                             </div>
                           </div>
 
@@ -556,11 +552,11 @@ export default function CheckoutPage() {
                             <FaRegMoneyBillAlt className="w-7 h-7" />
                           </div>
                           <div>
-                            <p className="text-sm font-semibold text-gray-900 flex items-center gap-2">
+                            <p className="text-[13px] font-semibold text-gray-900 flex items-center gap-2 tighter">
                               Cash on Delivery
-                              <span className="text-[10px] font-medium bg-amber-100 text-amber-700 px-2 py-0.5 rounded italic">Higher Friction</span>
+                              <span className="text-[9px] font-semibold bg-amber-100 text-amber-700 px-2 py-0.5 rounded italic widest">Higher Friction</span>
                             </p>
-                            <p className="text-xs text-gray-400 font-semibold mt-1">Pay 10% convenience fee for manual collection</p>
+                            <p className="text-[10px] text-gray-400 font-semibold mt-1">Pay 10% convenience fee for manual collection</p>
                           </div>
                         </div>
                         <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${paymentMethod === 'cod' ? 'border-amber-500 bg-amber-500' : 'border-gray-200'}`}>
@@ -581,7 +577,7 @@ export default function CheckoutPage() {
                   <button
                     onClick={handlePlaceOrder}
                     disabled={loading}
-                    className="w-full py-6 bg-blue-600 text-white font-semibold rounded-[28px] shadow-2xl shadow-blue-600/20 active:scale-[0.98] transition-all hidden md:block mt-10 text-lg"
+                    className="w-full py-6 bg-blue-600 text-white font-semibold rounded-[28px] shadow-2xl shadow-blue-600/20 active:scale-[0.98] transition-all hidden md:block mt-10 text-[14px] wider"
                   >
                     {loading ? 'Processing Transaction...' : 'Complete Payment & Order'}
                   </button>
@@ -686,7 +682,7 @@ export default function CheckoutPage() {
               }
             }}
             disabled={loading}
-            className="flex-1 py-3 bg-blue-600 text-white font-semibold text-[15px] rounded-[24px] shadow-2xl shadow-blue-600/30 active:scale-95 transition-all text-center"
+            className="flex-1 py-3 bg-blue-600 text-white font-semibold text-[14px] rounded-[24px] shadow-2xl shadow-blue-600/30 active:scale-95 transition-all text-center wider"
           >
             {loading ? 'Wait...' : (currentStep === 1 ? 'Go to Payment' : 'Confirm Order')}
           </button>

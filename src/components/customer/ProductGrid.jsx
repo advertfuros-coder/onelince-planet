@@ -28,7 +28,7 @@ export default function ProductGrid({
 }) {
   const [wishlist, setWishlist] = useState([])
   const [viewMode, setViewMode] = useState('grid') // 'grid' or 'list'
-  const { addItem } = useCart()
+  const { addToCart } = useCart()
 
   const toggleWishlist = (productId) => {
     setWishlist(prev =>
@@ -42,8 +42,7 @@ export default function ProductGrid({
   }
 
   const handleAddToCart = (product) => {
-    addItem(product, 1)
-    toast.success(`${product.name} added to cart!`)
+    addToCart(product, 1)
   }
 
   const generatePageNumbers = () => {

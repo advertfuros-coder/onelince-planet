@@ -16,7 +16,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 function ProductsContent() {
     const searchParams = useSearchParams()
     const { country } = useCurrency()
-    const { addItem } = useCart()
+    const { addToCart } = useCart()
     const [products, setProducts] = useState([])
     const [loading, setLoading] = useState(true)
     const [totalPages, setTotalPages] = useState(0)
@@ -84,8 +84,7 @@ function ProductsContent() {
     }
 
     const handleAddToCart = (product) => {
-        addItem(product, 1)
-        toast.success(`${product.name} added to cart!`)
+        addToCart(product, 1)
     }
 
     const generatePageNumbers = () => {
@@ -124,7 +123,7 @@ function ProductsContent() {
 
     return (
         <div className="min-h-screen bg-white">
-            <div className="max-w-[1440px] mx-auto md:px-6 px-4 py-6">
+            <div className="max-w-8xl mx-auto md:px-6 px-4 py-6">
                 {/* Breadcrumbs */}
                 {/* <nav className="flex items-center gap-2 text-[13px] text-gray-500 mb-8 font-medium">
                     <Link href="/" className="hover:text-blue-600 transition-colors">Home</Link>

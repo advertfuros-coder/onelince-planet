@@ -21,19 +21,23 @@ import {
   FiChevronDown,
   FiMapPin,
   FiInfo,
-  FiChevronRight
+  FiChevronRight,
+  FiCheck
 } from 'react-icons/fi'
 import { BiTagAlt } from 'react-icons/bi'
 import Button from '@/components/ui/Button'
 import Price, { StrikePrice } from '@/components/ui/Price'
 import { useCurrency } from '@/lib/context/CurrencyContext'
+import CouponBanner from '@/components/customer/CouponBanner'
 
 export default function CartPage() {
   const router = useRouter()
-  const { items, removeFromCart, updateQuantity, getCartTotal, getCartCount, isLoaded } = useCart()
+  const { items, removeFromCart, updateQuantity, getCartTotal, getCartCount, isLoaded, addToCart } = useCart()
   const { formatPrice, currencyConfig } = useCurrency()
   const [deliveryEstimates, setDeliveryEstimates] = useState({})
   const [loadingEstimates, setLoadingEstimates] = useState(false)
+  const [recommendedProducts, setRecommendedProducts] = useState([])
+  const [loadingRecommended, setLoadingRecommended] = useState(false)
 
   // Selection state
   const [selectedItems, setSelectedItems] = useState([])
@@ -98,6 +102,38 @@ export default function CartPage() {
     }
   }, [items, isLoaded])
 
+  // Fetch recommended products based on cart items
+  useEffect(() => {
+    const fetchRecommendedProducts = async () => {
+      if (items.length === 0) {
+        setRecommendedProducts([])
+        return
+      }
+
+      setLoadingRecommended(true)
+      try {
+        // Get unique product IDs from cart
+        const cartProductIds = items.map(item => item.productId)
+
+        // Fetch recommended products (exclude cart items)
+        const response = await fetch(`/api/products?limit=6&exclude=${cartProductIds.join(',')}`)
+        const data = await response.json()
+
+        if (data.success && data.products) {
+          setRecommendedProducts(data.products.slice(0, 6))
+        }
+      } catch (error) {
+        console.error('Failed to fetch recommended products:', error)
+      } finally {
+        setLoadingRecommended(false)
+      }
+    }
+
+    if (isLoaded) {
+      fetchRecommendedProducts()
+    }
+  }, [items, isLoaded])
+
   if (!isLoaded) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-blue-50/30">
@@ -148,29 +184,36 @@ export default function CartPage() {
           </button>
           <h1 className="text-sm font-semibold text-gray-800 tighter ">Shopping Bag</h1>
         </div>
-       </div>
+      </div>
 
       {/* Stepper */}
-      <div className="bg-white md:block hidden px-4 py-4 border-b border-gray-100 shadow-sm">
-        <div className="flex items-center justify-between max-w-xs mx-auto text-[10px] font-semibold  [2px]">
-          <div className="flex flex-col items-center gap-1.5 ">
-            <div className="w-2.5 h-2.5 rounded-full bg-blue-600 ring-4 ring-blue-50"></div>
-            <span className="text-blue-600">Bag</span>
+      <div className="bg-white md:block hidden px-4 py-6 border-b border-gray-100">
+        <div className="flex items-center justify-between max-w-sm mx-auto">
+          <div className="flex flex-col items-center gap-2">
+            <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs font-semibold shadow-lg shadow-blue-200">
+              <FiCheck className="w-4 h-4" />
+            </div>
+            <span className="text-[10px] font-semibold text-blue-600">Bag</span>
           </div>
-          <div className="flex-1 h-[2px] bg-gray-200 mx-2 -mt-4"></div>
-          <div className="flex flex-col items-center gap-1.5 opacity-40">
-            <div className="w-2.5 h-2.5 rounded-full bg-gray-300"></div>
-            <span>Address</span>
+          <div className="flex-1 h-[2px] bg-gray-200 mx-2 -mt-6"></div>
+          <div className="flex flex-col items-center gap-2">
+            <div className="w-8 h-8 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center text-xs font-semibold">
+              2
+            </div>
+            <span className="text-[10px] font-semibold text-gray-400">Address</span>
           </div>
-          <div className="flex-1 h-[2px] bg-gray-200 mx-2 -mt-4"></div>
-          <div className="flex flex-col items-center gap-1.5 opacity-40">
-            <div className="w-2.5 h-2.5 rounded-full bg-gray-300"></div>
-            <span>Payment</span>
+          <div className="flex-1 h-[2px] bg-gray-200 mx-2 -mt-6"></div>
+          <div className="flex flex-col items-center gap-2">
+            <div className="w-8 h-8 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center text-xs font-semibold">
+              3
+            </div>
+            <span className="text-[10px] font-semibold text-gray-400">Payment</span>
           </div>
         </div>
       </div>
 
-   
+
+
       {/* Selection Control Bar */}
       <div className="bg-white px-4 py-4 mb-1 flex items-center justify-between border-b border-gray-100">
         <div className="flex items-center gap-3">
@@ -212,11 +255,11 @@ export default function CartPage() {
               </div>
 
               {/* Product Visual */}
-              <Link href={`/products/${item.productId}`} className="w-32 aspect-[3/3] bg-gray -50 roun ded-3xl overflow-hidden flex-shrink-0 bo rder border-gray-100 flex items-center justify-center group">
+              <Link href={`/products/${item.productId}`} className="w-32 aspect-square bg-gray-50 rounded-3xl overflow-hidden flex-shrink-0 border border-gray-100 flex items-center justify-center group">
                 <img
-                  src={item.image?.startsWith('http') ? item.image : item.image || '/placeholder-product.png'}
+                  src={item.image || '/placeholder-product.png'}
                   alt={item.name}
-                  className="w-full h-full object-contain p3 mix-blend-multiply group-hover:scale-110 transition-transform duration-500"
+                  className="w-full h-full object-contain p-3 mix-blend-multiply group-hover:scale-110 transition-transform duration-500"
                 />
               </Link>
 
@@ -234,7 +277,7 @@ export default function CartPage() {
 
                 {/* Attribute Pickers */}
                 <div className="flex gap-2 mb-4">
-                  
+
                   <button onClick={() => updateQuantity(item.productId, item.quantity + 1, item.variant)} className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 rounded-2xl text-[10px] font-semibold text-gray-700 border border-gray-100  tighter">
                     QTY: {item.quantity} <FiChevronDown className="w-3.5 h-3.5 text-gray-400" />
                   </button>
@@ -255,7 +298,15 @@ export default function CartPage() {
                   </div>
                   <div className="flex items-center gap-2 text-[10px] text-emerald-600 font-semibold  wider">
                     <FiTruck className="w-3 h-3" />
-                    <span>Delivery: <span className="text-gray-900">Est. 9 Jan 2026</span></span>
+                    <span>Delivery: <span className="text-gray-900">
+                      {deliveryEstimates[item.productId] ? (
+                        `Est. ${new Date(deliveryEstimates[item.productId].etd).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`
+                      ) : loadingEstimates ? (
+                        'Calculating...'
+                      ) : (
+                        'Est. 2-5 days'
+                      )}
+                    </span></span>
                   </div>
                 </div>
               </div>
@@ -264,77 +315,73 @@ export default function CartPage() {
         })}
       </div>
 
-      {/* Discovery Section (You May Also Like) */}
-      <div className="mt-10 px-4">
-        <div className="flex items-center gap-2 mb-6">
-          <FiShoppingBag className="w-6 h-6 text-blue-600" />
-          <p className="text-[13px] font-semibold text-gray-900   ]">You May Also Like</p>
-        </div>
-        <div className="flex gap-2 overflow-x-auto no-scrollbar pb-6">
-          <button className="px-6 py-3 rounded-full border-2 border-blue-600 bg-blue-600 text-[10px] font-semibold text-white shadow-xl shadow-blue-600/10  widest whitespace-nowrap">Explore All</button>
-          {['Tech Essentials', 'Fashion', 'Eco-Decor', 'Fitness'].map(cat => (
-            <button key={cat} className="px-6 py-3 rounded-full border-2 border-white bg-white text-[10px] font-semibold text-gray-500 shadow-sm  widest whitespace-nowrap">{cat}</button>
-          ))}
-        </div>
+      {/* You May Also Like Section */}
+      {recommendedProducts.length > 0 && (
+        <div className="mt-10 px-4">
+          <div className="flex items-center gap-2 mb-6">
+            <FiShoppingBag className="w-6 h-6 text-blue-600" />
+            <p className="text-[13px] font-semibold text-gray-900">You May Also Like</p>
+          </div>
 
-        <div className="flex gap-4 overflow-x-auto no-scrollbar">
-          {[
-            { name: 'Pexpo', sub: 'Premium Craft Sipper', price: 299, original: 649, off: '54% OFF', img: 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=500&h=500&fit=crop' },
-            { name: 'Neutriderm', sub: 'Vitamin E Science', price: 1000, img: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&h=500&fit=crop' },
-            { name: 'Alexv', sub: 'Outerworld Jacket', price: 499, original: 1299, off: '60% OFF', img: 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=500&h=500&fit=crop' }
-          ].map((prod, i) => (
-            <div key={i} className="min-w-[170px] max-w-[170px] bg-white rounded-[32px] border border-gray-100 p-2 flex flex-col shadow-sm group">
-              <div className="aspect-square bg-gray-50 rounded-[28px] flex items-center justify-center p-3 relative overflow-hidden">
-                <img src={prod.img} className="w-full h-full object-cover mix-blend-multiply group-hover:scale-110 transition-transform duration-500" /> 
-                <div className="absolute top-2 right-2 w-7 h-7 bg-white/80 backdrop-blur rounded-full flex items-center justify-center text-blue-600 shadow-sm">
-                  <FiHeart className="w-3.5 h-3.5" />
-                </div>
-              </div>
-              <div className="p-3 pt-4 flex-1 flex flex-col">
-                <h5 className="text-[11px] font-semibold text-blue-600  wider truncate mb-1">{prod.name}</h5>
-                <p className="text-[10px] text-gray-400 font-semibold truncate mb-3">{prod.sub}</p>
-                <div className="mt-auto">
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="text-[13px] font-semibold text-gray-900">{currencyConfig.symbol}{prod.price}</span>
-                    {prod.original && <StrikePrice amount={prod.original} className="text-[9px] text-gray-300" />}
+          <div className="flex gap-4 overflow-x-auto no-scrollbar pb-6">
+            {recommendedProducts.map((product) => {
+              const finalPrice = product.pricing?.salePrice || product.pricing?.basePrice || 0
+              const originalPrice = product.pricing?.basePrice
+              const discount = originalPrice && finalPrice < originalPrice
+                ? Math.round(((originalPrice - finalPrice) / originalPrice) * 100)
+                : 0
+
+              return (
+                <div key={product._id} className="min-w-[170px] max-w-[170px] bg-white rounded-[32px] border border-gray-100 p-2 flex flex-col shadow-sm group">
+                  <Link href={`/products/${product._id}`} className="aspect-square bg-gray-50 rounded-[28px] flex items-center justify-center p-3 relative overflow-hidden">
+                    <img
+                      src={product.images?.[0]?.url || product.images?.[0] || '/placeholder-product.png'}
+                      alt={product.name}
+                      className="w-full h-full object-contain mix-blend-multiply group-hover:scale-110 transition-transform duration-500"
+                    />
+                    {discount > 0 && (
+                      <div className="absolute top-2 left-2 bg-red-500 text-white px-2 py-1 rounded-full text-[9px] font-bold">
+                        {discount}% OFF
+                      </div>
+                    )}
+                  </Link>
+                  <div className="p-3 pt-4 flex-1 flex flex-col">
+                    <Link href={`/products/${product._id}`}>
+                      <h5 className="text-[11px] font-semibold text-blue-600 wider truncate mb-1">{product.name}</h5>
+                    </Link>
+                    <p className="text-[10px] text-gray-400 font-semibold truncate mb-3 line-clamp-1">
+                      {product.category || 'Product'}
+                    </p>
+                    <div className="mt-auto">
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="text-[13px] font-semibold text-gray-900">
+                          {currencyConfig.symbol}{finalPrice.toLocaleString()}
+                        </span>
+                        {originalPrice && originalPrice > finalPrice && (
+                          <span className="text-[9px] text-gray-300 line-through">
+                            {currencyConfig.symbol}{originalPrice.toLocaleString()}
+                          </span>
+                        )}
+                      </div>
+                      <button
+                        onClick={() => addToCart(product, 1)}
+                        className="w-full py-2.5 bg-gray-50 rounded-2xl text-[9px] font-semibold text-blue-600 widest border border-blue-50 hover:bg-blue-600 hover:text-white transition-all"
+                      >
+                        Add to bag
+                      </button>
+                    </div>
                   </div>
-                  <button className="w-full py-2.5 bg-gray-50 rounded-2xl text-[9px] font-semibold text-blue-600  widest border border-blue-50 hover:bg-blue-600 hover:text-white transition-all">Add to bag</button>
                 </div>
-              </div>
-            </div>
-          ))}
+              )
+            })}
+          </div>
         </div>
-      </div>
+      )}
 
-      {/* Coupons/Incentives Section */}
-      <div className="mt-10 px-4">
-        <h3 className="text-[10px] font-semibold text-gray-400  [3px] mb-4">Planet Rewards</h3>
-        <div className="bg-white p-5 rounded-[28px] flex items-center justify-between shadow-xl shadow-blue-600/5 mb-3 border border-blue-50">
-          <div className="flex items-center gap-4">
-            <div className="w-10 h-10 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600">
-              <BiTagAlt className="w-6 h-6" />
-            </div>
-            <div>
-              <p className="text-[13px] font-semibold text-gray-900  tighter">Best Planet Coupon</p>
-              <p className="text-[10px] text-gray-400 font-semibold">Automatic savings applied</p>
-            </div>
-          </div>
-          <FiChevronRight className="text-blue-600 w-6 h-6" />
-        </div>
-        <div className="bg-gradient-to-br from-blue-600 to-blue-800 p-6 rounded-[32px] relative overflow-hidden shadow-2xl shadow-blue-500/10">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16 blur-2xl"></div>
-          <div className="flex items-start justify-between mb-4">
-            <div>
-              <h4 className="text-[18px] font-semibold text-[#FFD23F] tighter">Save {currencyConfig.symbol}301 Extra</h4>
-              <p className="text-[11px] text-blue-100 font-semibold mt-1">On orders exceeding {currencyConfig.symbol}1,299</p>
-            </div>
-            <div className="px-5 py-2 bg-white/10 backdrop-blur rounded-2xl border border-white/20 text-[10px] font-semibold text-white  widest">
-              PLANET301
-            </div>
-          </div>
-          <button className="w-full py-4 bg-[#FFD23F] text-blue-600 font-semibold text-[12px] rounded-2xl  [3px] active:scale-[0.98] transition-all">Claim Reward</button>
-        </div>
-      </div>
+
+
+      {/* Coupon Banner - Same as Homepage */}
+      <CouponBanner />
 
       {/* Financial Matrix (Price Details) */}
       <div className="mt-10 bg-white border-t-2 border-blue-50 p-6 pb-12 rounded-t-[40px] shadow-[0_-10px_30px_rgba(37,99,235,0.03)]">
@@ -368,7 +415,7 @@ export default function CartPage() {
 
       {/* Persistent Checkout Trigger */}
       {selectedCount > 0 && (
-        <div className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-xl border-t border-gray-100 p-5 z-40 lg:hidden shadow-[0_-10px_40px_rgba(0,0,0,0.1)]">
+        <div className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-xl border-t border-gray-100 p-5 z-40 l g:hidden shadow-[0_-10px_40px_rgba(0,0,0,0.1)]">
           <div className="flex items-center gap-5">
             <div className="flex-1">
               <p className="text-xl font-semibold text-blue-600 leading-none tighter">{currencyConfig.symbol}{Math.round(finalTotal).toLocaleString()}</p>

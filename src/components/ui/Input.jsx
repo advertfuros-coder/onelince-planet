@@ -19,7 +19,7 @@ const Input = forwardRef(({
       <input
         type={type}
         className={cn(
-          'w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent',
+          'w-full px-3 text-xs py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent',
           error ? 'border-red-500' : 'border-gray-300',
           className
         )}
@@ -27,7 +27,7 @@ const Input = forwardRef(({
         {...props}
       />
       {error && (
-        <p className="text-sm text-red-600">{error}</p>
+        <p className="text-xs text-red-600">{error}</p>
       )}
     </div>
   )

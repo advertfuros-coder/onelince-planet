@@ -34,6 +34,13 @@ export function CartProvider({ children }) {
   }, [items, isLoaded])
 
   const addToCart = (product, quantity = 1, variant = null) => {
+    console.log('=== ADD TO CART DEBUG ===');
+    console.log('Product object:', product);
+    console.log('Product images:', product.images);
+    console.log('Product images type:', typeof product.images);
+    console.log('First image:', product.images?.[0]);
+    console.log('Variant:', variant);
+    
     setItems(prevItems => {
       const existingItem = prevItems.find(
         item => item.productId === product._id &&
@@ -41,39 +48,70 @@ export function CartProvider({ children }) {
       )
 
       if (existingItem) {
-        setTimeout(() => toast.success('Updated cart quantity'), 0)
+        setTimeout(() => toast.success(`Updated ${product.name} quantity in cart`), 0)
         return prevItems.map(item =>
-          item.productId === product._id &&
+          item.productId === (product._id || product.id) &&
             JSON.stringify(item.variant) === JSON.stringify(variant)
             ? { ...item, quantity: item.quantity + quantity }
             : item
         )
       }
 
-      setTimeout(() => toast.success('Added to cart'), 0)
+      setTimeout(() => toast.success(`${product.name} added to cart`), 0)
 
-      const itemPrice = variant?.price || product.pricing?.salePrice || product.pricing?.basePrice;
-      const itemImage = (variant?.imageIndex !== undefined && product.images?.[variant.imageIndex]?.url)
-        || product.images?.[0]?.url;
-      const originalPrice = product.pricing?.basePrice || itemPrice * 1.25;
-      const sellerName = product.sellerId?.storeInfo?.storeName ||
-        product.sellerId?.businessInfo?.businessName ||
-        product.sellerId?.personalDetails?.fullName;
+      // Handle image extraction - product.images is an array of URL strings from the product detail page
+      let itemImage = '/placeholder-product.png'; // fallback
+      
+      if (product.images && Array.isArray(product.images)) {
+        if (variant && variant.imageIndex !== undefined && product.images[variant.imageIndex]) {
+          // If variant has a specific image index
+          const img = product.images[variant.imageIndex];
+          itemImage = typeof img === 'string' ? img : (img?.url || itemImage);
+        } else if (product.images[0]) {
+          // Use the first image
+          const img = product.images[0];
+          itemImage = typeof img === 'string' ? img : (img?.url || itemImage);
+        }
+      } else if (product.image) {
+        // Fallback to product.image if images array doesn't exist
+        itemImage = product.image;
+      }
 
-      console.log('Adding to cart - Image URL:', itemImage);
-      console.log('Product images:', product.images);
+      console.log('Extracted image URL:', itemImage);
+      
+      // Handle different price location variants
+      const itemPrice = variant?.price || 
+                        product.pricing?.salePrice || 
+                        product.pricing?.basePrice || 
+                        product.price || 
+                        0;
 
-      return [...prevItems, {
-        productId: product._id,
+      const originalPrice = product.pricing?.basePrice || product.originalPrice || itemPrice * 1.25;
+      
+      // Handle different seller name variants
+      const sellerName = product.seller?.name || 
+                         product.sellerId?.storeInfo?.storeName ||
+                         product.sellerId?.businessInfo?.businessName ||
+                         product.sellerId?.personalDetails?.fullName ||
+                         product.seller || 
+                         'Official Store';
+
+      const newItem = {
+        productId: product._id || product.id,
         name: product.name,
         price: itemPrice,
         originalPrice: originalPrice,
         image: itemImage,
         quantity,
         variant,
-        stock: variant?.stock ?? product.inventory?.stock,
+        stock: variant?.stock ?? product.inventory?.stock ?? product.stock,
         seller: sellerName
-      }]
+      };
+
+      console.log('New cart item:', newItem);
+      console.log('=== END DEBUG ===');
+
+      return [...prevItems, newItem]
     })
   }
 
@@ -133,7 +171,6 @@ export function CartProvider({ children }) {
     getCartTotal,
     getCartCount,
     isLoaded,
-    // Add these new values
     subtotal,
     shipping,
     tax,
