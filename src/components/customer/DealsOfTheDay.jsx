@@ -158,7 +158,7 @@ export default function TodaysBestDeals() {
                     </div>
 
                     {/* Black Strip (-20 deg) */}
-                    <div className="absolute top-1/2 left-1/2 w-[150%] -translate-x-1/2 -translate-y-1/2 -rotate-[8deg] bg-black py-1 border-y-2 border-white/10 z-10 shadow-xl opacity-90">
+                    <div className="absolute top-1/2 left-1/2 w-[150%] -translate-x-1/2 -translate-y-1/2 -rotate-[8deg] bg-black py-1 border-y-2 border-white/10 z-10 shadow-2xl opacity-100">
                         <div className="flex whitespace-nowrap animate-marquee-reverse">
                             {[...Array(10)].map((_, i) => (
                                 <span key={i} className="text-white text-xl md:text-3xl font-semibold  uppercase tracking-tighter flex items-center shrink-0">

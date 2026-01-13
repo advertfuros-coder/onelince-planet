@@ -69,7 +69,7 @@ export default function ProductCard({
             <img
               src={product.images[0].url}
               alt={product.name || 'Product image'}
-              className={`w-full h-full object-contain mix-blend-multiply ${!minimal ? 'group-hover:scale-110' : 'group-hover:scale-105'} transition-transform duration-700 ease-out`}
+              className={`w-full h-full ${variant === 'steal' ? 'object-cover' : 'object-contain mix-blend-multiply'} ${!minimal ? 'group-hover:scale-110' : 'group-hover:scale-105'} transition-transform duration-700 ease-out`}
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400">
@@ -136,24 +136,6 @@ export default function ProductCard({
                 {product.name}
               </h3>
             </Link>
-
-            {/* Progress Section */}
-            <div className="space-y-1.5 mt-3">
-              <div className="h-1.5 w-full bg-purple-100 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-gradient-to-r from-purple-400 to-purple-600 transition-all duration-1000"
-                  style={{ width: `${product.stealDealProgress || 40}%` }}
-                />
-              </div>
-              <div className="flex items-center gap-1.5 text-purple-600">
-                <div className="p-0.5 bg-purple-100 rounded-md">
-                  <FiLock className="w-3.5 h-3.5 stroke-[3]" />
-                </div>
-                <span className="text-[10px] font-medium uppercase tracking-wide">
-                  Shop for {formatPrice(product.moreToClaim || 191)} more to claim
-                </span>
-              </div>
-            </div>
 
             {/* Price section */}
             <div className="flex items-baseline gap-2">

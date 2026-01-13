@@ -21,7 +21,9 @@ import {
   ChevronRight,
   Monitor,
   Crown,
-  Sparkles
+  Sparkles,
+  TrendingDown,
+  Tag
 } from 'lucide-react'
 import clsx from 'clsx'
 import { motion } from 'framer-motion'
@@ -37,7 +39,10 @@ export default function AdminSidebar({ onNavigate, isMobile = false }) {
     { label: 'Products', href: '/admin/products', icon: Box },
     { label: 'Orders', href: '/admin/orders', icon: ShoppingCart },
     { label: 'Homepage Banners', href: '/admin/homepage/banners', icon: Monitor },
-    { label: 'Today\'s Best Deals', href: '/admin/homepage/todays-best-deals', icon: Sparkles },
+    { label: 'Featured Brands', href: '/admin/homepage/featured-brands', icon: Tag },
+    { label: 'st Deals', href: '/admin/homepage/todays-best-deals', icon: Sparkles },
+    { label: 'Coupon Banners', href: '/admin/homepage/coupon-banners', icon: Gift },
+    { label: 'Steal Deals', href: '/admin/homepage/steal-deals', icon: TrendingDown },
     { label: 'Payout Requests', href: '/admin/payouts', icon: DollarSign },
     { label: 'Reviews', href: '/admin/reviews', icon: Star },
     { label: 'Analytics', href: '/admin/analytics', icon: BarChart3 },

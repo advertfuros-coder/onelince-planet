@@ -3,45 +3,49 @@ import { useState, useEffect } from 'react'
 import ProductCard from './ProductCard'
 
 export default function StealDeals() {
-    // Mock data for demonstration - in real app, fetch from API
-    const [products, setProducts] = useState([
-        {
-            _id: 'steal-1',
-            name: 'Pampers Premium Care Pants Medium Size',
-            images: [{ url: 'https://images.unsplash.com/photo-1622290291468-a28f7a7dc6a8?q=80&w=800&auto=format&fit=crop' }],
-            quantity: '4 Pieces',
-            pricing: { salePrice: 9, basePrice: 99 },
-            stealDealProgress: 40,
-            moreToClaim: 191
-        },
-        {
-            _id: 'steal-2',
-            name: 'Avatar Protein Wafer Bar 10g Protein',
-            images: [{ url: 'https://images.unsplash.com/photo-1604497083434-f070162e1246?q=80&w=800&auto=format&fit=crop' }],
-            quantity: '40 g',
-            pricing: { salePrice: 20, basePrice: 80 },
-            stealDealProgress: 60,
-            moreToClaim: 191
-        },
-        {
-            _id: 'steal-3',
-            name: 'GNC Protein Wafer Bar Peanut Butter',
-            images: [{ url: 'https://images.unsplash.com/photo-1542310503-605990e66178?q=80&w=800&auto=format&fit=crop' }],
-            quantity: '40 g',
-            pricing: { salePrice: 15, basePrice: 60 },
-            stealDealProgress: 30,
-            moreToClaim: 191
-        },
-        {
-            _id: 'steal-4',
-            name: 'MuscleBlaze Biozyme Performance Whey',
-            images: [{ url: 'https://images.unsplash.com/photo-1579722820308-d74e5719d0a8?q=80&w=800&auto=format&fit=crop' }],
-            quantity: '1 kg',
-            pricing: { salePrice: 199, basePrice: 499 },
-            stealDealProgress: 15,
-            moreToClaim: 2500
+    const [products, setProducts] = useState([])
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        fetchDeals()
+    }, [])
+
+    const fetchDeals = async () => {
+        try {
+            const response = await fetch('/api/admin/steal-deals')
+            const data = await response.json()
+            if (data.success && data.deals) {
+                setProducts(data.deals)
+            }
+        } catch (error) {
+            console.error('Error fetching steal deals:', error)
+        } finally {
+            setLoading(false)
         }
-    ])
+    }
+
+    if (loading) {
+        return (
+            <section className="py-8 bg-white overflow-hidden">
+                <div className="max-w-8xl mx-auto px-4">
+                    <div className="bg-[#F8F3FF] rounded-[40px] p-4 md:p-10 relative border border-purple-100">
+                        <div className="animate-pulse space-y-6">
+                            <div className="h-12 bg-purple-200 rounded w-64 mx-auto" />
+                            <div className="flex gap-4">
+                                {[...Array(4)].map((_, i) => (
+                                    <div key={i} className="min-w-[260px] h-80 bg-purple-100 rounded-2xl" />
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        )
+    }
+
+    if (products.length === 0) {
+        return null // Don't show section if no deals
+    }
 
     return (
         <section className="py-8 bg-white overflow-hidden">
@@ -54,7 +58,7 @@ export default function StealDeals() {
                                 className="text-3xl md:text-5xl font-[1000] text-[#7C3AED] uppercase tracking-tighter leading-none"
                                 style={{ WebkitTextStroke: '1px #FFFFFF' }}
                             >
-                                STEAL DEALS
+                                STEAL DEA LS
                             </h2>
                             <div className="bg-[#7C3AED] p-2 rounded-xl rotate-12 shadow-lg">
                                 <span className="text-white text-2xl font-semibold">%</span>
@@ -65,10 +69,13 @@ export default function StealDeals() {
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z" /></svg>
                             </div>
                         </div>
+                        <p className="text-sm md:text-base text-purple-600 font-semibold mt-2">
+                            Massive price drops you can't miss!
+                        </p>
                     </div>
 
-                    {/* Products Scrollable Row - Using ProductCard Component */}
-                    <div className="flex gap-3 overflow-x-auto no-scrollbar pb-6 snap-x snap-mandatory -mx-4 px-4 md:mx-0 md:px-0">
+                    {/* Products Scrollable Row */}
+                    <div className="grid grid-cols-2 lg:grid-cols-6 gap-3 overflow-x-auto no-scrollbar pb-6 snap-x snap-mandatory -mx-4 px-4 md:mx-0 md:px-0">
                         {products.map((product) => (
                             <div
                                 key={product._id}
@@ -77,6 +84,7 @@ export default function StealDeals() {
                                 <ProductCard
                                     product={product}
                                     variant="steal"
+                                    showDiscountBadge={true}
                                 />
                             </div>
                         ))}
