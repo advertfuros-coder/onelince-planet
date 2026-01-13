@@ -148,7 +148,7 @@ export default function HeroBanner({ banners: externalBanners = null, previewBan
 
   return (
     <section className="relative w-full bg-white py-4 md:py-6">
-      <div className="max-w-[1400px] mx-auto px-4 md:px-6">
+      <div className="max-w-8xl mx-auto px-4 ">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
 
           {/* Main Card */}

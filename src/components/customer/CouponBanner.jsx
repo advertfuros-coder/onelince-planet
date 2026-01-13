@@ -14,7 +14,7 @@ export default function CouponBanner() {
 
     return (
         <section className="py- bg-white overflow-hidden">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-8xl mx-auto px-4  ">
                 <div
                     className="relative  group cursor-pointer transition-transform duration-300 hover:scale-[1.01]"
                     onClick={handleCopy}

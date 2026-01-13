@@ -268,7 +268,7 @@ export default function Header() {
     <header className="bg-white shadow-sm sticky top-0 z-50">
       {/* Desktop Main Header */}
       <div className="hidden lg:block border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-8xl mx-auto px-4  ">
           <div className="flex items-center justify-between h-16 gap-4">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 flex-shrink-0">
@@ -277,6 +277,10 @@ export default function Header() {
                 alt="OnlinePlanet Logo"
                 className="h-8 w-auto object-contain"
               />
+
+              <p className="text-xl font-semibold transition-colors hover:text-blue-600 cursor-pointer tracking-tight">
+                Online Planet
+              </p>
             </Link>
 
             {/* Search Bar - Center */}

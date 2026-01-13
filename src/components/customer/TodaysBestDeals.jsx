@@ -153,7 +153,7 @@ export default function TodaysBestDeals() {
 
     return (
         <section className="py-8 bg-white">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-8xl mx-auto px-4  ">
                 {/* Header - 100% Replication of Promotional Style */}
                 <div className="flex flex-col items-center justify-center text-center mb-6">
                     {/* Top Pill - Yellow Badge */}

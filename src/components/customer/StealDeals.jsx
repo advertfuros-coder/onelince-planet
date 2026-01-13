@@ -45,7 +45,7 @@ export default function StealDeals() {
 
     return (
         <section className="py-8 bg-white overflow-hidden">
-            <div className="max-w-7xl mx-auto px-4">
+            <div className="max-w-8xl mx-auto px-4">
                 <div className="bg-[#F8F3FF] rounded-[40px] p-4 md:p-10 relative border border-purple-100">
                     {/* Header */}
                     <div className="flex flex-col items-center mb-6">
