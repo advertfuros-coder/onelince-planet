@@ -37,7 +37,6 @@ export default function Header() {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
   const [isCategoriesOpen, setIsCategoriesOpen] = useState(false)
   const [isCountryMenuOpen, setIsCountryMenuOpen] = useState(false)
-  const [searchQuery, setSearchQuery] = useState('')
   const [location, setLocation] = useState('Dubai')
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false)
   const [pincode, setPincode] = useState('')
@@ -260,13 +259,7 @@ export default function Header() {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  const handleSearch = (e) => {
-    e.preventDefault()
-    if (searchQuery.trim()) {
-      router.push(`/products?search=${encodeURIComponent(searchQuery)}`)
-      setSearchQuery('')
-    }
-  }
+
 
   const cartCount = items.reduce((count, item) => count + item.quantity, 0)
   const wishlistCount = wishlist?.length || 0
@@ -332,10 +325,25 @@ export default function Header() {
                 )}
               </div>
 
-              <Link href="/become-a-seller" className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 transition-all font-semibold text-sm">
-                <FiShoppingBag className="w-4 h-4" />
-                <span>Want to Sell?</span>
-              </Link>
+              {user?.role === 'admin' && (
+                <Link href="/admin/dashboard" className="flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-all font-semibold text-sm">
+                  <FiZap className="w-4 h-4 text-yellow-400" />
+                  <span>Admin Panel</span>
+                </Link>
+              )}
+              {user?.role === 'seller' && (
+                <Link href="/seller" className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all font-semibold text-sm">
+                  <FiShoppingBag className="w-4 h-4" />
+                  <span>Seller Panel</span>
+                </Link>
+              )}
+
+              {(!user || user.role === 'customer') && (
+                <Link href="/become-a-seller" className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 transition-all font-semibold text-sm">
+                  <FiShoppingBag className="w-4 h-4" />
+                  <span>Want to Sell?</span>
+                </Link>
+              )}
 
               <Link href="/cart" className="relative p-2 hover:bg-gray-50 rounded-lg">
                 <FiShoppingCart className="w-5 h-5" />
@@ -353,7 +361,13 @@ export default function Header() {
                     <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-100 py-2">
                       <Link href="/profile" className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 text-sm">My Profile</Link>
                       <Link href="/orders" className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 text-sm">My Orders</Link>
-                      <button onClick={logout} className="w-full text-left px-4 py-2.5 text-red-600 hover:bg-red-50 text-sm">Sign Out</button>
+                      {user.role === 'admin' && (
+                        <Link href="/admin" className="flex items-center gap-3 px-4 py-2.5 hover:bg-blue-50 text-sm font-semibold text-blue-600 border-t border-gray-50">Admin Dashboard</Link>
+                      )}
+                      {user.role === 'seller' && (
+                        <Link href="/seller" className="flex items-center gap-3 px-4 py-2.5 hover:bg-blue-50 text-sm font-semibold text-blue-600 border-t border-gray-50">Seller Dashboard</Link>
+                      )}
+                      <button onClick={logout} className="w-full text-left px-4 py-2.5 text-red-600 hover:bg-red-50 text-sm border-t border-gray-50">Sign Out</button>
                     </div>
                   )}
                 </div>
@@ -427,26 +441,9 @@ export default function Header() {
 
           {/* Row 2: Search Bar - Hide on product detail pages */}
           {!hideHeaderExtras && (
-            <form onSubmit={handleSearch} className="relative mb-4">
-              <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center gap-1.5 opacity-60">
-                <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
-                <div className="w-1.5 h-1.5 rounded-full bg-yellow-500"></div>
-                <div className="w-1.5 h-1.5 rounded-full bg-red-500"></div>
-              </div>
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search products"
-                className="w-full pl-14 pr-12 py-2.5 bg-[#F0F2F5] rounded-full text-sm border-none focus:ring-1 focus:ring-blue-500 placeholder:text-gray-500 font-medium"
-              />
-              <button
-                type="submit"
-                className="absolute right-1 top-1/2 -translate-y-1/2 w-9 h-9 bg-[#003399] rounded-full flex items-center justify-center shadow-sm"
-              >
-                <FiSearch className="w-5 h-5 text-white" />
-              </button>
-            </form>
+            <div className="px-4 mb-4">
+              <SearchAutocomplete />
+            </div>
           )}
 
           {/* Row 3: Categories Horizontal Scroll - Hide on product detail pages */}
@@ -540,16 +537,7 @@ export default function Header() {
         <div className="lg:hidden bg-white border-t border-gray-100">
           <div className="px-4 py-4 space-y-4">
             {/* Mobile Search */}
-            <form onSubmit={handleSearch} className="relative">
-              <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search for any product or brand"
-                className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </form>
+            <SearchAutocomplete onClose={() => setIsMenuOpen(false)} />
 
             {/* Categories */}
             <div className="space-y-2">
@@ -568,6 +556,18 @@ export default function Header() {
 
             {/* Mobile Links */}
             <div className="pt-4 border-t border-gray-100 space-y-2">
+              {user?.role === 'admin' && (
+                <Link href="/admin" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-2 py-2 text-sm font-bold text-blue-600">
+                  <FiZap className="w-4 h-4 text-yellow-500" />
+                  Admin Dashboard
+                </Link>
+              )}
+              {user?.role === 'seller' && (
+                <Link href="/seller" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-2 py-2 text-sm font-bold text-blue-600">
+                  <FiShoppingBag className="w-4 h-4" />
+                  Seller Dashboard
+                </Link>
+              )}
               <Link href="/deals" className="flex items-center gap-2 py-2 text-sm font-semibold text-blue-600">
                 <FiGift className="w-4 h-4" />
                 Best Deals

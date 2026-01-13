@@ -39,12 +39,9 @@ export default function PromotionalBanners() {
                             <div className="hidden md:flex items-center gap-2 ml-4">
                                 <div className="w-32 h-32 bg-white/20 backdrop-blur-sm rounded-2xl p-2 transform group-hover:scale-110 transition-transform duration-300">
                                     <img
-                                        src="/products/electronics-promo.png"
+                                        src="https://images.unsplash.com/photo-1498049794561-7780e7231661?q=80&w=400&auto=format&fit=crop"
                                         alt="Electronics"
                                         className="w-full h-full object-contain"
-                                        onError={(e) => {
-                                            e.target.style.display = 'none'
-                                        }}
                                     />
                                 </div>
                             </div>

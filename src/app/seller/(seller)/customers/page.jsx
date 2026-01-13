@@ -25,12 +25,23 @@ import axios from 'axios'
 import { toast } from 'react-hot-toast'
 import { formatPrice } from '@/lib/utils'
 
+// Helper function to format currency based on seller's country
+const formatCurrency = (amount, country) => {
+  if (country === 'IN') {
+    return `₹${Math.round(amount).toLocaleString('en-IN')}`
+  } else {
+    return `AED ${Math.round(amount).toLocaleString('en-US')}`
+  }
+}
+
+
 export default function SellerCustomers() {
   const { token } = useAuth()
   const [customers, setCustomers] = useState([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
   const [viewMode, setViewMode] = useState('grid')
+  const [sellerCountry, setSellerCountry] = useState('AE')
 
   useEffect(() => {
     if (token) {
@@ -49,6 +60,7 @@ export default function SellerCustomers() {
 
       if (response.data.success) {
         setCustomers(response.data.customers)
+        setSellerCountry(response.data.sellerCountry || 'AE')
       } else {
         toast.error('Failed to load customers')
       }
@@ -131,7 +143,7 @@ export default function SellerCustomers() {
           />
           <CustomerStatCard
             label="Average LTV"
-            value={formatPrice(customerStats.avgLTV)}
+            value={formatCurrency(customerStats.avgLTV, sellerCountry)}
             icon={TrendingUp}
             color="indigo"
             delay={0.4}
@@ -176,7 +188,7 @@ export default function SellerCustomers() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {filteredCustomers.map((customer, idx) => (
-              <CustomerProfileCard key={customer.id} customer={customer} delay={idx * 0.05} />
+              <CustomerProfileCard key={customer.id} customer={customer} delay={idx * 0.05} sellerCountry={sellerCountry} />
             ))}
           </div>
         )}
@@ -217,7 +229,7 @@ function CustomerStatCard({ label, value, icon: Icon, color, delay, percent }) {
   )
 }
 
-function CustomerProfileCard({ customer, delay }) {
+function CustomerProfileCard({ customer, delay, sellerCountry }) {
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
@@ -271,7 +283,7 @@ function CustomerProfileCard({ customer, delay }) {
           <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-widest mb-1.5 flex items-center justify-end gap-1.5">
             Revenue <CreditCard size={10} />
           </p>
-          <p className="text-xl font-semibold text-blue-600 font-mono tracking-tighter">{formatPrice(customer.totalSpent)}</p>
+          <p className="text-xl font-semibold text-blue-600 font-mono tracking-tighter">{formatCurrency(customer.totalSpent, sellerCountry)}</p>
         </div>
       </div>
 

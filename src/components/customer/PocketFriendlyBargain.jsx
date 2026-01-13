@@ -9,42 +9,42 @@ export default function PocketFriendlyBargain() {
             category: 'Kurtas',
             price: '549',
             image: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=400&h=600&fit=crop',
-            link: '/products?category=kurtas'
+            link: '/products?category=kurtas&maxPrice=549'
         },
         {
             id: 2,
             category: 'Jeans',
             price: '799',
             image: 'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=400&h=600&fit=crop',
-            link: '/products?category=jeans'
+            link: '/products?category=jeans&maxPrice=799'
         },
         {
             id: 3,
             category: 'Backpacks',
             price: '799',
             image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&h=600&fit=crop',
-            link: '/products?category=backpacks'
+            link: '/products?category=backpacks&maxPrice=799'
         },
         {
             id: 4,
             category: 'Casual Shoes',
             price: '1149',
             image: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400&h=600&fit=crop',
-            link: '/products?category=shoes'
+            link: '/products?category=shoes&maxPrice=1149'
         },
         {
             id: 5,
             category: 'Jackets',
             price: '1299',
             image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400&h=600&fit=crop',
-            link: '/products?category=jackets'
+            link: '/products?category=jackets&maxPrice=1299'
         },
         {
             id: 6,
             category: 'Day Cream',
             price: '249',
             image: 'https://images.unsplash.com/photo-1556228578-8c7c2f1e1493?w=400&h=600&fit=crop',
-            link: '/products?category=skincare'
+            link: '/products?category=skincare&maxPrice=249'
         }
     ]
 

@@ -8,7 +8,7 @@ export default function StealDeals() {
         {
             _id: 'steal-1',
             name: 'Pampers Premium Care Pants Medium Size',
-            images: [{ url: 'https://images.unsplash.com/photo-1544126592-807daa2b565b?w=400' }],
+            images: [{ url: 'https://images.unsplash.com/photo-1622290291468-a28f7a7dc6a8?q=80&w=800&auto=format&fit=crop' }],
             quantity: '4 Pieces',
             pricing: { salePrice: 9, basePrice: 99 },
             stealDealProgress: 40,
@@ -17,25 +17,25 @@ export default function StealDeals() {
         {
             _id: 'steal-2',
             name: 'Avatar Protein Wafer Bar 10g Protein',
-            images: [{ url: 'https://images.unsplash.com/photo-1622484211148-71e3d7454f7a?w=400' }],
+            images: [{ url: 'https://images.unsplash.com/photo-1604497083434-f070162e1246?q=80&w=800&auto=format&fit=crop' }],
             quantity: '40 g',
-            pricing: { salePrice: 22, basePrice: 80 },
+            pricing: { salePrice: 20, basePrice: 80 },
             stealDealProgress: 60,
             moreToClaim: 191
         },
         {
             _id: 'steal-3',
             name: 'GNC Protein Wafer Bar Peanut Butter',
-            images: [{ url: 'https://images.unsplash.com/photo-1622484211148-71e3d7454f7a?w=400' }],
+            images: [{ url: 'https://images.unsplash.com/photo-1542310503-605990e66178?q=80&w=800&auto=format&fit=crop' }],
             quantity: '40 g',
-            pricing: { salePrice: 29, basePrice: 60 },
+            pricing: { salePrice: 15, basePrice: 60 },
             stealDealProgress: 30,
             moreToClaim: 191
         },
         {
             _id: 'steal-4',
             name: 'MuscleBlaze Biozyme Performance Whey',
-            images: [{ url: 'https://images.unsplash.com/photo-1593095191050-8adeb814040a?w=400' }],
+            images: [{ url: 'https://images.unsplash.com/photo-1579722820308-d74e5719d0a8?q=80&w=800&auto=format&fit=crop' }],
             quantity: '1 kg',
             pricing: { salePrice: 199, basePrice: 499 },
             stealDealProgress: 15,

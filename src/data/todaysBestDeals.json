@@ -3,7 +3,9 @@
     {
       "_id": "deal-001",
       "name": "Samsung Galaxy S24 Ultra 12+GB Titanium Gray 256GB Storage",
-      "images": ["/products/samsung-s24.jpg"],
+      "images": [
+        "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?q=80&w=800&auto=format&fit=crop"
+      ],
       "price": 999.99,
       "originalPrice": 1299.99,
       "rating": 4.5,
@@ -15,7 +17,9 @@
     {
       "_id": "deal-002",
       "name": "Nike Jordan Brooklyn Fleece Men's Pullover Hoodie Blue",
-      "images": ["/products/nike-hoodie.jpg"],
+      "images": [
+        "https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=800&auto=format&fit=crop"
+      ],
       "price": 45.0,
       "originalPrice": 89.99,
       "rating": 4.8,
@@ -27,7 +31,9 @@
     {
       "_id": "deal-003",
       "name": "Beanless Bag Inflatable Lounge Chair Grey Premium Comfort",
-      "images": ["/products/bean-bag.jpg"],
+      "images": [
+        "https://images.unsplash.com/photo-1519183071298-a2962ffdcd3f?q=80&w=800&auto=format&fit=crop"
+      ],
       "price": 32.0,
       "originalPrice": 48.0,
       "rating": 4.2,
@@ -39,7 +45,9 @@
     {
       "_id": "deal-004",
       "name": "Diamond Stud Earrings (1/3 ct. t.w.) in 14K White, Yellow or Rose Gold",
-      "images": ["/products/diamond-earrings.jpg"],
+      "images": [
+        "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=800&auto=format&fit=crop"
+      ],
       "price": 299.0,
       "originalPrice": 599.0,
       "rating": 4.9,
@@ -51,7 +59,9 @@
     {
       "_id": "deal-005",
       "name": "Nike Invincible 3 Premium Women's Running Shoes Beige/Black",
-      "images": ["/products/nike-shoes.jpg"],
+      "images": [
+        "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=800&auto=format&fit=crop"
+      ],
       "price": 190.0,
       "originalPrice": 250.0,
       "rating": 4.7,
@@ -63,7 +73,9 @@
     {
       "_id": "deal-006",
       "name": "Apple MacBook Pro 16-inch M3 Max Chip 36GB RAM 1TB SSD Space Black",
-      "images": ["/products/macbook-pro.jpg"],
+      "images": [
+        "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=800&auto=format&fit=crop"
+      ],
       "price": 2899.99,
       "originalPrice": 3499.99,
       "rating": 4.9,
@@ -75,7 +87,9 @@
     {
       "_id": "deal-007",
       "name": "Sony WH-1000XM5 Wireless Noise Cancelling Headphones - Black",
-      "images": ["/products/sony-headphones.jpg"],
+      "images": [
+        "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=800&auto=format&fit=crop"
+      ],
       "price": 349.99,
       "originalPrice": 399.99,
       "rating": 4.8,
@@ -87,7 +101,9 @@
     {
       "_id": "deal-008",
       "name": "Instant Pot Duo 7-in-1 Electric Pressure Cooker 6 Quart Stainless Steel",
-      "images": ["/products/instant-pot.jpg"],
+      "images": [
+        "https://images.unsplash.com/photo-1584286595398-a59f21d313f5?q=80&w=800&auto=format&fit=crop"
+      ],
       "price": 79.99,
       "originalPrice": 129.99,
       "rating": 4.6,
@@ -99,7 +115,9 @@
     {
       "_id": "deal-009",
       "name": "Levi's Men's 501 Original Fit Jeans Dark Wash Classic Denim",
-      "images": ["/products/levis-jeans.jpg"],
+      "images": [
+        "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=800&auto=format&fit=crop"
+      ],
       "price": 59.99,
       "originalPrice": 89.99,
       "rating": 4.5,
@@ -111,7 +129,9 @@
     {
       "_id": "deal-010",
       "name": "Dyson V15 Detect Absolute Cordless Vacuum Cleaner with Laser",
-      "images": ["/products/dyson-vacuum.jpg"],
+      "images": [
+        "https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?q=80&w=800&auto=format&fit=crop"
+      ],
       "price": 649.99,
       "originalPrice": 749.99,
       "rating": 4.7,

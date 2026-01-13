@@ -55,13 +55,13 @@ export default function PromotionalCards() {
 
                 {/* Mobile Slider Layout - Smooth Ribbon Approach */}
                 <div
-                    className="md:hidden relative"
+                    className=" relative"
                     onMouseEnter={() => setIsPaused(true)}
                     onMouseLeave={() => setIsPaused(false)}
                     onTouchStart={() => setIsPaused(true)}
                     onTouchEnd={() => setIsPaused(false)}
                 >
-                    <div className="overflow-hidden rounded-[32px]">
+                    <div className="overflow-hidden grid grid-cols-2 gap-6 rounded-[32px]">
                         <motion.div
                             className="flex"
                             drag="x"

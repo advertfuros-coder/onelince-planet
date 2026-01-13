@@ -121,6 +121,7 @@ export async function GET(request) {
     return NextResponse.json({
       success: true,
       customers,
+      sellerCountry: seller.businessInfo?.country || "AE",
       stats: {
         total: customers.length,
         totalRevenue: customers.reduce((sum, c) => sum + c.totalSpent, 0),

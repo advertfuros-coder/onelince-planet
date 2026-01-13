@@ -6,42 +6,42 @@ const defaultCategories = [
   {
     id: 'electronics',
     name: 'Electronics',
-    icon: '/category-icons/electronics.png',
+    icon: 'https://images.unsplash.com/photo-1498049794561-7780e7231661?q=80&w=200&auto=format&fit=crop',
     link: '/category/electronics',
     color: 'from-blue-500 to-indigo-600'
   },
   {
     id: 'fashion',
     name: 'Fashion',
-    icon: '/category-icons/fashion.png',
+    icon: 'https://images.unsplash.com/photo-1445205170230-053b830c6050?q=80&w=200&auto=format&fit=crop',
     link: '/category/fashion',
     color: 'from-pink-500 to-rose-600'
   },
   {
     id: 'home',
     name: 'Home & Decor',
-    icon: '/category-icons/home.png',
+    icon: 'https://images.unsplash.com/photo-1513519247388-193ad51c50bb?q=80&w=200&auto=format&fit=crop',
     link: '/category/home',
     color: 'from-green-500 to-emerald-600'
   },
   {
     id: 'beauty',
     name: 'Beauty & Skin',
-    icon: '/category-icons/beauty.png',
+    icon: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=200&auto=format&fit=crop',
     link: '/category/beauty',
     color: 'from-purple-500 to-violet-600'
   },
   {
     id: 'books',
     name: 'Books',
-    icon: '/category-icons/books.png',
+    icon: 'https://images.unsplash.com/photo-1495446815901-a7297e633e8d?q=80&w=200&auto=format&fit=crop',
     link: '/category/books',
     color: 'from-orange-500 to-amber-600'
   },
   {
     id: 'sports',
     name: 'Health & Fitness',
-    icon: '/category-icons/health',
+    icon: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=200&auto=format&fit=crop',
     link: '/category/health',
     color: 'from-cyan-500 to-teal-600'
   },

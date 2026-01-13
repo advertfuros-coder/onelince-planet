@@ -20,7 +20,8 @@ import {
   Truck,
   ChevronRight,
   Monitor,
-  Crown
+  Crown,
+  Sparkles
 } from 'lucide-react'
 import clsx from 'clsx'
 import { motion } from 'framer-motion'
@@ -35,6 +36,8 @@ export default function AdminSidebar({ onNavigate, isMobile = false }) {
     { label: 'Categories', href: '/admin/categories', icon: Package },
     { label: 'Products', href: '/admin/products', icon: Box },
     { label: 'Orders', href: '/admin/orders', icon: ShoppingCart },
+    { label: 'Homepage Banners', href: '/admin/homepage/banners', icon: Monitor },
+    { label: 'Today\'s Best Deals', href: '/admin/homepage/todays-best-deals', icon: Sparkles },
     { label: 'Payout Requests', href: '/admin/payouts', icon: DollarSign },
     { label: 'Reviews', href: '/admin/reviews', icon: Star },
     { label: 'Analytics', href: '/admin/analytics', icon: BarChart3 },

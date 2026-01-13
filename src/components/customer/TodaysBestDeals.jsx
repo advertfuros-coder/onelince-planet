@@ -19,43 +19,88 @@ export default function TodaysBestDeals() {
     const fetchProducts = async () => {
         try {
             setLoading(true)
-            const response = await fetch(`/api/products?limit=10&country=${region.code}`)
+            // Fetch featured products from the new API
+            const response = await fetch(`/api/admin/featured-products?section=todays_best_deals&limit=10`)
             const data = await response.json()
 
-            // Use API data if available, otherwise use dummy data
-            if (data.products && data.products.length > 0) {
+            console.log('TodaysBestDeals - Featured products API response:', data)
+
+            // Use featured products if available, otherwise use fallback
+            if (data.success && data.products && data.products.length > 0) {
+                console.log('TodaysBestDeals - Using featured products:', data.products.length)
+                console.log('TodaysBestDeals - Raw product data:', data.products)
+                
                 // Transform API data to match ProductCard expected format
-                const transformedProducts = data.products.map(product => ({
-                    ...product,
-                    pricing: {
-                        basePrice: product.originalPrice || product.price,
-                        salePrice: product.price
-                    },
-                    ratings: {
-                        average: product.rating || 4,
-                        totalReviews: product.reviewCount || 0
-                    },
-                    images: product.images?.map(img => ({ url: img })) || []
-                }))
+                const transformedProducts = data.products.map(product => {
+                    if (!product.price || product.price === 0) {
+                        console.warn('TodaysBestDeals - Product has no price:', product.name, product)
+                    }
+                    
+                    return {
+                        ...product,
+                        _id: product._id || product.id,
+                        price: product.price || 0,
+                        originalPrice: product.originalPrice || product.price || 0,
+                        pricing: {
+                            basePrice: product.originalPrice || product.price || 0,
+                            salePrice: product.price || 0
+                        },
+                        ratings: {
+                            average: product.rating || 4,
+                            totalReviews: product.reviewCount || 0
+                        },
+                        images: product.images?.length > 0
+                            ? product.images.map(img => ({ url: typeof img === 'string' ? img : img.url }))
+                            : [{ url: `https://picsum.photos/seed/${product._id}/400/400` }]
+                    }
+                })
+                console.log('TodaysBestDeals - Transformed featured products:', transformedProducts)
                 setProducts(transformedProducts)
             } else {
-                // Transform dummy data to match ProductCard expected format
-                const transformedDummyData = dummyDealsData.products.map(product => ({
-                    ...product,
-                    pricing: {
-                        basePrice: product.originalPrice || product.price,
-                        salePrice: product.price
-                    },
-                    ratings: {
-                        average: product.rating || 4,
-                        totalReviews: product.reviewCount || 0
-                    },
-                    images: product.images?.map(img => ({ url: img })) || []
-                }))
-                setProducts(transformedDummyData)
+                console.log('TodaysBestDeals - No featured products, using fallback')
+                // Fallback to regular products if no featured products
+                const fallbackResponse = await fetch(`/api/products?limit=10&country=${region.code}`)
+                const fallbackData = await fallbackResponse.json()
+                
+                if (fallbackData.products && fallbackData.products.length > 0) {
+                    console.log('TodaysBestDeals - Using regular products fallback')
+                    const transformedProducts = fallbackData.products.map(product => ({
+                        ...product,
+                        pricing: {
+                            basePrice: product.originalPrice || product.price,
+                            salePrice: product.price
+                        },
+                        ratings: {
+                            average: product.rating || 4,
+                            totalReviews: product.reviewCount || 0
+                        },
+                        images: product.images?.length > 0
+                            ? product.images.map(img => ({ url: typeof img === 'string' ? img : img.url }))
+                            : [{ url: `https://picsum.photos/seed/${product._id}/400/400` }]
+                    }))
+                    setProducts(transformedProducts)
+                } else {
+                    console.log('TodaysBestDeals - Using dummy data fallback')
+                    // Use dummy data as last resort
+                    const transformedDummyData = dummyDealsData.products.map(product => ({
+                        ...product,
+                        pricing: {
+                            basePrice: product.originalPrice || product.price,
+                            salePrice: product.price
+                        },
+                        ratings: {
+                            average: product.rating || 4,
+                            totalReviews: product.reviewCount || 0
+                        },
+                        images: product.images?.length > 0
+                            ? product.images.map(img => ({ url: img }))
+                            : [{ url: `https://picsum.photos/seed/${product._id}/400/400` }]
+                    }))
+                    setProducts(transformedDummyData)
+                }
             }
         } catch (error) {
-            console.error('Error fetching products:', error)
+            console.error('TodaysBestDeals - Error fetching products:', error)
             // Transform dummy data on error
             const transformedDummyData = dummyDealsData.products.map(product => ({
                 ...product,
@@ -67,7 +112,9 @@ export default function TodaysBestDeals() {
                     average: product.rating || 4,
                     totalReviews: product.reviewCount || 0
                 },
-                images: product.images?.map(img => ({ url: img })) || []
+                images: product.images?.length > 0
+                    ? product.images.map(img => ({ url: img }))
+                    : [{ url: `https://picsum.photos/seed/${product._id}/400/400` }]
             }))
             setProducts(transformedDummyData)
         } finally {
@@ -118,16 +165,16 @@ export default function TodaysBestDeals() {
 
                     {/* Main Title - Purple DEALS with Glow/Outline */}
                     <div className="relative">
-                        <h2 
+                        <h2
                             className="text-6xl md:text-[110px] font-[1000] text-[#9281FF] uppercase tracking-tighter leading-none"
-                            style={{ 
+                            style={{
                                 textShadow: '0 0 20px rgba(146, 129, 255, 0.2)',
                                 WebkitTextStroke: '2px #FFFFFF'
                             }}
                         >
                             DEALS
                         </h2>
-                        
+
                         {/* Star Decorations (4-pointed) */}
                         <div className="absolute top-2 -right-8 md:-right-16 animate-pulse">
                             <svg width="32" height="32" viewBox="0 0 24 24" fill="#FFD66B">
@@ -142,7 +189,7 @@ export default function TodaysBestDeals() {
                     </div>
 
                     {/* Subtitle with Chevron Circle */}
-                    <Link 
+                    <Link
                         href="/products"
                         className="mt6 flex items-center gap-3 group transition-transform hover:scale-105"
                     >
