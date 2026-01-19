@@ -33,6 +33,7 @@ import { useCart } from '../../lib/context/CartContext'
 import { useCurrency } from '../../lib/context/CurrencyContext'
 import { useWishlist } from '../../lib/hooks/useWishlist'
 import SearchAutocomplete from './SearchAutocomplete'
+import GenderSwitcher from './GenderSwitcher'
 
 // Mega Menu Category Data Structure
 const megaMenuCategories = [
