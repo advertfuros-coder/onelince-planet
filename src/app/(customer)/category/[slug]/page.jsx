@@ -286,24 +286,68 @@ const HEALTH_DATA = {
 export default function CategoryLandingPage() {
     const { slug } = useParams()
     const [currentSlide, setCurrentSlide] = useState(0)
+    const [showFilters, setShowFilters] = useState(false)
+    const [selectedFilters, setSelectedFilters] = useState({
+        priceRange: [0, 10000],
+        brands: [],
+        sizes: [],
+        colors: [],
+        rating: 0
+    })
+    const [sortBy, setSortBy] = useState('relevance')
+    const [viewMode, setViewMode] = useState('grid') // 'grid' or 'list'
 
     // Dynamic selection of data
     let categoryData;
+    let categoryName;
     switch (slug) {
-        case 'men': categoryData = MEN_FASHION_DATA; break;
-        case 'women': categoryData = WOMEN_FASHION_DATA; break;
-        case 'electronics': categoryData = ELECTRONICS_DATA; break;
-        case 'home': categoryData = HOME_DATA; break;
-        case 'beauty': categoryData = BEAUTY_DATA; break;
-        case 'books': categoryData = BOOKS_DATA; break;
-        case 'health': categoryData = HEALTH_DATA; break;
-        default: categoryData = MEN_FASHION_DATA;
+        case 'men':
+            categoryData = MEN_FASHION_DATA
+            categoryName = "Men's Fashion"
+            break;
+        case 'women':
+            categoryData = WOMEN_FASHION_DATA
+            categoryName = "Women's Fashion"
+            break;
+        case 'electronics':
+            categoryData = ELECTRONICS_DATA
+            categoryName = "Electronics"
+            break;
+        case 'home':
+            categoryData = HOME_DATA
+            categoryName = "Home & Decor"
+            break;
+        case 'beauty':
+            categoryData = BEAUTY_DATA
+            categoryName = "Beauty & Skin"
+            break;
+        case 'books':
+            categoryData = BOOKS_DATA
+            categoryName = "Books"
+            break;
+        case 'health':
+            categoryData = HEALTH_DATA
+            categoryName = "Health & Fitness"
+            break;
+        default:
+            categoryData = MEN_FASHION_DATA
+            categoryName = "Men's Fashion"
     }
 
 
     return (
-        <div className="min-h-screen bg-white">
+        <div className="min-h-screen bg-gray-50">
 
+            {/* Breadcrumbs */}
+            <div className="bg-white border-b border-gray-200">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+                    <div className="flex items-center gap-2 text-sm">
+                        <Link href="/" className="text-gray-500 hover:text-gray-900 transition-colors">Home</Link>
+                        <FiChevronRight className="w-4 h-4 text-gray-400" />
+                        <span className="text-gray-900 font-medium">{categoryName}</span>
+                    </div>
+                </div>
+            </div>
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 space-y-8">
 
@@ -343,10 +387,10 @@ export default function CategoryLandingPage() {
                 <div className="bg-white py-4 overflow-x-auto no-scrollbar border-b border-gray-50">
                     <div className="grid grid-rows-2 grid-flow-col gap-x-6 gap-y-6 min-w-max px-2">
                         {categoryData.subcategories.map((sub, idx) => (
-                            <Link 
+                            <Link
                                 href={`/products?category=${slug}&subcategory=${sub.name.toLowerCase()}`}
-                                key={idx} 
-                                className="flex flex-col items-center gap-2 flex-shrink-0 animate-in fade-in slide-in-from-right-4 duration-500" 
+                                key={idx}
+                                className="flex flex-col items-center gap-2 flex-shrink-0 animate-in fade-in slide-in-from-right-4 duration-500"
                                 style={{ animationDelay: `${idx * 30}ms` }}
                             >
                                 <div className={`w-20 h-24 rounded-3xl overflow-hidden shadow-sm border border-gray-100 flex items-center justify-center ${sub.bg || 'bg-gray-100'}`}>
@@ -371,6 +415,241 @@ export default function CategoryLandingPage() {
                         <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Powered By</span>
                         <span className="text-red-600 font-semibold italic text-xl tracking-tighter">Bata</span>
                         <div className="w-5 h-5 bg-black rounded-full flex items-center justify-center text-[8px] text-white"><FiChevronRight /></div>
+                    </div>
+                </div>
+
+                {/* Filter Sidebar + Product Grid Section */}
+                <div className="flex gap-6">
+                    {/* Filter Sidebar - Desktop */}
+                    <aside className="hidden lg:block w-64 flex-shrink-0">
+                        <div className="sticky top-4 space-y-4">
+                            {/* Filter Header */}
+                            <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-200">
+                                <div className="flex items-center justify-between mb-4">
+                                    <h3 className="font-semibold text-gray-900">Filters</h3>
+                                    <button className="text-xs text-blue-600 hover:text-blue-700 font-medium">Clear All</button>
+                                </div>
+
+                                {/* Price Range Filter */}
+                                <div className="border-t border-gray-100 pt-4">
+                                    <h4 className="font-medium text-sm text-gray-900 mb-3">Price Range</h4>
+                                    <div className="space-y-2">
+                                        <div className="flex items-center gap-2">
+                                            <input type="number" placeholder="Min" className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+                                            <span className="text-gray-400">-</span>
+                                            <input type="number" placeholder="Max" className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+                                        </div>
+                                        <div className="space-y-2">
+                                            {['Under ₹500', '₹500 - ₹1000', '₹1000 - ₹2000', 'Above ₹2000'].map((range) => (
+                                                <label key={range} className="flex items-center gap-2 cursor-pointer">
+                                                    <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
+                                                    <span className="text-sm text-gray-700">{range}</span>
+                                                </label>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Brand Filter */}
+                                <div className="border-t border-gray-100 pt-4 mt-4">
+                                    <h4 className="font-medium text-sm text-gray-900 mb-3">Brands</h4>
+                                    <div className="space-y-2 max-h-48 overflow-y-auto">
+                                        {categoryData.trustedBrands?.slice(0, 8).map((brand) => (
+                                            <label key={brand.name} className="flex items-center gap-2 cursor-pointer">
+                                                <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
+                                                <span className="text-sm text-gray-700">{brand.name}</span>
+                                            </label>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Size Filter (Fashion only) */}
+                                {(slug === 'men' || slug === 'women') && (
+                                    <div className="border-t border-gray-100 pt-4 mt-4">
+                                        <h4 className="font-medium text-sm text-gray-900 mb-3">Size</h4>
+                                        <div className="grid grid-cols-4 gap-2">
+                                            {['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL', '4XL'].map((size) => (
+                                                <button key={size} className="px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium hover:border-blue-600 hover:text-blue-600 transition-colors">
+                                                    {size}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Color Filter (Fashion only) */}
+                                {(slug === 'men' || slug === 'women') && (
+                                    <div className="border-t border-gray-100 pt-4 mt-4">
+                                        <h4 className="font-medium text-sm text-gray-900 mb-3">Color</h4>
+                                        <div className="grid grid-cols-6 gap-2">
+                                            {[
+                                                { name: 'Black', color: '#000000' },
+                                                { name: 'White', color: '#FFFFFF' },
+                                                { name: 'Red', color: '#EF4444' },
+                                                { name: 'Blue', color: '#3B82F6' },
+                                                { name: 'Green', color: '#10B981' },
+                                                { name: 'Yellow', color: '#F59E0B' },
+                                                { name: 'Pink', color: '#EC4899' },
+                                                { name: 'Purple', color: '#8B5CF6' },
+                                                { name: 'Gray', color: '#6B7280' },
+                                                { name: 'Brown', color: '#92400E' },
+                                                { name: 'Navy', color: '#1E3A8A' },
+                                                { name: 'Beige', color: '#D4A574' },
+                                            ].map((color) => (
+                                                <button
+                                                    key={color.name}
+                                                    className="w-8 h-8 rounded-full border-2 border-gray-300 hover:border-blue-600 transition-colors"
+                                                    style={{ backgroundColor: color.color }}
+                                                    title={color.name}
+                                                />
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Rating Filter */}
+                                <div className="border-t border-gray-100 pt-4 mt-4">
+                                    <h4 className="font-medium text-sm text-gray-900 mb-3">Customer Rating</h4>
+                                    <div className="space-y-2">
+                                        {[4, 3, 2, 1].map((rating) => (
+                                            <label key={rating} className="flex items-center gap-2 cursor-pointer">
+                                                <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
+                                                <div className="flex items-center gap-1">
+                                                    {[...Array(rating)].map((_, i) => (
+                                                        <FiStar key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                                                    ))}
+                                                    <span className="text-sm text-gray-700">& Up</span>
+                                                </div>
+                                            </label>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Discount Filter */}
+                                <div className="border-t border-gray-100 pt-4 mt-4">
+                                    <h4 className="font-medium text-sm text-gray-900 mb-3">Discount</h4>
+                                    <div className="space-y-2">
+                                        {['50% or more', '40% or more', '30% or more', '20% or more', '10% or more'].map((discount) => (
+                                            <label key={discount} className="flex items-center gap-2 cursor-pointer">
+                                                <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
+                                                <span className="text-sm text-gray-700">{discount}</span>
+                                            </label>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+
+                    {/* Main Content Area */}
+                    <div className="flex-1 space-y-4">
+                        {/* Sort Bar + View Toggle */}
+                        <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-200 flex items-center justify-between">
+                            <div className="flex items-center gap-4">
+                                {/* Mobile Filter Button */}
+                                <button className="lg:hidden flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                                    </svg>
+                                    <span className="text-sm font-medium">Filters</span>
+                                </button>
+
+                                <span className="text-sm text-gray-600">Showing 1-20 of 1,234 products</span>
+                            </div>
+
+                            <div className="flex items-center gap-3">
+                                {/* Sort Dropdown */}
+                                <select 
+                                    value={sortBy}
+                                    onChange={(e) => setSortBy(e.target.value)}
+                                    className="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                >
+                                    <option value="relevance">Relevance</option>
+                                    <option value="price-low">Price: Low to High</option>
+                                    <option value="price-high">Price: High to Low</option>
+                                    <option value="newest">Newest First</option>
+                                    <option value="popularity">Popularity</option>
+                                    <option value="rating">Customer Rating</option>
+                                    <option value="discount">Discount</option>
+                                </select>
+
+                                {/* View Toggle */}
+                                <div className="hidden md:flex items-center gap-1 border border-gray-300 rounded-lg p-1">
+                                    <button 
+                                        onClick={() => setViewMode('grid')}
+                                        className={`p-2 rounded ${viewMode === 'grid' ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100'}`}
+                                    >
+                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                                        </svg>
+                                    </button>
+                                    <button 
+                                        onClick={() => setViewMode('list')}
+                                        className={`p-2 rounded ${viewMode === 'list' ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100'}`}
+                                    >
+                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Product Grid */}
+                        <div className={`grid ${viewMode === 'grid' ? 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4' : 'grid-cols-1'} gap-4`}>
+                            {/* Placeholder for products - will be replaced with actual API data */}
+                            {[...Array(20)].map((_, idx) => (
+                                <div key={idx} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-200 hover:shadow-xl transition-shadow group">
+                                    {/* Product Image */}
+                                    <div className="aspect-square bg-gray-100 relative overflow-hidden">
+                                        <div className="absolute inset-0 bg-gradient-to-br from-gray-200 to-gray-300 animate-pulse" />
+                                        <div className="absolute top-2 right-2 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                            </svg>
+                                        </div>
+                                        <div className="absolute top-2 left-2 bg-red-600 text-white px-2 py-1 rounded-lg text-xs font-semibold">
+                                            50% OFF
+                                        </div>
+                                    </div>
+                                    
+                                    {/* Product Info */}
+                                    <div className="p-4 space-y-2">
+                                        <div className="h-4 bg-gray-200 rounded animate-pulse w-3/4" />
+                                        <div className="flex items-center gap-2">
+                                            <div className="h-6 bg-gray-300 rounded animate-pulse w-20" />
+                                            <div className="h-4 bg-gray-200 rounded animate-pulse w-16" />
+                                        </div>
+                                        <div className="flex items-center gap-1">
+                                            <div className="flex items-center gap-0.5">
+                                                {[...Array(5)].map((_, i) => (
+                                                    <FiStar key={i} className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                                                ))}
+                                            </div>
+                                            <span className="text-xs text-gray-500">(234)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Pagination */}
+                        <div className="flex items-center justify-center gap-2 py-8">
+                            <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50" disabled>
+                                Previous
+                            </button>
+                            {[1, 2, 3, '...', 62].map((page, idx) => (
+                                <button 
+                                    key={idx}
+                                    className={`px-4 py-2 rounded-lg transition-colors ${page === 1 ? 'bg-blue-600 text-white' : 'border border-gray-300 hover:bg-gray-50'}`}
+                                >
+                                    {page}
+                                </button>
+                            ))}
+                            <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                                Next
+                            </button>
+                        </div>
                     </div>
                 </div>
 

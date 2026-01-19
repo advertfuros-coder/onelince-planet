@@ -83,7 +83,7 @@ export default function StealDeals() {
                             >
                                 <ProductCard
                                     product={product}
-                                    showDiscountBadge={true}
+                                    variant="steal"
                                 />
                             </div>
                         ))}

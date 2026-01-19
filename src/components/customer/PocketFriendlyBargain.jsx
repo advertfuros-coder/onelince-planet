@@ -80,7 +80,7 @@ export default function PocketFriendlyBargain() {
     ]
 
     return (
-        <section className="mt-6 bg-white overflow-hidden">
+        <section className="mt-6 bg-  overflow-hidden">
             <div className="max-w-8xl mx-auto m px-4">
                 {/* Header Section */}
                 <div className="flex items-center justify-between mb-5 relative">

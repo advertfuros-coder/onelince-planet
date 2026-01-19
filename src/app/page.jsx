@@ -27,8 +27,11 @@ import DealOfTheDay from '@/components/customer/DealOfTheDay'
 import ShopByPrice from '@/components/customer/ShopByPrice'
 import StealDeals from '@/components/customer/StealDeals'
 import CouponBanner from '@/components/customer/CouponBanner'
+import CategoryGrid from '@/components/customer/CategoryGrid'
+import ValentinesSpecial from '@/components/customer/ValentinesSpecial'
  import DealsOfTheDay from '@/components/customer/DealsOfTheDay'
 import TodaysBestDeals from '@/components/customer/TodaysBestDeals'
+import TrendingNow from '@/components/customer/TrendingNow'
 
 export default function Home() {
   return (
@@ -37,6 +40,8 @@ export default function Home() {
       <main>
          <HeroBanner />
          <CouponBanner />
+         <CategoryGrid />
+         <ValentinesSpecial />
 
         <PocketFriendlyBargain />
          <TodaysBestDeals />
@@ -59,6 +64,9 @@ export default function Home() {
 
         {/* Top Brands - Brand showcase */}
         <TopBrands />
+
+        {/* Trending Now - Admin configurable trending products */}
+        <TrendingNow />
 
         {/* Footer - Complete site map */}
       </main>

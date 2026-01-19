@@ -707,7 +707,7 @@ export default function Header() {
         }}
       >
         {/* Overlay for better text readability */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-black/20 to-white"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-white/70 to-white"></div>
         <div className="relative z-10">
           {/* Row 0: Mobile Location Bar - Scalloped & Framed Design - Hide on product detail pages */}
           {!hideHeaderExtras && (
