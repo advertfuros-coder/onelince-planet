@@ -96,12 +96,24 @@ export default function OrderManagement() {
         try {
             setLoading(true);
             const token = localStorage.getItem('token');
+            console.log('=== FRONTEND: Fetching seller orders ===');
+            console.log('Token exists:', !!token);
+
             const response = await axios.get('/api/seller/orders', {
                 headers: { Authorization: `Bearer ${token}` }
             });
+
+            console.log('API Response:', response.data);
+            console.log('Orders received:', response.data.orders?.length || 0);
+
+            if (response.data.orders && response.data.orders.length > 0) {
+                console.log('Sample order:', response.data.orders[0]);
+            }
+
             setOrders(response.data.orders || []);
         } catch (error) {
             console.error('Fetch orders error:', error);
+            console.error('Error response:', error.response?.data);
             toast.error('Failed to load orders');
         } finally {
             setLoading(false);

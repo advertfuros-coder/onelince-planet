@@ -275,12 +275,27 @@ export default function CartPage() {
                 </div>
                 <p className="text-[10px] text-gray-400 font-semibold  wider mb-3">Merchant: {item.seller || 'Online Planet'}</p>
 
-                {/* Attribute Pickers */}
+                {/* Quantity Selector */}
                 <div className="flex gap-2 mb-4">
-
-                  <button onClick={() => updateQuantity(item.productId, item.quantity + 1, item.variant)} className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 rounded-2xl text-[10px] font-semibold text-gray-700 border border-gray-100  tighter">
-                    QTY: {item.quantity} <FiChevronDown className="w-3.5 h-3.5 text-gray-400" />
-                  </button>
+                  <div className="flex items-center gap-2 px-2 py-1.5 bg-gray-50 rounded-2xl border border-gray-100">
+                    <button
+                      onClick={() => updateQuantity(item.productId, item.quantity - 1, item.variant)}
+                      className="w-6 h-6 flex items-center justify-center rounded-full hover:bg-gray-100 active:scale-95 transition-all"
+                      disabled={item.quantity <= 1}
+                    >
+                      <FiMinus className="w-3.5 h-3.5 text-gray-600" />
+                    </button>
+                    <span className="text-[11px] font-semibold text-gray-900 min-w-[20px] text-center tighter">
+                      {item.quantity}
+                    </span>
+                    <button
+                      onClick={() => updateQuantity(item.productId, item.quantity + 1, item.variant)}
+                      className="w-6 h-6 flex items-center justify-center rounded-full hover:bg-gray-100 active:scale-95 transition-all"
+                      disabled={item.stock && item.quantity >= item.stock}
+                    >
+                      <FiPlus className="w-3.5 h-3.5 text-gray-600" />
+                    </button>
+                  </div>
                 </div>
 
                 {/* Matrix Pricing */}

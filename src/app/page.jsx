@@ -27,7 +27,7 @@ import DealOfTheDay from '@/components/customer/DealOfTheDay'
 import ShopByPrice from '@/components/customer/ShopByPrice'
 import StealDeals from '@/components/customer/StealDeals'
 import CouponBanner from '@/components/customer/CouponBanner'
-import DealsOfTheDay from '@/components/customer/DealsOfTheDay'
+ import DealsOfTheDay from '@/components/customer/DealsOfTheDay'
 import TodaysBestDeals from '@/components/customer/TodaysBestDeals'
 
 export default function Home() {
@@ -35,8 +35,8 @@ export default function Home() {
     <div className="min-h-screen bg-white">
       <Header />
       <main>
-        <HeroBanner />
-        <CouponBanner />
+         <HeroBanner />
+         <CouponBanner />
 
         <PocketFriendlyBargain />
          <TodaysBestDeals />

@@ -231,7 +231,7 @@ export default function HeroBanner({ banners: externalBanners = null, previewBan
           </div>
 
           {/* Sale Card */}
-          <div className={` md:block relative rounded-3xl overflow-hidden group h-[400px] ${currentSale.buttonLink ? 'cursor-pointer' : ''}`}>
+          <div className={` md:block hidden  relative rounded-3xl overflow-hidden group h-[400px] ${currentSale.buttonLink ? 'cursor-pointer' : ''}`}>
             {currentSale.buttonLink && (
               <Link href={currentSale.buttonLink} className="absolute inset-0 z-20" />
             )}

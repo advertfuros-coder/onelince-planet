@@ -15,22 +15,213 @@ import {
   FiZap,
   FiShoppingBag
 } from 'react-icons/fi'
+import {
+  Smartphone,
+  ShoppingBag,
+  Home,
+  Sparkles,
+  BookOpen,
+  Heart,
+  ShoppingCart,
+  Gift,
+  ChevronRight
+} from 'lucide-react'
 import { useAuth } from '../../lib/context/AuthContext'
 import { useCart } from '../../lib/context/CartContext'
 import { useCurrency } from '../../lib/context/CurrencyContext'
 import { useWishlist } from '../../lib/hooks/useWishlist'
 import SearchAutocomplete from './SearchAutocomplete'
 
-const categories = [
-  { name: 'Electronics', href: '/category/electronics' },
-  { name: 'Fashion', href: '/category/fashion' },
-  { name: 'Home & Decor', href: '/category/home' },
-  { name: 'Beauty & Skin', href: '/category/beauty' },
-  { name: 'Books', href: '/category/books' },
-  { name: 'Health & Fitness', href: '/category/health' },
-  { name: 'Groceries', href: '/category/groceries' },
-  { name: 'Gifts', href: '/category/gifts' }
+// Mega Menu Category Data Structure
+const megaMenuCategories = [
+  {
+    name: 'Electronics',
+    href: '/products?search=electronics',
+    icon: 'Smartphone',
+    subcategories: [
+      { name: 'Mobile Phones', href: '/products?search=mobile phones' },
+      { name: 'Laptops & Computers', href: '/products?search=laptops computers' },
+      { name: 'Tablets & iPads', href: '/products?search=tablets ipads' },
+      { name: 'Cameras & Photography', href: '/products?search=cameras photography' },
+      { name: 'Audio & Headphones', href: '/products?search=audio headphones' },
+      { name: 'Wearables & Smartwatches', href: '/products?search=wearables smartwatches' },
+      { name: 'Gaming Consoles', href: '/products?search=gaming consoles' },
+      { name: 'TV & Home Entertainment', href: '/products?search=tv home entertainment' },
+      { name: 'Accessories', href: '/products?search=electronics accessories' }
+    ],
+    featured: {
+      title: 'New Arrivals',
+      description: 'Latest tech at unbeatable prices',
+      image: '/featured/electronics.jpg',
+      link: '/products?search=electronics new arrivals'
+    }
+  },
+  {
+    name: 'Fashion',
+    href: '/products?search=fashion',
+    icon: 'ShoppingBag',
+    subcategories: [
+      { name: "Men's Clothing", href: '/products?search=mens clothing' },
+      { name: "Women's Clothing", href: '/products?search=womens clothing' },
+      { name: 'Kids Fashion', href: '/products?search=kids fashion' },
+      { name: 'Footwear', href: '/products?search=footwear shoes' },
+      { name: 'Bags & Luggage', href: '/products?search=bags luggage' },
+      { name: 'Watches', href: '/products?search=watches' },
+      { name: 'Jewelry & Accessories', href: '/products?search=jewelry accessories' },
+      { name: 'Sunglasses & Eyewear', href: '/products?search=sunglasses eyewear' },
+      { name: 'Sportswear', href: '/products?search=sportswear' }
+    ],
+    featured: {
+      title: 'Trending Styles',
+      description: 'Up to 60% off on fashion',
+      image: '/featured/fashion.jpg',
+      link: '/products?search=fashion trending'
+    }
+  },
+  {
+    name: 'Home & Decor',
+    href: '/products?search=home decor',
+    icon: 'Home',
+    subcategories: [
+      { name: 'Furniture', href: '/products?search=furniture' },
+      { name: 'Home Decor', href: '/products?search=home decor' },
+      { name: 'Kitchen & Dining', href: '/products?search=kitchen dining' },
+      { name: 'Bedding & Linen', href: '/products?search=bedding linen' },
+      { name: 'Lighting', href: '/products?search=lighting' },
+      { name: 'Storage & Organization', href: '/products?search=storage organization' },
+      { name: 'Garden & Outdoor', href: '/products?search=garden outdoor' },
+      { name: 'Home Appliances', href: '/products?search=home appliances' }
+    ],
+    featured: {
+      title: 'Home Makeover',
+      description: 'Transform your space',
+      image: '/featured/home.jpg',
+      link: '/products?search=home decor featured'
+    }
+  },
+  {
+    name: 'Beauty & Skin',
+    href: '/products?search=beauty skin',
+    icon: 'Sparkles',
+    subcategories: [
+      { name: 'Skincare', href: '/products?search=skincare' },
+      { name: 'Makeup', href: '/products?search=makeup' },
+      { name: 'Haircare', href: '/products?search=haircare' },
+      { name: 'Fragrances', href: '/products?search=fragrances perfume' },
+      { name: 'Bath & Body', href: '/products?search=bath body' },
+      { name: 'Beauty Tools', href: '/products?search=beauty tools' },
+      { name: 'Men\'s Grooming', href: '/products?search=mens grooming' },
+      { name: 'Wellness', href: '/products?search=wellness' }
+    ],
+    featured: {
+      title: 'Glow Up',
+      description: 'Premium beauty essentials',
+      image: '/featured/beauty.jpg',
+      link: '/products?search=beauty premium'
+    }
+  },
+  {
+    name: 'Books',
+    href: '/products?search=books',
+    icon: 'BookOpen',
+    subcategories: [
+      { name: 'Fiction', href: '/products?search=fiction books' },
+      { name: 'Non-Fiction', href: '/products?search=non-fiction books' },
+      { name: 'Children\'s Books', href: '/products?search=childrens books' },
+      { name: 'Educational', href: '/products?search=educational books' },
+      { name: 'Comics & Manga', href: '/products?search=comics manga' },
+      { name: 'Magazines', href: '/products?search=magazines' },
+      { name: 'eBooks', href: '/products?search=ebooks' }
+    ],
+    featured: {
+      title: 'Bestsellers',
+      description: 'Top reads this month',
+      image: '/featured/books.jpg',
+      link: '/products?search=books bestsellers'
+    }
+  },
+  {
+    name: 'Health & Fitness',
+    href: '/products?search=health fitness',
+    icon: 'Heart',
+    subcategories: [
+      { name: 'Fitness Equipment', href: '/products?search=fitness equipment' },
+      { name: 'Supplements & Vitamins', href: '/products?search=supplements vitamins' },
+      { name: 'Yoga & Meditation', href: '/products?search=yoga meditation' },
+      { name: 'Sports Nutrition', href: '/products?search=sports nutrition' },
+      { name: 'Health Monitors', href: '/products?search=health monitors' },
+      { name: 'Personal Care', href: '/products?search=personal care' }
+    ],
+    featured: {
+      title: 'Fitness Goals',
+      description: 'Start your journey today',
+      image: '/featured/health.jpg',
+      link: '/products?search=health fitness featured'
+    }
+  },
+  {
+    name: 'Groceries',
+    href: '/products?search=groceries',
+    icon: 'ShoppingCart',
+    subcategories: [
+      { name: 'Fresh Produce', href: '/products?search=fresh produce' },
+      { name: 'Dairy & Eggs', href: '/products?search=dairy eggs' },
+      { name: 'Snacks & Beverages', href: '/products?search=snacks beverages' },
+      { name: 'Packaged Foods', href: '/products?search=packaged foods' },
+      { name: 'Bakery', href: '/products?search=bakery' },
+      { name: 'Organic', href: '/products?search=organic' },
+      { name: 'International Foods', href: '/products?search=international foods' }
+    ],
+    featured: {
+      title: 'Fresh Daily',
+      description: 'Farm to your doorstep',
+      image: '/featured/groceries.jpg',
+      link: '/products?search=groceries fresh'
+    }
+  },
+  {
+    name: 'Gifts',
+    href: '/products?search=gifts',
+    icon: 'Gift',
+    subcategories: [
+      { name: 'For Him', href: '/products?search=gifts for him' },
+      { name: 'For Her', href: '/products?search=gifts for her' },
+      { name: 'For Kids', href: '/products?search=gifts for kids' },
+      { name: 'Personalized Gifts', href: '/products?search=personalized gifts' },
+      { name: 'Gift Cards', href: '/products?search=gift cards' },
+      { name: 'Occasions', href: '/products?search=gifts occasions' },
+      { name: 'Luxury Gifts', href: '/products?search=luxury gifts' }
+    ],
+    featured: {
+      title: 'Perfect Gifts',
+      description: 'Make moments special',
+      image: '/featured/gifts.jpg',
+      link: '/products?search=gifts featured'
+    }
+  }
 ]
+
+// Simple categories array for mobile/fallback
+const categories = megaMenuCategories.map(cat => ({
+  name: cat.name,
+  href: cat.href
+}))
+
+// Icon mapping helper
+const iconComponents = {
+  Smartphone,
+  ShoppingBag,
+  Home,
+  Sparkles,
+  BookOpen,
+  Heart,
+  ShoppingCart,
+  Gift
+}
+
+const getIconComponent = (iconName) => {
+  return iconComponents[iconName] || Smartphone
+}
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -44,6 +235,12 @@ export default function Header() {
   const [locationError, setLocationError] = useState('')
   const [showSecondaryHeader, setShowSecondaryHeader] = useState(true)
   const [lastScrollY, setLastScrollY] = useState(0)
+
+  // Mega Menu State
+  const [activeMegaMenu, setActiveMegaMenu] = useState(null)
+  const [hoveredCategory, setHoveredCategory] = useState(null)
+  const megaMenuTimerRef = useRef(null)
+  const hoverTimerRef = useRef(null)
 
   const { user, logout } = useAuth()
   const { items } = useCart()
@@ -61,6 +258,55 @@ export default function Header() {
   const isProfilePage = pathname?.startsWith('/profile')
   const isOrderDetailsPage = pathname?.startsWith('/orders/')
   const hideHeaderExtras = isProductDetailPage || isProductsPage || isProfilePage || isOrderDetailsPage
+
+  // Mega Menu Hover Handlers with delay
+  const handleCategoryHover = (categoryName) => {
+    // Clear any pending hide timer
+    if (megaMenuTimerRef.current) {
+      clearTimeout(megaMenuTimerRef.current)
+      megaMenuTimerRef.current = null
+    }
+
+    // Set active category with slight delay for smooth transition
+    if (hoverTimerRef.current) {
+      clearTimeout(hoverTimerRef.current)
+    }
+
+    hoverTimerRef.current = setTimeout(() => {
+      setActiveMegaMenu(categoryName)
+      setHoveredCategory(categoryName)
+    }, 100)
+  }
+
+  const handleMegaMenuLeave = () => {
+    // Clear hover timer
+    if (hoverTimerRef.current) {
+      clearTimeout(hoverTimerRef.current)
+      hoverTimerRef.current = null
+    }
+
+    // Delay hiding to allow user to move mouse to submenu
+    megaMenuTimerRef.current = setTimeout(() => {
+      setActiveMegaMenu(null)
+      setHoveredCategory(null)
+    }, 150)
+  }
+
+  const handleMegaMenuEnter = () => {
+    // Clear hide timer when mouse enters mega menu
+    if (megaMenuTimerRef.current) {
+      clearTimeout(megaMenuTimerRef.current)
+      megaMenuTimerRef.current = null
+    }
+  }
+
+  // Cleanup timers on unmount
+  useEffect(() => {
+    return () => {
+      if (megaMenuTimerRef.current) clearTimeout(megaMenuTimerRef.current)
+      if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current)
+    }
+  }, [])
 
   // Country configuration
   const countries = {
@@ -393,7 +639,7 @@ export default function Header() {
               <div className="h-1 bg-[#2D313F] w-full"></div>
 
               {/* Main Location Content */}
-              <div className="bg-[#FFD23F] px-4 py-2 relative z-10 sh adow-sm border-b border-[#FFD23F]/20">
+              <div className="bg-[#FFD23F] px-4 py-2 relative z-10 shadow-sm border-b border-[#FFD23F]/20">
                 <button
                   onClick={() => setIsLocationModalOpen(true)}
                   className="flex items-center gap-2 w-full text-left"
@@ -474,65 +720,133 @@ export default function Header() {
       </div>
 
 
-      {/* Navigation Bar - Hide on product detail pages */}
+      {/* Premium Mega Menu Navigation Bar - Hide on product detail pages */}
       {!hideHeaderExtras && (
-        <div className={`hidden lg:block bg-gray-50 border-b border-gray-200 overflow-hidden transition-all duration-300 ${showSecondaryHeader ? 'max-h-12 opacity-100' : 'max-h-0 opacity-0'}`}>
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between h-12">
-              {/* Categories */}
-              <div className="flex items-center gap-6">
-                {/* All Categories Dropdown */}
-                <div className="relative" ref={categoriesRef}>
-                  <button
-                    onClick={() => setIsCategoriesOpen(!isCategoriesOpen)}
-                    className="flex items-center gap-2 px-4 py-1.5 bg-white border border-gray-200 rounded-md hover:border-gray-300 transition-colors"
-                  >
-                    <FiMenu className="w-4 h-4" />
-                    <span className="text-sm font-semibold">All Categories</span>
-                    <FiChevronDown className="w-3 h-3" />
-                  </button>
+        <div className={`hidden lg:block bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200 overflow-visible transition-all duration-300 ${showSecondaryHeader ? 'max-h-14 opacity-100' : 'max-h-0 opacity-0'}`}>
+          <div className="w-full px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-center h-14 relative">
+              {/* Categories with Mega Menu - Full Width Centered */}
+              <div className="flex items-center gap-1 relative">
+                {megaMenuCategories.map((category) => {
+                  const IconComponent = getIconComponent(category.icon)
+                  const isActive = activeMegaMenu === category.name
 
-                  {isCategoriesOpen && (
-                    <div className="absolute left-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-100 py-2 max-h-96 overflow-y-auto">
-                      {categories.map((category) => (
-                        <Link
-                          key={category.name}
-                          href={category.href}
-                          className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors"
-                          onClick={() => setIsCategoriesOpen(false)}
-                        >
-                          <span className="text-sm font-medium">{category.name}</span>
-                        </Link>
-                      ))}
+                  return (
+                    <div
+                      key={category.name}
+                      className="relative"
+                      onMouseEnter={() => handleCategoryHover(category.name)}
+                      onMouseLeave={handleMegaMenuLeave}
+                    >
+                      <Link
+                        href={category.href}
+                        className={`flex items-center gap-2 px-4 py-3 text-sm font-medium transition-all duration-200 rounded-lg group ${isActive
+                            ? 'text-blue-600 bg-white shadow-sm'
+                            : 'text-gray-700 hover:text-blue-600 hover:bg-white/50'
+                          }`}
+                      >
+                        <IconComponent className={`w-4 h-4 transition-transform duration-200 ${isActive ? 'scale-110' : 'group-hover:scale-110'}`} />
+                        <span>{category.name}</span>
+                        <ChevronRight className={`w-3 h-3 transition-all duration-200 ${isActive ? 'rotate-90 opacity-100' : 'opacity-0 group-hover:opacity-100'}`} />
+                      </Link>
                     </div>
-                  )}
-                </div>
-
-                {/* Quick Categories */}
-                {categories.slice(0, 7).map((category) => (
-                  <Link
-                    key={category.name}
-                    href={category.href}
-                    className="text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
-                  >
-                    {category.name}
-                  </Link>
-                ))}
-              </div>
-
-              {/* Right Side Links */}
-              <div className="flex items-center gap-6">
-                <Link href="/deals" className="flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors">
-                  <FiGift className="w-4 h-4" />
-                  Best Deals
-                </Link>
-                <Link href="/live" className="flex items-center gap-2 text-sm font-semibold hover:text-blue-600 transition-colors">
-                  <span>OnlinePlanet Live</span>
-                  <FiZap className="w-4 h-4 text-red-500" />
-                </Link>
+                  )
+                })}
               </div>
             </div>
           </div>
+
+          {/* Mega Menu Dropdown */}
+          {activeMegaMenu && (
+            <div
+              className="absolute left-0 right-0 top-full bg-white border-t border-gray-200 shadow-2xl z-50 animate-in fade-in slide-in-from-top-2 duration-200"
+              onMouseEnter={handleMegaMenuEnter}
+              onMouseLeave={handleMegaMenuLeave}
+              style={{
+                animation: 'megaMenuSlide 0.2s ease-out'
+              }}
+            >
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                {megaMenuCategories.map((category) => {
+                  if (category.name !== activeMegaMenu) return null
+
+                  const IconComponent = getIconComponent(category.icon)
+
+                  return (
+                    <div key={category.name} className="grid grid-cols-12 gap-8">
+                      {/* Left Column - Category Info */}
+                      <div className="col-span-3 border-r border-gray-100 pr-6">
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
+                            <IconComponent className="w-6 h-6 text-white" />
+                          </div>
+                          <div>
+                            <h3 className="text-lg font-bold text-gray-900">{category.name}</h3>
+                            <p className="text-xs text-gray-500">Explore all products</p>
+                          </div>
+                        </div>
+                        <Link
+                          href={category.href}
+                          className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors group"
+                        >
+                          View All {category.name}
+                          <ChevronRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                        </Link>
+                      </div>
+
+                      {/* Middle Column - Subcategories Grid */}
+                      <div className="col-span-6">
+                        <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Popular Categories</h4>
+                        <div className="grid grid-cols-2 gap-x-6 gap-y-3">
+                          {category.subcategories.map((subcat) => (
+                            <Link
+                              key={subcat.name}
+                              href={subcat.href}
+                              className="flex items-center gap-2 text-sm text-gray-700 hover:text-blue-600 transition-colors group py-1.5 px-2 rounded-md hover:bg-blue-50"
+                            >
+                              <div className="w-1.5 h-1.5 rounded-full bg-gray-300 group-hover:bg-blue-600 transition-colors"></div>
+                              <span className="font-medium">{subcat.name}</span>
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Right Column - Featured Promo */}
+                      <div className="col-span-3">
+                        <div className="relative h-full rounded-2xl bg-gradient-to-br from-blue-500 via-indigo-600 to-purple-600 p-6 overflow-hidden group cursor-pointer">
+                          {/* Glassmorphic overlay */}
+                          <div className="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
+
+                          {/* Content */}
+                          <div className="relative z-10 h-full flex flex-col justify-between">
+                            <div>
+                              <div className="inline-block px-3 py-1 bg-white/20 backdrop-blur-md rounded-full mb-3">
+                                <span className="text-xs font-bold text-white">FEATURED</span>
+                              </div>
+                              <h4 className="text-xl font-bold text-white mb-2">{category.featured.title}</h4>
+                              <p className="text-sm text-white/90 mb-4">{category.featured.description}</p>
+                            </div>
+
+                            <Link
+                              href={category.featured.link}
+                              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-white text-blue-600 rounded-lg font-semibold text-sm hover:bg-blue-50 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 duration-200"
+                            >
+                              Shop Now
+                              <ChevronRight className="w-4 h-4" />
+                            </Link>
+                          </div>
+
+                          {/* Decorative elements */}
+                          <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
+                          <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          )}
         </div>
       )}
 
@@ -591,6 +905,17 @@ export default function Header() {
         .no-scrollbar {
           -ms-overflow-style: none;
           scrollbar-width: none;
+        }
+        
+        @keyframes megaMenuSlide {
+          from {
+            opacity: 0;
+            transform: translateY(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
       `}</style>
 
