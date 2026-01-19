@@ -26,10 +26,11 @@ import FeaturedCollections from '@/components/customer/FeaturedCollections'
 import DealOfTheDay from '@/components/customer/DealOfTheDay'
 import ShopByPrice from '@/components/customer/ShopByPrice'
 import StealDeals from '@/components/customer/StealDeals'
+import ElectronicGadgets from '@/components/customer/ElectronicGadgets'
 import CouponBanner from '@/components/customer/CouponBanner'
 import CategoryGrid from '@/components/customer/CategoryGrid'
 import ValentinesSpecial from '@/components/customer/ValentinesSpecial'
- import DealsOfTheDay from '@/components/customer/DealsOfTheDay'
+import DealsOfTheDay from '@/components/customer/DealsOfTheDay'
 import TodaysBestDeals from '@/components/customer/TodaysBestDeals'
 import TrendingNow from '@/components/customer/TrendingNow'
 
@@ -38,16 +39,19 @@ export default function Home() {
     <div className="min-h-screen bg-white">
       <Header />
       <main>
-         <HeroBanner />
-         <CouponBanner />
-         <CategoryGrid />
-         <ValentinesSpecial />
+        <HeroBanner />
+        <CouponBanner />
+        <CategoryGrid />
+        <ValentinesSpecial />
 
         <PocketFriendlyBargain />
-         <TodaysBestDeals />
+        <TodaysBestDeals />
 
         {/* Steal Deals - Claimable low-price offers */}
         <StealDeals />
+
+        {/* Electronic Gadgets - Electronics category showcase */}
+        <ElectronicGadgets />
 
 
 
@@ -57,7 +61,7 @@ export default function Home() {
         {/* Promotional Cards - Visual marketing banners */}
         <PromotionalCards />
 
-        
+
 
         {/* Features Bar - Key benefits */}
         <FeaturesBar />
