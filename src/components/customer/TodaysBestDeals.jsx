@@ -213,7 +213,6 @@ export default function TodaysBestDeals() {
                                 product={product}
                                 isWishlisted={wishlist.has(product._id)}
                                 onToggleWishlist={toggleWishlist}
-                                minimal={true}
                             />
                         </div>
                     ))}

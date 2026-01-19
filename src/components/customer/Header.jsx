@@ -13,7 +13,9 @@ import {
   FiMapPin,
   FiGift,
   FiZap,
-  FiShoppingBag
+  FiShoppingBag,
+  FiHome,
+  FiGrid
 } from 'react-icons/fi'
 import {
   Smartphone,
@@ -36,167 +38,167 @@ import SearchAutocomplete from './SearchAutocomplete'
 const megaMenuCategories = [
   {
     name: 'Electronics',
-    href: '/products?search=electronics',
+    href: '/category/electronics',
     icon: 'Smartphone',
     subcategories: [
-      { name: 'Mobile Phones', href: '/products?search=mobile phones' },
-      { name: 'Laptops & Computers', href: '/products?search=laptops computers' },
-      { name: 'Tablets & iPads', href: '/products?search=tablets ipads' },
-      { name: 'Cameras & Photography', href: '/products?search=cameras photography' },
-      { name: 'Audio & Headphones', href: '/products?search=audio headphones' },
-      { name: 'Wearables & Smartwatches', href: '/products?search=wearables smartwatches' },
-      { name: 'Gaming Consoles', href: '/products?search=gaming consoles' },
-      { name: 'TV & Home Entertainment', href: '/products?search=tv home entertainment' },
-      { name: 'Accessories', href: '/products?search=electronics accessories' }
+      { name: 'Mobile Phones', href: '/category/electronics/mobiles' },
+      { name: 'Laptops & Computers', href: '/category/electronics/laptops' },
+      { name: 'Tablets & iPads', href: '/category/electronics/tablets' },
+      { name: 'Cameras & Photography', href: '/category/electronics/cameras' },
+      { name: 'Audio & Headphones', href: '/category/electronics/audio' },
+      { name: 'Wearables & Smartwatches', href: '/category/electronics/wearables' },
+      { name: 'Gaming Consoles', href: '/category/electronics/gaming' },
+      { name: 'TV & Home Entertainment', href: '/category/electronics/tv' },
+      { name: 'Accessories', href: '/category/electronics/accessories' }
     ],
     featured: {
       title: 'New Arrivals',
       description: 'Latest tech at unbeatable prices',
       image: '/featured/electronics.jpg',
-      link: '/products?search=electronics new arrivals'
+      link: '/category/electronics/new'
     }
   },
   {
     name: 'Fashion',
-    href: '/products?search=fashion',
+    href: '/category/fashion',
     icon: 'ShoppingBag',
     subcategories: [
-      { name: "Men's Clothing", href: '/products?search=mens clothing' },
-      { name: "Women's Clothing", href: '/products?search=womens clothing' },
-      { name: 'Kids Fashion', href: '/products?search=kids fashion' },
-      { name: 'Footwear', href: '/products?search=footwear shoes' },
-      { name: 'Bags & Luggage', href: '/products?search=bags luggage' },
-      { name: 'Watches', href: '/products?search=watches' },
-      { name: 'Jewelry & Accessories', href: '/products?search=jewelry accessories' },
-      { name: 'Sunglasses & Eyewear', href: '/products?search=sunglasses eyewear' },
-      { name: 'Sportswear', href: '/products?search=sportswear' }
+      { name: "Men's Clothing", href: '/category/fashion/mens' },
+      { name: "Women's Clothing", href: '/category/fashion/womens' },
+      { name: 'Kids Fashion', href: '/category/fashion/kids' },
+      { name: 'Footwear', href: '/category/fashion/footwear' },
+      { name: 'Bags & Luggage', href: '/category/fashion/bags' },
+      { name: 'Watches', href: '/category/fashion/watches' },
+      { name: 'Jewelry & Accessories', href: '/category/fashion/jewelry' },
+      { name: 'Sunglasses & Eyewear', href: '/category/fashion/eyewear' },
+      { name: 'Sportswear', href: '/category/fashion/sportswear' }
     ],
     featured: {
       title: 'Trending Styles',
       description: 'Up to 60% off on fashion',
       image: '/featured/fashion.jpg',
-      link: '/products?search=fashion trending'
+      link: '/category/fashion/trending'
     }
   },
   {
     name: 'Home & Decor',
-    href: '/products?search=home decor',
+    href: '/category/home',
     icon: 'Home',
     subcategories: [
-      { name: 'Furniture', href: '/products?search=furniture' },
-      { name: 'Home Decor', href: '/products?search=home decor' },
-      { name: 'Kitchen & Dining', href: '/products?search=kitchen dining' },
-      { name: 'Bedding & Linen', href: '/products?search=bedding linen' },
-      { name: 'Lighting', href: '/products?search=lighting' },
-      { name: 'Storage & Organization', href: '/products?search=storage organization' },
-      { name: 'Garden & Outdoor', href: '/products?search=garden outdoor' },
-      { name: 'Home Appliances', href: '/products?search=home appliances' }
+      { name: 'Furniture', href: '/category/home/furniture' },
+      { name: 'Home Decor', href: '/category/home/decor' },
+      { name: 'Kitchen & Dining', href: '/category/home/kitchen' },
+      { name: 'Bedding & Linen', href: '/category/home/bedding' },
+      { name: 'Lighting', href: '/category/home/lighting' },
+      { name: 'Storage & Organization', href: '/category/home/storage' },
+      { name: 'Garden & Outdoor', href: '/category/home/garden' },
+      { name: 'Home Appliances', href: '/category/home/appliances' }
     ],
     featured: {
       title: 'Home Makeover',
       description: 'Transform your space',
       image: '/featured/home.jpg',
-      link: '/products?search=home decor featured'
+      link: '/category/home/featured'
     }
   },
   {
     name: 'Beauty & Skin',
-    href: '/products?search=beauty skin',
+    href: '/category/beauty',
     icon: 'Sparkles',
     subcategories: [
-      { name: 'Skincare', href: '/products?search=skincare' },
-      { name: 'Makeup', href: '/products?search=makeup' },
-      { name: 'Haircare', href: '/products?search=haircare' },
-      { name: 'Fragrances', href: '/products?search=fragrances perfume' },
-      { name: 'Bath & Body', href: '/products?search=bath body' },
-      { name: 'Beauty Tools', href: '/products?search=beauty tools' },
-      { name: 'Men\'s Grooming', href: '/products?search=mens grooming' },
-      { name: 'Wellness', href: '/products?search=wellness' }
+      { name: 'Skincare', href: '/category/beauty/skincare' },
+      { name: 'Makeup', href: '/category/beauty/makeup' },
+      { name: 'Haircare', href: '/category/beauty/haircare' },
+      { name: 'Fragrances', href: '/category/beauty/fragrances' },
+      { name: 'Bath & Body', href: '/category/beauty/bath' },
+      { name: 'Beauty Tools', href: '/category/beauty/tools' },
+      { name: 'Men\'s Grooming', href: '/category/beauty/mens' },
+      { name: 'Wellness', href: '/category/beauty/wellness' }
     ],
     featured: {
       title: 'Glow Up',
       description: 'Premium beauty essentials',
       image: '/featured/beauty.jpg',
-      link: '/products?search=beauty premium'
+      link: '/category/beauty/premium'
     }
   },
   {
     name: 'Books',
-    href: '/products?search=books',
+    href: '/category/books',
     icon: 'BookOpen',
     subcategories: [
-      { name: 'Fiction', href: '/products?search=fiction books' },
-      { name: 'Non-Fiction', href: '/products?search=non-fiction books' },
-      { name: 'Children\'s Books', href: '/products?search=childrens books' },
-      { name: 'Educational', href: '/products?search=educational books' },
-      { name: 'Comics & Manga', href: '/products?search=comics manga' },
-      { name: 'Magazines', href: '/products?search=magazines' },
-      { name: 'eBooks', href: '/products?search=ebooks' }
+      { name: 'Fiction', href: '/category/books/fiction' },
+      { name: 'Non-Fiction', href: '/category/books/non-fiction' },
+      { name: 'Children\'s Books', href: '/category/books/children' },
+      { name: 'Educational', href: '/category/books/educational' },
+      { name: 'Comics & Manga', href: '/category/books/comics' },
+      { name: 'Magazines', href: '/category/books/magazines' },
+      { name: 'eBooks', href: '/category/books/ebooks' }
     ],
     featured: {
       title: 'Bestsellers',
       description: 'Top reads this month',
       image: '/featured/books.jpg',
-      link: '/products?search=books bestsellers'
+      link: '/category/books/bestsellers'
     }
   },
   {
     name: 'Health & Fitness',
-    href: '/products?search=health fitness',
+    href: '/category/health',
     icon: 'Heart',
     subcategories: [
-      { name: 'Fitness Equipment', href: '/products?search=fitness equipment' },
-      { name: 'Supplements & Vitamins', href: '/products?search=supplements vitamins' },
-      { name: 'Yoga & Meditation', href: '/products?search=yoga meditation' },
-      { name: 'Sports Nutrition', href: '/products?search=sports nutrition' },
-      { name: 'Health Monitors', href: '/products?search=health monitors' },
-      { name: 'Personal Care', href: '/products?search=personal care' }
+      { name: 'Fitness Equipment', href: '/category/health/equipment' },
+      { name: 'Supplements & Vitamins', href: '/category/health/supplements' },
+      { name: 'Yoga & Meditation', href: '/category/health/yoga' },
+      { name: 'Sports Nutrition', href: '/category/health/nutrition' },
+      { name: 'Health Monitors', href: '/category/health/monitors' },
+      { name: 'Personal Care', href: '/category/health/personal-care' }
     ],
     featured: {
       title: 'Fitness Goals',
       description: 'Start your journey today',
       image: '/featured/health.jpg',
-      link: '/products?search=health fitness featured'
+      link: '/category/health/featured'
     }
   },
   {
     name: 'Groceries',
-    href: '/products?search=groceries',
+    href: '/category/groceries',
     icon: 'ShoppingCart',
     subcategories: [
-      { name: 'Fresh Produce', href: '/products?search=fresh produce' },
-      { name: 'Dairy & Eggs', href: '/products?search=dairy eggs' },
-      { name: 'Snacks & Beverages', href: '/products?search=snacks beverages' },
-      { name: 'Packaged Foods', href: '/products?search=packaged foods' },
-      { name: 'Bakery', href: '/products?search=bakery' },
-      { name: 'Organic', href: '/products?search=organic' },
-      { name: 'International Foods', href: '/products?search=international foods' }
+      { name: 'Fresh Produce', href: '/category/groceries/fresh' },
+      { name: 'Dairy & Eggs', href: '/category/groceries/dairy' },
+      { name: 'Snacks & Beverages', href: '/category/groceries/snacks' },
+      { name: 'Packaged Foods', href: '/category/groceries/packaged' },
+      { name: 'Bakery', href: '/category/groceries/bakery' },
+      { name: 'Organic', href: '/category/groceries/organic' },
+      { name: 'International Foods', href: '/category/groceries/international' }
     ],
     featured: {
       title: 'Fresh Daily',
       description: 'Farm to your doorstep',
       image: '/featured/groceries.jpg',
-      link: '/products?search=groceries fresh'
+      link: '/category/groceries/fresh'
     }
   },
   {
     name: 'Gifts',
-    href: '/products?search=gifts',
+    href: '/category/gifts',
     icon: 'Gift',
     subcategories: [
-      { name: 'For Him', href: '/products?search=gifts for him' },
-      { name: 'For Her', href: '/products?search=gifts for her' },
-      { name: 'For Kids', href: '/products?search=gifts for kids' },
-      { name: 'Personalized Gifts', href: '/products?search=personalized gifts' },
-      { name: 'Gift Cards', href: '/products?search=gift cards' },
-      { name: 'Occasions', href: '/products?search=gifts occasions' },
-      { name: 'Luxury Gifts', href: '/products?search=luxury gifts' }
+      { name: 'For Him', href: '/category/gifts/him' },
+      { name: 'For Her', href: '/category/gifts/her' },
+      { name: 'For Kids', href: '/category/gifts/kids' },
+      { name: 'Personalized Gifts', href: '/category/gifts/personalized' },
+      { name: 'Gift Cards', href: '/category/gifts/cards' },
+      { name: 'Occasions', href: '/category/gifts/occasions' },
+      { name: 'Luxury Gifts', href: '/category/gifts/luxury' }
     ],
     featured: {
       title: 'Perfect Gifts',
       description: 'Make moments special',
       image: '/featured/gifts.jpg',
-      link: '/products?search=gifts featured'
+      link: '/category/gifts/featured'
     }
   }
 ]
@@ -241,6 +243,48 @@ export default function Header() {
   const [hoveredCategory, setHoveredCategory] = useState(null)
   const megaMenuTimerRef = useRef(null)
   const hoverTimerRef = useRef(null)
+
+  // Time-based background state
+  const [timeOfDay, setTimeOfDay] = useState('day')
+
+  // Determine time of day based on IST
+  useEffect(() => {
+    const updateTimeOfDay = () => {
+      const now = new Date()
+      // Convert to IST (UTC+5:30)
+      const istOffset = 5.5 * 60 * 60 * 1000
+      const istTime = new Date(now.getTime() + istOffset)
+      const hours = istTime.getUTCHours()
+
+      if (hours >= 6 && hours < 17) {
+        setTimeOfDay('day')
+      } else if (hours >= 17 && hours < 19) {
+        setTimeOfDay('sunset')
+      } else {
+        setTimeOfDay('night')
+      }
+    }
+
+    updateTimeOfDay()
+    // Update every minute to ensure accuracy
+    const interval = setInterval(updateTimeOfDay, 60000)
+
+    return () => clearInterval(interval)
+  }, [])
+
+  // Get background image based on time of day
+  const getBackgroundImage = () => {
+    switch (timeOfDay) {
+      case 'day':
+        return '/weather/day.jpg'
+      case 'sunset':
+        return '/weather/sunset.png'
+      case 'night':
+        return '/weather/day.png'
+      default:
+        return '/weather/day.png'
+    }
+  }
 
   const { user, logout } = useAuth()
   const { items } = useCart()
@@ -513,18 +557,30 @@ export default function Header() {
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50">
       {/* Desktop Main Header */}
-      <div className="hidden lg:block border-b border-gray-100">
-        <div className="max-w-8xl mx-auto px-4  ">
+      <div
+        className="hidden lg:block bord er-b border-gray-100 relative overflow-hidden"
+        style={{
+          backgroundImage: `url(${getBackgroundImage()})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'top',
+          backgroundRepeat: 'no-repeat'
+        }}
+      >
+        {/* Overlay for better text readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-black/0 to-black/"></div>
+
+        <div className="max-w-8xl mx-auto px-4 relative z-10">
           <div className="flex items-center justify-between h-16 gap-4">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 flex-shrink-0">
               <img
                 src="/logo.png"
                 alt="OnlinePlanet Logo"
-                className="h-8 w-auto object-contain"
+                className="h-8 w-auto object-contain drop-shadow-lg"
               />
 
-              <p className="text-xl font-semibold transition-colors hover:text-blue-600 cursor-pointer tracking-tight">
+              <p className={`text-xl font-semibold transition-colors hover:text-blue-400 cursor-pointer tracking-tight drop-shadow-lg ${timeOfDay === 'night' ? 'text-white' : 'text-white'
+                }`}>
                 Online Planet
               </p>
             </Link>
@@ -540,23 +596,26 @@ export default function Header() {
               <div className="relative">
                 <button
                   onClick={() => setIsLocationModalOpen(!isLocationModalOpen)}
-                  className="flex items-center gap-2 text-xs hover:text-blue-600 transition-colors"
+                  className={`flex items-center gap-2 text-xs hover:text-blue-300 transition-colors ${timeOfDay === 'night' ? 'text-white' : 'text-white'
+                    }`}
                 >
-                  <FiMapPin className="w-4 h-4" />
+                  <FiMapPin className="w-4 h-4 drop-shadow-md" />
                   <div className="text-left">
-                    <div className="text-gray-500 line-clamp-1 max-w-[150px]">
+                    <div className="text-white/90 line-clamp-1 max-w-[150px] drop-shadow-md">
                       Delivering to {location} {pincode && <span className="font-semibold">{pincode}</span>}
                     </div>
-                    <div className="font-semibold text-gray-900">Update Location</div>
+                    <div className="font-semibold text-white drop-shadow-md">Update Location</div>
                   </div>
                 </button>
               </div>
 
               <div className="relative" ref={countryMenuRef}>
-                <button onClick={() => setIsCountryMenuOpen(!isCountryMenuOpen)} className="flex items-center gap-1.5 px-2 py-1 hover:bg-gray-50 rounded transition-colors">
-                  <span className="text-xl">{countries[country].flag}</span>
-                  <span className="text-sm font-semibold">{country}</span>
-                  <FiChevronDown className="w-3 h-3" />
+                <button onClick={() => setIsCountryMenuOpen(!isCountryMenuOpen)} className="flex items-center gap-1.5 px-2 py-1 hover:bg-white/20 rounded transition-colors backdrop-blur-sm">
+                  <span className="text-xl drop-shadow-md">{countries[country].flag}</span>
+                  <span className={`text-sm font-semibold drop-shadow-md ${timeOfDay === 'night' ? 'text-white' : 'text-white'
+                    }`}>{country}</span>
+                  <FiChevronDown className={`w-3 h-3 drop-shadow-md ${timeOfDay === 'night' ? 'text-white' : 'text-white'
+                    }`} />
                 </button>
                 {isCountryMenuOpen && (
                   <div className="absolute top-full right-0 mt-2 z-50 bg-white rounded-xl shadow-2xl w-80 border border-gray-100 overflow-hidden">
@@ -576,36 +635,40 @@ export default function Header() {
               </div>
 
               {user?.role === 'admin' && (
-                <Link href="/admin/dashboard" className="flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-all font-semibold text-sm">
+                <Link href="/admin/dashboard" className="flex items-center gap-2 px-4 py-2 bg-white/90 backdrop-blur-sm text-gray-900 rounded-lg hover:bg-white transition-all font-semibold text-sm shadow-lg">
                   <FiZap className="w-4 h-4 text-yellow-400" />
                   <span>Admin Panel</span>
                 </Link>
               )}
               {user?.role === 'seller' && (
-                <Link href="/seller" className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all font-semibold text-sm">
+                <Link href="/seller" className="flex items-center gap-2 px-4 py-2 bg-blue-600/90 backdrop-blur-sm text-white rounded-lg hover:bg-blue-700 transition-all font-semibold text-sm shadow-lg">
                   <FiShoppingBag className="w-4 h-4" />
                   <span>Seller Panel</span>
                 </Link>
               )}
 
               {(!user || user.role === 'customer') && (
-                <Link href="/become-a-seller" className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 transition-all font-semibold text-sm">
+                <Link href="/become-a-seller" className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 transition-all font-semibold text-sm shadow-lg backdrop-blur-sm">
                   <FiShoppingBag className="w-4 h-4" />
                   <span>Want to Sell?</span>
                 </Link>
               )}
 
-              <Link href="/cart" className="relative p-2 hover:bg-gray-50 rounded-lg">
-                <FiShoppingCart className="w-5 h-5" />
-                {cartCount > 0 && <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-[10px] font-semibold rounded-full w-4 h-4 flex items-center justify-center">{cartCount}</span>}
+              <Link href="/cart" className="relative p-2 hover:bg-white/20 rounded-lg backdrop-blur-sm transition-colors">
+                <FiShoppingCart className={`w-5 h-5 drop-shadow-md ${timeOfDay === 'night' ? 'text-white' : 'text-white'
+                  }`} />
+                {cartCount > 0 && <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-[10px] font-semibold rounded-full w-4 h-4 flex items-center justify-center shadow-lg">{cartCount}</span>}
               </Link>
 
               {user ? (
                 <div className="relative" ref={userMenuRef}>
-                  <button onClick={() => setIsUserMenuOpen(!isUserMenuOpen)} className="flex items-center gap-2 px-3 py-2 hover:bg-gray-50 rounded-lg">
-                    <FiUser className="w-5 h-5" />
-                    <span className="text-sm font-semibold">{user.name}</span>
-                    <FiChevronDown className="w-3 h-3" />
+                  <button onClick={() => setIsUserMenuOpen(!isUserMenuOpen)} className="flex items-center gap-2 px-3 py-2 hover:bg-white/20 rounded-lg backdrop-blur-sm transition-colors">
+                    <FiUser className={`w-5 h-5 drop-shadow-md ${timeOfDay === 'night' ? 'text-white' : 'text-white'
+                      }`} />
+                    <span className={`text-sm font-semibold drop-shadow-md ${timeOfDay === 'night' ? 'text-white' : 'text-white'
+                      }`}>{user.name}</span>
+                    <FiChevronDown className={`w-3 h-3 drop-shadow-md ${timeOfDay === 'night' ? 'text-white' : 'text-white'
+                      }`} />
                   </button>
                   {isUserMenuOpen && (
                     <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-100 py-2">
@@ -622,7 +685,10 @@ export default function Header() {
                   )}
                 </div>
               ) : (
-                <Link href="/login" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-50 rounded-lg text-sm font-semibold">Sign In</Link>
+                <Link href="/login" className="flex items-center gap-2 px-4 py-2 hover:bg-white/20 rounded-lg text-sm font-semibold backdrop-blur-sm transition-colors">
+                  <span className={`drop-shadow-md ${timeOfDay === 'night' ? 'text-white' : 'text-white'
+                    }`}>Sign In</span>
+                </Link>
               )}
             </div>
           </div>
@@ -630,63 +696,34 @@ export default function Header() {
       </div>
 
       {/* NEW Mobile Main Header */}
-      <div className="lg:hidden bg-white border-b border-gray-100">
-        <div className="">
+      <div
+        className="lg:hidden border-b border-gray-100 relative overflow-hidden"
+        style={{
+          backgroundImage: `url(${getBackgroundImage()})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'cent',
+          backgroundRepeat: 'no-repeat'
+        }}
+      >
+        {/* Overlay for better text readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-black/20 to-white"></div>
+        <div className="relative z-10">
           {/* Row 0: Mobile Location Bar - Scalloped & Framed Design - Hide on product detail pages */}
           {!hideHeaderExtras && (
             <div className={`relative transition-all duration-300 ease-in-out z-20 ${showSecondaryHeader ? 'max-h-24 opacity-100 mb-4' : 'max-h-0 opacity-0 mb-0'}`}>
               {/* Top Dark Strip as seen in screenshot */}
               <div className="h-1 bg-[#2D313F] w-full"></div>
 
-              {/* Main Location Content */}
-              <div className="bg-[#FFD23F] px-4 py-2 relative z-10 shadow-sm border-b border-[#FFD23F]/20">
-                <button
-                  onClick={() => setIsLocationModalOpen(true)}
-                  className="flex items-center gap-2 w-full text-left"
-                >
-                  <FiMapPin className="w-4 h-4 text-black shrink-0" />
-                  <div className="flex-1 min-w-0 flex items-center gap-1.5">
-                    <span className="text-[12px] text-gray-800 font-medium">Deliver to</span>
-                    <span className="text-[12px] text-black font-semibold truncate">{location}, {pincode}</span>
-                    <FiChevronDown className="w-4 h-4 text-gray-800 shrink-0 ml-auto" />
-                  </div>
-                </button>
-              </div>
 
-              {/* Premium Scalloped Bottom Edge */}
-              <div className="absolute -bottom-2.5 left-0 w-full overflow-hidden leading-none z-0">
-                <svg
-                  viewBox="0 0 1200 24"
-                  preserveAspectRatio="none"
-                  className="relative block w-full h-3 fill-[#FFD23F]"
-                >
-                  <path d="M0,0 h1200 v10 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 c-10,12-20,12-30,0 v-10 h-1200 Z"></path>
-                </svg>
-              </div>
+
             </div>
           )}
 
-          {/* Row 1: Logo and Icons */}
-          <div className="flex items-center justify-between mb-4 px-4 py-2">
+          {/* Row 1: Logo - Centered */}
+          <div className="flex items-center justify-center mb-4 px-4 py-3">
             <Link href="/" className="flex items-center">
-              <img src="/logo.png" alt="Logo" className="h-8 w-auto object-contain" />
+              <img src="/logo.png" alt="Logo" className="h-10 w-auto object-contain drop-shadow-lg" />
             </Link>
-            <div className="flex items-center gap-5">
-              <Link href="/profile" className="flex items-center justify-center w-9 h-9 rounded-full border border-gray-200">
-                <FiUser className="w-5 h-5 text-gray-700" />
-              </Link>
-              <Link href="/cart" className="relative">
-                <FiShoppingCart className="w-6 h-6 text-gray-700" />
-                {cartCount > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-[10px] font-semibold rounded-full w-4 h-4 flex items-center justify-center">
-                    {cartCount}
-                  </span>
-                )}
-              </Link>
-              <button onClick={() => setIsMenuOpen(!isMenuOpen)}>
-                <FiMenu className="w-7 h-7 text-gray-700" />
-              </button>
-            </div>
           </div>
 
           {/* Row 2: Search Bar - Hide on product detail pages */}
@@ -696,23 +733,27 @@ export default function Header() {
             </div>
           )}
 
-          {/* Row 3: Categories Horizontal Scroll - Hide on product detail pages */}
+          {/* Row 3: Category Icons Horizontal Scroll - Hide on product detail pages */}
           {!hideHeaderExtras && (
-            <div className={`overflow-hidden transition-all duration-300 ease-in-out ${showSecondaryHeader ? 'max-h-12 opacity-100 py-1 mb-2' : 'max-h-0 opacity-0 py-0 mb-0'}`}>
-              <div className="flex items-center gap-3 overflow-x-auto no-scrollbar whitespace-nowrap">
-                <div className="flex items-center gap-2 shrink-0">
-                  <span className="text-sm font-semibold text-gray-900">Categories</span>
-                  <div className="w-px h-4 bg-gray-300"></div>
-                </div>
-                {categories.map((category) => (
-                  <Link
-                    key={category.name}
-                    href={category.href}
-                    className="text-sm font-semibold text-gray-500 hover:text-blue-600 transition-colors px-1"
-                  >
-                    {category.name}
-                  </Link>
-                ))}
+            <div className={`overflow-hidden transition-all duration-300 ease-in-out  ${showSecondaryHeader ? 'max-h-24 opacity-100  m' : 'max-h-0 opacity-0 py-0 mb-0'}`}>
+              <div className="flex items-center gap-4 overflow-x-auto no-scrollbar whitespace-nowrap px-4">
+                {megaMenuCategories.map((category) => {
+                  const IconComponent = getIconComponent(category.icon)
+                  return (
+                    <Link
+                      key={category.name}
+                      href={category.href}
+                      className="flex flex-col items-center justify-center min-w-[70px] group"
+                    >
+                      <div className="w-14 h-14 rounded-2xl bg-white/90 backdrop-blur-sm border border-gray-200 flex items-center justify-center mb-1.5 group-active:scale-95 transition-transform shaow-lg">
+                        <IconComponent className="w-7 h-7 text-gray-800" />
+                      </div>
+                      <span className="text-[10px] font-semibold text-gray-800 text-center leading-tight">
+                        {category.name}
+                      </span>
+                    </Link>
+                  )
+                })}
               </div>
             </div>
           )}
@@ -722,8 +763,18 @@ export default function Header() {
 
       {/* Premium Mega Menu Navigation Bar - Hide on product detail pages */}
       {!hideHeaderExtras && (
-        <div className={`hidden lg:block bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200 overflow-visible transition-all duration-300 ${showSecondaryHeader ? 'max-h-14 opacity-100' : 'max-h-0 opacity-0'}`}>
-          <div className="w-full px-4 sm:px-6 lg:px-8">
+        <div
+          className={`hidden lg:block border-b border-gray-200 overflow-visible transition-all duration-300 relative ${showSecondaryHeader ? 'max-h-14 opacity-100' : 'max-h-0 opacity-0'}`}
+          style={{
+            backgroundImage: `url(${getBackgroundImage()})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat'
+          }}
+        >
+          {/* Gradient overlay from background to white */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-white/60 to-white"></div>
+          <div className="w-full px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="flex items-center justify-center h-14 relative">
               {/* Categories with Mega Menu - Full Width Centered */}
               <div className="flex items-center gap-1 relative">
@@ -741,12 +792,12 @@ export default function Header() {
                       <Link
                         href={category.href}
                         className={`flex items-center gap-2 px-4 py-3 text-sm font-medium transition-all duration-200 rounded-lg group ${isActive
-                            ? 'text-blue-600 bg-white shadow-sm'
-                            : 'text-gray-700 hover:text-blue-600 hover:bg-white/50'
+                          ? 'text-blue-600 bg-white shadow-sm'
+                          : 'text-gray-700 hover:text-blue-600 hover:bg-white/70'
                           }`}
                       >
                         <IconComponent className={`w-4 h-4 transition-transform duration-200 ${isActive ? 'scale-110' : 'group-hover:scale-110'}`} />
-                        <span>{category.name}</span>
+                        <span className="font-semibold">{category.name}</span>
                         <ChevronRight className={`w-3 h-3 transition-all duration-200 ${isActive ? 'rotate-90 opacity-100' : 'opacity-0 group-hover:opacity-100'}`} />
                       </Link>
                     </div>
@@ -853,7 +904,7 @@ export default function Header() {
       {/* Mobile Menu */}
       {isMenuOpen && (
         <div className="lg:hidden bg-white border-t border-gray-100">
-          <div className="px-4 py-4 space-y-4">
+          <div className="px-4 py-4 shadow-lg space-y-4">
             {/* Mobile Search */}
             <SearchAutocomplete onClose={() => setIsMenuOpen(false)} />
 
@@ -962,6 +1013,68 @@ export default function Header() {
           </div>
         </div>
       )}
+
+      {/* Mobile Bottom Navigation Bar */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 safe-area-bottom">
+        <div className="flex items-center justify-around h-16 px-2">
+          {/* Home */}
+          <Link
+            href="/"
+            className={`flex flex-col items-center justify-center flex-1 py-2 transition-colors ${pathname === '/' ? 'text-blue-600' : 'text-gray-600'
+              }`}
+          >
+            <FiHome className="w-6 h-6 mb-1" />
+            <span className="text-[10px] font-medium">Home</span>
+          </Link>
+
+          {/* Categories */}
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className={`flex flex-col items-center justify-center flex-1 py-2 transition-colors ${isMenuOpen ? 'text-blue-600' : 'text-gray-600'
+              }`}
+          >
+            <FiGrid className="w-6 h-6 mb-1" />
+            <span className="text-[10px] font-medium">Categories</span>
+          </button>
+
+          {/* Deals */}
+          <Link
+            href="/deals"
+            className={`flex flex-col items-center justify-center flex-1 py-2 transition-colors ${pathname === '/deals' ? 'text-blue-600' : 'text-gray-600'
+              }`}
+          >
+            <FiGift className="w-6 h-6 mb-1" />
+            <span className="text-[10px] font-medium">Deals</span>
+          </Link>
+
+          {/* Account */}
+          <Link
+            href="/profile"
+            className={`flex flex-col items-center justify-center flex-1 py-2 transition-colors ${pathname?.startsWith('/profile') ? 'text-blue-600' : 'text-gray-600'
+              }`}
+          >
+            <FiUser className="w-6 h-6 mb-1" />
+            <span className="text-[10px] font-medium">Account</span>
+          </Link>
+
+          {/* Cart */}
+          <Link
+            href="/cart"
+            className={`flex flex-col items-center justify-center flex-1 py-2 relative transition-colors ${pathname === '/cart' ? 'text-blue-600' : 'text-gray-600'
+              }`}
+          >
+            <div className="relative">
+              <FiShoppingCart className="w-6 h-6 mb-1" />
+              {cartCount > 0 && (
+                <span className="absolute -top-1 -right-2 bg-blue-600 text-white text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                  {cartCount}
+                </span>
+              )}
+            </div>
+            <span className="text-[10px] font-medium">Cart</span>
+          </Link>
+        </div>
+      </div>
     </header>
   )
 }

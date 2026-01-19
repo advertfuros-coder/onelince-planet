@@ -116,7 +116,7 @@ export default function SearchAutocomplete({ onClose }) {
     }, [])
 
     return (
-        <div className="relative w-full" ref={dropdownRef}>
+        <div className="relative shadow-lg w-full" ref={dropdownRef}>
             {/* Search Input */}
             <form onSubmit={handleSearch} className="relative">
                 <input

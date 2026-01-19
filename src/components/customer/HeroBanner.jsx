@@ -179,12 +179,12 @@ export default function HeroBanner({ banners: externalBanners = null, previewBan
                 {(currentBanner.showTitle !== false || currentBanner.showSubtitle !== false) && (
                   <div className="space-y-1 md:space-y-2">
                     {currentBanner.showTitle !== false && (
-                      <h2 className="text-2xl md:text-4xl font-semibold tracking-tight opacity-90">
+                      <h2 className="text-xl md:text-4xl md:w-full w-[200px] font-semibold tracking-tight opacity-90">
                         {currentBanner.title}
                       </h2>
                     )}
                     {currentBanner.showSubtitle !== false && (
-                      <p className="text-md md:text-2xl font-semibold leading-tight">
+                      <p className="text-xs md:text-2xl md:w-full w-[200px] font-semibold leading-tight">
                         {currentBanner.subtitle}
                       </p>
                     )}

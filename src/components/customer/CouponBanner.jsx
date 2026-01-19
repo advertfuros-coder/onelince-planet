@@ -67,7 +67,7 @@ export default function CouponBanner() {
                     >
                         {/* Main Ticket Background with Paper Texture */}
                         <div
-                            className="relative py-20 h-28 md:h-32 flex items-center justify-between px-8 md:px-16 rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.1)] overflow-hidden border border-black/5"
+                            className="relative py-0 h-20 md:h-28 flex items-center justify-between px-8 md:px-16 rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.1)] overflow-hidden border border-black/5"
                             style={{
                                 backgroundColor: currentBanner.backgroundColor,
                                 backgroundImage: `url("https://www.transparenttextures.com/patterns/natural-paper.png")`,
@@ -107,9 +107,7 @@ export default function CouponBanner() {
 
                                 {/* Right Side: Promo Code Section */}
                                 <div className="flex flex-col items-center md:items-end">
-                                    <p className="text-sm md:text-xl font-semibold text-[#1a1a1b] mb-1 italic tracking-tight opacity-90">
-                                        Use Code:
-                                    </p>
+                                   
                                     <div className="relative">
                                         <div
                                             className="px-6 md:px-10 py-2 md:py-3 rounded-2xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)] border border-black/10 flex items-center gap-3 active:scale-95 transition-all"
@@ -129,14 +127,12 @@ export default function CouponBanner() {
 
                                         {/* Floating Feedback */}
                                         {copied && (
-                                            <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] font-semibold px-3 py-1.5 rounded-full animate-bounce">
+                                            <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] font-semibold px-3 py- 1.5 rounded-full animate-bounce">
                                                 COPIED!
                                             </div>
                                         )}
                                     </div>
-                                    <p className="text-[10px] md:text-xs font-semibold text-[#1a1a1b]/40 mt-2 uppercase tracking-[0.2em]">
-                                        {currentBanner.termsAndConditions}
-                                    </p>
+                                    
                                 </div>
                             </div>
                         </div>

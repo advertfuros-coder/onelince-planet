@@ -1,6 +1,16 @@
 'use client'
 import React from 'react'
 import Link from 'next/link'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { Navigation, Pagination, FreeMode, Autoplay, Grid } from 'swiper/modules'
+
+// Import Swiper styles
+import 'swiper/css'
+import 'swiper/css/navigation'
+import 'swiper/css/pagination'
+import 'swiper/css/free-mode'
+import 'swiper/css/autoplay'
+import 'swiper/css/grid'
 
 export default function PocketFriendlyBargain() {
     const bargains = [
@@ -45,6 +55,27 @@ export default function PocketFriendlyBargain() {
             price: '249',
             image: 'https://images.unsplash.com/photo-1556228578-8c7c2f1e1493?w=400&h=600&fit=crop',
             link: '/products?category=skincare&maxPrice=249'
+        },
+        {
+            id: 7,
+            category: 'T-Shirts',
+            price: '399',
+            image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=600&fit=crop',
+            link: '/products?category=tshirts&maxPrice=399'
+        },
+        {
+            id: 8,
+            category: 'Sunglasses',
+            price: '599',
+            image: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400&h=600&fit=crop',
+            link: '/products?category=sunglasses&maxPrice=599'
+        },
+        {
+            id: 9,
+            category: 'Watches',
+            price: '999',
+            image: 'https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=400&h=600&fit=crop',
+            link: '/products?category=watches&maxPrice=999'
         }
     ]
 
@@ -69,42 +100,42 @@ export default function PocketFriendlyBargain() {
                             {/* Top Left Star - Bigger */}
                             <g transform="translate(10, 10)">
                                 <path d="M8,0 L10,5 L15,5 L11,8 L13,13 L8,10 L3,13 L5,8 L1,5 L6,5 Z" fill="#FFD700" opacity="0.95">
-                                    <animateTransform attributeName="transform" type="rotate" from="0 8 8" to="360 8 8" dur="3s" repeatCount="indefinite"/>
+                                    <animateTransform attributeName="transform" type="rotate" from="0 8 8" to="360 8 8" dur="3s" repeatCount="indefinite" />
                                 </path>
                             </g>
-                            
+
                             {/* Top Center Star */}
                             <g transform="translate(45, 5)">
                                 <path d="M6,0 L7.5,4 L11.5,4 L8.5,6.5 L10,10.5 L6,8 L2,10.5 L3.5,6.5 L0.5,4 L4.5,4 Z" fill="#FFD700" opacity="0.9">
-                                    <animateTransform attributeName="transform" type="rotate" from="0 6 6" to="360 6 6" dur="2.5s" repeatCount="indefinite"/>
+                                    <animateTransform attributeName="transform" type="rotate" from="0 6 6" to="360 6 6" dur="2.5s" repeatCount="indefinite" />
                                 </path>
                             </g>
-                            
+
                             {/* Top Right Star - Bigger */}
                             <g transform="translate(82, 8)">
                                 <path d="M8,0 L10,5 L15,5 L11,8 L13,13 L8,10 L3,13 L5,8 L1,5 L6,5 Z" fill="#FFC107" opacity="0.9">
-                                    <animateTransform attributeName="transform" type="rotate" from="0 8 8" to="360 8 8" dur="4s" repeatCount="indefinite"/>
+                                    <animateTransform attributeName="transform" type="rotate" from="0 8 8" to="360 8 8" dur="4s" repeatCount="indefinite" />
                                 </path>
                             </g>
-                            
+
                             {/* Middle Right Star */}
                             <g transform="translate(88, 45)">
                                 <path d="M5,0 L6.5,3.5 L10,3.5 L7,5.5 L8.5,9 L5,7 L1.5,9 L3,5.5 L0,3.5 L3.5,3.5 Z" fill="#FFB300" opacity="0.85">
-                                    <animateTransform attributeName="transform" type="rotate" from="0 5 5" to="360 5 5" dur="3.2s" repeatCount="indefinite"/>
+                                    <animateTransform attributeName="transform" type="rotate" from="0 5 5" to="360 5 5" dur="3.2s" repeatCount="indefinite" />
                                 </path>
                             </g>
-                            
+
                             {/* Bottom Left Star - Bigger */}
                             <g transform="translate(5, 72)">
                                 <path d="M7,0 L8.5,4.5 L13,4.5 L9.5,7 L11,11.5 L7,9 L3,11.5 L4.5,7 L1,4.5 L5.5,4.5 Z" fill="#FFB300" opacity="0.9">
-                                    <animateTransform attributeName="transform" type="rotate" from="0 7 7" to="360 7 7" dur="3.5s" repeatCount="indefinite"/>
+                                    <animateTransform attributeName="transform" type="rotate" from="0 7 7" to="360 7 7" dur="3.5s" repeatCount="indefinite" />
                                 </path>
                             </g>
-                            
+
                             {/* Bottom Right Star */}
                             <g transform="translate(75, 78)">
                                 <path d="M6,0 L7.5,4 L11.5,4 L8.5,6.5 L10,10.5 L6,8 L2,10.5 L3.5,6.5 L0.5,4 L4.5,4 Z" fill="#FFC107" opacity="0.88">
-                                    <animateTransform attributeName="transform" type="rotate" from="0 6 6" to="360 6 6" dur="2.8s" repeatCount="indefinite"/>
+                                    <animateTransform attributeName="transform" type="rotate" from="0 6 6" to="360 6 6" dur="2.8s" repeatCount="indefinite" />
                                 </path>
                             </g>
 
@@ -124,47 +155,82 @@ export default function PocketFriendlyBargain() {
                     </div>
                 </div>
 
-                {/* Grid / Carousel Container */}
-                <div className="relative">
-                    <div className="flex md:grid md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-4 overflow-x-auto no-scrollbar snap-x snap-mandatory pb-4">
+                {/* Swiper Carousel */}
+                <div className="relative pb-4">
+                    <Swiper
+                        modules={[Navigation, Pagination, FreeMode, Autoplay, Grid]}
+                        spaceBetween={12}
+                        slidesPerView={3}
+                        slidesPerGroup={1}
+                        grid={{
+                            rows: 2,
+                            fill: 'row'
+                        }}
+                        loop={true}
+                        autoplay={{
+                            delay: 4000,
+                            disableOnInteraction: false,
+                            pauseOnMouseEnter: true
+                        }}
+                        speed={1000}
+                        freeMode={false}
+                        breakpoints={{
+                            640: {
+                                slidesPerView: 3,
+                                spaceBetween: 12,
+                                grid: {
+                                    rows: 2,
+                                    fill: 'row'
+                                }
+                            },
+                            768: {
+                                slidesPerView: 3,
+                                spaceBetween: 16,
+                                grid: {
+                                    rows: 2,
+                                    fill: 'row'
+                                }
+                            },
+                            1024: {
+                                slidesPerView: 6,
+                                spaceBetween: 16,
+                            },
+                        }}
+                        className="!pb-2"
+                    >
                         {bargains.map((item) => (
-                            <Link
-                                key={item.id}
-                                href={item.link}
-                                className="min-w-[45vw] md:min-w-0 snap-start group"
-                            >
-                                <div className="relative aspect-[3/4] rounded-[24px] md:rounded-[32px] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 bg-gray-100">
-                                    {/* Image */}
-                                    <img
-                                        src={item.image}
-                                        alt={item.category}
-                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
-                                    />
+                            <SwiperSlide key={item.id}>
+                                <Link href={item.link} className="block group">
+                                    <div className="relative aspect-[3/4] rounded-[24px] md:rounded-[32px] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 bg-gray-100">
+                                        {/* Image */}
+                                        <img
+                                            src={item.image}
+                                            alt={item.category}
+                                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+                                        />
 
-                                    {/* Gradient Overlay */}
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent"></div>
+                                        {/* Gradient Overlay */}
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent"></div>
 
-                                    {/* Content Overlay */}
-                                    <div className="absolute bottom-4 left-4 md:bottom-6 md:left-6 text-white space-y-0.5">
-                                        <p className="text-[10px] md:text-xs font-semibold opacity-80 uppercase tracking-wider">
-                                            Under
-                                        </p>
-                                        <div className="inline-block bg-yellow-400 px-1.5 md:px-2 py-1 -rotate-2 transform-gpu shadow-lg">
-                                            <p className="text-xl md:text-xl font-semibold text-black tracking-tighter italic leading-none">
-                                                ₹ {item.price}
+                                        {/* Content Overlay */}
+                                        <div className="absolute bottom-4 left-4 md:bottom-6 md:left-6 text-white space-y-0.5">
+                                            <p className="text-[10px] md:text-xs font-semibold opacity-80 uppercase tracking-wider">
+                                                Under
+                                            </p>
+                                            <div className="inline-block bg-yellow-400 px-1.5 md:px-2 py-1 -rotate-2 transform-gpu shadow-lg">
+                                                <p className="text-xl md:text-xl font-semibold text-black tracking-tighter italic leading-none">
+                                                    ₹ {item.price}
+                                                </p>
+                                            </div>
+                                            <p className="text-xs md:text-lg font-semibold opacity-90 leading-tight">
+                                                {item.category}
                                             </p>
                                         </div>
-                                        <p className="text-xs md:text-lg font-semibold opacity-90 leading-tight">
-                                            {item.category}
-                                        </p>
                                     </div>
-                                </div>
-                            </Link>
+                                </Link>
+                            </SwiperSlide>
                         ))}
-                    </div>
-
-                    {/* Pagination Dots (Mobile) */}
-
+                    </Swiper>
                 </div>
             </div>
         </section>
