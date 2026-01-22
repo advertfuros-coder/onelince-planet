@@ -430,7 +430,7 @@ export default function CartPage() {
 
       {/* Persistent Checkout Trigger */}
       {selectedCount > 0 && (
-        <div className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-xl border-t border-gray-100 p-5 z-40 l g:hidden shadow-[0_-10px_40px_rgba(0,0,0,0.1)]">
+        <div className="fixed bottom-16 left-0 right-0 bg-white/80 backdrop-blur-xl border-t border-gray-100 p-5 z-40 lg:hidden shadow-[0_-10px_40px_rgba(0,0,0,0.1)]">
           <div className="flex items-center gap-5">
             <div className="flex-1">
               <p className="text-xl font-semibold text-blue-600 leading-none tighter">{currencyConfig.symbol}{Math.round(finalTotal).toLocaleString()}</p>

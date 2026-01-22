@@ -667,7 +667,7 @@ export default function CheckoutPage() {
       </div>
 
       {/* Mobile Action Bar */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-2xl border-t border-blue-50 p-5 z-40 lg:hidden shadow-[0_-15px_40px_rgba(37,99,235,0.08)]">
+      <div className="fixed bottom-16 left-0 right-0 bg-white/95 backdrop-blur-2xl border-t border-blue-50 p-5 z-40 lg:hidden shadow-[0_-15px_40px_rgba(37,99,235,0.08)]">
         <div className="flex items-center justify-between gap-6">
           <div className="flex flex-col">
             <span className="text-xl font-semibold text-blue-600 tighter">{currencyConfig.symbol}{Math.round(finalTotal).toLocaleString()}</span>

@@ -775,22 +775,20 @@ export default function Header() {
             </div>
           )}
 
-          {/* Row 1: Logo - Centered */}
-          <div className="flex items-center justify-center mb-4 px-4 py-3">
-            <Link href="/" className="flex items-center">
-              <img src="/logo.png" alt="Logo" className="h-10 w-auto object-contain drop-shadow-lg" />
+          {/* Row 1: Logo & Search Bar */}
+          <div className="flex items-center gap-3 px-4 py-3">
+            <Link href="/" className="flex-shrink-0">
+              <img src="/logo.png" alt="Logo" className="h-8 w-auto object-contain drop-shadow-lg" />
             </Link>
+            {!hideHeaderExtras && (
+              <div className="flex-1 min-w-0">
+                <SearchAutocomplete />
+              </div>
+            )}
           </div>
 
-          {/* Row 2: Search Bar - Hide on product detail pages */}
-          {!hideHeaderExtras && (
-            <div className="px-4 mb-4">
-              <SearchAutocomplete />
-            </div>
-          )}
-
-          {/* Row 3: Category Icons Horizontal Scroll - Hide on product detail pages */}
-          {!hideHeaderExtras && (
+          {/* Row 3: Category Icons Horizontal Scroll - Only show on homepage */}
+          {pathname === '/' && (
             <div className={`overflow-hidden transition-all duration-300 ease-in-out  ${showSecondaryHeader ? 'max-h-24 opacity-100  m' : 'max-h-0 opacity-0 py-0 mb-0'}`}>
               <div className="flex items-center gap-4 overflow-x-auto no-scrollbar whitespace-nowrap px-4">
                 {megaMenuCategories.map((category) => {

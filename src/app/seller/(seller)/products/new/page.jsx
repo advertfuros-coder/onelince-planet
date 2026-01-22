@@ -975,7 +975,7 @@ export default function AddProductPage() {
                         onChange={(e) => setForm({ ...form, keywords: e.target.value })}
                         placeholder="e.g. wireless, bluetooth, noise cancelling, audiophile, luxury"
                         rows={3}
-                        className="w-full bg-white/5 border border-blue-500/10 rounded-2xl px-6 py-4 text-xs font-semibold text-white placeholder-slate-600 focus:bg-white/10 focus:border-blue-500 transition-all outline-none"
+                        className="w-full bg-white/5 border border-blue-500/10 rounded-2xl px-6 py-4 text-xs font-semibold  placeholder-slate-600 focus:bg-white/10 focus:border-blue-500 transition-all outline-none"
                       />
                       <p className="text-[8px] font-semibold text-slate-600 uppercase tracking-widest">Separate with commas. These are not visible to customers.</p>
                     </div>
