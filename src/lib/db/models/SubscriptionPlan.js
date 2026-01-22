@@ -231,11 +231,10 @@ const SubscriptionPlanSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 // Indexes
-SubscriptionPlanSchema.index({ name: 1 });
 SubscriptionPlanSchema.index({ status: 1, isVisible: 1 });
 SubscriptionPlanSchema.index({ sortOrder: 1 });
 
@@ -244,10 +243,10 @@ SubscriptionPlanSchema.virtual("calculatedPricing").get(function () {
   return {
     monthly: this.pricing.monthly,
     quarterly: Math.round(
-      this.pricing.monthly * (1 - this.discounts.quarterly / 100)
+      this.pricing.monthly * (1 - this.discounts.quarterly / 100),
     ),
     yearly: Math.round(
-      this.pricing.monthly * (1 - this.discounts.yearly / 100)
+      this.pricing.monthly * (1 - this.discounts.yearly / 100),
     ),
   };
 });
@@ -300,12 +299,12 @@ SubscriptionPlanSchema.methods.updateAnalytics = async function (data) {
 SubscriptionPlanSchema.pre("save", function (next) {
   if (!this.pricing.quarterly) {
     this.pricing.quarterly = Math.round(
-      this.pricing.monthly * (1 - this.discounts.quarterly / 100)
+      this.pricing.monthly * (1 - this.discounts.quarterly / 100),
     );
   }
   if (!this.pricing.yearly) {
     this.pricing.yearly = Math.round(
-      this.pricing.monthly * (1 - this.discounts.yearly / 100)
+      this.pricing.monthly * (1 - this.discounts.yearly / 100),
     );
   }
   next();

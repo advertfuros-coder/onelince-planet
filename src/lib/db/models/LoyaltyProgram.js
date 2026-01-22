@@ -70,18 +70,17 @@ const loyaltyProgramSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 // Indexes
-loyaltyProgramSchema.index({ userId: 1 });
 loyaltyProgramSchema.index({ tier: 1 });
 
 // Methods
 loyaltyProgramSchema.methods.addPoints = function (
   points,
   description,
-  orderId = null
+  orderId = null,
 ) {
   const multipliedPoints = Math.round(points * this.benefits.pointsMultiplier);
 

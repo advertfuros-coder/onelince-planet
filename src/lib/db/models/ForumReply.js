@@ -7,13 +7,11 @@ const ForumReplySchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "ForumPost",
       required: true,
-      index: true,
     },
     authorId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
-      index: true,
     },
 
     // Reply details
@@ -69,7 +67,7 @@ const ForumReplySchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 // Indexes
@@ -84,7 +82,7 @@ ForumReplySchema.virtual("likeCount").get(function () {
 // Method to add like
 ForumReplySchema.methods.addLike = function (userId) {
   const alreadyLiked = this.likes.some(
-    (like) => like.userId.toString() === userId.toString()
+    (like) => like.userId.toString() === userId.toString(),
   );
   if (!alreadyLiked) {
     this.likes.push({ userId });
