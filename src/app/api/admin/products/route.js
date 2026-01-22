@@ -14,7 +14,7 @@ export async function GET(request) {
     if (!decoded || !isAdmin(decoded)) {
       return NextResponse.json(
         { success: false, message: "Unauthorized" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -67,7 +67,7 @@ export async function GET(request) {
 
     // Try to find sellers by _id first (if sellerId is Seller ObjectId)
     let sellers = await Seller.find({ _id: { $in: sellerIds } })
-      .select("businessName email userId")
+      .select("businessInfo personalDetails userId")
       .lean();
 
     console.log("Sellers found by _id:", sellers.length); // Debug log
@@ -75,7 +75,7 @@ export async function GET(request) {
     // If no sellers found, try finding by userId (if sellerId is User ObjectId)
     if (sellers.length === 0 && sellerIds.length > 0) {
       sellers = await Seller.find({ userId: { $in: sellerIds } })
-        .select("businessName email userId")
+        .select("businessInfo personalDetails userId")
         .lean();
 
       console.log("Sellers found by userId:", sellers.length); // Debug log
@@ -84,11 +84,16 @@ export async function GET(request) {
     // Create seller map - support both _id and userId matching
     const sellerMap = {};
     sellers.forEach((seller) => {
+      const flattenedSeller = {
+        ...seller,
+        businessName: seller.businessInfo?.businessName || seller.businessName,
+        email: seller.personalDetails?.email || seller.email
+      };
       // Map by seller._id
-      sellerMap[seller._id.toString()] = seller;
+      sellerMap[seller._id.toString()] = flattenedSeller;
       // Also map by seller.userId (in case product references User)
       if (seller.userId) {
-        sellerMap[seller.userId.toString()] = seller;
+        sellerMap[seller.userId.toString()] = flattenedSeller;
       }
     });
 
@@ -136,7 +141,7 @@ export async function GET(request) {
     console.error("Products API Error:", error);
     return NextResponse.json(
       { success: false, message: "Server error", error: error.message },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -151,7 +156,7 @@ export async function PATCH(request) {
     if (!decoded || !isAdmin(decoded)) {
       return NextResponse.json(
         { success: false, message: "Unauthorized" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -180,7 +185,7 @@ export async function PATCH(request) {
       default:
         return NextResponse.json(
           { success: false, message: "Invalid action" },
-          { status: 400 }
+          { status: 400 },
         );
     }
 
@@ -193,7 +198,7 @@ export async function PATCH(request) {
   } catch (error) {
     return NextResponse.json(
       { success: false, message: "Server error", error: error.message },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

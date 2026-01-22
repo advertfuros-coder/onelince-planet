@@ -14,6 +14,7 @@ export default function EditProductPage({ params }) {
   const [productId, setProductId] = useState(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [seller, setSeller] = useState(null)
 
   const [formData, setFormData] = useState({
     name: '',
@@ -110,6 +111,7 @@ export default function EditProductPage({ params }) {
           },
           isActive: product.isActive,
         })
+        setSeller(product.sellerId)
       }
     } catch (error) {
       toast.error('Failed to load product')
@@ -549,6 +551,42 @@ export default function EditProductPage({ params }) {
 
         {/* Sidebar */}
         <div className="lg:col-span-1 space-y-6">
+          {/* Seller Info */}
+          {seller && (
+            <Section title="Seller Information">
+              <div className="space-y-4">
+                <div className="p-4 bg-blue-50 rounded-xl border border-blue-100">
+                  <p className="text-[10px] font-bold text-blue-600 uppercase tracking-widest mb-1">Business Name</p>
+                  <p className="text-sm font-semibold text-slate-900">{seller.businessInfo?.businessName || 'N/A'}</p>
+                </div>
+                
+                <div className="grid grid-cols-1 gap-3">
+                  <div>
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Contact Person</p>
+                    <p className="text-xs font-medium text-slate-700">{seller.personalDetails?.fullName || 'N/A'}</p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Email Address</p>
+                    <p className="text-xs font-medium text-slate-700">{seller.personalDetails?.email || 'N/A'}</p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Phone Number</p>
+                    <p className="text-xs font-medium text-slate-700">{seller.personalDetails?.phone || 'N/A'}</p>
+                  </div>
+                </div>
+
+                <div className="pt-2">
+                  <button
+                    type="button"
+                    onClick={() => router.push(`/admin/sellers/${seller._id}`)}
+                    className="w-full flex items-center justify-center gap-2 py-3 bg-slate-900 text-white rounded-xl text-[10px] font-semibold uppercase tracking-widest hover:bg-blue-600 transition-all shadow-lg shadow-slate-200"
+                  >
+                    View Full Seller Profile
+                  </button>
+                </div>
+              </div>
+            </Section>
+          )}
           {/* Status */}
           <Section title="Status">
             <label className="flex items-center space-x-2">

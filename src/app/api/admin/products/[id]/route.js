@@ -20,7 +20,7 @@ export async function GET(request, { params }) {
 
     const { id } = await params;
     const product = await Product.findById(id)
-      .populate("sellerId", "businessName email phone")
+      .populate("sellerId", "businessInfo personalDetails userId")
       .lean();
 
     if (!product) {

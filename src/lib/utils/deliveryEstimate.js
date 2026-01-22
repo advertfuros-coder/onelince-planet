@@ -10,7 +10,7 @@
 export function calculateDeliveryEstimate(
   product,
   userCountry = "AE",
-  sellerCountry = "AE"
+  sellerCountry = "AE",
 ) {
   // Determine if international shipping
   const isInternational = userCountry !== sellerCountry;
@@ -41,22 +41,15 @@ export function calculateDeliveryEstimate(
 }
 
 /**
- * Add business days (excluding weekends)
+ * Add calendar days (including weekends)
  */
-function addBusinessDays(date, days) {
+function addCalendarDays(date, days) {
   const result = new Date(date);
-  let addedDays = 0;
-
-  while (addedDays < days) {
-    result.setDate(result.getDate() + 1);
-    // Skip weekends (0 = Sunday, 6 = Saturday)
-    if (result.getDay() !== 0 && result.getDay() !== 6) {
-      addedDays++;
-    }
-  }
-
+  result.setDate(result.getDate() + days);
   return result;
 }
+
+const addBusinessDays = addCalendarDays; // Alias for now to minimize changes if other functions use it
 
 /**
  * Format delivery date range for display
@@ -75,7 +68,7 @@ function formatDeliveryRange(minDate, maxDate) {
   // Different months: "Jan 30 - Feb 2"
   return `${minDate.toLocaleDateString(
     "en-US",
-    options
+    options,
   )} - ${maxDate.toLocaleDateString("en-US", options)}`;
 }
 

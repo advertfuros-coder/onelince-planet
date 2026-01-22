@@ -49,6 +49,10 @@ export default function CategoryGrid() {
         { name: 'Furniture', image: '/category-icons/furnitures.png', href: '/category/home', gradient: 'from-brown-500 to-brown-700' },
         { name: 'Skincare', image: '/category-icons/beauty.png', href: '/category/beauty', gradient: 'from-teal-500 to-teal-700' },
         { name: "Men's Care", image: '/category-icons/menscare.png', href: '/category/beauty', gradient: 'from-slate-600 to-slate-800' },
+        { name: 'Books', image: '/category-icons/books.png', href: '/category/books', gradient: 'from-amber-400 to-orange-500' },
+        { name: 'Office Supplies', image: '/category-icons/books.png', href: '/category/office', gradient: 'from-blue-600 to-indigo-700' },
+        { name: 'Car Care', image: '/category-icons/mobileaccess.png', href: '/category/automotive', gradient: 'from-gray-700 to-slate-900' },
+        { name: 'Oral Care', image: '/category-icons/beauty.png', href: '/category/beauty', gradient: 'from-indigo-400 to-blue-600' },
     ]
 
     return (

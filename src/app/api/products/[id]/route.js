@@ -12,19 +12,24 @@ export async function GET(request, { params }) {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json(
         { success: false, message: "Invalid Product ID" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    // Fetch product with seller details
-    const product = await Product.findById(id)
+    // Fetch product with seller details (must be approved and active)
+    const product = await Product.findOne({
+      _id: id,
+      isActive: true,
+      isApproved: true,
+      isDraft: { $ne: true },
+    })
       .populate("sellerId", "businessInfo storeInfo personalDetails ratings")
       .lean();
 
     if (!product) {
       return NextResponse.json(
         { success: false, message: "Product not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -78,7 +83,7 @@ export async function GET(request, { params }) {
     console.error("Fetch product error:", error);
     return NextResponse.json(
       { success: false, message: error.message },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

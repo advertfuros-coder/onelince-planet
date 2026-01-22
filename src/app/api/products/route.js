@@ -24,7 +24,7 @@ export async function GET(request) {
     const country = searchParams.get("country"); // IN or AE
 
     // Build query
-    const query = { isActive: true, isDraft: { $ne: true } };
+    const query = { isActive: true, isApproved: true, isDraft: { $ne: true } };
 
     // Fetch by specific IDs (for recently viewed)
     if (ids) {
@@ -90,7 +90,7 @@ export async function GET(request) {
           $match: {
             "seller_info.businessInfo.country": country, // Direct match on country code (IN or AE)
           },
-        }
+        },
       );
     }
 
@@ -144,7 +144,7 @@ export async function GET(request) {
     console.error("Get products error:", error);
     return NextResponse.json(
       { success: false, message: "Server error", error: error.message },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -158,7 +158,7 @@ export async function POST(request) {
     if (!token) {
       return NextResponse.json(
         { success: false, message: "Unauthorized" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -173,13 +173,13 @@ export async function POST(request) {
         message: "Product created successfully",
         product,
       },
-      { status: 201 }
+      { status: 201 },
     );
   } catch (error) {
     console.error("Create product error:", error);
     return NextResponse.json(
       { success: false, message: "Server error", error: error.message },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

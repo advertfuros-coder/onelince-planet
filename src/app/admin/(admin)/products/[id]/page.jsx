@@ -49,7 +49,7 @@ export default function AdminProductDetailPage({ params }) {
         headers: { Authorization: `Bearer ${token}` },
       })
 
-      console.log('Product details:', res.data )
+      console.log('Product details:', res.data)
 
       if (res.data.success) {
         setProduct(res.data.product)
@@ -131,9 +131,8 @@ export default function AdminProductDetailPage({ params }) {
         <div className="flex space-x-3">
           <button
             onClick={toggleStatus}
-            className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-white ${
-              product.isActive ? 'bg-red-600 hover:bg-red-700' : 'bg-green-600 hover:bg-green-700'
-            }`}
+            className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-white ${product.isActive ? 'bg-red-600 hover:bg-red-700' : 'bg-green-600 hover:bg-green-700'
+              }`}
           >
             {product.isActive ? <FiXCircle /> : <FiCheckCircle />}
             <span>{product.isActive ? 'Deactivate' : 'Activate'}</span>
@@ -157,9 +156,8 @@ export default function AdminProductDetailPage({ params }) {
 
       {/* Status Banner */}
       <div
-        className={`rounded-lg p-4 flex items-center justify-between ${
-          product.isActive ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'
-        }`}
+        className={`rounded-lg p-4 flex items-center justify-between ${product.isActive ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'
+          }`}
       >
         <div className="flex items-center space-x-3">
           {product.isActive ? (
@@ -214,9 +212,8 @@ export default function AdminProductDetailPage({ params }) {
                   <button
                     key={idx}
                     onClick={() => setActiveImage(idx)}
-                    className={`aspect-square rounded-lg overflow-hidden border-2 transition-colors ${
-                      activeImage === idx ? 'border-blue-600' : 'border-gray-200 hover:border-gray-300'
-                    }`}
+                    className={`aspect-square rounded-lg overflow-hidden border-2 transition-colors ${activeImage === idx ? 'border-blue-600' : 'border-gray-200 hover:border-gray-300'
+                      }`}
                   >
                     <img src={img} alt={`${product.name} ${idx + 1}`} className="w-full h-full object-cover" />
                   </button>
@@ -235,7 +232,7 @@ export default function AdminProductDetailPage({ params }) {
               <InfoRow label="SKU" value={product.sku || 'N/A'} />
               <InfoRow label="Stock" value={product.inventory?.stock || 0} />
               <InfoRow label="Low Stock Alert" value={product.inventory?.lowStockThreshold || 0} />
-             </div>
+            </div>
           </div>
         </div>
 
@@ -301,9 +298,9 @@ export default function AdminProductDetailPage({ params }) {
                   <p className="text-sm font-semibold text-green-600">
                     {product.pricing?.costPrice && product.pricing?.salePrice
                       ? (
-                          ((product.pricing.salePrice - product.pricing.costPrice) / product.pricing.salePrice) *
-                          100
-                        ).toFixed(1)
+                        ((product.pricing.salePrice - product.pricing.costPrice) / product.pricing.salePrice) *
+                        100
+                      ).toFixed(1)
                       : 0}
                     %
                   </p>
@@ -319,48 +316,66 @@ export default function AdminProductDetailPage({ params }) {
           </div>
 
           {/* Seller Info */}
-          {product.seller && (
+          {product.sellerId && typeof product.sellerId === 'object' && (
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center space-x-2">
                 <FiUser />
                 <span>Seller Information</span>
               </h3>
-              <div className="space-y-3">
-                <InfoRow label="Business Name" value={product.seller.businessInfo?.businessName} />
-                <InfoRow label="Email" value={product.seller.email} />
-                <InfoRow label="Phone" value={product.seller.userId?.phone || 'N/A'} />
-                <div className="pt-3">
-                  <Link
-                    href={`/admin/sellers/${product.sellerId}`}
-                    className="text-blue-600 hover:underline text-sm font-medium"
+
+              <div className="space-y-4">
+                <div className="p-4 bg-blue-50 rounded-xl border border-blue-100">
+                  <p className="text-[10px] font-bold text-blue-600 uppercase tracking-widest mb-1">Business Name</p>
+                  <p className="text-sm font-semibold text-slate-900">{product.sellerId.businessInfo?.businessName || 'N/A'}</p>
+                </div>
+
+                <div className="grid grid-cols-1 gap-3">
+                  <div>
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Contact Person</p>
+                    <p className="text-xs font-medium text-slate-700">{product.sellerId.personalDetails?.fullName || 'N/A'}</p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Email Address</p>
+                    <p className="text-xs font-medium text-slate-700">{product.sellerId.personalDetails?.email || 'N/A'}</p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Phone Number</p>
+                    <p className="text-xs font-medium text-slate-700">{product.sellerId.personalDetails?.phone || 'N/A'}</p>
+                  </div>
+                </div>
+
+                <div className="pt-2">
+                  <button
+                    onClick={() => router.push(`/admin/sellers/${product.sellerId._id}`)}
+                    className="w-full flex items-center justify-center gap-2 py-3 bg-slate-900 text-white rounded-xl text-[10px] font-semibold uppercase tracking-widest hover:bg-blue-600 transition-all shadow-lg shadow-slate-200"
                   >
-                    View Seller Profile →
-                  </Link>
+                    View Full Seller Profile
+                  </button>
                 </div>
               </div>
             </div>
           )}
 
-        {/* Specifications */}
-{product.specifications && product.specifications.length > 0 && (
-  <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-    <h3 className="text-lg font-semibold text-gray-900 mb-4">Specifications</h3>
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      {product.specifications.map((spec, idx) => {
-        // Handle different specification formats
-        const label = spec.key || spec.name || spec.label || `Spec ${idx + 1}`
-        const value = spec.value || spec.description || JSON.stringify(spec)
-        
-        return (
-          <div key={idx} className="flex flex-col py-2 border-b">
-            <span className="text-xs text-gray-500 uppercase mb-1">{label}</span>
-            <span className="text-sm font-medium text-gray-900">{value}</span>
-          </div>
-        )
-      })}
-    </div>
-  </div>
-)}
+          {/* Specifications */}
+          {product.specifications && product.specifications.length > 0 && (
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Specifications</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {product.specifications.map((spec, idx) => {
+                  // Handle different specification formats
+                  const label = spec.key || spec.name || spec.label || `Spec ${idx + 1}`
+                  const value = spec.value || spec.description || JSON.stringify(spec)
+
+                  return (
+                    <div key={idx} className="flex flex-col py-2 border-b">
+                      <span className="text-xs text-gray-500 uppercase mb-1">{label}</span>
+                      <span className="text-sm font-medium text-gray-900">{value}</span>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          )}
 
 
           {/* Tags */}

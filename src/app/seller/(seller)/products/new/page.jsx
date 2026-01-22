@@ -471,11 +471,11 @@ export default function AddProductPage() {
       })
 
       if (response.data.success) {
-        toast.success('Matrix Synchronized: Product Live')
+        toast.success('Product Created Successfully')
         router.push('/seller/products')
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Synchronization Failure')
+      toast.error(error.response?.data?.message || 'Failed to Create Product')
       console.error(error)
     } finally {
       setLoading(false)
@@ -508,18 +508,25 @@ export default function AddProductPage() {
                 onClick={() => router.back()}
                 className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-tighter text-slate-400 hover:text-slate-900 transition-colors mb-2"
               >
-                <ChevronLeft size={14} /> System Registry
+                <ChevronLeft size={14} /> Back to Products
               </button>
-              <h1 className="text-4xl font-semibold text-slate-900 tracking-tight">New Asset <span className="text-blue-600">.</span></h1>
-              <p className="text-slate-400 font-semibold text-sm mt-1">Registering new inventory manifest to the global grid.</p>
+              <h1 className="text-4xl font-semibold text-slate-900 tracking-tight">Add Product <span className="text-blue-600">.</span></h1>
+              <p className="text-slate-400 font-semibold text-sm mt-1">List a new product on the marketplace.</p>
             </div>
             <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => router.push('/seller/products')}
+                className="flex items-center gap-2 px-6 py-3 bg-white border border-slate-200 text-slate-400 rounded-2xl text-[10px] font-semibold uppercase tracking-widest hover:border-slate-900 hover:text-slate-900 transition-all"
+              >
+                Cancel
+              </button>
               <button
                 type="button"
                 onClick={handleSaveDraft}
                 className="flex items-center gap-2 px-6 py-3 bg-slate-100 text-slate-600 rounded-2xl text-[10px] font-semibold uppercase tracking-widest hover:bg-slate-200 transition-all"
               >
-                <Save size={14} /> Archive Draft
+                <Save size={14} /> Save Draft
               </button>
             </div>
           </div>
@@ -680,8 +687,8 @@ export default function AddProductPage() {
                         <Zap size={20} className={form.trackInventory ? 'animate-pulse' : ''} />
                       </div>
                       <div className="flex-1">
-                        <p className="text-sm font-semibold text-slate-900 uppercase tracking-wide">Automatic Tracking</p>
-                        <p className="text-[10px] font-semibold text-slate-400">Sync inventory across nodes automatically.</p>
+                        <p className="text-sm font-semibold text-slate-900 uppercase tracking-wide">Track Stock Automatically</p>
+                        <p className="text-[10px] font-semibold text-slate-400">Keep inventory accurate across the store.</p>
                       </div>
                       <input type="checkbox" name="trackInventory" checked={form.trackInventory} onChange={handleChange} className="hidden" />
                       <div className={`w-10 h-6 rounded-full relative transition-all ${form.trackInventory ? 'bg-blue-600' : 'bg-slate-300'}`}>
@@ -703,8 +710,8 @@ export default function AddProductPage() {
                   <div className="bg-white rounded-[2.5rem] border border-slate-100 p-10 shadow-xl shadow-slate-200/20 space-y-8">
                     <div className="flex items-center justify-between bg-slate-50 p-6 rounded-3xl border border-slate-100">
                       <div>
-                        <h4 className="text-xs font-semibold text-slate-900 uppercase tracking-widest">Does this have variations?</h4>
-                        <p className="text-[9px] font-semibold text-slate-400 uppercase tracking-widest mt-1">Like multiple colors, sizes, or models.</p>
+                        <h4 className="text-xs font-semibold text-slate-900 uppercase tracking-widest">Does this product have options?</h4>
+                        <p className="text-[9px] font-semibold text-slate-400 uppercase tracking-widest mt-1">Like different colors, sizes, or models.</p>
                       </div>
                       <button
                         type="button"
@@ -782,7 +789,7 @@ export default function AddProductPage() {
                                   <th className="px-8 py-5 text-[10px] font-semibold text-slate-400 uppercase tracking-widest">Variation</th>
                                   <th className="px-6 py-5 text-[10px] font-semibold text-slate-400 uppercase tracking-widest w-40">Price (AED)</th>
                                   <th className="px-6 py-5 text-[10px] font-semibold text-slate-400 uppercase tracking-widest w-32">Stock</th>
-                                  <th className="px-8 py-5 text-[10px] font-semibold text-slate-400 uppercase tracking-widest w-32 text-center">Asset</th>
+                                  <th className="px-8 py-5 text-[10px] font-semibold text-slate-400 uppercase tracking-widest w-32 text-center">Image</th>
                                 </tr>
                               </thead>
                               <tbody className="divide-y divide-slate-100">
@@ -961,14 +968,14 @@ export default function AddProductPage() {
                       </h3>
                       <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">Hidden keywords to improve global discoverability</p>
                     </div>
-                    <div className="p-8 bg-slate-900 rounded-[2rem] space-y-4">
+                    <div className="p-8 bg-slate-50 rounded-[2rem] space-y-4">
                       <label className="text-[9px] font-semibold text-slate-500 uppercase tracking-[0.2em]">Backend Search Tags</label>
                       <textarea
                         value={form.keywords}
                         onChange={(e) => setForm({ ...form, keywords: e.target.value })}
                         placeholder="e.g. wireless, bluetooth, noise cancelling, audiophile, luxury"
                         rows={3}
-                        className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-xs font-semibold text-white placeholder-slate-600 focus:bg-white/10 focus:border-blue-500 transition-all outline-none"
+                        className="w-full bg-white/5 border border-blue-500/10 rounded-2xl px-6 py-4 text-xs font-semibold text-white placeholder-slate-600 focus:bg-white/10 focus:border-blue-500 transition-all outline-none"
                       />
                       <p className="text-[8px] font-semibold text-slate-600 uppercase tracking-widest">Separate with commas. These are not visible to customers.</p>
                     </div>

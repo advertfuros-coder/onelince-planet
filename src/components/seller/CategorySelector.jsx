@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { ChevronRight, Check, Search, Loader2, Info, Sparkles, Zap, X } from 'lucide-react'
 import axios from 'axios'
 
@@ -44,6 +44,8 @@ export default function CategorySelector({
         level2: '',
         level3: ''
     })
+    const [focusedLevel, setFocusedLevel] = useState(null)
+    const blurTimeoutRef = useRef(null)
 
     // AI Suggestion State
     const [aiLoading, setAiLoading] = useState(false)
@@ -291,9 +293,15 @@ export default function CategorySelector({
                                 }
                             }}
                             onFocus={(e) => {
+                                if (blurTimeoutRef.current) clearTimeout(blurTimeoutRef.current)
+                                setFocusedLevel(level)
                                 if (!currentSelection) {
                                     e.target.select()
                                 }
+                            }}
+                            onBlur={() => {
+                                // Small delay to allow clicking an option
+                                blurTimeoutRef.current = setTimeout(() => setFocusedLevel(null), 200)
                             }}
                             placeholder={isDisabled ? 'Select previous level first' : placeholder}
                             disabled={isDisabled}
@@ -308,16 +316,22 @@ export default function CategorySelector({
                         </div>
                     </div>
 
-                    {/* Dropdown List (only show when typing and not selected) */}
-                    {!currentSelection && searchTerm[levelKey] && filteredCategories.length > 0 && (
+                    {/* Dropdown List (show when focused or typing) */}
+                    {!currentSelection && (focusedLevel === level || searchTerm[levelKey]) && filteredCategories.length > 0 && (
                         <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-200 rounded-2xl shadow-xl z-50 max-h-64 overflow-y-auto">
                             {filteredCategories.map((category, idx) => (
                                 <button
                                     key={category._id}
                                     type="button"
+                                    onMouseDown={(e) => {
+                                        // Prevent blur from closing before click
+                                        e.preventDefault()
+                                    }}
                                     onClick={() => {
+                                        if (blurTimeoutRef.current) clearTimeout(blurTimeoutRef.current)
                                         handleSelect(level, category)
                                         setSearchTerm(prev => ({ ...prev, [levelKey]: '' }))
+                                        setFocusedLevel(null)
                                     }}
                                     className={`w-full text-left px-5 py-3 text-sm font-semibold text-slate-700 hover:bg-blue-50 transition-colors ${idx === 0 ? 'rounded-t-2xl' : ''
                                         } ${idx === filteredCategories.length - 1 ? 'rounded-b-2xl' : ''} border-b last:border-b-0 border-slate-100`}

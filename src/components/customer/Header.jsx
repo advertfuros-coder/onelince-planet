@@ -26,7 +26,11 @@ import {
   Heart,
   ShoppingCart,
   Gift,
-  ChevronRight
+  ChevronRight,
+  Baby,
+  Car,
+  PawPrint,
+  Briefcase
 } from 'lucide-react'
 import { useAuth } from '../../lib/context/AuthContext'
 import { useCart } from '../../lib/context/CartContext'
@@ -107,14 +111,14 @@ const megaMenuCategories = [
     href: '/category/beauty',
     icon: 'Sparkles',
     subcategories: [
-      { name: 'Skincare', href: '/category/beauty/skincare' },
-      { name: 'Makeup', href: '/category/beauty/makeup' },
-      { name: 'Haircare', href: '/category/beauty/haircare' },
-      { name: 'Fragrances', href: '/category/beauty/fragrances' },
-      { name: 'Bath & Body', href: '/category/beauty/bath' },
-      { name: 'Beauty Tools', href: '/category/beauty/tools' },
-      { name: 'Men\'s Grooming', href: '/category/beauty/mens' },
-      { name: 'Wellness', href: '/category/beauty/wellness' }
+      { name: 'Skincare Essentials', href: '/category/beauty/skincare' },
+      { name: 'Haircare & Treatments', href: '/category/beauty/haircare' },
+      { name: 'Makeup & Cosmetics', href: '/category/beauty/makeup' },
+      { name: 'Fragrances & Perfumes', href: '/category/beauty/fragrances' },
+      { name: 'Bath & Body Care', href: '/category/beauty/bath-body' },
+      { name: 'Men\'s Grooming', href: '/category/beauty/mens-grooming' },
+      { name: 'Oral Care', href: '/category/beauty/oral-care-dept' },
+      { name: 'Professional Tools', href: '/category/beauty/makeup-tools' }
     ],
     featured: {
       title: 'Glow Up',
@@ -183,23 +187,70 @@ const megaMenuCategories = [
     }
   },
   {
-    name: 'Gifts',
-    href: '/category/gifts',
-    icon: 'Gift',
+    name: 'Automotive',
+    href: '/category/automotive',
+    icon: 'Car',
     subcategories: [
-      { name: 'For Him', href: '/category/gifts/him' },
-      { name: 'For Her', href: '/category/gifts/her' },
-      { name: 'For Kids', href: '/category/gifts/kids' },
-      { name: 'Personalized Gifts', href: '/category/gifts/personalized' },
-      { name: 'Gift Cards', href: '/category/gifts/cards' },
-      { name: 'Occasions', href: '/category/gifts/occasions' },
-      { name: 'Luxury Gifts', href: '/category/gifts/luxury' }
+      { name: 'Car Accessories', href: '/category/automotive/car-accessories' },
+      { name: 'Car Care', href: '/category/automotive/car-care' },
+      { name: 'Auto Electronics', href: '/category/automotive/electronics' },
+      { name: 'Tools & Equipment', href: '/category/automotive/tools' }
     ],
     featured: {
-      title: 'Perfect Gifts',
-      description: 'Make moments special',
-      image: '/featured/gifts.jpg',
-      link: '/category/gifts/featured'
+      title: 'Car Essentials',
+      description: 'Keep your ride in top shape',
+      image: '/featured/automotive.jpg',
+      link: '/category/automotive/featured'
+    }
+  },
+  {
+    name: 'Baby & Toys',
+    href: '/category/baby-toys',
+    icon: 'Baby',
+    subcategories: [
+      { name: 'Baby Care', href: '/category/baby-toys/care' },
+      { name: 'Toys', href: '/category/baby-toys/toys' },
+      { name: 'Baby Gear', href: '/category/baby-toys/gear' },
+      { name: 'School Supplies', href: '/category/baby-toys/school' }
+    ],
+    featured: {
+      title: 'Kids Universe',
+      description: 'The best for your little ones',
+      image: '/featured/kids.jpg',
+      link: '/category/baby-toys/featured'
+    }
+  },
+  {
+    name: 'Pet Supplies',
+    href: '/category/pets',
+    icon: 'PawPrint',
+    subcategories: [
+      { name: 'Dog Supplies', href: '/category/pets/dogs' },
+      { name: 'Cat Supplies', href: '/category/pets/cats' },
+      { name: 'Pet Food', href: '/category/pets/food' },
+      { name: 'Pet Grooming', href: '/category/pets/grooming' }
+    ],
+    featured: {
+      title: 'Pet Paradise',
+      description: 'Everything for your furry friends',
+      image: '/featured/pets.jpg',
+      link: '/category/pets/featured'
+    }
+  },
+  {
+    name: 'Office Supplies',
+    href: '/category/office',
+    icon: 'Briefcase',
+    subcategories: [
+      { name: 'Stationery', href: '/category/office/stationery' },
+      { name: 'Office Electronics', href: '/category/office/electronics' },
+      { name: 'Printers', href: '/category/office/printers' }
+    ],
+    featured: {
+      title: 'Work Smart',
+      description: 'Productivity at your fingertips',
+      image: '/featured/office.jpg',
+      link: '/category/office/featured'
     }
   }
 ]
@@ -219,7 +270,11 @@ const iconComponents = {
   BookOpen,
   Heart,
   ShoppingCart,
-  Gift
+  Gift,
+  Baby,
+  Car,
+  PawPrint,
+  Briefcase
 }
 
 const getIconComponent = (iconName) => {

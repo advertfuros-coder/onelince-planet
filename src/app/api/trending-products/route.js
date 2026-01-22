@@ -23,7 +23,7 @@ export async function GET() {
     const products = trendingProducts
       .map((tp) => {
         const product = tp.product;
-        if (!product) return null;
+        if (!product || !product.isApproved || !product.isActive) return null;
 
         const basePrice = product.pricing?.basePrice || 0;
         const salePrice = product.pricing?.salePrice || basePrice;
