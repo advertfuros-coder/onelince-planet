@@ -128,7 +128,7 @@ export default function ProductCard({
         <div className="flex items-center gap-2 text-[#00A650] text-[13px] font-medium mt-2">
           <FiTruck className="w-4 h-4 stroke-[2.5px]" />
           <span>
-            Delivery by <span className="font-semibold text-[#00A650]">{deliveryEstimate.label}</span>
+            Delivery <span className="font-semibold text-[#00A650]">{deliveryEstimate.label}</span>
           </span>
         </div>
       </div>

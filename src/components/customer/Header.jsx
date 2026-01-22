@@ -281,9 +281,9 @@ export default function Header() {
       case 'sunset':
         return '/weather/sunset.png'
       case 'night':
-        return '/weather/day.png'
+        return '/weather/night.png'
       default:
-        return '/weather/day.png'
+        return '/weather/sunset.png'
     }
   }
 
@@ -559,16 +559,16 @@ export default function Header() {
     <header className="bg-white shadow-sm sticky top-0 z-50">
       {/* Desktop Main Header */}
       <div
-        className="hidden lg:block bord er-b border-gray-100 relative overflow-hidden"
-        style={{
-          backgroundImage: `url(${getBackgroundImage()})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'top',
-          backgroundRepeat: 'no-repeat'
-        }}
+        className="hidden lg:block border-b border-gray-100 relative z-30"
+      // style={{
+      //   backgroundImage: `url(${getBackgroundImage()})`,
+      //   backgroundSize: 'cover',
+      //   backgroundPosition: 'top',
+      //   backgroundRepeat: 'no-repeat'
+      // }}
       >
         {/* Overlay for better text readability */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-black/0 to-black/"></div>
+        {/* <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-black/0 to-black/"></div> */}
 
         <div className="max-w-8xl mx-auto px-4 relative z-10">
           <div className="flex items-center justify-between h-16 gap-4">
@@ -580,15 +580,15 @@ export default function Header() {
                 className="h-8 w-auto object-contain drop-shadow-lg"
               />
 
-              <p className={`text-xl font-semibold transition-colors hover:text-blue-400 cursor-pointer tracking-tight drop-shadow-lg ${timeOfDay === 'night' ? 'text-white' : 'text-white'
-                }`}>
+              <p className={`text-xl font-semibold transition-colors hover:text-blue-400 cursor-pointer tracking-tight drop-shadow-lg  
+                `}>
                 Online Planet
               </p>
             </Link>
 
             {/* Search Bar - Center */}
             {!hideHeaderExtras && (
-              <div className="flex flex-1 max-w-2xl mx-8">
+              <div className="flex  flex-1 max-w-2xl mx-8">
                 <SearchAutocomplete />
               </div>
             )}
@@ -597,15 +597,15 @@ export default function Header() {
               <div className="relative">
                 <button
                   onClick={() => setIsLocationModalOpen(!isLocationModalOpen)}
-                  className={`flex items-center gap-2 text-xs hover:text-blue-300 transition-colors ${timeOfDay === 'night' ? 'text-white' : 'text-white'
+                  className={`flex items-center gap-2 text-xs hover:text-blue-300 transition-colors 
                     }`}
                 >
                   <FiMapPin className="w-4 h-4 drop-shadow-md" />
                   <div className="text-left">
-                    <div className="text-white/90 line-clamp-1 max-w-[150px] drop-shadow-md">
+                    <div className=" text-black line-clamp-1 max-w-[150px] drop-shadow-md">
                       Delivering to {location} {pincode && <span className="font-semibold">{pincode}</span>}
                     </div>
-                    <div className="font-semibold text-white drop-shadow-md">Update Location</div>
+                    <div className="font-semibold text-black drop-shadow-md">Update Location</div>
                   </div>
                 </button>
               </div>
@@ -613,9 +613,9 @@ export default function Header() {
               <div className="relative" ref={countryMenuRef}>
                 <button onClick={() => setIsCountryMenuOpen(!isCountryMenuOpen)} className="flex items-center gap-1.5 px-2 py-1 hover:bg-white/20 rounded transition-colors backdrop-blur-sm">
                   <span className="text-xl drop-shadow-md">{countries[country].flag}</span>
-                  <span className={`text-sm font-semibold drop-shadow-md ${timeOfDay === 'night' ? 'text-white' : 'text-white'
+                  <span className={`text-sm font-semibold drop-shadow-md 
                     }`}>{country}</span>
-                  <FiChevronDown className={`w-3 h-3 drop-shadow-md ${timeOfDay === 'night' ? 'text-white' : 'text-white'
+                  <FiChevronDown className={`w-3 h-3 drop-shadow-md 
                     }`} />
                 </button>
                 {isCountryMenuOpen && (
@@ -656,7 +656,7 @@ export default function Header() {
               )}
 
               <Link href="/cart" className="relative p-2 hover:bg-white/20 rounded-lg backdrop-blur-sm transition-colors">
-                <FiShoppingCart className={`w-5 h-5 drop-shadow-md ${timeOfDay === 'night' ? 'text-white' : 'text-white'
+                <FiShoppingCart className={`w-5 h-5 drop-shadow-md 
                   }`} />
                 {cartCount > 0 && <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-[10px] font-semibold rounded-full w-4 h-4 flex items-center justify-center shadow-lg">{cartCount}</span>}
               </Link>
@@ -664,11 +664,11 @@ export default function Header() {
               {user ? (
                 <div className="relative" ref={userMenuRef}>
                   <button onClick={() => setIsUserMenuOpen(!isUserMenuOpen)} className="flex items-center gap-2 px-3 py-2 hover:bg-white/20 rounded-lg backdrop-blur-sm transition-colors">
-                    <FiUser className={`w-5 h-5 drop-shadow-md ${timeOfDay === 'night' ? 'text-white' : 'text-white'
+                    <FiUser className={`w-5 h-5 drop-shadow-md 
                       }`} />
-                    <span className={`text-sm font-semibold drop-shadow-md ${timeOfDay === 'night' ? 'text-white' : 'text-white'
+                    <span className={`text-sm font-semibold drop-shadow-md 
                       }`}>{user.name}</span>
-                    <FiChevronDown className={`w-3 h-3 drop-shadow-md ${timeOfDay === 'night' ? 'text-white' : 'text-white'
+                    <FiChevronDown className={`w-3 h-3 drop-shadow-md 
                       }`} />
                   </button>
                   {isUserMenuOpen && (
@@ -687,7 +687,7 @@ export default function Header() {
                 </div>
               ) : (
                 <Link href="/login" className="flex items-center gap-2 px-4 py-2 hover:bg-white/20 rounded-lg text-sm font-semibold backdrop-blur-sm transition-colors">
-                  <span className={`drop-shadow-md ${timeOfDay === 'night' ? 'text-white' : 'text-white'
+                  <span className={`drop-shadow-md 
                     }`}>Sign In</span>
                 </Link>
               )}
@@ -698,7 +698,7 @@ export default function Header() {
 
       {/* NEW Mobile Main Header */}
       <div
-        className="lg:hidden border-b border-gray-100 relative overflow-hidden"
+        className="lg:hidden border-b border-gray-100 relative z-30"
         style={{
           backgroundImage: `url(${getBackgroundImage()})`,
           backgroundSize: 'cover',
@@ -762,16 +762,10 @@ export default function Header() {
       </div>
 
 
-      {/* Premium Mega Menu Navigation Bar - Hide on product detail pages */}
       {!hideHeaderExtras && (
         <div
-          className={`hidden lg:block border-b border-gray-200 overflow-visible transition-all duration-300 relative ${showSecondaryHeader ? 'max-h-14 opacity-100' : 'max-h-0 opacity-0'}`}
-          style={{
-            backgroundImage: `url(${getBackgroundImage()})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat'
-          }}
+          className={`hidden lg:block border-b border-gray-200 overflow-visible transition-all duration-300 relative z-20 ${showSecondaryHeader ? 'max-h-14 opacity-100' : 'max-h-0 opacity-0'}`}
+
         >
           {/* Gradient overlay from background to white */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-white/60 to-white"></div>
