@@ -296,11 +296,11 @@ export default function AdminProductDetailPage({ params }) {
                 <div>
                   <p className="text-xs text-gray-600">Margin %</p>
                   <p className="text-sm font-semibold text-green-600">
-                    {product.pricing?.costPrice && product.pricing?.salePrice
+                    {product.pricing?.salePrice
                       ? (
-                        ((product.pricing.salePrice - product.pricing.costPrice) / product.pricing.salePrice) *
-                        100
-                      ).toFixed(1)
+                          ((product.pricing.salePrice - (product.pricing.costPrice || 0)) / product.pricing.salePrice) *
+                          100
+                        ).toFixed(1)
                       : 0}
                     %
                   </p>
@@ -318,25 +318,40 @@ export default function AdminProductDetailPage({ params }) {
           {/* Seller Info */}
           {product.sellerId && typeof product.sellerId === 'object' && (
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center space-x-2">
-                <FiUser />
-                <span>Seller Information</span>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <FiUser />
+                  <span>Seller Information</span>
+                </div>
+                {product.sellerId.subscriptionPlan && (
+                  <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
+                    product.sellerId.subscriptionPlan === 'premium' ? 'bg-purple-100 text-purple-700' :
+                    product.sellerId.subscriptionPlan === 'basic' ? 'bg-blue-100 text-blue-700' :
+                    'bg-slate-100 text-slate-600'
+                  }`}>
+                    {product.sellerId.subscriptionPlan}
+                  </span>
+                )}
               </h3>
-
+              
               <div className="space-y-4">
                 <div className="p-4 bg-blue-50 rounded-xl border border-blue-100">
                   <p className="text-[10px] font-bold text-blue-600 uppercase tracking-widest mb-1">Business Name</p>
                   <p className="text-sm font-semibold text-slate-900">{product.sellerId.businessInfo?.businessName || 'N/A'}</p>
                 </div>
-
-                <div className="grid grid-cols-1 gap-3">
+                
+                <div className="grid grid-cols-2 gap-3">
                   <div>
                     <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Contact Person</p>
                     <p className="text-xs font-medium text-slate-700">{product.sellerId.personalDetails?.fullName || 'N/A'}</p>
                   </div>
                   <div>
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">GSTIN</p>
+                    <p className="text-xs font-medium text-slate-700 font-mono italic">{product.sellerId.businessInfo?.gstin || 'No GSTIN'}</p>
+                  </div>
+                  <div>
                     <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Email Address</p>
-                    <p className="text-xs font-medium text-slate-700">{product.sellerId.personalDetails?.email || 'N/A'}</p>
+                    <p className="text-xs font-medium text-slate-700 truncate">{product.sellerId.personalDetails?.email || 'N/A'}</p>
                   </div>
                   <div>
                     <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Phone Number</p>

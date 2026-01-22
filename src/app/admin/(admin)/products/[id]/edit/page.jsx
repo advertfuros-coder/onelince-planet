@@ -553,23 +553,40 @@ export default function EditProductPage({ params }) {
         <div className="lg:col-span-1 space-y-6">
           {/* Seller Info */}
           {seller && (
-            <Section title="Seller Information">
+            <Section title={
+              <div className="flex items-center justify-between w-full">
+                <span>Seller Information</span>
+                {seller.subscriptionPlan && (
+                  <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
+                    seller.subscriptionPlan === 'premium' ? 'bg-purple-100 text-purple-700' :
+                    seller.subscriptionPlan === 'basic' ? 'bg-blue-100 text-blue-700' :
+                    'bg-slate-100 text-slate-600'
+                  }`}>
+                    {seller.subscriptionPlan}
+                  </span>
+                )}
+              </div>
+            }>
               <div className="space-y-4">
                 <div className="p-4 bg-blue-50 rounded-xl border border-blue-100">
                   <p className="text-[10px] font-bold text-blue-600 uppercase tracking-widest mb-1">Business Name</p>
                   <p className="text-sm font-semibold text-slate-900">{seller.businessInfo?.businessName || 'N/A'}</p>
                 </div>
                 
-                <div className="grid grid-cols-1 gap-3">
+                <div className="grid grid-cols-2 gap-3">
                   <div>
                     <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Contact Person</p>
                     <p className="text-xs font-medium text-slate-700">{seller.personalDetails?.fullName || 'N/A'}</p>
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Email Address</p>
-                    <p className="text-xs font-medium text-slate-700">{seller.personalDetails?.email || 'N/A'}</p>
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">GSTIN</p>
+                    <p className="text-xs font-medium text-slate-700 font-mono italic">{seller.businessInfo?.gstin || 'No GSTIN'}</p>
                   </div>
-                  <div>
+                  <div className="col-span-2">
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Email Address</p>
+                    <p className="text-xs font-medium text-slate-700 truncate">{seller.personalDetails?.email || 'N/A'}</p>
+                  </div>
+                  <div className="col-span-2">
                     <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Phone Number</p>
                     <p className="text-xs font-medium text-slate-700">{seller.personalDetails?.phone || 'N/A'}</p>
                   </div>
