@@ -3,6 +3,14 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 
+// Payment Logos
+import gpayLogo from '@/assets/paylogo/gpay.png'
+import paytmLogo from '@/assets/paylogo/paytm.png'
+import phonepeLogo from '@/assets/paylogo/phomepay.png'
+import upayLogo from '@/assets/paylogo/upay.png'
+import vidsLogo from '@/assets/paylogo/vids.png'
+
+
 import {
   FiCheck,
   FiTruck,
@@ -23,7 +31,9 @@ import {
   FiHeart,
   FiRefreshCw,
   FiCheckCircle,
-  FiLock as FiLockAlt
+  FiLock as FiLockAlt,
+  FiPlus,
+  FiX
 } from 'react-icons/fi'
 import { FaRegMoneyBillAlt } from 'react-icons/fa'
 import { BiWallet, BiBarcodeReader, BiLeaf, BiTagAlt } from 'react-icons/bi'
@@ -38,7 +48,17 @@ import axios from 'axios'
 
 export default function CheckoutPage() {
   const router = useRouter()
-  const { items, subtotal, shipping, total, clearCart } = useCart()
+  const {
+    items,
+    subtotal,
+    shipping,
+    total,
+    clearCart,
+    appliedCoupon,
+    discount,
+    applyCoupon,
+    removeCoupon
+  } = useCart()
   const { user } = useAuth()
   const { formatPrice, currencyConfig } = useCurrency()
   const [loading, setLoading] = useState(false)
@@ -62,15 +82,22 @@ export default function CheckoutPage() {
   const [deliveryMethod, setDeliveryMethod] = useState('standard') // standard | express
   const [paymentMethod, setPaymentMethod] = useState('online') // online | upi | cod
 
-  // Coupon
+  // Coupon input state
   const [couponCode, setCouponCode] = useState('')
-  const [appliedCoupon, setAppliedCoupon] = useState(null)
-  const [discount, setDiscount] = useState(0)
 
   // Donation
   const [isDonationChecked, setIsDonationChecked] = useState(false)
   const [donationAmount, setDonationAmount] = useState(20)
   const { country, exchangeRates } = useCurrency()
+  const [loadingPincode, setLoadingPincode] = useState(false)
+  const [pincodeError, setPincodeError] = useState('')
+
+  // Saved Addresses
+  const [savedAddresses, setSavedAddresses] = useState([])
+  const [selectedAddressId, setSelectedAddressId] = useState(null)
+  const [showAddNewAddress, setShowAddNewAddress] = useState(false)
+  const [loadingAddresses, setLoadingAddresses] = useState(false)
+  const [saveAddress, setSaveAddress] = useState(false)
 
   // Base donation options in INR
   const donationOptions = [10, 20, 50, 100]
@@ -90,8 +117,11 @@ export default function CheckoutPage() {
       router.push('/cart')
     } else {
       fetchDeliveryEstimates()
+      if (user) {
+        fetchSavedAddresses()
+      }
     }
-  }, [items, router])
+  }, [items, router, user])
 
   const fetchDeliveryEstimates = async () => {
     const pincode = localStorage.getItem('userPincode')
@@ -121,6 +151,138 @@ export default function CheckoutPage() {
     }
   }
 
+  // Fetch city and state from pincode using India Postal API
+  const fetchLocationFromPincode = async (pincode) => {
+    if (!pincode || pincode.length !== 6 || !/^\d{6}$/.test(pincode)) {
+      setPincodeError('')
+      return
+    }
+
+    setLoadingPincode(true)
+    setPincodeError('')
+
+    try {
+      const response = await fetch(`https://api.postalpincode.in/pincode/${pincode}`)
+      const data = await response.json()
+
+      if (data[0]?.Status === 'Success' && data[0]?.PostOffice?.length > 0) {
+        const postOffice = data[0].PostOffice[0]
+        setShippingInfo(prev => ({
+          ...prev,
+          city: postOffice.District,
+          state: postOffice.State,
+          country: 'India'
+        }))
+        setPincodeError('')
+      } else {
+        setPincodeError('Invalid pincode')
+        setShippingInfo(prev => ({
+          ...prev,
+          city: '',
+          state: ''
+        }))
+      }
+    } catch (error) {
+      console.error('Failed to fetch location:', error)
+      setPincodeError('Failed to fetch location')
+    } finally {
+      setLoadingPincode(false)
+    }
+  }
+
+  // Fetch saved addresses for logged-in user
+  const fetchSavedAddresses = async () => {
+    setLoadingAddresses(true)
+    try {
+      const token = localStorage.getItem('token')
+      if (!token) return
+
+      const response = await axios.get('/api/customer/addresses', {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+
+      if (response.data.success) {
+        setSavedAddresses(response.data.addresses)
+
+        // Auto-select default address or first address
+        const defaultAddr = response.data.addresses.find(addr => addr.isDefault)
+        const addrToSelect = defaultAddr || response.data.addresses[0]
+
+        if (addrToSelect) {
+          setSelectedAddressId(addrToSelect._id)
+          setShippingInfo({
+            name: addrToSelect.name || user?.name || '',
+            email: user?.email || '',
+            phone: addrToSelect.phone || '',
+            addressLine1: addrToSelect.addressLine1 || '',
+            addressLine2: addrToSelect.addressLine2 || '',
+            city: addrToSelect.city || '',
+            state: addrToSelect.state || '',
+            pincode: addrToSelect.pincode || '',
+            country: addrToSelect.country || 'India'
+          })
+        } else {
+          setShowAddNewAddress(true)
+        }
+      }
+    } catch (error) {
+      console.error('Failed to fetch addresses:', error)
+    } finally {
+      setLoadingAddresses(false)
+    }
+  }
+
+  // Select existing address
+  const selectAddress = (address) => {
+    setSelectedAddressId(address._id)
+    setShippingInfo({
+      name: address.name || user?.name || '',
+      email: user?.email || '',
+      phone: address.phone || '',
+      addressLine1: address.addressLine1 || '',
+      addressLine2: address.addressLine2 || '',
+      city: address.city || '',
+      state: address.state || '',
+      pincode: address.pincode || '',
+      country: address.country || 'India'
+    })
+    setShowAddNewAddress(false)
+  }
+
+  // Save new address to user profile
+  const saveNewAddress = async () => {
+    if (!user || !saveAddress) return
+
+    try {
+      const token = localStorage.getItem('token')
+      if (!token) return
+
+      const addressData = {
+        name: shippingInfo.name,
+        phone: shippingInfo.phone,
+        addressLine1: shippingInfo.addressLine1,
+        addressLine2: shippingInfo.addressLine2,
+        city: shippingInfo.city,
+        state: shippingInfo.state,
+        pincode: shippingInfo.pincode,
+        country: shippingInfo.country,
+        isDefault: savedAddresses.length === 0,
+        label: 'home'
+      }
+
+      const response = await axios.post('/api/customer/addresses', addressData, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+
+      if (response.data.success) {
+        setSavedAddresses(response.data.addresses)
+        toast.success('Address saved successfully!')
+      }
+    } catch (error) {
+      console.error('Failed to save address:', error)
+    }
+  }
+
   const validateShipping = () => {
     const required = ['name', 'email', 'phone', 'addressLine1', 'city', 'state', 'pincode', 'country']
     for (const field of required) {
@@ -138,13 +300,7 @@ export default function CheckoutPage() {
   }
 
   const handleApplyCoupon = () => {
-    if (couponCode === 'SAVE20') {
-      setDiscount(subtotal * 0.2)
-      setAppliedCoupon({ code: 'SAVE20', type: 'percentage', value: 20 })
-      toast.success('Coupon applied successfully!')
-    } else {
-      toast.error('Invalid coupon code')
-    }
+    applyCoupon(couponCode, subtotal)
   }
 
   const deliveryCost = deliveryMethod === 'express' ? 99 : 0
@@ -283,7 +439,7 @@ export default function CheckoutPage() {
           </button>
           <h1 className="text-[14px] font-semibold text-gray-800 tighter">Secure Checkout</h1>
         </div>
-       
+
       </div>
 
       {/* Stepper */}
@@ -340,21 +496,159 @@ export default function CheckoutPage() {
 
                 {currentStep === 1 ? (
                   <div className="space-y-8 animate-slideUp">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="space-y-6">
-                        <Input label="Receiver Full Name" value={shippingInfo.name} onChange={e => setShippingInfo({ ...shippingInfo, name: e.target.value })} placeholder="Enter name" />
-                        <Input label="Email for Invoice" type="email" value={shippingInfo.email} onChange={e => setShippingInfo({ ...shippingInfo, email: e.target.value })} placeholder="email@example.com" />
-                        <Input label="Primary Mobile" value={shippingInfo.phone} onChange={e => setShippingInfo({ ...shippingInfo, phone: e.target.value })} placeholder="+91 / +971" />
-                      </div>
-                      <div className="space-y-6">
-                        <Input label="Street / Building" value={shippingInfo.addressLine1} onChange={e => setShippingInfo({ ...shippingInfo, addressLine1: e.target.value })} placeholder="Building Name / H.No" />
-                        <Input label="Area / Landmark" value={shippingInfo.addressLine2} onChange={e => setShippingInfo({ ...shippingInfo, addressLine2: e.target.value })} placeholder="Sector / Landmark" />
-                        <div className="grid grid-cols-2 gap-4">
-                          <Input label="City" value={shippingInfo.city} onChange={e => setShippingInfo({ ...shippingInfo, city: e.target.value })} />
-                          <Input label="Pincode" value={shippingInfo.pincode} onChange={e => setShippingInfo({ ...shippingInfo, pincode: e.target.value })} />
+                    {/* Saved Addresses - Only for logged-in users */}
+                    {user && savedAddresses.length > 0 && (
+                      <div className="space-y-4">
+                        <h4 className="text-[13px] font-semibold text-gray-900 tighter">Select Delivery Address</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {savedAddresses.map((address) => (
+                            <div
+                              key={address._id}
+                              onClick={() => selectAddress(address)}
+                              className={`p-5 rounded-[24px] border-2 cursor-pointer transition-all ${selectedAddressId === address._id && !showAddNewAddress
+                                ? 'border-blue-600 bg-blue-50/30'
+                                : 'border-gray-100 bg-gray-50 hover:border-gray-200'
+                                }`}
+                            >
+                              <div className="flex items-start justify-between mb-3">
+                                <div className="flex items-center gap-2">
+                                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selectedAddressId === address._id && !showAddNewAddress
+                                    ? 'border-blue-600 bg-blue-600'
+                                    : 'border-gray-300'
+                                    }`}>
+                                    {selectedAddressId === address._id && !showAddNewAddress && (
+                                      <FiCheck className="w-3 h-3 text-white" />
+                                    )}
+                                  </div>
+                                  <span className="text-[11px] font-semibold text-gray-900">{address.name}</span>
+                                </div>
+                                {address.isDefault && (
+                                  <span className="text-[9px] font-semibold bg-blue-100 text-blue-600 px-2 py-1 rounded-full">Default</span>
+                                )}
+                              </div>
+                              <p className="text-[11px] text-gray-600 leading-relaxed">
+                                {address.addressLine1}, {address.addressLine2 && `${address.addressLine2}, `}
+                                {address.city}, {address.state} - {address.pincode}
+                              </p>
+                              <p className="text-[10px] text-gray-400 mt-2">Phone: {address.phone}</p>
+                            </div>
+                          ))}
+
+                          {/* Add New Address Card */}
+                          <div
+                            onClick={() => {
+                              setShowAddNewAddress(true)
+                              setSelectedAddressId(null)
+                            }}
+                            className={`p-5 rounded-[24px] border-2 cursor-pointer transition-all flex items-center justify-center ${showAddNewAddress
+                              ? 'border-blue-600 bg-blue-50/30'
+                              : 'border-dashed border-gray-300 bg-white hover:border-blue-400'
+                              }`}
+                          >
+                            <div className="text-center">
+                              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                                <FiPlus className="w-6 h-6 text-blue-600" />
+                              </div>
+                              <p className="text-[12px] font-semibold text-blue-600">Add New Address</p>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    )}
+
+                    {/* Address Form - Show when adding new or no saved addresses */}
+                    {(showAddNewAddress || !user || savedAddresses.length === 0) && (
+                      <>
+                        {user && savedAddresses.length > 0 && (
+                          <div className="flex items-center gap-2 pt-4 border-t border-gray-100">
+                            <FiMapPin className="w-4 h-4 text-blue-600" />
+                            <h4 className="text-[13px] font-semibold text-gray-900 tighter">Enter New Address</h4>
+                          </div>
+                        )}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          <div className="space-y-6">
+                            <Input label="Receiver Full Name" value={shippingInfo.name} onChange={e => setShippingInfo({ ...shippingInfo, name: e.target.value })} placeholder="Enter name" />
+                            <Input label="Email for Invoice" type="email" value={shippingInfo.email} onChange={e => setShippingInfo({ ...shippingInfo, email: e.target.value })} placeholder="email@example.com" />
+                            <Input label="Primary Mobile" value={shippingInfo.phone} onChange={e => setShippingInfo({ ...shippingInfo, phone: e.target.value })} placeholder="+91 / +971" />
+                          </div>
+                          <div className="space-y-6">
+                            <Input label="Street / Building" value={shippingInfo.addressLine1} onChange={e => setShippingInfo({ ...shippingInfo, addressLine1: e.target.value })} placeholder="Building Name / H.No" />
+                            <Input label="Area / Landmark" value={shippingInfo.addressLine2} onChange={e => setShippingInfo({ ...shippingInfo, addressLine2: e.target.value })} placeholder="Sector / Landmark" />
+
+                            {/* Pincode, City, State in single row */}
+                            <div className="space-y-2">
+                              <label className="text-[10px] font-semibold text-gray-500 uppercase tracking-widest ml-1">Pincode</label>
+                              <div className="relative">
+                                <input
+                                  type="text"
+                                  value={shippingInfo.pincode}
+                                  onChange={(e) => {
+                                    const value = e.target.value.replace(/\D/g, '').slice(0, 6)
+                                    setShippingInfo({ ...shippingInfo, pincode: value })
+                                    if (value.length === 6) {
+                                      fetchLocationFromPincode(value)
+                                    }
+                                  }}
+                                  placeholder="Enter 6-digit pincode"
+                                  maxLength={6}
+                                  className="w-full px-5 py-3.5 bg-gray-50 border-2 border-gray-100 rounded-2xl focus:border-blue-500 focus:bg-white focus:outline-none transition-all text-sm font-semibold"
+                                />
+                                {loadingPincode && (
+                                  <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                                    <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                                  </div>
+                                )}
+                              </div>
+                              {pincodeError && (
+                                <p className="text-xs text-red-500 font-medium ml-1">{pincodeError}</p>
+                              )}
+                            </div>
+
+                            {/* City and State in single row */}
+                            <div className="grid grid-cols-2 gap-4">
+                              <div className="space-y-2">
+                                <label className="text-[10px] font-semibold text-gray-500 uppercase tracking-widest ml-1">City</label>
+                                <input
+                                  type="text"
+                                  value={shippingInfo.city}
+                                  readOnly={shippingInfo.pincode.length === 6 && !pincodeError}
+                                  onChange={e => setShippingInfo({ ...shippingInfo, city: e.target.value })}
+                                  placeholder="City"
+                                  className="w-full px-5 py-3.5 bg-gray-50 border-2 border-gray-100 rounded-2xl focus:border-blue-500 focus:bg-white focus:outline-none transition-all text-sm font-semibold read-only:bg-blue-50 read-only:text-blue-600"
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <label className="text-[10px] font-semibold text-gray-500 uppercase tracking-widest ml-1">State</label>
+                                <input
+                                  type="text"
+                                  value={shippingInfo.state}
+                                  readOnly={shippingInfo.pincode.length === 6 && !pincodeError}
+                                  onChange={e => setShippingInfo({ ...shippingInfo, state: e.target.value })}
+                                  placeholder="State"
+                                  className="w-full px-5 py-3.5 bg-gray-50 border-2 border-gray-100 rounded-2xl focus:border-blue-500 focus:bg-white focus:outline-none transition-all text-sm font-semibold read-only:bg-blue-50 read-only:text-blue-600"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Save Address Checkbox - Only for logged-in users adding new address */}
+                        {user && showAddNewAddress && (
+                          <div className="flex items-center gap-3 pt-4">
+                            <input
+                              type="checkbox"
+                              id="saveAddress"
+                              checked={saveAddress}
+                              onChange={(e) => setSaveAddress(e.target.checked)}
+                              className="w-5 h-5 rounded-lg border-2 border-gray-300 text-blue-600 focus:ring-blue-600"
+                            />
+                            <label htmlFor="saveAddress" className="text-[12px] font-semibold text-gray-700 cursor-pointer">
+                              Save this address for future orders
+                            </label>
+                          </div>
+                        )}
+                      </>
+                    )}
 
                     <div className="pt-8 border-t border-gray-100">
                       <div className="flex items-center justify-between mb-6">
@@ -395,7 +689,14 @@ export default function CheckoutPage() {
                     </div>
 
                     <button
-                      onClick={() => { if (validateShipping()) setCurrentStep(2) }}
+                      onClick={async () => {
+                        if (validateShipping()) {
+                          if (saveAddress) {
+                            await saveNewAddress()
+                          }
+                          setCurrentStep(2)
+                        }
+                      }}
                       className="w-full py-5 bg-blue-600 text-white font-semibold rounded-[24px] shadow-xl shadow-blue-600/20 active:scale-[0.98] transition-all hidden md:block text-[14px] wider"
                     >
                       Confirm Address & Choose Payment
@@ -421,47 +722,7 @@ export default function CheckoutPage() {
             {/* Payment & Rewards */}
             <div className={`bg-white md:rounded-[40px] rounded-none overflow-hidden transition-all duration-500 md:border border-gray-100 md:shadow-xl md:shadow-blue-900/5 ${currentStep !== 2 ? 'max-h-[120px] opacity-100' : 'max-h- [3000px]'}`}>
               {currentStep === 2 && (
-                <div className="md:p-8 px-4 py-8">
-
-                  {/* Coupon Section Refined */}
-                  <div className="mb-4 md:bg-blue-50/30 md:border border-blue-100 md:p-8 p-0 md:rounded-[32px] rounded-none relative md:overflow-hidden">
-                    <div className="absolute -top-10 -right-10 w-40 h-40 bg-blue-600/5 rounded-full blur-3xl"></div>
-                    <div className="flex items-center justify-between mb-6">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-[#FFD23F]">
-                          <BiTagAlt className="w-5 h-5" />
-                        </div>
-                        <div>
-                          <p className="text-[13px] font-semibold text-gray-900 tighter">Available Promotions</p>
-                          <p className="text-[10px] text-gray-400 font-semibold">Maximize your planet savings</p>
-                        </div>
-                      </div>
-                      {appliedCoupon && (
-                        <button onClick={() => { setAppliedCoupon(null); setDiscount(0); }} className="text-xs font-semibold text-red-500">Remove Coupon</button>
-                      )}
-                    </div>
-                    <div className="grid grid-cols-2 gap-3 relative z-10">
-                      <input
-                        type="text"
-                        placeholder="Enter Promo Code"
-                        value={couponCode}
-                        onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
-                        className="flex-1 px-6 py-2 bg-white border border-gray-100 rounded-2xl text-[13px] font-semibold focus:ring-2 focus:ring-blue-600/20 placeholder:text-gray-300 transition-all"
-                      />
-                      <button
-                        onClick={handleApplyCoupon}
-                        className="px-8 bg-blue-600 text-white text-[12px] font-semibold rounded-2xl shadow-lg shadow-blue-600/10 active:scale-95 transition-all wider"
-                      >
-                        Apply Code
-                      </button>
-                    </div>
-                    {!appliedCoupon && (
-                      <div className="mt-4 flex items-center gap-2 px-1">
-                        <span className="text-[9px] font-semibold text-blue-600 bg-blue-100 px-2 py-1 rounded widest">SAVE20</span>
-                        <p className="text-[10px] text-gray-400 font-semibold">Use code <span className="text-blue-600 font-semibold">SAVE20</span> for 20% flat discount!</p>
-                      </div>
-                    )}
-                  </div>
+                <div className="md:p-8 px-4">
 
                   {/* Donation Section - Second in Sequence */}
                   <div className="bg-gradient-to-br from-green-600 to-green-900 md:p-8 p-4 md:rounded-[40px] rounded-[32px] mb-8 text-white relative overflow-hidden shadow-2xl shadow-blue-900/10">
@@ -477,19 +738,21 @@ export default function CheckoutPage() {
                           <p className="text-[13px] font-semibold tighter">Green Orbit Contribution</p>
                           <p className="text-[10px] text-blue-100/70 font-semibold italic">Empower your carbon neutrality</p>
                         </div>
+
+
+
+                        <label className="absolute right-0 top-0 items-center gap-4 cursor-pointer group bg-white/5 p-4 rounded-2xl b order border-white/10 hover:bg-white/10 transition-colors">
+                          <input
+                            type="checkbox"
+                            checked={isDonationChecked}
+                            onChange={() => setIsDonationChecked(!isDonationChecked)}
+                            className="w-6 h-6 rounded-lg border-2 border-white/20 bg-transparent text-[#FFD23F] focus:ring-0 checked:bg-[#FFD23F] transition-all"
+                          />
+
+                        </label>
                       </div>
 
-                      <label className="flex items-center gap-4 cursor-pointer group bg-white/5 p-4 mb-2 rounded-2xl border border-white/10 hover:bg-white/10 transition-colors">
-                        <input
-                          type="checkbox"
-                          checked={isDonationChecked}
-                          onChange={() => setIsDonationChecked(!isDonationChecked)}
-                          className="w-6 h-6 rounded-lg border-2 border-white/20 bg-transparent text-[#FFD23F] focus:ring-0 checked:bg-[#FFD23F] transition-all"
-                        />
-                        <div>
-                          <span className="text-[11px] font-semibold block tighter">Plant a tree with this package</span>
-                         </div>
-                      </label>
+
 
 
                       <div className="flex items-center gap-3 overflow-x-auto no-scrollbar pb-2">
@@ -531,10 +794,27 @@ export default function CheckoutPage() {
                             <div className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all ${paymentMethod === opt.id ? 'bg-blue-600 text-white scale-110 shadow-lg' : 'bg-white text-gray-400'}`}>
                               <opt.icon className="w-7 h-7" />
                             </div>
-                            <div>
+                            <div className="flex-1">
                               <p className="text-[13px] font-semibold text-gray-900 tighter">{opt.name}</p>
                               <p className="text-[10px] text-gray-400 font-semibold mt-1">{opt.sub}</p>
                             </div>
+                          </div>
+
+                          {/* Payment Logos */}
+                          <div className="mt-4 flex items-center gap-3 flex-wrap">
+                            {opt.id === 'online' && (
+                              <>
+                                <Image src={vidsLogo} alt="Cards" height={24} className="" />
+                                <Image src={upayLogo} alt="RuPay" height={20} className="scale-80 -ml-2 mt-1 opacity-80" />
+                              </>
+                            )}
+                            {opt.id === 'upi' && (
+                              <>
+                                <Image src={gpayLogo} alt="Google Pay" height={24} className="" />
+                                <Image src={phonepeLogo} alt="PhonePe" height={24} className="" />
+                                <Image src={paytmLogo} alt="Paytm" height={24} className="" />
+                              </>
+                            )}
                           </div>
 
                         </div>
@@ -637,7 +917,43 @@ export default function CheckoutPage() {
                 </div>
               </div>
 
-              <div className="space-y-3">
+              {/* Coupon Section in Sidebar */}
+              <div className="mt-6 pt-6 border-t border-gray-100">
+                {!appliedCoupon ? (
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={couponCode}
+                      onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                      placeholder="Coupon Code"
+                      className="flex-1 px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none text-xs font-semibold"
+                    />
+                    <button
+                      onClick={handleApplyCoupon}
+                      className="px-4 py-2 bg-blue-600 text-white text-[10px] font-bold rounded-xl hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20"
+                    >
+                      Apply
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-between p-3 bg-blue-50 border border-blue-100 rounded-2xl">
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 bg-blue-600 rounded-lg flex items-center justify-center">
+                        <BiTagAlt className="w-3.5 h-3.5 text-white" />
+                      </div>
+                      <div>
+                        <p className="text-[11px] font-bold text-blue-900">{appliedCoupon.code} applied</p>
+                        <p className="text-[9px] text-blue-600 font-semibold">Saved {currencyConfig.symbol}{Math.round(discount)}</p>
+                      </div>
+                    </div>
+                    <button onClick={removeCoupon} className="p-1 hover:bg-blue-100 rounded-full transition-colors">
+                      <FiX className="w-4 h-4 text-blue-600" />
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <div className="mt-6 space-y-3">
                 <div className="flex items-center gap-3 p-4 rounded-2xl bg-gray-50/50 border border-gray-100">
                   <FiTruck className="text-blue-600 w-5 h-5 shrink-0" />
                   <div>
@@ -674,9 +990,14 @@ export default function CheckoutPage() {
             <button className="text-[9px] font-semibold text-gray-400 flex items-center gap-1.5 mt-0.5">Summary <FiChevronRight className="w-3 h-3" /></button>
           </div>
           <button
-            onClick={() => {
+            onClick={async () => {
               if (currentStep === 1) {
-                if (validateShipping()) setCurrentStep(2)
+                if (validateShipping()) {
+                  if (saveAddress) {
+                    await saveNewAddress()
+                  }
+                  setCurrentStep(2)
+                }
               } else {
                 handlePlaceOrder()
               }

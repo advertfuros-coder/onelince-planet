@@ -32,7 +32,6 @@ import CouponBanner from '@/components/customer/CouponBanner'
 
 export default function CartPage() {
   const router = useRouter()
-  const { items, removeFromCart, updateQuantity, getCartTotal, getCartCount, isLoaded, addToCart } = useCart()
   const { formatPrice, currencyConfig } = useCurrency()
   const [deliveryEstimates, setDeliveryEstimates] = useState({})
   const [loadingEstimates, setLoadingEstimates] = useState(false)
@@ -41,6 +40,23 @@ export default function CartPage() {
 
   // Selection state
   const [selectedItems, setSelectedItems] = useState([])
+
+  // Coupon input state
+  const [couponCode, setCouponCode] = useState('')
+
+  const { 
+    items, 
+    removeFromCart, 
+    updateQuantity, 
+    getCartTotal, 
+    getCartCount, 
+    isLoaded, 
+    addToCart,
+    appliedCoupon,
+    discount,
+    applyCoupon,
+    removeCoupon: removeCouponFromCart
+  } = useCart()
 
   // BRAND COLORS
   const BRAND_PRIMARY = '#2563eb' // Blue 600
@@ -151,7 +167,19 @@ export default function CartPage() {
   const totalMRP = cartTotal * 1.4
   const discountOnMRP = totalMRP - cartTotal
   const platformFee = selectedCount > 0 ? 20 : 0
-  const finalTotal = cartTotal + platformFee
+  const shippingFee = (cartTotal > 500 || selectedCount === 0) ? 0 : 50
+  const finalTotal = cartTotal + platformFee + shippingFee - discount
+
+  // Handle coupon apply
+  const handleApplyCoupon = () => {
+    applyCoupon(couponCode, cartTotal)
+  }
+
+  // Remove coupon
+  const removeCoupon = () => {
+    setCouponCode('')
+    removeCouponFromCart()
+  }
 
   if (items.length === 0) {
     return (
@@ -177,14 +205,7 @@ export default function CartPage() {
   return (
     <div className="min-h-screen bg-blue-50/30 pb-32">
       {/* Header */}
-      <div className="bg-white border-b border-gray-100 px-4 py-3 flex items-center justify-between sticky top-0 z-30">
-        <div className="flex items-center gap-4">
-          <button onClick={() => router.back()} className="p-1 text-blue-600">
-            <FiArrowLeft className="w-6 h-6" />
-          </button>
-          <h1 className="text-sm font-semibold text-gray-800 tighter ">Shopping Bag</h1>
-        </div>
-      </div>
+      
 
       {/* Stepper */}
       <div className="bg-white md:block hidden px-4 py-6 border-b border-gray-100">
@@ -215,7 +236,7 @@ export default function CartPage() {
 
 
       {/* Selection Control Bar */}
-      <div className="bg-white px-4 py-4 mb-1 flex items-center justify-between border-b border-gray-100">
+      {/* <div className="bg-white px-4 py-4 mb-1 flex items-center justify-between border-b border-gray-100">
         <div className="flex items-center gap-3">
           <input
             type="checkbox"
@@ -231,7 +252,7 @@ export default function CartPage() {
           <FiTrash2 className="w-5 h-5 hover:text-red-500 transition-colors" />
           <FiHeart className="w-5 h-5 hover:text-blue-500 transition-colors" />
         </div>
-      </div>
+      </div> */}
 
       {/* Premium Item Cards */}
       <div className="space-y-1">
@@ -245,21 +266,21 @@ export default function CartPage() {
           return (
             <div key={id} className={`bg-white p-5 flex gap-5 relative transition-all duration-300 shadow-sm ${!isSelected ? 'opacity-50 grayscale-[0.5]' : ''}`}>
               {/* Selection Checkbox Overlay */}
-              <div className="absolute top-5 left-5 z-10">
+              {/* <div className="absolute top-5 left-5 z-10">
                 <input
                   type="checkbox"
                   checked={isSelected}
                   onChange={() => toggleItemSelection(id)}
                   className="w-5 h-5 rounded-lg border-2 border-gray-100 text-blue-600 focus:ring-blue-600"
                 />
-              </div>
+              </div> */}
 
               {/* Product Visual */}
-              <Link href={`/products/${item.productId}`} className="w-32 aspect-square bg-gray-50 rounded-3xl overflow-hidden flex-shrink-0 border border-gray-100 flex items-center justify-center group">
+              <Link href={`/products/${item.productId}`} className="w-32 aspect-square bg-g ray-50 rounded-3xl overflow-hidden flex-shrink-0 bor der border-gray-100 flex items-center justify-center group">
                 <img
                   src={item.image || '/placeholder-product.png'}
                   alt={item.name}
-                  className="w-full h-full object-contain p-3 mix-blend-multiply group-hover:scale-110 transition-transform duration-500"
+                  className="w-full h-full object-contain   mix-blend-multiply group-hover:scale-110 transition-transform duration-500"
                 />
               </Link>
 
@@ -267,10 +288,10 @@ export default function CartPage() {
               <div className="flex-1 min-w-0 flex flex-col pt-1">
                 <div className="flex justify-between items-start mb-1">
                   <div className="flex-1">
-                    <p className="text-[14px] text-gray-900 font-semibold leading-tight">{item.name}</p>
+                    <p className="text-xs pr-3 text-gray-900 font-semibold leading-tight">{item.name}</p>
                   </div>
                   <button onClick={() => removeFromCart(item.productId, item.variant)} className="p-1">
-                    <FiTrash2 className="w-4 h-4 text-gray-200 hover:text-red-500 transition-colors" />
+                    <FiTrash2 className="w-4 h-4 text-red-500 hover:text-red-500 transition-colors" />
                   </button>
                 </div>
                 <p className="text-[10px] text-gray-400 font-semibold  wider mb-3">Merchant: {item.seller || 'Online Planet'}</p>
@@ -306,11 +327,8 @@ export default function CartPage() {
                 </div>
 
                 {/* Meta Labels */}
-                <div className="space-y-1.5 pt-3 border-t border-dashed border-gray-100">
-                  <div className="flex items-center gap-2 text-[10px] text-gray-900 font-semibold  wider">
-                    <FiRefreshCw className="w-3 h-3 text-blue-600" />
-                    <span>Verified 7-Day Returns</span>
-                  </div>
+                <div className="">
+                  
                   <div className="flex items-center gap-2 text-[10px] text-emerald-600 font-semibold  wider">
                     <FiTruck className="w-3 h-3" />
                     <span>Delivery: <span className="text-gray-900">
@@ -329,6 +347,124 @@ export default function CartPage() {
           )
         })}
       </div>
+
+
+
+
+
+      {/* Coupon Banner - Same as Homepage */}
+      <CouponBanner />
+
+      {/* Coupon Input Section */}
+      <div className="mt-6 bg-white border border-gray-100 p-6 rounded-[32px] shadow-sm">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
+            <BiTagAlt className="w-5 h-5 text-blue-600" />
+          </div>
+          <div>
+            <h3 className="text-[13px] font-semibold text-gray-900">Apply Coupon</h3>
+            <p className="text-[10px] text-gray-400 font-semibold">Get extra discounts on your order</p>
+          </div>
+        </div>
+
+        {!appliedCoupon ? (
+          <div className="flex gap-3">
+            <input
+              type="text"
+              value={couponCode}
+              onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+              placeholder="Enter coupon code"
+              className="flex-1 px-5 py-3 bg-gray-50 border-2 border-gray-100 rounded-2xl focus:border-blue-500 focus:bg-white focus:outline-none transition-all text-sm font-semibold placeholder:text-gray-300"
+            />
+            <button
+              onClick={handleApplyCoupon}
+              disabled={!couponCode.trim()}
+              className="px-8 py-3 bg-blue-600 text-white font-semibold rounded-2xl hover:bg-blue-700 disabled:bg-gray-200 disabled:text-gray-400 transition-all text-[13px] shadow-lg shadow-blue-600/20"
+            >
+              Apply
+            </button>
+          </div>
+        ) : (
+          <div className="flex items-center justify-between p-4 bg-green-50 border border-green-200 rounded-2xl">
+            <div className="flex items-center gap-3">
+              <FiCheckCircle className="w-5 h-5 text-green-600" />
+              <div>
+                <p className="text-[12px] font-semibold text-green-900">
+                  Coupon "{appliedCoupon.code}" Applied!
+                </p>
+                <p className="text-[10px] text-green-600 font-medium">
+                  You saved {currencyConfig.symbol}{Math.round(discount).toLocaleString()}
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={removeCoupon}
+              className="text-[11px] font-semibold text-red-500 hover:text-red-600 transition-colors"
+            >
+              Remove
+            </button>
+          </div>
+        )}
+ 
+      </div>
+
+
+
+
+      {/* Financial Matrix (Price Details) */}
+      <div className="mt-4 bg-white border-t-2 border-blue-50 p-6 pb-12 rounded-t-[40px] shadow-[0_-10px_30px_rgba(37,99,235,0.03)]">
+        <h3 className="text-[10px] font-semibold text-gray-400  [3px] mb-6">Financial Ledger</h3>
+        <div className="space-y-4 text-[13px]">
+          <div className="flex justify-between items-center font-semibold text-gray-500">
+            <span className=" widest text-[11px]">Gross Value</span>
+            <span className="text-gray-900">{currencyConfig.symbol}{Math.round(totalMRP).toLocaleString()}</span>
+          </div>
+          <div className="flex justify-between items-center font-semibold">
+            <span className="text-gray-500  widest text-[11px]">Planet Savings</span>
+            <span className="text-emerald-500 font-semibold">-{currencyConfig.symbol}{Math.round(discountOnMRP).toLocaleString()}</span>
+          </div>
+          <div className="flex justify-between items-center font-semibold">
+            <span className="text-gray-500 flex items-center gap-1.5  widest text-[11px]">Platform Fee <FiInfo className="w-3.5 h-3.5" /></span>
+            <span className="text-gray-900">+{currencyConfig.symbol}{platformFee}</span>
+          </div>
+          <div className="flex justify-between items-center font-semibold">
+            <span className="text-gray-500  widest text-[11px]">Logistics Fee</span>
+            <span className={shippingFee > 0 ? "text-gray-900" : "text-emerald-500 font-semibold widest"}>
+              {shippingFee > 0 ? `+${currencyConfig.symbol}${shippingFee}` : 'FREE'}
+            </span>
+          </div>
+          {appliedCoupon && discount > 0 && (
+            <div className="flex justify-between items-center font-semibold">
+              <span className="text-gray-500  widest text-[11px]">Coupon Discount ({appliedCoupon.code})</span>
+              <span className="text-emerald-500 font-semibold">-{currencyConfig.symbol}{Math.round(discount).toLocaleString()}</span>
+            </div>
+          )}
+          <div className="pt-6 border-t border-dashed border-gray-100 flex justify-between items-end">
+            <div className="flex flex-col">
+              <span className="text-[10px] font-semibold text-blue-600  [3px]">Net Payable</span>
+              <span className="text-[11px] text-gray-400 font-semibold mt-1">Final amount for checkout</span>
+            </div>
+            <span className="text-xl font-semibold text-blue-600 tighter">{currencyConfig.symbol}{Math.round(finalTotal).toLocaleString()}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Persistent Checkout Trigger */}
+      {selectedCount > 0 && (
+        <div className="fixed md:bottom-0 bottom-16 left-0 right-0 bg-white/80 backdrop-blur-xl border-t border-gray-100 p-5 z-40 lg: shadow-[0_-10px_40px_rgba(0,0,0,0.1)]">
+          <div className="flex items-center gap-5">
+            <div className="flex-1">
+              <p className="text-xl font-semibold text-blue-600 leading-none tighter">{currencyConfig.symbol}{Math.round(finalTotal).toLocaleString()}</p>
+              <button className="text-[9px] font-semibold text-gray-400  [2px] mt-1.5 flex items-center gap-1">View Breakdown <FiChevronDown /></button>
+            </div>
+            <Link href="/checkout" className="flex-[1.8]">
+              <button className="w-full py-3 bg-blue-600 text-white font-semibold text-[14px] rounded-[24px] shadow-2xl shadow-blue-600/20  [4px] active:scale-[0.98] transition-all">
+                Place Order
+              </button>
+            </Link>
+          </div>
+        </div>
+      )}
 
       {/* You May Also Like Section */}
       {recommendedProducts.length > 0 && (
@@ -394,56 +530,6 @@ export default function CartPage() {
       )}
 
 
-
-      {/* Coupon Banner - Same as Homepage */}
-      <CouponBanner />
-
-      {/* Financial Matrix (Price Details) */}
-      <div className="mt-10 bg-white border-t-2 border-blue-50 p-6 pb-12 rounded-t-[40px] shadow-[0_-10px_30px_rgba(37,99,235,0.03)]">
-        <h3 className="text-[10px] font-semibold text-gray-400  [3px] mb-6">Financial Ledger</h3>
-        <div className="space-y-4 text-[13px]">
-          <div className="flex justify-between items-center font-semibold text-gray-500">
-            <span className=" widest text-[11px]">Gross Value</span>
-            <span className="text-gray-900">{currencyConfig.symbol}{Math.round(totalMRP).toLocaleString()}</span>
-          </div>
-          <div className="flex justify-between items-center font-semibold">
-            <span className="text-gray-500  widest text-[11px]">Planet Savings</span>
-            <span className="text-emerald-500 font-semibold">-{currencyConfig.symbol}{Math.round(discountOnMRP).toLocaleString()}</span>
-          </div>
-          <div className="flex justify-between items-center font-semibold">
-            <span className="text-gray-500 flex items-center gap-1.5  widest text-[11px]">Platform Fee <FiInfo className="w-3.5 h-3.5" /></span>
-            <span className="text-gray-900">+{currencyConfig.symbol}{platformFee}</span>
-          </div>
-          <div className="flex justify-between items-center font-semibold">
-            <span className="text-gray-500  widest text-[11px]">Logistics Fee</span>
-            <span className="text-emerald-500 font-semibold  widest">Absorbed</span>
-          </div>
-          <div className="pt-6 border-t border-dashed border-gray-100 flex justify-between items-end">
-            <div className="flex flex-col">
-              <span className="text-[10px] font-semibold text-blue-600  [3px]">Net Payable</span>
-              <span className="text-[11px] text-gray-400 font-semibold mt-1">Final amount for checkout</span>
-            </div>
-            <span className="text-xl font-semibold text-blue-600 tighter">{currencyConfig.symbol}{Math.round(finalTotal).toLocaleString()}</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Persistent Checkout Trigger */}
-      {selectedCount > 0 && (
-        <div className="fixed bottom-16 left-0 right-0 bg-white/80 backdrop-blur-xl border-t border-gray-100 p-5 z-40 lg:hidden shadow-[0_-10px_40px_rgba(0,0,0,0.1)]">
-          <div className="flex items-center gap-5">
-            <div className="flex-1">
-              <p className="text-xl font-semibold text-blue-600 leading-none tighter">{currencyConfig.symbol}{Math.round(finalTotal).toLocaleString()}</p>
-              <button className="text-[9px] font-semibold text-gray-400  [2px] mt-1.5 flex items-center gap-1">View Breakdown <FiChevronDown /></button>
-            </div>
-            <Link href="/checkout" className="flex-[1.8]">
-              <button className="w-full py-3 bg-blue-600 text-white font-semibold text-[14px] rounded-[24px] shadow-2xl shadow-blue-600/20  [4px] active:scale-[0.98] transition-all">
-                Place Order
-              </button>
-            </Link>
-          </div>
-        </div>
-      )}
 
       {/* Ecosystem Trust Signifiers */}
       <div className="mt-8 px-6 flex items-center justify-around pb-24">

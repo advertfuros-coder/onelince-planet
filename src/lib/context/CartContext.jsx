@@ -8,6 +8,8 @@ export const CartContext = createContext()
 export function CartProvider({ children }) {
   const [items, setItems] = useState([])
   const [isLoaded, setIsLoaded] = useState(false)
+  const [appliedCoupon, setAppliedCoupon] = useState(null)
+  const [discount, setDiscount] = useState(0)
 
   // Load cart from localStorage on mount
   useEffect(() => {
@@ -40,7 +42,7 @@ export function CartProvider({ children }) {
     console.log('Product images type:', typeof product.images);
     console.log('First image:', product.images?.[0]);
     console.log('Variant:', variant);
-    
+
     setItems(prevItems => {
       const existingItem = prevItems.find(
         item => item.productId === product._id &&
@@ -61,7 +63,7 @@ export function CartProvider({ children }) {
 
       // Handle image extraction - product.images is an array of URL strings from the product detail page
       let itemImage = '/placeholder-product.png'; // fallback
-      
+
       if (product.images && Array.isArray(product.images)) {
         if (variant && variant.imageIndex !== undefined && product.images[variant.imageIndex]) {
           // If variant has a specific image index
@@ -78,23 +80,23 @@ export function CartProvider({ children }) {
       }
 
       console.log('Extracted image URL:', itemImage);
-      
+
       // Handle different price location variants
-      const itemPrice = variant?.price || 
-                        product.pricing?.salePrice || 
-                        product.pricing?.basePrice || 
-                        product.price || 
-                        0;
+      const itemPrice = variant?.price ||
+        product.pricing?.salePrice ||
+        product.pricing?.basePrice ||
+        product.price ||
+        0;
 
       const originalPrice = product.pricing?.basePrice || product.originalPrice || itemPrice * 1.25;
-      
+
       // Handle different seller name variants
-      const sellerName = product.seller?.name || 
-                         product.sellerId?.storeInfo?.storeName ||
-                         product.sellerId?.businessInfo?.businessName ||
-                         product.sellerId?.personalDetails?.fullName ||
-                         product.seller || 
-                         'Official Store';
+      const sellerName = product.seller?.name ||
+        product.sellerId?.storeInfo?.storeName ||
+        product.sellerId?.businessInfo?.businessName ||
+        product.sellerId?.personalDetails?.fullName ||
+        product.seller ||
+        'Official Store';
 
       const newItem = {
         productId: product._id || product.id,
@@ -156,6 +158,29 @@ export function CartProvider({ children }) {
     return items.reduce((count, item) => count + item.quantity, 0)
   }
 
+  const applyCoupon = (code, cartTotal) => {
+    if (code === 'SAVE20') {
+      const couponDiscount = cartTotal * 0.2
+      setDiscount(couponDiscount)
+      setAppliedCoupon({ code: 'SAVE20', type: 'percentage', value: 20 })
+      toast.success('Coupon SAVE20 applied! 20% off')
+      return true
+    } else if (code === 'FLAT100') {
+      setDiscount(100)
+      setAppliedCoupon({ code: 'FLAT100', type: 'flat', value: 100 })
+      toast.success('Coupon FLAT100 applied! ₹100 off')
+      return true
+    }
+    toast.error('Invalid coupon code')
+    return false
+  }
+
+  const removeCoupon = () => {
+    setAppliedCoupon(null)
+    setDiscount(0)
+    toast.success('Coupon removed')
+  }
+
   // Calculate all cart values
   const subtotal = getCartTotal()
   const shipping = subtotal > 500 ? 0 : 50 // Free shipping over 500
@@ -174,7 +199,11 @@ export function CartProvider({ children }) {
     subtotal,
     shipping,
     tax,
-    total
+    total: total - discount,
+    appliedCoupon,
+    discount,
+    applyCoupon,
+    removeCoupon
   }
 
   return (

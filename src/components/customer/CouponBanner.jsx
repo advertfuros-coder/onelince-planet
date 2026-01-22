@@ -81,7 +81,7 @@ export default function CouponBanner() {
                                 {/* Offer Text */}
                                 <div className="flex flex-col">
                                     <h2
-                                        className="text-4xl md:text-[80px] font-[1000] italic uppercase tracking-tighter leading-none select-none"
+                                        className="text-3xl md:text-[80px] font-[1000] italic uppercase tracking-tighter leading-none select-none"
                                         style={{
                                             color: currentBanner.textColor,
                                             textShadow: '3px 3px 0px rgba(0,0,0,0.1), 0 0 10px rgba(255, 214, 107, 0.3)',

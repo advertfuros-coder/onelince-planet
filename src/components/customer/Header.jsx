@@ -615,12 +615,7 @@ export default function Header() {
       {/* Desktop Main Header */}
       <div
         className="hidden lg:block border-b border-gray-100 relative z-30"
-      // style={{
-      //   backgroundImage: `url(${getBackgroundImage()})`,
-      //   backgroundSize: 'cover',
-      //   backgroundPosition: 'top',
-      //   backgroundRepeat: 'no-repeat'
-      // }}
+      
       >
         {/* Overlay for better text readability */}
         {/* <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-black/0 to-black/"></div> */}
@@ -754,12 +749,7 @@ export default function Header() {
       {/* NEW Mobile Main Header */}
       <div
         className="lg:hidden border-b border-gray-100 relative z-30"
-        style={{
-          backgroundImage: `url(${getBackgroundImage()})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'cent',
-          backgroundRepeat: 'no-repeat'
-        }}
+        
       >
         {/* Overlay for better text readability */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-white/70 to-white"></div>
