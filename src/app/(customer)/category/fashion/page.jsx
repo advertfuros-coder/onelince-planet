@@ -1,6 +1,6 @@
 'use client'
 import { useSearchParams } from 'next/navigation'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import Link from 'next/link'
 import { FiChevronRight, FiPlay, FiCheckCircle } from 'react-icons/fi'
 import { motion } from 'framer-motion'
@@ -40,7 +40,7 @@ const KIDS_FASHION_DATA = {
     ]
 }
 
-export default function FashionCategoryPage() {
+function FashionCategoryContent() {
     const searchParams = useSearchParams()
     const gender = searchParams.get('gender') || 'men'
 
@@ -180,7 +180,7 @@ export default function FashionCategoryPage() {
     return (
         <div className="min-h-screen bg-white">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 space- y-8">
-                
+
                 {/* Gender Switcher - Sticky on scroll */}
                 <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md py-4 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 border-b border-gray-100">
                     <GenderSwitcher />
@@ -478,5 +478,20 @@ export default function FashionCategoryPage() {
                 }
             `}</style>
         </div>
+    )
+}
+
+export default function FashionCategoryPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-white flex items-center justify-center">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"></div>
+                    <p className="mt-4 text-gray-600">Loading fashion...</p>
+                </div>
+            </div>
+        }>
+            <FashionCategoryContent />
+        </Suspense>
     )
 }

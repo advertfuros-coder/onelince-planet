@@ -7,7 +7,6 @@ const SupplierSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
-      index: true,
     },
 
     // Supplier details
@@ -96,7 +95,7 @@ const SupplierSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 // Indexes
@@ -106,7 +105,7 @@ SupplierSchema.index({ "products.productId": 1 });
 // Method to get supplier for product
 SupplierSchema.statics.getPreferredSupplier = async function (
   productId,
-  sellerId
+  sellerId,
 ) {
   const supplier = await this.findOne({
     sellerId,

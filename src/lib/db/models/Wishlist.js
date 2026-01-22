@@ -7,7 +7,6 @@ const WishlistSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
-      index: true,
     },
     items: [
       {
@@ -25,7 +24,7 @@ const WishlistSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 // Compound index for efficient queries
@@ -34,7 +33,7 @@ WishlistSchema.index({ userId: 1, "items.productId": 1 });
 // Method to add item to wishlist
 WishlistSchema.methods.addItem = function (productId) {
   const exists = this.items.some(
-    (item) => item.productId.toString() === productId.toString()
+    (item) => item.productId.toString() === productId.toString(),
   );
   if (!exists) {
     this.items.push({ productId });
@@ -45,7 +44,7 @@ WishlistSchema.methods.addItem = function (productId) {
 // Method to remove item from wishlist
 WishlistSchema.methods.removeItem = function (productId) {
   this.items = this.items.filter(
-    (item) => item.productId.toString() !== productId.toString()
+    (item) => item.productId.toString() !== productId.toString(),
   );
   return this.save();
 };
@@ -53,7 +52,7 @@ WishlistSchema.methods.removeItem = function (productId) {
 // Method to check if product is in wishlist
 WishlistSchema.methods.hasProduct = function (productId) {
   return this.items.some(
-    (item) => item.productId.toString() === productId.toString()
+    (item) => item.productId.toString() === productId.toString(),
   );
 };
 
