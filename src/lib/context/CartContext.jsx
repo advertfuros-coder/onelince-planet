@@ -65,12 +65,15 @@ export function CartProvider({ children }) {
       let itemImage = '/placeholder-product.png'; // fallback
 
       if (product.images && Array.isArray(product.images)) {
-        if (variant && variant.imageIndex !== undefined && product.images[variant.imageIndex]) {
-          // If variant has a specific image index
+        if (variant && variant.images && Array.isArray(variant.images) && variant.images.length > 0) {
+          // If variant has its own specific gallery array
+          itemImage = variant.images[0];
+        } else if (variant && variant.imageIndex !== undefined && product.images[variant.imageIndex]) {
+          // If variant has a specific image index in the main array
           const img = product.images[variant.imageIndex];
           itemImage = typeof img === 'string' ? img : (img?.url || itemImage);
         } else if (product.images[0]) {
-          // Use the first image
+          // Use the first image of the product
           const img = product.images[0];
           itemImage = typeof img === 'string' ? img : (img?.url || itemImage);
         }

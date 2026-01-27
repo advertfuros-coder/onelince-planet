@@ -84,6 +84,7 @@ export default function EditProductPage() {
     lowStockThreshold: '10',
     trackInventory: true,
     weight: '',
+    unit: 'kg', // kg | g | l | ml | units
     freeShipping: false,
     shippingFee: '',
     specifications: [{ key: '', value: '' }],
@@ -134,6 +135,7 @@ export default function EditProductPage() {
           lowStockThreshold: p.inventory?.lowStockThreshold || '10',
           trackInventory: p.inventory?.trackInventory ?? true,
           weight: p.shipping?.weight || '',
+          unit: p.shipping?.unit || 'kg',
           freeShipping: p.shipping?.freeShipping ?? false,
           shippingFee: p.shipping?.shippingFee || '',
           specifications: p.specifications?.length > 0 ? p.specifications : [{ key: '', value: '' }],
@@ -484,6 +486,7 @@ export default function EditProductPage() {
         },
         shipping: {
           weight: form.weight ? Number(form.weight) : undefined,
+          unit: form.unit,
           freeShipping: form.freeShipping,
           shippingFee: form.shippingFee ? Number(form.shippingFee) : undefined
         },
@@ -819,40 +822,58 @@ export default function EditProductPage() {
                           </div>
                         </div>
 
+                        {/* Simplified Variant Manager */}
                         {form.variants.length > 0 && (
-                          <div className="overflow-hidden rounded-[2rem] border border-slate-100 overflow-x-auto bg-slate-50/30">
-                            <table className="w-full text-left min-w-[700px]">
-                              <thead>
-                                <tr className="border-b border-slate-100">
-                                  <th className="px-8 py-5 text-[10px] font-semibold text-slate-400 uppercase tracking-widest">Variation</th>
-                                  <th className="px-6 py-5 text-[10px] font-semibold text-slate-400 uppercase tracking-widest w-40">Price (AED)</th>
-                                  <th className="px-6 py-5 text-[10px] font-semibold text-slate-400 uppercase tracking-widest w-32">Stock</th>
-                                  <th className="px-8 py-5 text-[10px] font-semibold text-slate-400 uppercase tracking-widest w-32 text-center">Asset</th>
-                                </tr>
-                              </thead>
-                              <tbody className="divide-y divide-slate-100">
-                                {form.variants.map((variant, idx) => (
-                                  <tr key={idx} className="hover:bg-white transition-colors group">
-                                    <td className="px-8 py-5">
-                                      <p className="text-xs font-semibold text-slate-900 truncate max-w-[200px]">{variant.name}</p>
-                                      <p className="text-[9px] font-semibold text-slate-400 uppercase tracking-tighter mt-1">{variant.sku}</p>
-                                    </td>
-                                    <td className="px-6 py-5">
-                                      <div className="relative">
-                                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] font-semibold text-slate-400">AED</span>
-                                        <input
-                                          type="number"
-                                          value={variant.price}
-                                          onChange={(e) => {
-                                            const v = [...form.variants];
-                                            v[idx].price = Number(e.target.value);
-                                            setForm({ ...form, variants: v });
-                                          }}
-                                          className="w-full bg-white border border-slate-200 rounded-xl pl-10 pr-4 py-2 text-xs font-semibold focus:border-blue-500 outline-none transition-all shadow-sm"
-                                        />
-                                      </div>
-                                    </td>
-                                    <td className="px-6 py-5">
+                          <div className="space-y-6">
+                            <div className="flex items-center justify-between">
+                              <h3 className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">Variation Manager ({form.variants.length})</h3>
+                              <button 
+                                type="button"
+                                onClick={() => {
+                                  const newVariants = form.variants.map(v => ({
+                                    ...v,
+                                    price: form.basePrice || v.price,
+                                    stock: form.stock || v.stock
+                                  }));
+                                  setForm({ ...form, variants: newVariants });
+                                  toast.success('Synced with base price/stock');
+                                }}
+                                className="text-[9px] font-bold text-blue-600 uppercase tracking-widest hover:text-blue-700 transition-colors bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-100"
+                              >
+                                Sync Base Details
+                              </button>
+                            </div>
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                              {form.variants.map((variant, idx) => (
+                                <div key={idx} className="bg-white rounded-[2rem] border border-slate-100 p-8 shadow-sm hover:shadow-xl hover:translate-y-[-4px] transition-all group">
+                                  <div className="flex items-start justify-between mb-6">
+                                    <div>
+                                      <span className="text-[9px] font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded-md uppercase tracking-tighter mb-2 inline-block">Variation #{idx + 1}</span>
+                                      <h4 className="text-sm font-bold text-slate-900 line-clamp-1">{variant.name}</h4>
+                                      <p className="text-[9px] font-semibold text-slate-400 uppercase tracking-widest mt-0.5">{variant.sku}</p>
+                                    </div>
+                                    <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-300 group-hover:bg-blue-600 group-hover:text-white transition-all">
+                                      <Layers size={20} />
+                                    </div>
+                                  </div>
+
+                                  <div className="grid grid-cols-2 gap-4 mb-8">
+                                    <div className="space-y-1.5">
+                                      <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Price (AED)</label>
+                                      <input
+                                        type="number"
+                                        value={variant.price}
+                                        onChange={(e) => {
+                                          const v = [...form.variants];
+                                          v[idx].price = Number(e.target.value);
+                                          setForm({ ...form, variants: v });
+                                        }}
+                                        className="w-full bg-slate-50 border-none rounded-xl px-4 py-2.5 text-xs font-bold text-slate-700 focus:ring-2 focus:ring-blue-500/20 transition-all outline-none"
+                                      />
+                                    </div>
+                                    <div className="space-y-1.5">
+                                      <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Stock</label>
                                       <input
                                         type="number"
                                         value={variant.stock}
@@ -861,44 +882,51 @@ export default function EditProductPage() {
                                           v[idx].stock = Number(e.target.value);
                                           setForm({ ...form, variants: v });
                                         }}
-                                        className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2 text-xs font-semibold focus:border-blue-500 outline-none transition-all shadow-sm"
+                                        className="w-full bg-slate-50 border-none rounded-xl px-4 py-2.5 text-xs font-bold text-slate-700 focus:ring-2 focus:ring-blue-500/20 transition-all outline-none"
                                       />
-                                    </td>
-                                    <td className="px-8 py-5">
-                                      <div className="flex flex-wrap justify-center gap-2 max-w-[150px] mx-auto">
-                                        {/* Variant Gallery */}
-                                        {variant.images?.map((img, imgIdx) => (
-                                          <div key={imgIdx} className="relative group/mini w-10 h-10">
-                                            <img src={img} className="w-full h-full object-cover rounded-lg border border-slate-200" />
-                                            <button
-                                              type="button"
-                                              onClick={() => removeVariantImage(idx, imgIdx)}
-                                              className="absolute -top-1 -right-1 bg-rose-500 text-white rounded-full p-0.5 opacity-0 group-hover:mini:opacity-100 transition-all hover:scale-110 shadow-lg"
-                                            >
-                                              <X size={8} />
-                                            </button>
-                                          </div>
-                                        ))}
+                                    </div>
+                                  </div>
 
-                                        {/* Add Slot */}
-                                        {(!variant.images || variant.images.length < 7) && (
-                                          <label className="w-10 h-10 rounded-lg border border-dashed border-slate-300 flex items-center justify-center cursor-pointer hover:border-blue-500 hover:bg-white transition-all group/add">
-                                            <input
-                                              type="file"
-                                              className="hidden"
-                                              accept="image/*"
-                                              onChange={(e) => handleVariantImageUpload(idx, e.target.files[0])}
-                                            />
-                                            <Plus size={14} className="text-slate-400 group-hover/add:text-blue-500 transition-all" />
-                                          </label>
-                                        )}
-                                      </div>
-                                      <p className="text-[8px] font-semibold text-slate-400 uppercase tracking-widest mt-2">{variant.images?.length || 0}/7 Images</p>
-                                    </td>
-                                  </tr>
-                                ))}
-                              </tbody>
-                            </table>
+                                  <div className="space-y-3">
+                                    <div className="flex items-center justify-between">
+                                      <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Variant Photos</label>
+                                      <span className="text-[8px] font-extrabold text-blue-500 uppercase">{variant.images?.length || 0}/7</span>
+                                    </div>
+                                    
+                                    <div className="flex flex-wrap gap-2.5">
+                                      {variant.images?.map((img, imgIdx) => (
+                                        <div key={imgIdx} className="relative group/photo w-14 h-14">
+                                          <img src={img} className="w-full h-full object-cover rounded-xl border-2 border-slate-50 shadow-sm" />
+                                          <button
+                                            type="button"
+                                            onClick={() => removeVariantImage(idx, imgIdx)}
+                                            className="absolute -top-1.5 -right-1.5 bg-rose-500 text-white rounded-full p-1 opacity-100 md:opacity-0 group-hover/photo:opacity-100 transition-all hover:scale-110 shadow-lg z-10"
+                                          >
+                                            <X size={10} />
+                                          </button>
+                                          {imgIdx === 0 && (
+                                            <div className="absolute inset-x-0 bottom-0 bg-blue-600/80 text-white text-[6px] font-bold uppercase py-0.5 text-center rounded-b-xl">Lead</div>
+                                          )}
+                                        </div>
+                                      ))}
+
+                                      {(!variant.images || variant.images.length < 7) && (
+                                        <label className="w-14 h-14 rounded-xl border-2 border-dashed border-slate-200 flex flex-col items-center justify-center cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-all group/upload">
+                                          <input
+                                            type="file"
+                                            className="hidden"
+                                            accept="image/*"
+                                            onChange={(e) => handleVariantImageUpload(idx, e.target.files[0])}
+                                          />
+                                          <Camera size={16} className="text-slate-300 group-hover/upload:text-blue-500 transition-all" />
+                                          <span className="text-[6px] font-bold text-slate-400 group-hover/upload:text-blue-500 mt-1 uppercase">Add</span>
+                                        </label>
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
                           </div>
                         )}
                       </div>
@@ -929,7 +957,34 @@ export default function EditProductPage() {
                 >
                   <h3 className="text-xs font-semibold text-slate-900 uppercase tracking-widest">Delivery Details</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <InputField label="Weight (KG)" name="weight" type="number" value={form.weight} onChange={handleChange} icon={Truck} placeholder="e.g. 0.5" />
+                    <div className="group space-y-2">
+                      <label className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-widest text-slate-500 group-focus-within:text-blue-600 transition-colors">
+                        <Truck size={12} />
+                        Weight / Volume
+                      </label>
+                      <div className="flex gap-2">
+                        <input
+                          type="number"
+                          name="weight"
+                          value={form.weight}
+                          onChange={handleChange}
+                          placeholder="e.g. 500"
+                          className="flex-1 bg-slate-50/50 border border-slate-100 rounded-2xl px-5 py-3.5 text-sm font-semibold text-slate-700 placeholder-slate-300 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 outline-none transition-all"
+                        />
+                        <select
+                          name="unit"
+                          value={form.unit}
+                          onChange={handleChange}
+                          className="w-24 bg-slate-50/50 border border-slate-100 rounded-2xl px-3 py-3.5 text-sm font-semibold text-slate-700 outline-none focus:bg-white focus:border-blue-500 transition-all cursor-pointer"
+                        >
+                          <option value="kg">kg</option>
+                          <option value="g">g</option>
+                          <option value="l">l</option>
+                          <option value="ml">ml</option>
+                          <option value="units">units</option>
+                        </select>
+                      </div>
+                    </div>
                     <InputField label="Shipping Fee (AED)" name="shippingFee" type="number" value={form.shippingFee} onChange={handleChange} icon={DollarSign} disabled={form.freeShipping} />
                   </div>
                   <label className="flex items-center gap-4 cursor-pointer group bg-slate-50 p-6 rounded-3xl border border-slate-100 hover:border-blue-200 transition-all">
@@ -1126,7 +1181,7 @@ export default function EditProductPage() {
                       <div className="bg-slate-900 rounded-[2.5rem] p-10 text-white space-y-8 relative overflow-hidden">
                         <div className="absolute top-0 right-0 w-32 h-32 bg-blue-600/10 blur-3xl -mr-16 -mt-16" />
                         <h4 className="text-[11px] font-semibold uppercase tracking-widest text-slate-400 relative z-10">Product Summary</h4>
- 
+
                         <div className="space-y-6 relative z-10">
                           <div className="flex justify-between items-end border-b border-white/5 pb-4">
                             <div>
@@ -1150,7 +1205,7 @@ export default function EditProductPage() {
                             <Truck className="text-amber-400" size={18} />
                           </div>
                         </div>
- 
+
                         <div className="pt-4 relative z-10">
                           <div className="p-5 bg-white/5 rounded-2xl border border-white/10">
                             <div className="flex items-center gap-3">
@@ -1219,18 +1274,18 @@ export default function EditProductPage() {
           <div className="sticky top-28 space-y-6">
             {/* Display Mode Control */}
             <div className="bg-white/80 backdrop-blur-md rounded-[2rem] border border-slate-100 p-2 flex items-center gap-2 shadow-xl shadow-slate-200/20">
-                <button
-                  onClick={() => setPreviewMode('desktop')}
-                  className={`flex-1 py-3 px-4 rounded-2xl flex items-center justify-center gap-2 text-[10px] font-semibold uppercase tracking-widest transition-all ${previewMode === 'desktop' ? 'bg-slate-900 text-white shadow-xl' : 'text-slate-400 hover:bg-slate-50'}`}
-                >
-                  <Box size={14} /> Desktop View
-                </button>
-                <button
-                  onClick={() => setPreviewMode('mobile')}
-                  className={`flex-1 py-3 px-4 rounded-2xl flex items-center justify-center gap-2 text-[10px] font-semibold uppercase tracking-widest transition-all ${previewMode === 'mobile' ? 'bg-slate-900 text-white shadow-xl' : 'text-slate-400 hover:bg-slate-50'}`}
-                >
-                  <Target size={14} /> Mobile View
-                </button>
+              <button
+                onClick={() => setPreviewMode('desktop')}
+                className={`flex-1 py-3 px-4 rounded-2xl flex items-center justify-center gap-2 text-[10px] font-semibold uppercase tracking-widest transition-all ${previewMode === 'desktop' ? 'bg-slate-900 text-white shadow-xl' : 'text-slate-400 hover:bg-slate-50'}`}
+              >
+                <Box size={14} /> Desktop View
+              </button>
+              <button
+                onClick={() => setPreviewMode('mobile')}
+                className={`flex-1 py-3 px-4 rounded-2xl flex items-center justify-center gap-2 text-[10px] font-semibold uppercase tracking-widest transition-all ${previewMode === 'mobile' ? 'bg-slate-900 text-white shadow-xl' : 'text-slate-400 hover:bg-slate-50'}`}
+              >
+                <Target size={14} /> Mobile View
+              </button>
             </div>
 
             <div className={`transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] ${previewMode === 'mobile' ? 'w-[320px] mx-auto scale-95 border-[12px] border-slate-950 rounded-[3.5rem] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] h-[650px] overflow-hidden' : 'w-full'}`}>
@@ -1250,7 +1305,7 @@ export default function EditProductPage() {
                     <span className="bg-blue-600 text-[9px] font-semibold px-3 py-1 rounded-full uppercase">{form.category || 'Category'}</span>
                     <h2 className={`${previewMode === 'mobile' ? 'text-lg' : 'text-xl'} font-semibold mt-3 truncate`}>{form.name || 'Product Name'}</h2>
                   </div>
- 
+
                   {/* Feature Highlights Preview */}
                   {form.highlights?.some(h => h) && (
                     <div className="space-y-2 border-t border-white/10 pt-4">
@@ -1262,7 +1317,7 @@ export default function EditProductPage() {
                       ))}
                     </div>
                   )}
- 
+
                   <div className="flex items-center justify-between border-t border-white/10 pt-6">
                     <div>
                       <p className="text-[10px] font-semibold text-slate-500">Price</p>

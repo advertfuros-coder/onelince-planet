@@ -210,17 +210,29 @@ export default function ProductDetailPage() {
         return keys.every(k => vAttrs[k] === selectedOptions[k]);
       })
       setActiveVariant(variant || null)
-
-      // If variant has a specific image, switch to it (if we added it to schema)
-      if (variant && variant.imageIndex !== undefined) {
-        setSelectedImage(variant.imageIndex)
-      }
+      setSelectedImage(0)
     }
   }, [selectedOptions, product])
 
   // New logic to initialize selectedOptions when product is loaded
   useEffect(() => {
     if (product && product.options?.length > 0) {
+      // Check for variant SKU in URL query params
+      const searchParams = new URLSearchParams(window.location.search);
+      const variantSku = searchParams.get('v');
+
+      if (variantSku && product.variants?.length > 0) {
+        const targetVariant = product.variants.find(v => v.sku === variantSku);
+        if (targetVariant) {
+          const vAttrs = targetVariant.attributes instanceof Map 
+            ? Object.fromEntries(targetVariant.attributes) 
+            : targetVariant.attributes;
+          setSelectedOptions(vAttrs);
+          return;
+        }
+      }
+
+      // Default: Select first value of each option
       const initial = {}
       product.options.forEach(opt => {
         if (opt.values?.length > 0) initial[opt.name] = opt.values[0]
@@ -313,7 +325,10 @@ export default function ProductDetailPage() {
   const handleAddToCart = () => {
     if (!product) return
 
-    addToCart(product, quantity, activeVariant || null)
+    const finalName = activeVariant ? `${activeVariant.name} ${product.name}` : product.name;
+    const augmentedProduct = { ...product, name: finalName };
+
+    addToCart(augmentedProduct, quantity, activeVariant || null)
   }
 
   const handleBuyNow = () => {
@@ -549,9 +564,11 @@ export default function ProductDetailPage() {
                   {product.images[selectedImage] ? (
                     <>
                       <img
-                        src={product.images[selectedImage]}
+                        src={(activeVariant?.images && activeVariant.images.length > 0)
+                          ? activeVariant.images[selectedImage] || activeVariant.images[0]
+                          : product.images[selectedImage]}
                         alt={product.name}
-                        className="w-full h-full object-contain p -8"
+                        className="w-full h-full object-contain p-8"
                       />
                       {/* Zoom hint */}
                       <div className="absolute bottom-4 right-4 bg-black/60 text-white px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -570,22 +587,39 @@ export default function ProductDetailPage() {
               </div>
 
               {/* Thumbnail Gallery */}
-              {product.images.length > 1 && (
-                <div className="grid grid-cols-4 gap-3">
-                  {product.images.map((img, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setSelectedImage(index)}
-                      className={`aspect-square bg-white rounded-xl p -2 border-2 transition-all hover:scale-105 ${selectedImage === index
-                        ? 'border-blue-600 ring-2 ring-blue-100'
-                        : 'border-gray-200 hover:border-gray-300'
-                        }`}
-                    >
-                      <img src={img} alt={`View ${index + 1}`} className="w-full h-full object-contain" />
-                    </button>
-                  ))}
-                </div>
-              )}
+              {(() => {
+                const displayImages = (activeVariant?.images && activeVariant.images.length > 0)
+                  ? activeVariant.images
+                  : product.images;
+
+                if (displayImages.length <= 1) return null;
+
+                return (
+                  <div className="grid grid-cols-4 gap-3">
+                    {displayImages.map((img, index) => {
+                      // Find the actual index in the master product.images array if using variant images for selection logic
+                      // Or just use the local index if the main image display is also updated to use displayImages
+                      return (
+                        <button
+                          key={index}
+                          onClick={() => {
+                            // If we are showing variant images, we need to map the local index back to the master index 
+                            // OR update the main image component to use displayImages directly.
+                            // To keep it simple and robust, let's make the main image component also follow displayImages.
+                            setSelectedImage(index);
+                          }}
+                          className={`aspect-square bg-white rounded-xl p-2 border-2 transition-all hover:scale-105 ${selectedImage === index
+                            ? 'border-blue-600 ring-2 ring-blue-100'
+                            : 'border-gray-200 hover:border-gray-300'
+                            }`}
+                        >
+                          <img src={img} alt={`View ${index + 1}`} className="w-full h-full object-contain" />
+                        </button>
+                      );
+                    })}
+                  </div>
+                );
+              })()}
             </div>
           </div>
 
@@ -594,7 +628,7 @@ export default function ProductDetailPage() {
             {/* Product Title & Rating */}
             <div className="bg-white rounded-2xl md:p-6 mb-4 md:shadow-sm md:border border-gray-100">
               <h1 className="text-md lg:text-2xl font-semibold text-gray-900 mb-2 leading-tight">
-                {product.name}
+                {activeVariant ? `${activeVariant.name} ${product.name}` : product.name}
               </h1>
 
               {/* Rating & Reviews */}

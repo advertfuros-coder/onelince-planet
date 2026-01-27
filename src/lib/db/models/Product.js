@@ -96,6 +96,7 @@ const ProductSchema = new mongoose.Schema(
           of: String, // { "Color": "Red", "Size": "S" }
         },
         imageIndex: { type: Number, default: 0 }, // Link to main images array
+        images: [String], // Specific images for this variant
       },
     ],
 
@@ -119,11 +120,23 @@ const ProductSchema = new mongoose.Schema(
 
     shipping: {
       weight: Number,
+      unit: {
+        type: String,
+        enum: ["kg", "g", "l", "ml", "units"],
+        default: "kg",
+      },
       freeShipping: {
         type: Boolean,
         default: false,
       },
       shippingFee: Number,
+    },
+
+    returnPolicy: {
+      isReturnable: { type: Boolean, default: true },
+      returnDuration: { type: Number, default: 7 }, // in days
+      isReplaceable: { type: Boolean, default: true },
+      replacementDuration: { type: Number, default: 7 }, // in days
     },
 
     // Delivery Estimate (Pre-calculated, no API calls needed)
@@ -194,7 +207,7 @@ const ProductSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 ProductSchema.index({ sellerId: 1 });

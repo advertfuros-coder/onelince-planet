@@ -17,11 +17,18 @@ export function createSlug(text) {
 export function createProductUrl(product) {
   if (!product) return "/products";
 
-  const id = product._id || product.id;
+  const id = product.parentId || product._id || product.id;
+  const variantSku = product.variantSku;
   const slug = createSlug(product.name);
 
   // Format: /products/product-name-id
-  return `/products/${slug}-${id}`;
+  let url = `/products/${slug}-${id}`;
+  
+  if (variantSku) {
+    url += `?v=${variantSku}`;
+  }
+
+  return url;
 }
 
 // Extract ID from a slug-based URL

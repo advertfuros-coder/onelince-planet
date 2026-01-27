@@ -107,14 +107,59 @@ export async function GET(request) {
     // Execute query
     let products = await Product.aggregate(pipeline);
 
+    // --- VARIANT FLATTENING LOGIC ---
+    // If searching, we want to show all variants as separate products
+    if (search || category || ids) {
+      let flattenedProducts = [];
+      const searchRegex = search ? new RegExp(search, "i") : null;
+
+      for (const p of products) {
+        if (p.variants && p.variants.length > 0) {
+          for (const v of p.variants) {
+            // Check if this variant should be shown:
+            // 1. If it's a direct search, check if variant name matches OR parent name matches
+            // 2. If it's a category/ID list, show all variants
+            const variantName = `${v.name} ${p.name}`;
+            const matchesSearch = !searchRegex || 
+                                 searchRegex.test(variantName) || 
+                                 searchRegex.test(p.brand) || 
+                                 searchRegex.test(p.description);
+
+            if (matchesSearch) {
+              flattenedProducts.push({
+                ...p,
+                _id: `${p._id}_${v.sku}`,
+                parentId: p._id,
+                variantSku: v.sku,
+                name: variantName,
+                pricing: {
+                  ...p.pricing,
+                  basePrice: v.price || p.pricing.basePrice,
+                  salePrice: v.price || p.pricing.salePrice,
+                },
+                images: v.images && v.images.length > 0 ? v.images.map(url => ({ url })) : p.images,
+                inventory: {
+                  ...p.inventory,
+                  stock: v.stock || 0
+                }
+              });
+            }
+          }
+        } else {
+          flattenedProducts.push(p);
+        }
+      }
+      products = flattenedProducts;
+    }
+
     // Populate sellerId field from the lookup results or fetch them manually for the results
     // Since aggregate doesn't use Mongoose populate, we'll manually fetch seller info for the current page
-    const sellerIds = [...new Set(products.map((p) => p.sellerId))];
+    const distinctSellerIds = [...new Set(products.map((p) => p.sellerId))];
     const sellers = await (
       await import("@/lib/db/models/Seller")
     ).default
       .find({
-        _id: { $in: sellerIds },
+        _id: { $in: distinctSellerIds },
       })
       .select("businessInfo storeInfo personalDetails isVerified ratings")
       .lean();

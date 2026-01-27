@@ -35,16 +35,43 @@ export async function GET(request) {
         icon: cat.icon || "📦",
         productCount: cat.productCount || 0,
       })),
-      products: products.map((product) => ({
-        type: "product",
-        id: product._id,
-        name: product.name,
-        slug: product.slug || product._id,
-        image: product.images?.[0]?.url || null,
-        price: product.pricing?.salePrice || product.pricing?.basePrice || 0,
-        category: product.category?.name || "Uncategorized",
-        rating: product.ratings?.average || 0,
-      })),
+      products: products.flatMap((product) => {
+        if (product.variants && product.variants.length > 0) {
+          const searchRegex = new RegExp(query, "i");
+          return product.variants
+            .filter((v) => searchRegex.test(`${v.name} ${product.name}`))
+            .map((v) => ({
+              type: "product",
+              id: `${product._id}_${v.sku}`,
+              parentId: product._id,
+              variantSku: v.sku,
+              name: `${v.name} ${product.name}`,
+              slug: product.slug || product._id,
+              image:
+                (v.images && v.images[0]) || product.images?.[0]?.url || null,
+              price:
+                v.price ||
+                product.pricing?.salePrice ||
+                product.pricing?.basePrice ||
+                0,
+              category: product.category?.name || "Uncategorized",
+              rating: product.ratings?.average || 0,
+            }));
+        }
+        return [
+          {
+            type: "product",
+            id: product._id,
+            name: product.name,
+            slug: product.slug || product._id,
+            image: product.images?.[0]?.url || null,
+            price:
+              product.pricing?.salePrice || product.pricing?.basePrice || 0,
+            category: product.category?.name || "Uncategorized",
+            rating: product.ratings?.average || 0,
+          },
+        ];
+      }),
       total: categories.length + products.length,
     };
 
@@ -61,7 +88,7 @@ export async function GET(request) {
         error: "Failed to fetch suggestions",
         suggestions: { categories: [], products: [], total: 0 },
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -82,7 +109,7 @@ async function searchProducts(query, limit) {
       { brand: searchRegex },
     ],
   })
-    .select("name images pricing slug category ratings")
+    .select("name images pricing slug category ratings variants")
     .populate("category", "name")
     .limit(limit)
     .sort({ "ratings.average": -1, "inventory.soldCount": -1 })
