@@ -14,7 +14,7 @@ export async function GET(request) {
     if (!decoded) {
       return NextResponse.json(
         { success: false, message: "Unauthorized" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -23,7 +23,7 @@ export async function GET(request) {
     if (!seller) {
       return NextResponse.json(
         { success: false, message: "Seller profile not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -34,8 +34,8 @@ export async function GET(request) {
     const category = searchParams.get("category");
     const status = searchParams.get("status");
 
-    // Use seller._id for querying products
-    let query = { sellerId: seller._id };
+    // Use sellerId (User ID) for querying products
+    let query = { sellerId: decoded.userId };
 
     if (search) {
       query.$or = [
@@ -73,7 +73,7 @@ export async function GET(request) {
       // For low-health, we need to calculate health for all and filter
       // Note: This is acceptable for seller-specific catalogs (~few thousand max)
       const allSellerProducts = await Product.find({
-        sellerId: seller._id,
+        sellerId: decoded.userId,
         isDraft: { $ne: true },
       }).lean();
 
@@ -102,8 +102,15 @@ export async function GET(request) {
     }
 
     // Get stats efficiently
-    const allProductsForStats = await Product.find({ sellerId: seller._id, isDraft: { $ne: true } }).select('name description images highlights category inventory.sku keywords').lean();
-    
+    const allProductsForStats = await Product.find({
+      sellerId: decoded.userId,
+      isDraft: { $ne: true },
+    })
+      .select(
+        "name description images highlights category inventory.sku keywords",
+      )
+      .lean();
+
     const calculateHealth = (p) => {
       let score = 0;
       if (p.name?.length > 20) score += 15;
@@ -116,35 +123,37 @@ export async function GET(request) {
       return Math.min(score, 100);
     };
 
-    const lowHealthCount = allProductsForStats.filter(p => calculateHealth(p) < 70).length;
+    const lowHealthCount = allProductsForStats.filter(
+      (p) => calculateHealth(p) < 70,
+    ).length;
 
     const stats = {
-      total: await Product.countDocuments({ sellerId: seller._id }),
+      total: await Product.countDocuments({ sellerId: decoded.userId }),
       active: await Product.countDocuments({
-        sellerId: seller._id,
+        sellerId: decoded.userId,
         isActive: true,
         isDraft: { $ne: true },
       }),
       inactive: await Product.countDocuments({
-        sellerId: seller._id,
+        sellerId: decoded.userId,
         isActive: false,
         isDraft: { $ne: true },
       }),
       pending: await Product.countDocuments({
-        sellerId: seller._id,
+        sellerId: decoded.userId,
         isApproved: false,
         isDraft: { $ne: true },
       }),
       drafts: await Product.countDocuments({
-        sellerId: seller._id,
+        sellerId: decoded.userId,
         isDraft: true,
       }),
       lowStock: await Product.countDocuments({
-        sellerId: seller._id,
+        sellerId: decoded.userId,
         isDraft: { $ne: true },
         $expr: { $lte: ["$inventory.stock", "$inventory.lowStockThreshold"] },
       }),
-      lowHealth: lowHealthCount
+      lowHealth: lowHealthCount,
     };
 
     return NextResponse.json({
@@ -162,7 +171,7 @@ export async function GET(request) {
     console.error("Products GET error:", error);
     return NextResponse.json(
       { success: false, message: "Server error", error: error.message },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -176,7 +185,7 @@ export async function POST(request) {
     if (!decoded) {
       return NextResponse.json(
         { success: false, message: "Unauthorized" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -185,7 +194,7 @@ export async function POST(request) {
     if (!seller) {
       return NextResponse.json(
         { success: false, message: "Seller profile not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -201,7 +210,7 @@ export async function POST(request) {
 
     const product = await Product.create({
       ...body,
-      sellerId: seller._id,
+      sellerId: decoded.userId,
       isApproved: false, // Moved to manual/quality-check review queue
     });
 
@@ -218,7 +227,7 @@ export async function POST(request) {
         message: error.code === 11000 ? "SKU already exists" : "Server error",
         error: error.message,
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

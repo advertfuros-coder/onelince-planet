@@ -18,7 +18,7 @@ export async function GET(request) {
     if (!decoded) {
       return NextResponse.json(
         { success: false, message: "Unauthorized" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -33,7 +33,8 @@ export async function GET(request) {
         success: true,
         orders: [],
         total: 0,
-        message: "No seller profile found. Please complete your seller onboarding.",
+        message:
+          "No seller profile found. Please complete your seller onboarding.",
       });
     }
 
@@ -41,9 +42,10 @@ export async function GET(request) {
     console.log("User ID (from token):", decoded.id);
     console.log("Seller ID (from profile):", sellerProfile._id.toString());
 
-    // Now query orders where items.seller matches the Seller ID (not User ID)
+    // Query orders where items.seller matches the User ID
+    // Note: In our schema, items.seller usually references the User model
     const orders = await Order.find({
-      "items.seller": sellerProfile._id,
+      "items.seller": decoded.id,
     })
       .populate("customer", "name email phone")
       .populate("items.product", "name images sku")
@@ -57,7 +59,7 @@ export async function GET(request) {
     const filteredOrders = orders.map((order) => ({
       ...order,
       items: order.items.filter(
-        (item) => item.seller?.toString() === sellerProfile._id.toString()
+        (item) => item.seller?.toString() === decoded.id,
       ),
     }));
 
@@ -70,7 +72,7 @@ export async function GET(request) {
     console.error("Get seller orders error:", error);
     return NextResponse.json(
       { success: false, message: "Server error", error: error.message },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
