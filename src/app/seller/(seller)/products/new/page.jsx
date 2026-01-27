@@ -473,7 +473,8 @@ export default function AddProductPage() {
         specifications: form.specifications.filter(spec => spec.key && spec.value),
         images: form.images, // Use actual uploaded images
         options: form.options,
-        variants: form.variants
+        variants: form.variants,
+        returnPolicy: form.returnPolicy
       }
 
       const response = await axios.post('/api/seller/products', payload, {

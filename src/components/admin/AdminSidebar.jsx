@@ -21,6 +21,7 @@ import {
   ChevronRight,
   Monitor,
   Crown,
+  RefreshCcw,
   Sparkles,
   TrendingDown,
   Tag
@@ -38,6 +39,7 @@ export default function AdminSidebar({ onNavigate, isMobile = false }) {
     { label: 'Categories', href: '/admin/categories', icon: Package },
     { label: 'Products', href: '/admin/products', icon: Box },
     { label: 'Orders', href: '/admin/orders', icon: ShoppingCart },
+    { label: 'Returns', href: '/admin/returns', icon: RefreshCcw },
     { label: 'Homepage Banners', href: '/admin/homepage/banners', icon: Monitor },
     { label: 'Featured Brands', href: '/admin/homepage/featured-brands', icon: Tag },
     { label: 'st Deals', href: '/admin/homepage/todays-best-deals', icon: Sparkles },

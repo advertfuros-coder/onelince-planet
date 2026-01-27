@@ -90,7 +90,13 @@ export default function EditProductPage() {
     specifications: [{ key: '', value: '' }],
     images: [],
     options: [],
-    variants: []
+    variants: [],
+    returnPolicy: {
+      isReturnable: true,
+      returnDuration: 7,
+      isReplaceable: true,
+      replacementDuration: 7
+    }
   })
 
   const [newOptionName, setNewOptionName] = useState('')
@@ -148,6 +154,12 @@ export default function EditProductPage() {
           isDraft: p.isDraft || false,
           highlights: p.highlights || [''],
           keywords: p.keywords?.join(', ') || '',
+          returnPolicy: p.returnPolicy || {
+            isReturnable: true,
+            returnDuration: 7,
+            isReplaceable: true,
+            replacementDuration: 7
+          },
           hsnCode: p.hsnCode || ''
         })
         if (p.variants?.length > 0) setShowVariants(true)
@@ -245,6 +257,7 @@ export default function EditProductPage() {
           price: v.price ? Number(v.price) : undefined,
           stock: v.stock ? Number(v.stock) : 0,
         })),
+        returnPolicy: form.returnPolicy,
         isDraft: true
       }
 
@@ -497,6 +510,7 @@ export default function EditProductPage() {
         highlights: form.highlights.filter(h => h.trim()),
         keywords: form.keywords.split(',').map(k => k.trim()).filter(k => k),
         hsnCode: form.hsnCode,
+        returnPolicy: form.returnPolicy,
         isDraft: false // Final publish sets it to not a draft
       }
 
@@ -1000,6 +1014,98 @@ export default function EditProductPage() {
                       <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${form.freeShipping ? 'right-1' : 'left-1'}`} />
                     </div>
                   </label>
+
+                  {/* Return & Replacement Policy Section */}
+                  <div className="pt-8 border-t border-slate-100 space-y-8">
+                    <div className="space-y-1">
+                      <h3 className="text-xs font-semibold text-slate-900 uppercase tracking-widest flex items-center gap-2">
+                        <ShieldCheck size={16} className="text-blue-600" /> Service Policies
+                      </h3>
+                      <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest leading-relaxed">Configure how returns and replacements work for this item.</p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                      {/* Return Policy */}
+                      <div className="bg-slate-50/50 p-6 rounded-3xl border border-slate-100 space-y-6">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className={`p-2 rounded-xl ${form.returnPolicy.isReturnable ? 'bg-blue-600 text-white' : 'bg-slate-200 text-slate-400'}`}>
+                              <Box size={18} />
+                            </div>
+                            <div>
+                                <p className="text-xs font-bold text-slate-900 uppercase">Returnable</p>
+                                <p className="text-[9px] font-semibold text-slate-400">Can customers return this?</p>
+                            </div>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => setForm(prev => ({ 
+                                ...prev, 
+                                returnPolicy: { ...prev.returnPolicy, isReturnable: !prev.returnPolicy.isReturnable } 
+                            }))}
+                            className={`w-10 h-6 rounded-full relative transition-all ${form.returnPolicy.isReturnable ? 'bg-blue-600' : 'bg-slate-300'}`}
+                          >
+                            <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${form.returnPolicy.isReturnable ? 'right-1' : 'left-1'}`} />
+                          </button>
+                        </div>
+                        
+                        {form.returnPolicy.isReturnable && (
+                          <div className="space-y-2 animate-in fade-in slide-in-from-top-2 duration-300">
+                            <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Return Window (Days)</label>
+                            <input
+                              type="number"
+                              value={form.returnPolicy.returnDuration}
+                              onChange={(e) => setForm(prev => ({
+                                ...prev,
+                                returnPolicy: { ...prev.returnPolicy, returnDuration: Number(e.target.value) }
+                              }))}
+                              className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2 text-xs font-bold focus:border-blue-500 outline-none"
+                            />
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Replacement Policy */}
+                      <div className="bg-slate-50/50 p-6 rounded-3xl border border-slate-100 space-y-6">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className={`p-2 rounded-xl ${form.returnPolicy.isReplaceable ? 'bg-orange-600 text-white' : 'bg-slate-200 text-slate-400'}`}>
+                              <Zap size={18} />
+                            </div>
+                            <div>
+                                <p className="text-xs font-bold text-slate-900 uppercase">Replaceable</p>
+                                <p className="text-[9px] font-semibold text-slate-400">Can customers request replacement?</p>
+                            </div>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => setForm(prev => ({ 
+                                ...prev, 
+                                returnPolicy: { ...prev.returnPolicy, isReplaceable: !prev.returnPolicy.isReplaceable } 
+                            }))}
+                            className={`w-10 h-6 rounded-full relative transition-all ${form.returnPolicy.isReplaceable ? 'bg-orange-600' : 'bg-slate-300'}`}
+                          >
+                            <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${form.returnPolicy.isReplaceable ? 'right-1' : 'left-1'}`} />
+                          </button>
+                        </div>
+                        
+                        {form.returnPolicy.isReplaceable && (
+                          <div className="space-y-2 animate-in fade-in slide-in-from-top-2 duration-300">
+                            <label className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Replacement Window (Days)</label>
+                            <input
+                              type="number"
+                              value={form.returnPolicy.replacementDuration}
+                              onChange={(e) => setForm(prev => ({
+                                ...prev,
+                                returnPolicy: { ...prev.returnPolicy, replacementDuration: Number(e.target.value) }
+                              }))}
+                              className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2 text-xs font-bold focus:border-orange-500 outline-none"
+                            />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 </motion.div>
               )}
 

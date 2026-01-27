@@ -69,6 +69,35 @@ export default function OrderDetailsPage() {
 
   const currentStageIndex = order.status === 'delivered' ? 2 : order.status === 'shipped' ? 1 : 0
 
+  const checkEligibility = (item, type) => {
+    if (order.status !== 'delivered') return false
+
+    if (['returned', 'cancelled'].includes(item.status)) return false
+
+    const deliveredAt = order.shipping?.deliveredAt ? new Date(order.shipping.deliveredAt) : new Date(order.updatedAt)
+    const now = new Date()
+    const diffTime = Math.abs(now - deliveredAt);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    const policy = item.product?.returnPolicy || {
+      isReturnable: true,
+      returnDuration: 7,
+      isReplaceable: true,
+      replacementDuration: 7
+    }
+
+    if (type === 'return') {
+      return policy.isReturnable && diffDays <= policy.returnDuration
+    } else {
+      return policy.isReplaceable && diffDays <= policy.replacementDuration
+    }
+  }
+
+  const handleReturnRequest = (item, type) => {
+    // We'll implement the modal logic next
+    router.push(`/orders/${order._id}/return?productId=${item.product._id}&type=${type}${item.sku ? `&sku=${item.sku}` : ''}`)
+  }
+
   return (
     <div className="min-h-screen bg-[#F1F3F6] pb-10">
       {/* Header */}
@@ -106,6 +135,28 @@ export default function OrderDetailsPage() {
               <p className="text-xs text-gray-500 mt-0.5">
                 {Object.entries(item.variant || {}).map(([key, value]) => `${key}: ${value}`).join(', ') || 'Standard'}
               </p>
+
+              <div className="flex gap-2 mt-3">
+                {checkEligibility(item, 'return') && (
+                  <button
+                    onClick={() => handleReturnRequest(item, 'return')}
+                    className="text-[11px] font-bold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-100 hover:bg-blue-600 hover:text-white transition-all uppercase tracking-tighter"
+                  >
+                    Return Item
+                  </button>
+                )}
+                {checkEligibility(item, 'replacement') && (
+                  <button
+                    onClick={() => handleReturnRequest(item, 'replacement')}
+                    className="text-[11px] font-bold text-orange-600 bg-orange-50 px-3 py-1.5 rounded-lg border border-orange-100 hover:bg-orange-600 hover:text-white transition-all uppercase tracking-tighter"
+                  >
+                    Replace Item
+                  </button>
+                )}
+                {item.status === 'returned' && (
+                  <span className="text-[10px] font-bold text-red-600 bg-red-50 px-2 py-1 rounded border border-red-100 uppercase">Item Returned</span>
+                )}
+              </div>
             </div>
           </div>
         ))}
@@ -149,10 +200,10 @@ export default function OrderDetailsPage() {
                 {stages.map((stage, idx) => (
                   <div key={idx} className="flex flex-col items-center w-24 text-center">
                     <div className={`w-[32px] h-[32px] rounded-full border-2 flex items-center justify-center transition-all ${idx < currentStageIndex
+                      ? 'bg-[#00A36C] border-[#00A36C]'
+                      : idx === currentStageIndex
                         ? 'bg-[#00A36C] border-[#00A36C]'
-                        : idx === currentStageIndex
-                          ? 'bg-[#00A36C] border-[#00A36C]'
-                          : 'bg-white border-gray-200'
+                        : 'bg-white border-gray-200'
                       }`}>
                       {idx <= currentStageIndex ? (
                         <FiCheck className="text-white w-5 h-5 font-semibold" />
@@ -250,7 +301,7 @@ export default function OrderDetailsPage() {
         </div>
         <div className="mt-4 pt-4 border-t border-gray-50 flex items-center gap-2">
           <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
-             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
           </div>
           <div>
             <p className="text-[12px] text-gray-500">Payment Mode</p>
@@ -265,7 +316,7 @@ export default function OrderDetailsPage() {
           <div className="bg-gradient-to-br from-[#E8F5E9] to-[#C8E6C9] rounded-2xl p-4 border border-[#A5D6A7]/30 shadow-sm relative overflow-hidden">
             {/* Subtle Splash Effect */}
             <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full blur-3xl -mr-10 -mt-10"></div>
-            
+
             <div className="flex items-center gap-4 relative z-10">
               <div className="w-14 h-14 bg-white rounded-full shadow-md flex items-center justify-center flex-shrink-0 animate-pulse">
                 <svg className="w-8 h-8 text-[#2E7D32]" fill="currentColor" viewBox="0 0 24 24">
@@ -275,12 +326,12 @@ export default function OrderDetailsPage() {
               <div>
                 <h4 className="text-[15px] font-semibold text-[#1B5E20]">Green Revolution Hero! 🌿</h4>
                 <p className="text-[12px] text-[#2E7D32] font-medium leading-tight mt-1">
-                  Thank you for your donation of <span className="font-semibold">{order.shippingAddress?.country === 'India' ? '₹' : 'AED'} {order.shippingAddress?.country === 'India' ? order.pricing.donation : (order.pricing.donation / 22.73).toFixed(0)}</span>. 
+                  Thank you for your donation of <span className="font-semibold">{order.shippingAddress?.country === 'India' ? '₹' : 'AED'} {order.shippingAddress?.country === 'India' ? order.pricing.donation : (order.pricing.donation / 22.73).toFixed(0)}</span>.
                   You've just helped plant a tree today!
                 </p>
               </div>
             </div>
-            
+
             <div className="mt-3 flex items-center gap-2">
               <div className="flex -space-x-2">
                 {[1, 2, 3].map(i => (
