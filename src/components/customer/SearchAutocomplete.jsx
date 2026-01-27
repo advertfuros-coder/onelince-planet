@@ -178,6 +178,7 @@ export default function SearchAutocomplete({ onClose }) {
                             </div>
                             {suggestions.products.map((product, index) => {
                                 const itemIndex = suggestions.categories.length + index
+                                const isVariant = !!product.variantSku
                                 return (
                                     <button
                                         key={product.id}
@@ -203,7 +204,14 @@ export default function SearchAutocomplete({ onClose }) {
 
                                         {/* Product Info */}
                                         <div className="flex-1 min-w-0">
-                                            <p className="font-medium text-sm text-gray-900 truncate">{product.name}</p>
+                                            <div className="flex items-center gap-2">
+                                                <p className="font-medium text-sm text-gray-900 truncate">{product.name}</p>
+                                                {isVariant && (
+                                                    <span className="px-2 py-0.5 bg-purple-100 text-purple-700 text-[10px] font-semibold rounded-full whitespace-nowrap">
+                                                        Variant
+                                                    </span>
+                                                )}
+                                            </div>
                                             <div className="flex items-center gap-2 mt-0.5">
                                                 <p className="text-xs font-semibold text-blue-600">
                                                     {formatPrice(product.price)}
@@ -213,6 +221,11 @@ export default function SearchAutocomplete({ onClose }) {
                                                         <span className="text-xs text-yellow-500">★</span>
                                                         <span className="text-xs text-gray-500">{product.rating.toFixed(1)}</span>
                                                     </div>
+                                                )}
+                                                {isVariant && product.stock !== undefined && (
+                                                    <span className={`text-[10px] font-medium ${product.stock > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                                                        {product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
+                                                    </span>
                                                 )}
                                             </div>
                                         </div>

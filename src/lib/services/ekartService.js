@@ -91,20 +91,32 @@ class EkartService {
 
   /**
    * Create shipment from order
+   * @param {Object} order - The order object
+   * @param {Object} [seller] - Optional seller details for pickup location
    */
-  async createShipmentFromOrder(order) {
+  async createShipmentFromOrder(order, seller = null) {
+    // Determine pickup details (default to env vars, override if seller provided)
+    const pickupName = seller?.businessInfo?.businessName || this.pickupLocationName;
+    const pickupAddress = seller?.pickupAddress 
+      ? `${seller.pickupAddress.addressLine1}, ${seller.pickupAddress.addressLine2 || ''}, ${seller.pickupAddress.city}, ${seller.pickupAddress.state} - ${seller.pickupAddress.pincode}`
+      : this.sellerAddress;
+    const sellerName = seller?.businessInfo?.businessName || this.sellerName;
+    const sellerGst = seller?.businessInfo?.gstNumber || this.gstNumber;
+
     const shipmentData = {
       client_id: this.clientId,
       client_name: this.clientName,
-      seller_name: this.sellerName,
-      seller_gst_number: this.gstNumber,
+      seller_name: sellerName,
+      seller_gst_number: sellerGst,
       pickup_location: {
-        name: this.pickupLocationName,
-        address: this.sellerAddress,
+        name: pickupName,
+        address: pickupAddress,
       },
       return_location: {
-        name: this.returnLocationName,
-        address: this.sellerAddress,
+        // Typically return location is same as pickup or central warehouse
+        // For now using same logic as pickup if seller is provided
+        name: seller ? pickupName : this.returnLocationName,
+        address: seller ? pickupAddress : this.sellerAddress,
       },
       packages: [
         {

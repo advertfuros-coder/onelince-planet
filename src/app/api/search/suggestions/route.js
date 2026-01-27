@@ -36,28 +36,38 @@ export async function GET(request) {
         productCount: cat.productCount || 0,
       })),
       products: products.flatMap((product) => {
+        // If product has variants, expand each variant as a separate result
         if (product.variants && product.variants.length > 0) {
           const searchRegex = new RegExp(query, "i");
-          return product.variants
-            .filter((v) => searchRegex.test(`${v.name} ${product.name}`))
-            .map((v) => ({
+          
+          // Filter variants that match the search query
+          const matchingVariants = product.variants.filter((v) => {
+            const variantFullName = `${v.name} ${product.name}`;
+            return searchRegex.test(variantFullName) || 
+                   searchRegex.test(product.name) || 
+                   searchRegex.test(v.name);
+          });
+
+          // If we have matching variants, return them as individual results
+          if (matchingVariants.length > 0) {
+            return matchingVariants.map((v) => ({
               type: "product",
               id: `${product._id}_${v.sku}`,
               parentId: product._id,
               variantSku: v.sku,
-              name: `${v.name} ${product.name}`,
+              variantName: v.name,
+              name: `${v.name} ${product.name}`, // e.g., "Pineapple Moisturizer Cold Cream"
               slug: product.slug || product._id,
-              image:
-                (v.images && v.images[0]) || product.images?.[0]?.url || null,
-              price:
-                v.price ||
-                product.pricing?.salePrice ||
-                product.pricing?.basePrice ||
-                0,
+              image: (v.images && v.images[0]) || product.images?.[0]?.url || null,
+              price: v.price || product.pricing?.salePrice || product.pricing?.basePrice || 0,
               category: product.category?.name || "Uncategorized",
               rating: product.ratings?.average || 0,
+              stock: v.stock || 0,
             }));
+          }
         }
+        
+        // For products without variants or no matching variants, return the base product
         return [
           {
             type: "product",
@@ -65,13 +75,12 @@ export async function GET(request) {
             name: product.name,
             slug: product.slug || product._id,
             image: product.images?.[0]?.url || null,
-            price:
-              product.pricing?.salePrice || product.pricing?.basePrice || 0,
+            price: product.pricing?.salePrice || product.pricing?.basePrice || 0,
             category: product.category?.name || "Uncategorized",
             rating: product.ratings?.average || 0,
           },
         ];
-      }),
+      }).slice(0, limit), // Limit final results after expansion
       total: categories.length + products.length,
     };
 
@@ -94,7 +103,7 @@ export async function GET(request) {
 }
 
 /**
- * Search products by name, keywords, tags
+ * Search products by name, keywords, tags, AND variant names
  */
 async function searchProducts(query, limit) {
   const searchRegex = new RegExp(query, "i");
@@ -107,11 +116,12 @@ async function searchProducts(query, limit) {
       { keywords: searchRegex },
       { tags: searchRegex },
       { brand: searchRegex },
+      { "variants.name": searchRegex }, // Search within variant names
     ],
   })
     .select("name images pricing slug category ratings variants")
     .populate("category", "name")
-    .limit(limit)
+    .limit(limit * 2) // Fetch more to account for variant expansion
     .sort({ "ratings.average": -1, "inventory.soldCount": -1 })
     .lean();
 }

@@ -807,15 +807,15 @@ export default function Header() {
 
       {!hideHeaderExtras && (
         <div
-          className={`hidden lg:block border-b border-gray-200 overflow-visible transition-all duration-300 relative z-20 ${showSecondaryHeader ? 'max-h-14 opacity-100' : 'max-h-0 opacity-0'}`}
+          className={`hidden lg:block border-b border-gray-200 overflow-x-auto overflow-y-hidden transition-all duration-300 relative z-20 ${showSecondaryHeader ? 'max-h-16 opacity-100' : 'max-h-0 opacity-0'}`}
 
         >
           {/* Gradient overlay from background to white */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-white/60 to-white"></div>
           <div className="w-full px-4 sm:px-6 lg:px-8 relative z-10">
-            <div className="flex items-center justify-center h-14 relative">
-              {/* Categories with Mega Menu - Full Width Centered */}
-              <div className="flex items-center gap-1 relative">
+            <div className="flex items-center h-16 relative min-w-max">
+              {/* Categories with Mega Menu - Horizontal Scroll */}
+              <div className="flex items-center gap-1 relative whitespace-nowrap">
                 {megaMenuCategories.map((category) => {
                   const IconComponent = getIconComponent(category.icon)
                   const isActive = activeMegaMenu === category.name
@@ -823,20 +823,20 @@ export default function Header() {
                   return (
                     <div
                       key={category.name}
-                      className="relative"
+                      className="relative flex-shrink-0"
                       onMouseEnter={() => handleCategoryHover(category.name)}
                       onMouseLeave={handleMegaMenuLeave}
                     >
                       <Link
                         href={category.href}
-                        className={`flex items-center gap-2 px-4 py-3 text-sm font-medium transition-all duration-200 rounded-lg group ${isActive
+                        className={`flex items-center gap-2 px-3 py-2 text-sm font-medium transition-all duration-200 rounded-lg group whitespace-nowrap ${isActive
                           ? 'text-blue-600 bg-white shadow-sm'
                           : 'text-gray-700 hover:text-blue-600 hover:bg-white/70'
                           }`}
                       >
-                        <IconComponent className={`w-4 h-4 transition-transform duration-200 ${isActive ? 'scale-110' : 'group-hover:scale-110'}`} />
+                        <IconComponent className={`w-4 h-4 transition-transform duration-200 flex-shrink-0 ${isActive ? 'scale-110' : 'group-hover:scale-110'}`} />
                         <span className="font-semibold">{category.name}</span>
-                        <ChevronRight className={`w-3 h-3 transition-all duration-200 ${isActive ? 'rotate-90 opacity-100' : 'opacity-0 group-hover:opacity-100'}`} />
+                        <ChevronRight className={`w-3 h-3 transition-all duration-200 flex-shrink-0 ${isActive ? 'rotate-90 opacity-100' : 'opacity-0 group-hover:opacity-100'}`} />
                       </Link>
                     </div>
                   )

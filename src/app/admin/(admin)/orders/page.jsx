@@ -358,7 +358,10 @@ export default function AdminOrdersPage() {
                     <div>
                       <p className="text-xs text-gray-600 mb-1">Seller</p>
                       <p className="font-semibold text-gray-900">
-                        {order.items[0]?.seller?.businessName || 'N/A'}
+                        {order.items[0]?.seller?.businessInfo?.businessName ||
+                          order.items[0]?.seller?.storeInfo?.storeName ||
+                          order.items[0]?.seller?.personalDetails?.fullName ||
+                          'N/A'}
                       </p>
                     </div>
                     <div>

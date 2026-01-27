@@ -4,6 +4,7 @@ import connectDB from "@/lib/db/mongodb";
 import { verifyToken } from "@/lib/utils/auth";
 import shiprocketService from "@/lib/services/shiprocketService";
 import Order from "@/lib/db/models/Order";
+import Seller from "@/lib/db/models/Seller";
 
 export async function POST(request) {
   try {
@@ -45,11 +46,62 @@ export async function POST(request) {
       );
     }
 
+    // Determine Seller and Pickup Location
+    let pickupLocationName = process.env.SHIPROCKET_PICKUP_NAME || "Home";
+    
+    // We use the seller from the first item as the pickup location source
+    const sellerUserId = order.items[0]?.seller;
+    
+    if (sellerUserId) {
+      const sellerProfile = await Seller.findOne({ userId: sellerUserId });
+      
+      if (sellerProfile && sellerProfile.pickupAddress) {
+        const { pickupAddress, businessInfo, personalDetails } = sellerProfile;
+        // Create a unique location code for this seller
+        const locationCode = `Seller_${sellerProfile._id}`;
+        
+        try {
+          // Check if this location already exists in Shiprocket
+          const pickupLocationsResponse = await shiprocketService.getPickupLocations();
+          // The API response structure usually has data property or the array directly depending on the client wrapper
+          // Based on shiprocketService.js implementation, it returns response.data directly.
+          // Shiprocket API returns { shipping_address: [...] }
+          const existingLocation = pickupLocationsResponse?.shipping_address?.find(
+            loc => loc.pickup_location === locationCode
+          );
+          
+          if (!existingLocation) {
+            console.log(`Creating new pickup location for seller: ${locationCode}`);
+            // Add new pickup location
+            await shiprocketService.addPickupLocation({
+              pickup_location: locationCode,
+              name: businessInfo?.businessName || personalDetails?.fullName || "Seller",
+              email: personalDetails?.email || "seller@example.com",
+              phone: personalDetails?.phone || "9876543210",
+              address: pickupAddress.addressLine1,
+              address_2: pickupAddress.addressLine2 || "",
+              city: pickupAddress.city,
+              state: pickupAddress.state,
+              country: pickupAddress.country || "India",
+              pin_code: pickupAddress.pincode
+            });
+          } else {
+            console.log(`Using existing pickup location: ${locationCode}`);
+          }
+          
+          pickupLocationName = locationCode;
+        } catch (err) {
+          console.error("Error managing pickup location:", err.message);
+          // Fallback to default if managing location fails
+        }
+      }
+    }
+
     // Create Shiprocket order
     const result = await shiprocketService.createOrder({
       order_id: order.orderNumber,
       order_date: new Date(order.createdAt).toISOString().split("T")[0],
-      pickup_location: process.env.SHIPROCKET_PICKUP_NAME || "Home",
+      pickup_location: pickupLocationName,
       billing_customer_name: order.shippingAddress.name,
       billing_address: order.shippingAddress.addressLine1,
       billing_city: order.shippingAddress.city,

@@ -615,7 +615,7 @@ function OrderDetailsModal({ order, onClose, onUpdate }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-[60] flex items-center justify-center p-4"
+            className="fixed  inset-0 bg-gray-900/60 backdrop-blur-sm z-100 flex items-center justify-center p-4"
             onClick={onClose}
         >
             <motion.div

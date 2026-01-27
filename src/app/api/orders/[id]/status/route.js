@@ -13,6 +13,9 @@ export async function PUT(request, { params }) {
   try {
     await connectDB();
 
+    // Await params for Next.js 15 compatibility
+    const { id } = await params;
+
     const token = request.headers.get("authorization")?.replace("Bearer ", "");
     const decoded = verifyToken(token);
 
@@ -23,7 +26,6 @@ export async function PUT(request, { params }) {
       );
     }
 
-    const { id } = params;
     const body = await request.json();
     const { status, trackingId, carrier, estimatedDelivery, description } =
       body;
@@ -45,10 +47,19 @@ export async function PUT(request, { params }) {
     }
 
     // Check permissions
-    const isSeller = order.items.some(
-      (item) => item.seller.toString() === decoded.id
-    );
-    const isCustomer = order.customer.toString() === decoded.id;
+    let isSeller = false;
+    if (decoded.role === "seller") {
+      // For sellers, we need to get their Seller ID from their User ID
+      const Seller = require("@/lib/db/models/Seller").default;
+      const sellerProfile = await Seller.findOne({ userId: decoded.id });
+      if (sellerProfile) {
+        isSeller = order.items.some(
+          (item) => item.seller && item.seller.toString() === sellerProfile._id.toString()
+        );
+      }
+    }
+    
+    const isCustomer = order.customer && order.customer.toString() === decoded.id;
     const isAdmin = decoded.role === "admin";
 
     if (!isSeller && !isCustomer && !isAdmin) {

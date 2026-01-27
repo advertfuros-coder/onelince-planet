@@ -447,30 +447,55 @@ class OrderService {
 
   // Notification methods
   async notifyOrderProcessing(order) {
-    const customer = order.customer;
-    await msg91Service.notifyOrderProcessing(order, customer);
+    try {
+      const customer = order.customer;
+      if (!customer) return; // Skip if no customer data
+      await msg91Service.notifyOrderProcessing(order, customer);
+    } catch (error) {
+      console.error("Notify order processing error:", error);
+    }
   }
 
   async notifyOrderPacked(order) {
-    const customer = order.customer;
-    await msg91Service.notifyOrderPacked(order, customer);
+    try {
+      const customer = order.customer;
+      if (!customer) return; // Skip if no customer data
+      await msg91Service.notifyOrderPacked(order, customer);
+    } catch (error) {
+      console.error("Notify order packed error:", error);
+    }
   }
 
   async notifyOrderShipped(order) {
-    const customer = order.customer;
-    await msg91Service.notifyOrderShipped(order, customer);
-    await emailService.sendOrderShipped(order, customer);
+    try {
+      const customer = order.customer;
+      if (!customer) return; // Skip if no customer data
+      await msg91Service.notifyOrderShipped(order, customer);
+      await emailService.sendOrderShipped(order, customer);
+    } catch (error) {
+      console.error("Notify order shipped error:", error);
+    }
   }
 
   async notifyOrderOutForDelivery(order) {
-    const customer = order.customer;
-    await msg91Service.notifyOrderOutForDelivery(order, customer);
+    try {
+      const customer = order.customer;
+      if (!customer) return; // Skip if no customer data
+      await msg91Service.notifyOrderOutForDelivery(order, customer);
+    } catch (error) {
+      console.error("Notify order out for delivery error:", error);
+    }
   }
 
   async notifyOrderDelivered(order) {
-    const customer = order.customer;
-    await msg91Service.notifyOrderDelivered(order, customer);
-    await emailService.sendOrderDelivered(order, customer);
+    try {
+      const customer = order.customer;
+      if (!customer) return; // Skip if no customer data
+      await msg91Service.notifyOrderDelivered(order, customer);
+      await emailService.sendOrderDelivered(order, customer);
+    } catch (error) {
+      console.error("Notify order delivered error:", error);
+    }
   }
 
   async notifyOrderCancelled(order, reason) {

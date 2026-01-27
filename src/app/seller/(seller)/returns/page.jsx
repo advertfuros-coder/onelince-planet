@@ -225,7 +225,7 @@ export default function SellerReturnsPage() {
                                             </div>
                                             <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">No return claims found</p>
                                         </div>
-                                    </th>
+                                    </td>
                                 </tr>
                             )}
                         </tbody>

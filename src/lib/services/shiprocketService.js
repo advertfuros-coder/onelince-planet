@@ -225,6 +225,25 @@ class ShiprocketService {
       },
     });
   }
+
+  /**
+   * Get all pickup locations
+   */
+  async getPickupLocations() {
+    return await this.makeRequest("/settings/company/pickup", {
+      method: "GET",
+    });
+  }
+
+  /**
+   * Add a new pickup location
+   */
+  async addPickupLocation(data) {
+    return await this.makeRequest("/settings/company/addpickup", {
+      method: "POST",
+      data: data,
+    });
+  }
 }
 
 const shiprocketService = new ShiprocketService();
