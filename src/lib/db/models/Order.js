@@ -233,6 +233,27 @@ const OrderSchema = new mongoose.Schema(
       title: String,
       description: String,
       images: [String],
+      
+      // Bank details for COD refunds
+      bankDetails: {
+        accountHolderName: String,
+        accountNumber: String,
+        ifscCode: String,
+        bankName: String,
+        branchName: String,
+        accountType: {
+          type: String,
+          enum: ['savings', 'current'],
+        },
+        // Razorpay validation
+        isVerified: { type: Boolean, default: false },
+        verifiedAt: Date,
+        razorpayFundAccountId: String,
+        validationId: String,
+        validationStatus: String,
+        validationUtr: String,
+      },
+      
       status: {
         type: String,
         enum: [
@@ -248,7 +269,14 @@ const OrderSchema = new mongoose.Schema(
       },
       requestedAt: Date,
       resolvedAt: Date,
+      approvedAt: Date,
+      approvedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+      rejectedAt: Date,
+      rejectedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+      rejectionReason: String,
       refundAmount: Number,
+      refundedAt: Date,
+      refundTransactionId: String,
       qualityCheck: {
         checkedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
         checkedAt: Date,
@@ -261,6 +289,16 @@ const OrderSchema = new mongoose.Schema(
       },
     },
 
+    // Return shipment tracking (Ekart RTO)
+    returnShipping: {
+      trackingId: String,
+      carrier: String,
+      status: String,
+      createdAt: Date,
+      pickedUpAt: Date,
+      deliveredAt: Date,
+    },
+
     dimensions: {
       length: { type: Number, default: 10 },
       breadth: { type: Number, default: 10 },
@@ -268,7 +306,7 @@ const OrderSchema = new mongoose.Schema(
       weight: { type: Number, default: 0.5 },
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 if (mongoose.models.Order) {

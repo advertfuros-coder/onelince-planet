@@ -162,10 +162,34 @@ const UserSchema = new mongoose.Schema(
         },
       },
     },
+
+    // Saved bank accounts for COD refunds
+    savedBankAccounts: [
+      {
+        accountHolderName: String,
+        accountNumber: String,
+        ifscCode: String,
+        bankName: String,
+        branchName: String,
+        accountType: {
+          type: String,
+          enum: ["savings", "current"],
+          default: "savings",
+        },
+        isDefault: { type: Boolean, default: false },
+        isVerified: { type: Boolean, default: false },
+        verifiedAt: Date,
+        razorpayFundAccountId: String,
+        validationId: String,
+        validationUtr: String,
+        addedAt: { type: Date, default: Date.now },
+        lastUsedAt: Date,
+      },
+    ],
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 // Hash password before saving

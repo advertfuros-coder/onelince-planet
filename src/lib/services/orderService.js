@@ -88,7 +88,7 @@ class OrderService {
             await this.processRefund(
               order,
               order.pricing.total,
-              options.reason
+              options.reason,
             );
           }
 
@@ -150,7 +150,7 @@ class OrderService {
     try {
       const order = await Order.findById(orderId).populate(
         "customer",
-        "name email phone"
+        "name email phone",
       );
 
       if (!order) {
@@ -165,7 +165,7 @@ class OrderService {
       // Check if within return window (7 days)
       const deliveryDate = order.shipping.deliveredAt;
       const daysSinceDelivery = Math.floor(
-        (Date.now() - deliveryDate) / (1000 * 60 * 60 * 24)
+        (Date.now() - deliveryDate) / (1000 * 60 * 60 * 24),
       );
 
       if (daysSinceDelivery > 7) {
@@ -219,7 +219,7 @@ class OrderService {
     try {
       const order = await Order.findById(orderId).populate(
         "customer",
-        "name email phone"
+        "name email phone",
       );
 
       if (!order || !order.returnRequest) {
@@ -241,7 +241,7 @@ class OrderService {
         await msg91Service.notifyReturnApproved(
           order,
           order.customer,
-          options.pickupDate || "within 2-3 business days"
+          options.pickupDate || "within 2-3 business days",
         );
 
         // Restock inventory
@@ -547,6 +547,317 @@ class OrderService {
       sgst: order.pricing.tax / 2,
       grandTotal: order.pricing.total,
     };
+  }
+
+  /**
+   * Generate HTML invoice for customers
+   */
+  generateInvoiceHtml(order, seller) {
+    const deliveryDate = order.shipping?.deliveredAt
+      ? new Date(order.shipping.deliveredAt).toLocaleDateString("en-IN", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        })
+      : "N/A";
+
+    const orderDate = new Date(order.createdAt).toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+
+    const sellerName =
+      seller?.businessInfo?.businessName || seller?.name || "Online Planet";
+    const sellerGST = seller?.businessInfo?.gstin || "N/A";
+
+    return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice - ${order.orderNumber}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 40px;
+            background: #f5f5f5;
+        }
+        .invoice-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            border-bottom: 3px solid #2563eb;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .company-info h1 {
+            color: #2563eb;
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        .company-info p {
+            color: #666;
+            font-size: 14px;
+        }
+        .invoice-title {
+            text-align: right;
+        }
+        .invoice-title h2 {
+            font-size: 32px;
+            color: #1f2937;
+            margin-bottom: 10px;
+        }
+        .invoice-meta {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        .meta-box {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .meta-box h3 {
+            color: #2563eb;
+            font-size: 14px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+        .meta-box p {
+            color: #4b5563;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .meta-box strong {
+            color: #1f2937;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+        }
+        thead {
+            background: #2563eb;
+            color: white;
+        }
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #e5e7eb;
+            color: #4b5563;
+            font-size: 14px;
+        }
+        tbody tr:hover {
+            background: #f9fafb;
+        }
+        .text-right { text-align: right; }
+        .totals {
+            margin-top: 30px;
+            display: flex;
+            justify-content: flex-end;
+        }
+        .totals-table {
+            width: 350px;
+        }
+        .totals-table tr {
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .totals-table td {
+            padding: 12px 15px;
+        }
+        .totals-table .grand-total {
+            background: #2563eb;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .footer {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 2px solid #e5e7eb;
+            text-align: center;
+            color: #6b7280;
+            font-size: 13px;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            background: #10b981;
+            color: white;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        @media print {
+            body { padding: 0; background: white; }
+            .invoice-container { box-shadow: none; }
+            .no-print { display: none; }
+        }
+        .print-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 24px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .print-button:hover {
+            background: #1d4ed8;
+        }
+    </style>
+</head>
+<body>
+    <button class="print-button no-print" onclick="window.print()">🖨️ Print Invoice</button>
+    
+    <div class="invoice-container">
+        <div class="header">
+            <div class="company-info">
+                <h1>${sellerName}</h1>
+                <p>Dubai, UAE</p>
+                <p>GST: ${sellerGST}</p>
+            </div>
+            <div class="invoice-title">
+                <h2>INVOICE</h2>
+                <p style="color: #6b7280; font-size: 14px;">
+                    <strong>Invoice #:</strong> ${order.orderNumber}<br>
+                    <strong>Date:</strong> ${orderDate}
+                </p>
+                <div style="margin-top: 10px;">
+                    <span class="status-badge">✓ DELIVERED</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="invoice-meta">
+            <div class="meta-box">
+                <h3>Bill To</h3>
+                <p>
+                    <strong>${order.shippingAddress.name}</strong><br>
+                    ${order.shippingAddress.addressLine1}<br>
+                    ${order.shippingAddress.addressLine2 ? order.shippingAddress.addressLine2 + "<br>" : ""}
+                    ${order.shippingAddress.city}, ${order.shippingAddress.state}<br>
+                    ${order.shippingAddress.pincode}<br>
+                    Phone: ${order.shippingAddress.phone}
+                </p>
+            </div>
+            <div class="meta-box">
+                <h3>Delivery Information</h3>
+                <p>
+                    <strong>Order Date:</strong> ${orderDate}<br>
+                    <strong>Delivery Date:</strong> ${deliveryDate}<br>
+                    <strong>Payment Method:</strong> ${order.payment.method.toUpperCase()}<br>
+                    <strong>Tracking ID:</strong> ${order.shipping?.trackingId || "N/A"}<br>
+                    <strong>Carrier:</strong> ${order.shipping?.carrier || "N/A"}
+                </p>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>SKU</th>
+                    <th class="text-right">Price</th>
+                    <th class="text-right">Qty</th>
+                    <th class="text-right">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${order.items
+                  .map(
+                    (item) => `
+                    <tr>
+                        <td><strong>${item.name}</strong></td>
+                        <td>${item.sku || "N/A"}</td>
+                        <td class="text-right">₹${item.price.toLocaleString("en-IN")}</td>
+                        <td class="text-right">${item.quantity}</td>
+                        <td class="text-right"><strong>₹${(item.price * item.quantity).toLocaleString("en-IN")}</strong></td>
+                    </tr>
+                `,
+                  )
+                  .join("")}
+            </tbody>
+        </table>
+
+        <div class="totals">
+            <table class="totals-table">
+                <tr>
+                    <td>Subtotal</td>
+                    <td class="text-right"><strong>₹${order.pricing.subtotal.toLocaleString("en-IN")}</strong></td>
+                </tr>
+                ${
+                  order.pricing.shipping > 0
+                    ? `
+                <tr>
+                    <td>Shipping</td>
+                    <td class="text-right"><strong>₹${order.pricing.shipping.toLocaleString("en-IN")}</strong></td>
+                </tr>
+                `
+                    : ""
+                }
+                ${
+                  order.pricing.tax > 0
+                    ? `
+                <tr>
+                    <td>Tax (GST)</td>
+                    <td class="text-right"><strong>₹${order.pricing.tax.toLocaleString("en-IN")}</strong></td>
+                </tr>
+                `
+                    : ""
+                }
+                ${
+                  order.pricing.discount > 0
+                    ? `
+                <tr>
+                    <td>Discount</td>
+                    <td class="text-right" style="color: #10b981;"><strong>-₹${order.pricing.discount.toLocaleString("en-IN")}</strong></td>
+                </tr>
+                `
+                    : ""
+                }
+                <tr class="grand-total">
+                    <td>TOTAL</td>
+                    <td class="text-right">₹${order.pricing.total.toLocaleString("en-IN")}</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="footer">
+            <p><strong>Thank you for your purchase!</strong></p>
+            <p style="margin-top: 10px;">
+                This is a computer-generated invoice and does not require a signature.<br>
+                For any queries, please contact us at info@onlineplanet.ae
+            </p>
+        </div>
+    </div>
+</body>
+</html>
+    `;
   }
 }
 

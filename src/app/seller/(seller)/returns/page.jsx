@@ -78,11 +78,11 @@ export default function SellerReturnsPage() {
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-slate-900">Return & Replacement Center</h1>
-                    <p className="text-[12px] font-bold text-slate-400 mt-1 uppercase tracking-widest">Manage customer quality claims and service requests</p>
+                    <h1 className="text-2xl font-semibold text-slate-900">Return & Replacement Center</h1>
+                    <p className="text-[12px] font-semibold text-slate-400 mt-1 uppercase -widest">Manage customer quality claims and service requests</p>
                 </div>
                 <div className="flex items-center gap-3">
-                    <button className="px-6 py-2.5 bg-blue-600 text-white rounded-2xl text-[12px] font-bold uppercase tracking-widest hover:bg-blue-700 shadow-lg shadow-blue-200 transition-all">
+                    <button className="px-6 py-2.5 bg-blue-600 text-white rounded-2xl text-[12px] font-semibold uppercase -widest hover:bg-blue-700 shadow-lg shadow-blue-200 transition-all">
                         Export Policy
                     </button>
                 </div>
@@ -101,10 +101,10 @@ export default function SellerReturnsPage() {
                             <div className={`p-3 rounded-2xl bg-${stat.color}-50 text-${stat.color}-600`}>
                                 <stat.icon size={20} />
                             </div>
-                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Daily Summary</span>
+                            <span className="text-[10px] font-semibold text-slate-400 uppercase -widest">Daily Summary</span>
                         </div>
-                        <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">{stat.label}</p>
-                        <h3 className="text-3xl font-black text-slate-900 mt-1">{stat.value}</h3>
+                        <p className="text-xs font-semibold text-slate-500 uppercase -widest">{stat.label}</p>
+                        <h3 className="text-3xl font-semibold text-slate-900 mt-1">{stat.value}</h3>
                     </div>
                 ))}
             </div>
@@ -117,7 +117,7 @@ export default function SellerReturnsPage() {
                             <button
                                 key={t}
                                 onClick={() => setFilter(t)}
-                                className={`px-6 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all ${filter === t ? 'bg-slate-900 text-white shadow-xl' : 'text-slate-400 hover:bg-slate-50'}`}
+                                className={`px-6 py-2 rounded-xl text-[10px] font-semibold uppercase -widest transition-all ${filter === t ? 'bg-slate-900 text-white shadow-xl' : 'text-slate-400 hover:bg-slate-50'}`}
                             >
                                 {t}
                             </button>
@@ -125,7 +125,7 @@ export default function SellerReturnsPage() {
                     </div>
                     <div className="relative group">
                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-blue-500" size={16} />
-                        <input type="text" placeholder="Search by Order ID..." className="pl-12 pr-6 py-3 bg-slate-50/50 border border-transparent rounded-2xl text-[11px] font-bold outline-none focus:bg-white focus:border-blue-500 transition-all w-64" />
+                        <input type="text" placeholder="Search by Order ID..." className="pl-12 pr-6 py-3 bg-slate-50/50 border border-transparent rounded-2xl text-[11px] font-semibold outline-none focus:bg-white focus:border-blue-500 transition-all w-64" />
                     </div>
                 </div>
 
@@ -133,12 +133,12 @@ export default function SellerReturnsPage() {
                     <table className="w-full">
                         <thead className="bg-slate-50/50">
                             <tr>
-                                <th className="px-8 py-5 text-left text-[10px] font-bold text-slate-400 uppercase tracking-widest">Order & Item</th>
-                                <th className="px-8 py-5 text-left text-[10px] font-bold text-slate-400 uppercase tracking-widest">Type</th>
-                                <th className="px-8 py-5 text-left text-[10px] font-bold text-slate-400 uppercase tracking-widest">Customer Details</th>
-                                <th className="px-8 py-5 text-left text-[10px] font-bold text-slate-400 uppercase tracking-widest">Evidence</th>
-                                <th className="px-8 py-5 text-left text-[10px] font-bold text-slate-400 uppercase tracking-widest">Status</th>
-                                <th className="px-8 py-5 text-right text-[10px] font-bold text-slate-400 uppercase tracking-widest">Actions</th>
+                                <th className="px-8 py-5 text-left text-[10px] font-semibold text-slate-400 uppercase -widest">Order & Item</th>
+                                <th className="px-8 py-5 text-left text-[10px] font-semibold text-slate-400 uppercase -widest">Type</th>
+                                <th className="px-8 py-5 text-left text-[10px] font-semibold text-slate-400 uppercase -widest">Customer Details</th>
+                                <th className="px-8 py-5 text-left text-[10px] font-semibold text-slate-400 uppercase -widest">Evidence</th>
+                                <th className="px-8 py-5 text-left text-[10px] font-semibold text-slate-400 uppercase -widest">Status</th>
+                                <th className="px-8 py-5 text-right text-[10px] font-semibold text-slate-400 uppercase -widest">Actions</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-50">
@@ -147,22 +147,22 @@ export default function SellerReturnsPage() {
                                     <td className="px-8 py-6">
                                         <div className="flex items-center gap-4">
                                             <div>
-                                                <p className="text-xs font-bold text-slate-900 mb-1">{req.items[0]?.name || 'Unknown Item'}</p>
-                                                <p className="text-[10px] font-bold text-blue-600 uppercase tracking-tighter">Order #{req.orderId?.orderNumber || req.orderId?._id.slice(-8)}</p>
+                                                <p className="text-xs font-semibold text-slate-900 mb-1">{req.items[0]?.name || 'Unknown Item'}</p>
+                                                <p className="text-[10px] font-semibold text-blue-600 uppercase -tighter">Order #{req.orderId?.orderNumber || req.orderId?._id.slice(-8)}</p>
                                             </div>
                                         </div>
                                     </td>
                                     <td className="px-8 py-6">
                                         <div className="flex flex-col">
-                                            <span className={`text-[9px] font-bold px-2 py-1 rounded-lg uppercase tracking-widest border w-fit ${req.items[0]?.type === 'return' ? 'bg-blue-50 text-blue-600 border-blue-100' : 'bg-orange-50 text-orange-600 border-orange-100'}`}>
+                                            <span className={`text-[9px] font-semibold px-2 py-1 rounded-lg uppercase -widest border w-fit ${req.items[0]?.type === 'return' ? 'bg-blue-50 text-blue-600 border-blue-100' : 'bg-orange-50 text-orange-600 border-orange-100'}`}>
                                                 {req.items[0]?.type || 'return'}
                                             </span>
                                         </div>
                                     </td>
                                     <td className="px-8 py-6 max-w-xs">
                                         <p className="text-[11px] font-medium text-slate-600 line-clamp-2 leading-relaxed">{req.description}</p>
-                                        <p className="text-[9px] font-bold text-slate-400 mt-1 uppercase tracking-widest italic font-serif">Reason: {req.items[0]?.reason}</p>
-                                        <p className="text-[9px] font-bold text-slate-500 mt-0.5">Customer: {req.customerId?.name}</p>
+                                        <p className="text-[9px] font-semibold text-slate-400 mt-1 uppercase -widest italic font-serif">Reason: {req.items[0]?.reason}</p>
+                                        <p className="text-[9px] font-semibold text-slate-500 mt-0.5">Customer: {req.customerId?.name}</p>
                                     </td>
                                     <td className="px-8 py-6 text-center">
                                         <div className="flex -space-x-2 justify-start">
@@ -172,14 +172,14 @@ export default function SellerReturnsPage() {
                                                 </div>
                                             ))}
                                             {req.evidence?.length > 3 && (
-                                                <div className="w-10 h-10 rounded-xl bg-slate-100 border-2 border-white flex items-center justify-center text-[10px] font-bold text-slate-400">
+                                                <div className="w-10 h-10 rounded-xl bg-slate-100 border-2 border-white flex items-center justify-center text-[10px] font-semibold text-slate-400">
                                                     +{req.evidence.length - 3}
                                                 </div>
                                             )}
                                         </div>
                                     </td>
                                     <td className="px-8 py-6">
-                                        <span className={`text-[10px] font-bold px-3 py-1.5 rounded-2xl uppercase tracking-tighter border ${getStatusStyle(req.status)}`}>
+                                        <span className={`text-[10px] font-semibold px-3 py-1.5 rounded-2xl uppercase -tighter border ${getStatusStyle(req.status)}`}>
                                             {req.status}
                                         </span>
                                     </td>
@@ -223,7 +223,7 @@ export default function SellerReturnsPage() {
                                             <div className="w-20 h-20 bg-slate-50 rounded-[2rem] flex items-center justify-center text-slate-200 mb-4">
                                                 <RefreshCcw size={40} />
                                             </div>
-                                            <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">No return claims found</p>
+                                            <p className="text-xs font-semibold text-slate-400 uppercase -widest">No return claims found</p>
                                         </div>
                                     </td>
                                 </tr>

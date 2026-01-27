@@ -52,7 +52,7 @@ class RazorpayService {
   verifyPaymentSignature(
     razorpayOrderId,
     razorpayPaymentId,
-    razorpaySignature
+    razorpaySignature,
   ) {
     try {
       const text = `${razorpayOrderId}|${razorpayPaymentId}`;
@@ -120,7 +120,7 @@ class RazorpayService {
       const payment = await this.razorpay.payments.capture(
         paymentId,
         Math.round(amount * 100), // Amount in paise
-        "INR"
+        "INR",
       );
 
       console.log("Payment captured:", paymentId);
@@ -173,7 +173,7 @@ class RazorpayService {
     try {
       const refund = await this.razorpay.payments.fetchRefund(
         paymentId,
-        refundId
+        refundId,
       );
       return {
         success: true,
@@ -193,9 +193,8 @@ class RazorpayService {
    */
   async getAllRefunds(paymentId) {
     try {
-      const refunds = await this.razorpay.payments.fetchMultipleRefund(
-        paymentId
-      );
+      const refunds =
+        await this.razorpay.payments.fetchMultipleRefund(paymentId);
       return {
         success: true,
         refunds: refunds.items,
@@ -217,7 +216,7 @@ class RazorpayService {
     account,
     mode = "IMPS",
     purpose = "payout",
-    notes = {}
+    notes = {},
   ) {
     try {
       const options = {
@@ -337,7 +336,7 @@ class RazorpayService {
     description,
     customer,
     referenceId,
-    notes = {}
+    notes = {},
   ) {
     try {
       const options = {
@@ -367,6 +366,160 @@ class RazorpayService {
       return {
         success: false,
         error: error.message,
+      };
+    }
+  }
+
+  /**
+   * Validate bank account details using Razorpay Fund Account Validation
+   * Sends ₹1 to the account to verify it's valid
+   */
+  async validateBankAccount(bankDetails) {
+    try {
+      const { accountHolderName, accountNumber, ifscCode } = bankDetails;
+
+      console.log("🏦 Validating bank account:", {
+        accountNumber: `***${accountNumber.slice(-4)}`,
+        ifscCode,
+      });
+
+      // Step 1: Create a contact (customer)
+      const contact = await this.razorpay.contacts.create({
+        name: accountHolderName,
+        type: "customer",
+        reference_id: `contact_${Date.now()}`,
+      });
+
+      console.log("✅ Contact created:", contact.id);
+
+      // Step 2: Create a fund account
+      const fundAccount = await this.razorpay.fundAccount.create({
+        contact_id: contact.id,
+        account_type: "bank_account",
+        bank_account: {
+          name: accountHolderName,
+          ifsc: ifscCode,
+          account_number: accountNumber,
+        },
+      });
+
+      console.log("✅ Fund account created:", fundAccount.id);
+
+      // Step 3: Validate the fund account (sends ₹1 to verify)
+      const validation = await this.razorpay.fundAccount.validate({
+        fund_account_id: fundAccount.id,
+        amount: 100, // ₹1 in paise (100 paise = ₹1)
+        currency: "INR",
+        notes: {
+          purpose: "Bank account validation for COD refund",
+        },
+      });
+
+      console.log("✅ Validation initiated:", validation.id);
+
+      // Return validation details
+      return {
+        success: true,
+        isValid: validation.status === "completed",
+        fundAccountId: fundAccount.id,
+        validationId: validation.id,
+        status: validation.status,
+        utr: validation.utr,
+        message:
+          validation.status === "completed"
+            ? "Bank account verified successfully. ₹1 has been sent to your account."
+            : "Bank account validation in progress. Please wait...",
+      };
+    } catch (error) {
+      console.error("❌ Bank validation error:", error);
+
+      // Handle specific Razorpay errors
+      if (error.error?.description) {
+        return {
+          success: false,
+          isValid: false,
+          message: error.error.description,
+        };
+      }
+
+      return {
+        success: false,
+        isValid: false,
+        message: "Failed to validate bank account. Please check your details.",
+      };
+    }
+  }
+
+  /**
+   * Check validation status
+   */
+  async checkValidationStatus(validationId) {
+    try {
+      const validation =
+        await this.razorpay.fundAccount.fetchValidation(validationId);
+
+      return {
+        success: true,
+        status: validation.status,
+        isValid: validation.status === "completed",
+        utr: validation.utr,
+      };
+    } catch (error) {
+      console.error("❌ Check validation status error:", error);
+      return {
+        success: false,
+        message: "Failed to check validation status",
+      };
+    }
+  }
+
+  /**
+   * Process refund to bank account (for COD orders)
+   */
+  async processBankTransfer(fundAccountId, amount, orderId) {
+    try {
+      console.log(
+        `💰 Processing bank transfer: ₹${amount / 100} to fund account ${fundAccountId}`,
+      );
+
+      const payout = await this.razorpay.payouts.create({
+        account_number: process.env.RAZORPAY_ACCOUNT_NUMBER, // Your Razorpay account
+        fund_account_id: fundAccountId,
+        amount: amount, // in paise
+        currency: "INR",
+        mode: "IMPS", // Instant transfer
+        purpose: "refund",
+        queue_if_low_balance: true,
+        reference_id: `refund_${orderId}`,
+        narration: `Refund for order ${orderId}`,
+        notes: {
+          order_id: orderId,
+          type: "COD_refund",
+        },
+      });
+
+      console.log("✅ Payout created:", payout.id);
+
+      return {
+        success: true,
+        payoutId: payout.id,
+        status: payout.status,
+        utr: payout.utr,
+        message: "Refund initiated successfully",
+      };
+    } catch (error) {
+      console.error("❌ Bank transfer error:", error);
+
+      if (error.error?.description) {
+        return {
+          success: false,
+          message: error.error.description,
+        };
+      }
+
+      return {
+        success: false,
+        message: "Failed to process bank transfer",
       };
     }
   }

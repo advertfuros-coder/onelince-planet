@@ -19,7 +19,7 @@ export async function POST(request, { params }) {
     if (!decoded) {
       return NextResponse.json(
         { success: false, message: "Unauthorized" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -30,7 +30,7 @@ export async function POST(request, { params }) {
     if (!reason || !title) {
       return NextResponse.json(
         { success: false, message: "Reason and title are required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -39,15 +39,83 @@ export async function POST(request, { params }) {
     if (!order) {
       return NextResponse.json(
         { success: false, message: "Order not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
     if (order.customer.toString() !== decoded.id) {
       return NextResponse.json(
         { success: false, message: "Unauthorized" },
-        { status: 403 }
+        { status: 403 },
       );
+    }
+
+    // For COD orders, check for verified bank details
+    const isCOD =
+      order.paymentMethod === "COD" || order.paymentMethod === "cod";
+    if (isCOD) {
+      let bankDetails = order.returnRequest?.bankDetails;
+
+      // If no bank details in order, try to use saved bank account from user profile
+      if (!bankDetails || !bankDetails.isVerified) {
+        const User = (await import("@/lib/db/models/User")).default;
+        const user = await User.findById(decoded.id);
+
+        if (
+          user &&
+          user.savedBankAccounts &&
+          user.savedBankAccounts.length > 0
+        ) {
+          // Use default bank account or first verified account
+          const defaultAccount = user.savedBankAccounts.find(
+            (acc) => acc.isDefault && acc.isVerified,
+          );
+          const firstVerifiedAccount = user.savedBankAccounts.find(
+            (acc) => acc.isVerified,
+          );
+          const savedAccount = defaultAccount || firstVerifiedAccount;
+
+          if (savedAccount) {
+            // Auto-populate bank details from saved account
+            if (!order.returnRequest) {
+              order.returnRequest = {};
+            }
+
+            order.returnRequest.bankDetails = {
+              accountHolderName: savedAccount.accountHolderName,
+              accountNumber: savedAccount.accountNumber,
+              ifscCode: savedAccount.ifscCode,
+              bankName: savedAccount.bankName,
+              accountType: savedAccount.accountType,
+              isVerified: true,
+              verifiedAt: savedAccount.verifiedAt,
+              razorpayFundAccountId: savedAccount.razorpayFundAccountId,
+              validationId: savedAccount.validationId,
+              validationUtr: savedAccount.validationUtr,
+            };
+
+            // Update last used timestamp
+            savedAccount.lastUsedAt = new Date();
+            await user.save();
+
+            console.log(`✅ Using saved bank account for COD refund`);
+            bankDetails = order.returnRequest.bankDetails;
+          }
+        }
+      }
+
+      // If still no verified bank details, require validation
+      if (!bankDetails || !bankDetails.isVerified) {
+        return NextResponse.json(
+          {
+            success: false,
+            message:
+              "Please verify your bank account details first for COD refund",
+            requiresBankValidation: true,
+          },
+          { status: 400 },
+        );
+      }
     }
 
     // Request return
@@ -61,20 +129,22 @@ export async function POST(request, { params }) {
     if (!result.success) {
       return NextResponse.json(
         { success: false, message: result.error },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     return NextResponse.json({
       success: true,
-      message: "Return request submitted successfully",
+      message: isCOD
+        ? "Return request submitted. Refund will be processed to your verified bank account."
+        : "Return request submitted successfully",
       order: result.order,
     });
   } catch (error) {
     console.error("Return request error:", error);
     return NextResponse.json(
       { success: false, message: "Server error", error: error.message },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -93,7 +163,7 @@ export async function PUT(request, { params }) {
     if (!decoded) {
       return NextResponse.json(
         { success: false, message: "Unauthorized" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -107,7 +177,7 @@ export async function PUT(request, { params }) {
           success: false,
           message: "Valid action (approved/rejected) is required",
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -116,19 +186,19 @@ export async function PUT(request, { params }) {
     if (!order) {
       return NextResponse.json(
         { success: false, message: "Order not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
     const isSeller = order.items.some(
-      (item) => item.seller.toString() === decoded.id
+      (item) => item.seller.toString() === decoded.id,
     );
     const isAdmin = decoded.role === "admin";
 
     if (!isSeller && !isAdmin) {
       return NextResponse.json(
         { success: false, message: "Unauthorized" },
-        { status: 403 }
+        { status: 403 },
       );
     }
 
@@ -141,7 +211,7 @@ export async function PUT(request, { params }) {
     if (!result.success) {
       return NextResponse.json(
         { success: false, message: result.error },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -150,7 +220,7 @@ export async function PUT(request, { params }) {
       await orderService.processRefund(
         result.order,
         refundAmount,
-        "Return approved"
+        "Return approved",
       );
     }
 
@@ -163,7 +233,7 @@ export async function PUT(request, { params }) {
     console.error("Process return error:", error);
     return NextResponse.json(
       { success: false, message: "Server error", error: error.message },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

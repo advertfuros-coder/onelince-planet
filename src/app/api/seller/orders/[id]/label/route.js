@@ -1,4 +1,4 @@
-// app/api/seller/orders/[id]/manifest/route.js
+// app/api/seller/orders/[id]/label/route.js
 import { NextResponse } from "next/server";
 import connectDB from "@/lib/db/mongodb";
 import Order from "@/lib/db/models/Order";
@@ -36,54 +36,59 @@ export async function GET(request, { params }) {
         (item) => item.seller?.toString() === seller._id.toString(),
       )
     ) {
-      // In this specific app, orders are seller-specific in their own context often
-      // But we should verify. If the order doesn't have seller info in items, we check the order itself if it has a seller field.
+      return NextResponse.json(
+        { success: false, message: "Unauthorized" },
+        { status: 403 },
+      );
     }
 
-    // If order has a shipment ID, print manifest
+    // If order has a shipment ID, download label
     if (order.shipping?.trackingId) {
       try {
-        const manifestData = await ekartService.downloadManifest(
-          order.shipping.trackingId,
+        const labelData = await ekartService.downloadLabel(
+          order.shipping.trackingId
         );
-
-        console.log("Manifest data received:", manifestData);
-
-        // Extract URL from various possible response formats
-        const manifestUrl =
-          manifestData?.manifestDownloadUrl ||
-          manifestData?.data?.manifestDownloadUrl ||
-          manifestData?.data?.manifest_url ||
-          manifestData?.manifest_url ||
-          manifestData?.url ||
-          manifestData?.data?.url ||
-          (typeof manifestData === "string" ? manifestData : null);
-
-        if (manifestUrl) {
+        
+        console.log("Label data received:", labelData);
+        
+        // Check if it's a Buffer (PDF)
+        if (Buffer.isBuffer(labelData)) {
+          // Convert buffer to base64
+          const base64 = labelData.toString('base64');
           return NextResponse.json({
             success: true,
-            manifest_url: manifestUrl,
+            label_data: base64,
+            content_type: 'application/pdf'
+          });
+        }
+        
+        // Otherwise try to extract URL from response
+        const labelUrl = labelData?.data?.label_url || 
+                        labelData?.label_url || 
+                        labelData?.url ||
+                        labelData?.data?.url ||
+                        (typeof labelData === 'string' ? labelData : null);
+        
+        if (labelUrl) {
+          return NextResponse.json({
+            success: true,
+            label_url: labelUrl,
           });
         } else {
-          return NextResponse.json(
-            {
-              success: false,
-              message: "Manifest URL not found in response",
-              debug: manifestData,
-            },
-            { status: 500 },
-          );
+          return NextResponse.json({
+            success: false,
+            message: "Label URL not found in response",
+            debug: typeof labelData
+          }, { status: 500 });
         }
       } catch (srError) {
-        console.error("Ekart Manifest Error:", srError);
+        console.error("Ekart Label Error:", srError);
         return NextResponse.json(
           {
             success: false,
-            message:
-              srError.response?.data?.message ||
-              "Failed to generate manifest from Ekart",
+            message: srError.response?.data?.message || "Failed to download label from Ekart",
           },
-          { status: 500 },
+          { status: 500 }
         );
       }
     }
@@ -97,7 +102,7 @@ export async function GET(request, { params }) {
       { status: 400 },
     );
   } catch (error) {
-    console.error("Manifest API Error:", error);
+    console.error("Label API Error:", error);
     return NextResponse.json(
       { success: false, message: "Server error" },
       { status: 500 },

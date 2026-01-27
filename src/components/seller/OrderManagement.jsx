@@ -29,11 +29,11 @@ import {
 } from 'lucide-react';
 
 const statusConfig = {
-    pending: { color: 'amber', icon: Clock, label: 'Pending Approval' },
-    confirmed: { color: 'blue', icon: CheckCircle2, label: 'Store Confirmed' },
-    processing: { color: 'indigo', icon: Settings, label: 'In Preparation' },
-    packed: { color: 'violet', icon: Package, label: 'Packed & Ready' },
-    shipped: { color: 'cyan', icon: Truck, label: 'In Transit' },
+    pending: { color: 'amber', icon: Clock, label: 'New Order' },
+    confirmed: { color: 'blue', icon: CheckCircle2, label: 'Confirmed' },
+    processing: { color: 'indigo', icon: Settings, label: 'Packing' },
+    packed: { color: 'violet', icon: Package, label: 'Ready to Ship' },
+    shipped: { color: 'cyan', icon: Truck, label: 'Shipped' },
     out_for_delivery: { color: 'teal', icon: Truck, label: 'Out for Delivery' },
     delivered: { color: 'emerald', icon: CheckCircle2, label: 'Delivered' },
     cancelled: { color: 'rose', icon: XCircle, label: 'Cancelled' },
@@ -147,10 +147,10 @@ export default function OrderManagement() {
                             <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/20">
                                 <Package size={18} />
                             </div>
-                            <span className="text-[10px] font-semibold text-blue-600 uppercase tracking-widest bg-blue-50 px-3 py-1 rounded-full">Order Hub</span>
+                            <span className="text-[10px] font-semibold text-blue-600 uppercase tracking-widest bg-blue-50 px-3 py-1 rounded-full">Orders</span>
                         </div>
-                        <h1 className="text-4xl font-semibold text-gray-900 tracking-tighter">Fulfillment Pipeline</h1>
-                        <p className="text-gray-500 font-medium mt-1">Real-time logistics monitoring and order lifecycle management</p>
+                        <h2 className="text-4xl font-semibold text-gray-900 tracking-tight mb-2">My Orders</h2>
+                        <p className="text-gray-500 font-medium">View and manage all your customer orders</p>
                     </div>
 
                     <div className="flex items-center gap-3">
@@ -182,7 +182,7 @@ export default function OrderManagement() {
                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-blue-600 transition-colors" size={18} />
                         <input
                             type="text"
-                            placeholder="Find ID, customer or SKU..."
+                            placeholder="Search by order number or customer name..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             className="w-full pl-12 pr-4 py-3 bg-gray-50 border-none rounded-2xl text-sm font-semibold focus:ring-2 focus:ring-blue-100 transition-all"
@@ -297,15 +297,15 @@ export default function OrderManagement() {
                             <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-6">
                                 <Package className="w-10 h-10 text-blue-300" />
                             </div>
-                            <h3 className="text-2xl font-semibold text-gray-900 tracking-tighter">No Units in Pipeline</h3>
+                            <h3 className="text-2xl font-semibold text-gray-900 tracking-tighter">No Orders Found</h3>
                             <p className="text-gray-500 font-medium mt-2 max-w-sm mx-auto">
                                 {searchTerm || filter !== 'all'
-                                    ? 'Adjust your search parameters to find matching orders.'
-                                    : 'Incoming orders will appear here automatically as they are placed.'}
+                                    ? 'Try searching with different keywords.'
+                                    : 'New orders will show up here when customers place them.'}
                             </p>
                         </motion.div>
-                    ) : (
-                        <div className={viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6' : 'space-y-4'}>
+                    ) : viewMode === 'grid' ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                             {filteredOrders.map((order, idx) => (
                                 <OrderListItem
                                     key={order._id}
@@ -313,11 +313,44 @@ export default function OrderManagement() {
                                     onSelect={setSelectedOrder}
                                     onUpdate={fetchOrders}
                                     delay={idx * 0.05}
-                                    viewMode={viewMode}
+                                    viewMode="grid"
                                     isSelected={selectedOrderIds.includes(order._id)}
                                     onToggleSelect={() => toggleSelectOrder(order._id)}
                                 />
                             ))}
+                        </div>
+                    ) : (
+                        <div className="bg-white rounded-[2rem] border border-gray-100/50 overflow-hidden">
+                            <table className="w-full">
+                                <thead className="bg-gray-50 border-b border-gray-100">
+                                    <tr>
+                                        <th className="px-6 py-4 text-left">
+                                            <div className="w-6 h-6" />
+                                        </th>
+                                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600">Order Number</th>
+                                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600">Customer Name</th>
+                                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600">Order Date</th>
+                                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600">City</th>
+                                        <th className="px-6 py-4 text-right text-xs font-semibold text-gray-600">Total Amount</th>
+                                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600">Order Status</th>
+                                        <th className="px-6 py-4 text-right text-xs font-semibold text-gray-600">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-gray-100">
+                                    {filteredOrders.map((order, idx) => (
+                                        <OrderListItem
+                                            key={order._id}
+                                            order={order}
+                                            onSelect={setSelectedOrder}
+                                            onUpdate={fetchOrders}
+                                            delay={idx * 0.02}
+                                            viewMode="list"
+                                            isSelected={selectedOrderIds.includes(order._id)}
+                                            onToggleSelect={() => toggleSelectOrder(order._id)}
+                                        />
+                                    ))}
+                                </tbody>
+                            </table>
                         </div>
                     )}
                 </div>
@@ -359,7 +392,7 @@ function OrderMetricCard({ label, value, icon: Icon, color, delay, alert }) {
                     <Icon size={22} />
                 </div>
                 <div>
-                    <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-1">{label}</p>
+                    <span className="text-xs font-semibold text-gray-500 mb-1">{label}</span>
                     <p className="text-3xl font-semibold text-gray-900 tracking-tight">{value || 0}</p>
                 </div>
             </div>
@@ -415,14 +448,14 @@ function OrderListItem({ order, onSelect, onUpdate, delay, viewMode, isSelected,
                             <h4 className="text-lg font-semibold text-gray-900 tracking-tight" onClick={() => onSelect(order)}>{order.orderNumber}</h4>
                             <ArrowUpRight size={14} className="text-gray-300 group-hover:text-blue-600 transition-colors" />
                         </div>
-                        <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">{new Date(order.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}</p>
+                        <p className="text-xs font-medium text-gray-500">{new Date(order.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}</p>
                     </div>
                     <div className={`px-3 py-1.5 rounded-xl border flex items-center gap-2 ${order.status === 'delivered' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' :
                         order.status === 'pending' ? 'bg-amber-50 text-amber-600 border-amber-100' :
                             'bg-blue-50 text-blue-600 border-blue-100'
                         }`}>
                         <StatusIcon size={12} />
-                        <span className="text-[10px] font-semibold uppercase tracking-tight">{config.label}</span>
+                        <span className="text-xs font-semibold">{config.label}</span>
                     </div>
                 </div>
 
@@ -444,35 +477,35 @@ function OrderListItem({ order, onSelect, onUpdate, delay, viewMode, isSelected,
                 <div className="grid grid-cols-2 gap-3 pl-8">
                     <button
                         onClick={() => onSelect(order)}
-                        className="py-3 bg-gray-50 text-gray-900 rounded-xl text-[10px] font-semibold uppercase hover:bg-gray-100 transition-all"
+                        className="py-3 bg-gray-50 text-gray-900 rounded-xl text-xs font-semibold hover:bg-gray-100 transition-all"
                     >
-                        Detailed Log
+                        View Details
                     </button>
                     {order.status === 'pending' && (
                         <button
                             onClick={() => quickStatusUpdate('confirmed')}
                             disabled={updating}
-                            className="py-3 bg-blue-600 text-white rounded-xl text-[10px] font-semibold uppercase hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/10 active:scale-95 disabled:opacity-50"
+                            className="py-3 bg-blue-600 text-white rounded-xl text-xs font-semibold hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/10 active:scale-95 disabled:opacity-50"
                         >
-                            Confirm Unit
+                            Accept Order
                         </button>
                     )}
                     {order.status === 'confirmed' && (
                         <button
                             onClick={() => quickStatusUpdate('processing')}
                             disabled={updating}
-                            className="py-3 bg-indigo-600 text-white rounded-xl text-[10px] font-semibold uppercase hover:bg-indigo-700 transition-all shadow-lg active:scale-95 disabled:opacity-50"
+                            className="py-3 bg-indigo-600 text-white rounded-xl text-xs font-semibold hover:bg-indigo-700 transition-all shadow-lg active:scale-95 disabled:opacity-50"
                         >
-                            Start Prep
+                            Start Packing
                         </button>
                     )}
                     {order.status === 'processing' && (
                         <button
                             onClick={() => quickStatusUpdate('packed')}
                             disabled={updating}
-                            className="py-3 bg-violet-600 text-white rounded-xl text-[10px] font-semibold uppercase hover:bg-violet-700 transition-all shadow-lg active:scale-95 disabled:opacity-50"
+                            className="py-3 bg-violet-600 text-white rounded-xl text-xs font-semibold hover:bg-violet-700 transition-all shadow-lg active:scale-95 disabled:opacity-50"
                         >
-                            Seal Pack
+                            Mark as Packed
                         </button>
                     )}
                 </div>
@@ -480,95 +513,130 @@ function OrderListItem({ order, onSelect, onUpdate, delay, viewMode, isSelected,
         )
     }
 
+    // Table row view
     return (
-        <motion.div
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
+        <motion.tr
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             transition={{ delay }}
-            className={`bg-white p-6 rounded-[2rem] border shadow-sm hover:shadow-lg transition-all flex flex-col lg:flex-row lg:items-center justify-between gap-4 group ${isSelected ? 'border-blue-600 bg-blue-50/10' : 'border-gray-100/50'}`}
+            className={`hover:bg-gray-50 transition-colors ${isSelected ? 'bg-blue-50/30' : ''}`}
         >
-            <div className="flex items-center gap-6">
+            <td className="px-6 py-4">
                 <div
                     onClick={onToggleSelect}
-                    className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all cursor-pointer ${isSelected ? 'bg-blue-600 border-blue-600 text-white' : 'bg-white border-gray-200 group-hover:border-blue-300'
+                    className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all cursor-pointer ${isSelected ? 'bg-blue-600 border-blue-600 text-white' : 'bg-white border-gray-200 hover:border-blue-300'
                         }`}
                 >
                     {isSelected && <CheckCircle2 size={14} />}
                 </div>
+            </td>
 
-                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${order.status === 'delivered' ? 'bg-emerald-50 text-emerald-600' :
-                    order.status === 'pending' ? 'bg-amber-50 text-amber-600' :
-                        'bg-blue-50 text-blue-600'
-                    }`}>
-                    <Package size={22} />
-                </div>
-
-                <div className="space-y-1">
-                    <div className="flex items-center gap-3">
-                        <h4 className="text-base font-semibold text-gray-900 tracking-tight" onClick={() => onSelect(order)}>{order.orderNumber}</h4>
-                        <div className={`px-2 py-0.5 rounded-lg border text-[9px] font-semibold uppercase tracking-tighter shrink-0 ${order.status === 'delivered' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' :
-                            order.status === 'pending' ? 'bg-amber-50 text-amber-600 border-amber-100' :
-                                'bg-blue-50 text-blue-600 border-blue-100'
-                            }`}>
-                            {config.label}
-                        </div>
+            <td className="px-6 py-4">
+                <div className="flex items-center gap-3">
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${order.status === 'delivered' ? 'bg-emerald-50 text-emerald-600' :
+                            order.status === 'pending' ? 'bg-amber-50 text-amber-600' :
+                                'bg-blue-50 text-blue-600'
+                        }`}>
+                        <Package size={18} />
                     </div>
-                    <div className="flex items-center gap-4 text-[11px] font-semibold text-gray-400">
-                        <span className="flex items-center gap-1.5"><User size={12} /> {order.shippingAddress?.name || order.customer?.name || 'User'}</span>
-                        <span className="flex items-center gap-1.5"><Calendar size={12} /> {new Date(order.createdAt).toLocaleDateString()}</span>
-                        <span className="flex items-center gap-1.5"><MapPin size={12} /> {order.shippingAddress?.city || 'Local'}</span>
+                    <div>
+                        <p className="text-sm font-semibold text-gray-900 tracking-tight">{order.orderNumber}</p>
+                        <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">{totalItems} Units</p>
                     </div>
                 </div>
-            </div>
+            </td>
 
-            <div className="flex items-center justify-between lg:justify-end gap-8 border-t lg:border-none pt-4 lg:pt-0">
-                <div className="text-right">
-                    <p className="text-sm font-semibold text-gray-900 tracking-tight">₹{(order.pricing?.total || 0).toLocaleString()}</p>
-                    <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">{totalItems} Units</p>
-                </div>
-
+            <td className="px-6 py-4">
                 <div className="flex items-center gap-2">
+                    <User size={14} className="text-gray-400" />
+                    <span className="text-sm font-medium text-gray-700">{order.shippingAddress?.name || order.customer?.name || 'Authenticated Portal User'}</span>
+                </div>
+            </td>
+
+            <td className="px-6 py-4">
+                <div className="flex items-center gap-2">
+                    <Calendar size={14} className="text-gray-400" />
+                    <span className="text-sm font-medium text-gray-700">
+                        {new Date(order.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+                    </span>
+                </div>
+            </td>
+
+            <td className="px-6 py-4">
+                <div className="flex items-center gap-2">
+                    <MapPin size={14} className="text-gray-400" />
+                    <span className="text-sm font-medium text-gray-700">{order.shippingAddress?.city || 'India'}</span>
+                </div>
+            </td>
+
+            <td className="px-6 py-4 text-right">
+                <p className="text-base font-semibold text-gray-900">₹{(order.pricing?.total || 0).toLocaleString('en-IN')}</p>
+                <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">{totalItems} Units</p>
+            </td>
+
+            <td className="px-6 py-4">
+                <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border ${order.status === 'delivered' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' :
+                        order.status === 'pending' ? 'bg-amber-50 text-amber-600 border-amber-100' :
+                            order.status === 'packed' ? 'bg-violet-50 text-violet-600 border-violet-100' :
+                                'bg-blue-50 text-blue-600 border-blue-100'
+                    }`}>
+                    <StatusIcon size={12} />
+                    <span className="text-xs font-semibold">{config.label}</span>
+                </div>
+            </td>
+
+            <td className="px-6 py-4">
+                <div className="flex items-center justify-end gap-2">
                     <button
                         onClick={() => onSelect(order)}
-                        className="p-3 bg-gray-50 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all"
+                        className="p-2.5 bg-gray-50 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all"
+                        title="View Details"
                     >
-                        <Eye size={18} />
+                        <Eye size={16} />
                     </button>
 
                     {order.status === 'pending' && (
                         <button
                             onClick={() => quickStatusUpdate('confirmed')}
                             disabled={updating}
-                            className="px-6 py-3 bg-blue-600 text-white rounded-xl text-[10px] font-semibold uppercase hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/10 active:scale-95 disabled:opacity-50"
+                            className="px-4 py-2.5 bg-blue-600 text-white rounded-xl text-xs font-semibold hover:bg-blue-700 transition-all shadow-sm active:scale-95 disabled:opacity-50"
                         >
-                            Confirm Dispatch
+                            Accept Order
                         </button>
                     )}
                     {order.status === 'confirmed' && (
                         <button
                             onClick={() => quickStatusUpdate('processing')}
                             disabled={updating}
-                            className="px-6 py-3 bg-indigo-600 text-white rounded-xl text-[10px] font-semibold uppercase hover:bg-indigo-700 transition-all shadow-lg active:scale-95 disabled:opacity-50"
+                            className="px-4 py-2.5 bg-indigo-600 text-white rounded-xl text-xs font-semibold hover:bg-indigo-700 transition-all shadow-sm active:scale-95 disabled:opacity-50"
                         >
-                            Move to Prep
+                            Start Packing
                         </button>
                     )}
                     {order.status === 'processing' && (
                         <button
                             onClick={() => quickStatusUpdate('packed')}
                             disabled={updating}
-                            className="px-6 py-3 bg-violet-600 text-white rounded-xl text-[10px] font-semibold uppercase hover:bg-violet-700 transition-all shadow-lg active:scale-95 disabled:opacity-50"
+                            className="px-4 py-2.5 bg-violet-600 text-white rounded-xl text-xs font-semibold hover:bg-violet-700 transition-all shadow-sm active:scale-95 disabled:opacity-50"
                         >
-                            Seal Manifest
+                            Mark as Packed
                         </button>
                     )}
                 </div>
-            </div>
-        </motion.div>
-    )
+            </td>
+        </motion.tr>
+    );
 }
 
 function OrderDetailsModal({ order, onClose, onUpdate }) {
+    const [showDimensionModal, setShowDimensionModal] = useState(false);
+    const [dimensions, setDimensions] = useState({
+        weight: 0.5,
+        length: 30,
+        width: 20,
+        height: 15
+    });
+
     const handleGenerateInvoice = async () => {
         try {
             const token = localStorage.getItem('token');
@@ -594,19 +662,95 @@ function OrderDetailsModal({ order, onClose, onUpdate }) {
     const handleGenerateManifest = async () => {
         try {
             const token = localStorage.getItem('token');
+            console.log('Requesting manifest for order:', order._id);
             const response = await axios.get(`/api/seller/orders/${order._id}/manifest`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
+
+            console.log('Manifest response:', response.data);
 
             if (response.data.success && response.data.manifest_url) {
                 window.open(response.data.manifest_url, '_blank');
                 toast.success('Manifest retrieved');
             } else {
                 toast.error(response.data.message || 'Manifest not available');
+                if (response.data.debug) {
+                    console.log('Debug info:', response.data.debug);
+                }
             }
         } catch (error) {
             console.error('Manifest error:', error);
-            toast.error('Failed to retrieve manifest');
+            toast.error(error.response?.data?.message || 'Failed to retrieve manifest');
+        }
+    };
+
+    const handleDownloadLabel = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            console.log('Requesting label for order:', order._id);
+            const response = await axios.get(`/api/seller/orders/${order._id}/label`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            console.log('Label response:', response.data);
+
+            if (response.data.success) {
+                // Handle base64 PDF data
+                if (response.data.label_data) {
+                    const byteCharacters = atob(response.data.label_data);
+                    const byteNumbers = new Array(byteCharacters.length);
+                    for (let i = 0; i < byteCharacters.length; i++) {
+                        byteNumbers[i] = byteCharacters.charCodeAt(i);
+                    }
+                    const byteArray = new Uint8Array(byteNumbers);
+                    const blob = new Blob([byteArray], { type: 'application/pdf' });
+                    const url = window.URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = `label-${order.orderNumber}.pdf`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    window.URL.revokeObjectURL(url);
+                    toast.success('Label downloaded');
+                }
+                // Handle URL
+                else if (response.data.label_url) {
+                    window.open(response.data.label_url, '_blank');
+                    toast.success('Label retrieved');
+                }
+            } else {
+                toast.error(response.data.message || 'Label not available');
+                if (response.data.debug) {
+                    console.log('Debug info:', response.data.debug);
+                }
+            }
+        } catch (error) {
+            console.error('Label error:', error);
+            toast.error(error.response?.data?.message || 'Failed to retrieve label');
+        }
+    };
+
+    const handleCreateShipment = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.post(`/api/seller/orders/${order._id}/shipment`, {
+                dimensions
+            }, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            if (response.data.success) {
+                toast.success('Shipment created successfully');
+                setShowDimensionModal(false);
+                onClose();
+                if (window.location) window.location.reload();
+            } else {
+                toast.error(response.data.message || 'Failed to create shipment');
+            }
+        } catch (error) {
+            console.error('Shipment error:', error);
+            toast.error(error.response?.data?.message || 'Failed to create shipment');
         }
     };
 
@@ -646,7 +790,7 @@ function OrderDetailsModal({ order, onClose, onUpdate }) {
                         {/* Customer Information */}
                         <div className="space-y-8">
                             <section>
-                                <h5 className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-4">Consignee Intelligence</h5>
+                                <h5 className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-4">Customer Information</h5>
                                 <div className="bg-gray-50 rounded-3xl p-6 border border-gray-100">
                                     <div className="flex items-start gap-4 mb-6 pb-6 border-b border-gray-200/50">
                                         <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-blue-600 shadow-sm">
@@ -671,7 +815,7 @@ function OrderDetailsModal({ order, onClose, onUpdate }) {
                             </section>
 
                             <section>
-                                <h5 className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-4">Unit Manifest ({order.items?.length || 0})</h5>
+                                <h5 className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-4">Order Items ({order.items?.length || 0})</h5>
                                 <div className="space-y-3">
                                     {order.items?.map((item, idx) => (
                                         <div key={idx} className="flex items-center gap-4 bg-white border border-gray-100 p-3 rounded-2xl">
@@ -696,7 +840,7 @@ function OrderDetailsModal({ order, onClose, onUpdate }) {
                         {/* Financials & Logic */}
                         <div className="space-y-8">
                             <section>
-                                <h5 className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-4">Financial Breakdown</h5>
+                                <h5 className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-4">Payment Details</h5>
                                 <div className="bg-[#0A1128] rounded-3xl p-8 text-white relative overflow-hidden">
                                     <div className="absolute top-[-20%] right-[-20%] w-64 h-64 bg-blue-600/20 rounded-full blur-3xl pointer-events-none" />
                                     <div className="relative z-10 space-y-4">
@@ -721,17 +865,40 @@ function OrderDetailsModal({ order, onClose, onUpdate }) {
                             </section>
 
                             <section>
-                                <h5 className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-4">Shipping Control</h5>
+                                <h5 className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-4">Shipping & Logistics</h5>
                                 <div className="bg-white border-2 border-dashed border-gray-100 rounded-3xl p-6">
                                     <p className="text-[10px] font-semibold text-gray-400 uppercase mb-4">Carrier Documentation</p>
-                                    <button
-                                        onClick={handleGenerateManifest}
-                                        disabled={!order.shipping?.shipmentId}
-                                        className="w-full py-4 bg-gray-50 border border-gray-100 rounded-2xl flex items-center justify-center gap-3 font-semibold text-gray-600 hover:bg-gray-100 transition-all disabled:opacity-50"
-                                    >
-                                        <Truck size={18} />
-                                        <span>Download Manifest</span>
-                                    </button>
+                                    <div className="flex flex-col gap-3">
+                                        {!order.shipping?.trackingId && ['packed', 'ready_for_pickup'].includes(order.status) && (
+                                            <button
+                                                onClick={() => setShowDimensionModal(true)}
+                                                className="w-full py-4 bg-blue-600 text-white rounded-2xl flex items-center justify-center gap-3 font-semibold hover:bg-blue-700 transition-all shadow-lg active:scale-95"
+                                            >
+                                                <Truck size={18} />
+                                                <span>Create Shipment (Ekart)</span>
+                                            </button>
+                                        )}
+
+                                        {order.shipping?.trackingId && (
+                                            <>
+                                                <button
+                                                    onClick={handleDownloadLabel}
+                                                    className="w-full py-4 bg-indigo-600 text-white rounded-2xl flex items-center justify-center gap-3 font-semibold hover:bg-indigo-700 transition-all shadow-lg active:scale-95"
+                                                >
+                                                    <Download size={18} />
+                                                    <span>Download Label</span>
+                                                </button>
+
+                                                <button
+                                                    onClick={handleGenerateManifest}
+                                                    className="w-full py-4 bg-gray-50 border border-gray-100 rounded-2xl flex items-center justify-center gap-3 font-semibold text-gray-600 hover:bg-gray-100 transition-all"
+                                                >
+                                                    <Truck size={18} />
+                                                    <span>Download Manifest</span>
+                                                </button>
+                                            </>
+                                        )}
+                                    </div>
                                 </div>
                             </section>
                         </div>
@@ -756,6 +923,87 @@ function OrderDetailsModal({ order, onClose, onUpdate }) {
                     </div>
                 </div>
             </motion.div>
+
+            {/* Dimension Modal */}
+            <AnimatePresence>
+                {showDimensionModal && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="absolute inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-10"
+                        onClick={() => setShowDimensionModal(false)}
+                    >
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.9, opacity: 0 }}
+                            className="bg-white rounded-3xl p-8 max-w-md w-full mx-4 shadow-2xl"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <h3 className="text-2xl font-semibold text-gray-900 mb-2">Package Dimensions</h3>
+                            <p className="text-sm text-gray-500 mb-6">Enter the package dimensions for accurate shipping</p>
+
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="block text-xs font-semibold text-gray-600 mb-2 uppercase tracking-wide">Weight (kg)</label>
+                                    <input
+                                        type="number"
+                                        step="0.1"
+                                        value={dimensions.weight}
+                                        onChange={(e) => setDimensions({ ...dimensions, weight: parseFloat(e.target.value) || 0 })}
+                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    />
+                                </div>
+                                <div className="grid grid-cols-3 gap-3">
+                                    <div>
+                                        <label className="block text-xs font-semibold text-gray-600 mb-2 uppercase tracking-wide">Length (cm)</label>
+                                        <input
+                                            type="number"
+                                            value={dimensions.length}
+                                            onChange={(e) => setDimensions({ ...dimensions, length: parseInt(e.target.value) || 0 })}
+                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-semibold text-gray-600 mb-2 uppercase tracking-wide">Width (cm)</label>
+                                        <input
+                                            type="number"
+                                            value={dimensions.width}
+                                            onChange={(e) => setDimensions({ ...dimensions, width: parseInt(e.target.value) || 0 })}
+                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-semibold text-gray-600 mb-2 uppercase tracking-wide">Height (cm)</label>
+                                        <input
+                                            type="number"
+                                            value={dimensions.height}
+                                            onChange={(e) => setDimensions({ ...dimensions, height: parseInt(e.target.value) || 0 })}
+                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="flex gap-3 mt-8">
+                                <button
+                                    onClick={() => setShowDimensionModal(false)}
+                                    className="flex-1 py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition-all"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    onClick={handleCreateShipment}
+                                    className="flex-1 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/20"
+                                >
+                                    Create Shipment
+                                </button>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </motion.div>
     );
 }

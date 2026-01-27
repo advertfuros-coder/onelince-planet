@@ -20,7 +20,7 @@ export async function GET(request, { params }) {
     if (!decoded) {
       return NextResponse.json(
         { success: false, message: "Unauthorized" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -34,13 +34,13 @@ export async function GET(request, { params }) {
     if (!order) {
       return NextResponse.json(
         { success: false, message: "Order not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
     // Verify user is seller, customer, or admin
     const isSeller = order.items.some(
-      (item) => item.seller._id.toString() === decoded.id
+      (item) => item.seller._id.toString() === decoded.id,
     );
     const isCustomer = order.customer._id.toString() === decoded.id;
     const isAdmin = decoded.role === "admin";
@@ -48,7 +48,18 @@ export async function GET(request, { params }) {
     if (!isSeller && !isCustomer && !isAdmin) {
       return NextResponse.json(
         { success: false, message: "Unauthorized" },
-        { status: 403 }
+        { status: 403 },
+      );
+    }
+
+    // For customers, only allow invoice download for delivered orders
+    if (isCustomer && order.status !== "delivered") {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Invoice is only available for delivered orders",
+        },
+        { status: 400 },
       );
     }
 
@@ -58,6 +69,17 @@ export async function GET(request, { params }) {
     // Generate GST invoice
     const invoice = orderService.generateGSTInvoice(order, seller);
 
+    // Return HTML for customers, JSON for sellers/admin
+    if (isCustomer) {
+      const invoiceHtml = orderService.generateInvoiceHtml(order, seller);
+      return new NextResponse(invoiceHtml, {
+        headers: {
+          "Content-Type": "text/html",
+          "Content-Disposition": `inline; filename="invoice-${order.orderNumber}.html"`,
+        },
+      });
+    }
+
     return NextResponse.json({
       success: true,
       invoice,
@@ -66,7 +88,7 @@ export async function GET(request, { params }) {
     console.error("Generate invoice error:", error);
     return NextResponse.json(
       { success: false, message: "Server error", error: error.message },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
