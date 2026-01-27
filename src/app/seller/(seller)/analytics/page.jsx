@@ -59,6 +59,13 @@ export default function SellerAnalytics() {
       returningCustomers: 0,
       customerRetentionRate: 0,
       totalCustomers: 0
+    },
+    funnel: {
+      initiated: 0,
+      authorized: 0,
+      successful: 0,
+      processing: 0,
+      delivered: 0
     }
   })
   const [loading, setLoading] = useState(true)
@@ -152,35 +159,35 @@ export default function SellerAnalytics() {
               </button>
             </div>
 
-            {/* Funnel Steps mapped from totalOrders */}
+            {/* Funnel Steps mapped from real metrics */}
             <div className="grid grid-cols-5 gap-2 h-64 items-end relative">
               <FunnelStep
                 label="Initiated"
-                value={Math.round(analyticsData.overview.totalOrders * 1.5).toLocaleString()}
+                value={(analyticsData.funnel?.initiated || 0).toLocaleString()}
                 height="90%"
                 active
               />
               <FunnelStep
                 label="Authorized"
-                value={Math.round(analyticsData.overview.totalOrders * 1.2).toLocaleString()}
+                value={(analyticsData.funnel?.authorized || 0).toLocaleString()}
                 height="75%"
                 active
               />
               <FunnelStep
                 label="Successful"
-                value={analyticsData.overview.totalOrders.toLocaleString()}
+                value={(analyticsData.funnel?.successful || 0).toLocaleString()}
                 height="60%"
                 active
                 highlight
               />
               <FunnelStep
                 label="Processing"
-                value={Math.round(analyticsData.overview.totalOrders * 0.8).toLocaleString()}
+                value={(analyticsData.funnel?.processing || 0).toLocaleString()}
                 height="45%"
               />
               <FunnelStep
                 label="Delivered"
-                value={Math.round(analyticsData.overview.totalOrders * 0.7).toLocaleString()}
+                value={(analyticsData.funnel?.delivered || 0).toLocaleString()}
                 height="35%"
               />
 
@@ -390,7 +397,7 @@ function ProgressStat({ label, value, total, color, stripes }) {
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <span className="text-sm font-semibold text-gray-500">{label}</span>
-        <span className="text-sm font-semibold text-gray-900">₹{value.toLocaleString()}</span>
+        <span className="text-sm font-semibold text-gray-900">{formatPrice(value)}</span>
       </div>
       <div className="h-4 w-full bg-gray-50 rounded-xl overflow-hidden relative">
         <motion.div

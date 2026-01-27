@@ -8,11 +8,11 @@ export function cn(...inputs) {
 
 export function formatPrice(
   price,
-  region = { currency: "AED", locale: "en-AE" }
+  region = { currency: "INR", locale: "en-IN" },
 ) {
-  return new Intl.NumberFormat(region.locale || "en-AE", {
+  return new Intl.NumberFormat(region.locale || "en-IN", {
     style: "currency",
-    currency: region.currency || "AED",
+    currency: region.currency || "INR",
     minimumFractionDigits: 0,
     maximumFractionDigits: 2,
   }).format(price);
