@@ -178,7 +178,7 @@ export default function BecomeASellerPage() {
     ]
 
     return (
-        <div className={`min-h-screen bg-white text-gray-900 selection:bg-blue-100 selection:text-blue-900 ${poppins.className} font-sans`}>
+        <div className={`min-h-screen bg-white text-gray-900 selection:bg-blue-100 selection:text-blue-900 ${poppins.className} fon t-sans`}>
 
 
             {/* Hero Section */}

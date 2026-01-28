@@ -10,7 +10,7 @@ export async function GET(request) {
     const category = searchParams.get("category");
 
     // Build query
-    const query = { isActive: true };
+    const query = { isActive: true, isApproved: true, isDraft: { $ne: true } };
     if (category) {
       query.category = category;
     }
@@ -39,7 +39,7 @@ export async function GET(request) {
     console.error("Get brands error:", error);
     return NextResponse.json(
       { success: false, message: "Server error", error: error.message },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
