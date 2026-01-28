@@ -25,7 +25,7 @@ export async function GET(request) {
     // IMPORTANT: The seller logged in is a User, but products have Seller IDs
     // We need to get the Seller document associated with this User first
     const Seller = require("@/lib/db/models/Seller").default;
-    const sellerProfile = await Seller.findOne({ userId: decoded.id });
+    const sellerProfile = await Seller.findOne({ userId: decoded.userId });
 
     if (!sellerProfile) {
       // No seller profile found for this user
@@ -38,28 +38,21 @@ export async function GET(request) {
       });
     }
 
-    console.log("=== SELLER ORDERS ===");
-    console.log("User ID (from token):", decoded.id);
-    console.log("Seller ID (from profile):", sellerProfile._id.toString());
-
     // Query orders where items.seller matches the User ID
     // Note: In our schema, items.seller usually references the User model
     const orders = await Order.find({
-      "items.seller": sellerProfile._id,
+      "items.seller": decoded.userId,
     })
       .populate("customer", "name email phone")
       .populate("items.product", "name images sku")
       .sort({ createdAt: -1 })
       .lean();
 
-    console.log("Orders found:", orders.length);
-    console.log("=== END SELLER ORDERS ===");
-
     // Filter items to show only this seller's items
     const filteredOrders = orders.map((order) => ({
       ...order,
       items: order.items.filter(
-        (item) => item.seller?.toString() === sellerProfile._id.toString(),
+        (item) => item.seller?.toString() === decoded.userId.toString(),
       ),
     }));
 

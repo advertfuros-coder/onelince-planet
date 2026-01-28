@@ -37,15 +37,10 @@ export async function GET(request) {
     const products = await Product.find({ sellerId: decoded.userId });
     const productIds = products.map((p) => p._id);
 
-    console.log(`📊 [Dashboard] Seller ID: ${decoded.userId}`);
-    console.log(`📦 [Dashboard] Total Products: ${products.length}`);
-
     // 2. Get all orders containing seller's products (using User ID)
     const allOrders = await Order.find({
       "items.seller": decoded.userId,
     }).populate("customer", "name email phone");
-
-    console.log(`🛒 [Dashboard] Total Orders: ${allOrders.length}`);
 
     // 3. Filter items belonging to this seller from all orders
     const sellerOrderItems = [];

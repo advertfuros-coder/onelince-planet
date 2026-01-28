@@ -132,6 +132,8 @@ export default function SellerProductsPage() {
         { headers: { Authorization: `Bearer ${token}` } }
       )
 
+      console.log(res.data)
+
       if (res.data.success) {
         toast.success(`Product ${!currentStatus ? 'activated' : 'deactivated'}`)
         fetchProducts()
@@ -188,12 +190,8 @@ export default function SellerProductsPage() {
               <span className="text-[11px] font-semibold text-blue-600 uppercase tracking-[0.2em] bg-blue-50/50 backdrop-blur-sm px-4 py-1.5 rounded-full border border-blue-100">Product Management</span>
             </div>
             <h1 className="text-5xl font-semibold text-slate-900 tracking-tighter flex items-center gap-4">
-              Product Catalog <span className="text-blue-600">.</span>
-              {sellerBadges.length > 0 && (
-                <div className="hidden md:flex gap-1">
-                  <SellerBadges badges={sellerBadges} maxDisplay={2} size="sm" />
-                </div>
-              )}
+              Products<span className="text-blue-600">.</span>
+              
             </h1>
             <p className="text-slate-400 font-semibold text-base max-w-xl leading-relaxed">Manage all your products, track inventory levels, and monitor product performance in one place.</p>
           </div>
