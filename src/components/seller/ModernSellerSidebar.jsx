@@ -45,8 +45,8 @@ const menuSections = [
     items: [
       { name: 'Dashboard', href: '/seller/dashboard', icon: LayoutDashboard },
       { name: 'Analytics', href: '/seller/analytics', icon: LineChart },
-      { name: 'Insights', href: '/seller/insights', icon: TrendingUp, badge: 'New' },
-      { name: 'Reports', href: '/seller/reports', icon: FileText, badge: 'New' },
+      // { name: 'Insights', href: '/seller/insights', icon: TrendingUp, badge: 'New' },
+      // { name: 'Reports', href: '/seller/reports', icon: FileText, badge: 'New' },
     ]
   },
   {
@@ -54,9 +54,9 @@ const menuSections = [
     items: [
       { name: 'Products', href: '/seller/products', icon: ShoppingBag },
       { name: 'Inventory Master', href: '/seller/inventory', icon: Package, badge: 'Live' },
-      { name: 'Warehouses', href: '/seller/warehouses', icon: MapPin, badge: 'New' },
-      { name: 'Inventory Alerts', href: '/seller/inventory-alerts', icon: AlertCircle, badge: 'New' },
-      { name: 'Pricing Rules', href: '/seller/pricing-rules', icon: Zap, badge: 'New' },
+      // { name: 'Warehouses', href: '/seller/warehouses', icon: MapPin, badge: 'New' },
+      // { name: 'Inventory Alerts', href: '/seller/inventory-alerts', icon: AlertCircle, badge: 'New' },
+      // { name: 'Pricing Rules', href: '/seller/pricing-rules', icon: Zap, badge: 'New' },
     ]
   },
   {
@@ -65,35 +65,35 @@ const menuSections = [
       { name: 'Orders', href: '/seller/orders', icon: ClipboardList },
       { name: 'Returns', href: '/seller/returns', icon: RefreshCcw, badge: 'New' },
       { name: 'Shipping', href: '/seller/shipping', icon: Truck },
-      { name: 'Customers', href: '/seller/customers', icon: Users },
+      // { name: 'Customers', href: '/seller/customers', icon: Users },
       { name: 'Payouts', href: '/seller/payouts', icon: Wallet },
     ]
   },
   {
     title: 'Marketing',
     items: [
-      { name: 'Advertising', href: '/seller/advertising', icon: Target, badge: 'New' },
-      { name: 'Coupons', href: '/seller/coupons', icon: Ticket, badge: 'New' },
-      { name: 'Suppliers', href: '/seller/suppliers', icon: Users, badge: 'New' },
+      // { name: 'Advertising', href: '/seller/advertising', icon: Target, badge: 'New' },
+      // { name: 'Coupons', href: '/seller/coupons', icon: Ticket, badge: 'New' },
+      // { name: 'Suppliers', href: '/seller/suppliers', icon: Users, badge: 'New' },
       { name: 'Reviews', href: '/seller/reviews', icon: Star },
     ]
   },
   {
     title: 'Tools & Learning',
     items: [
-      { name: 'Messages', href: '/seller/messages', icon: MessageSquare, badge: '4' },
-      { name: 'Notifications', href: '/seller/notifications', icon: Bell, badge: '12' },
-      { name: 'Training', href: '/seller/training', icon: Book, badge: 'New' },
-      { name: 'Integrations', href: '/seller/integrations', icon: Link2, badge: 'New' },
+      // { name: 'Messages', href: '/seller/messages', icon: MessageSquare, badge: '4' },
+      // { name: 'Notifications', href: '/seller/notifications', icon: Bell, badge: '12' },
+      // { name: 'Training', href: '/seller/training', icon: Book, badge: 'New' },
+      // { name: 'Integrations', href: '/seller/integrations', icon: Link2, badge: 'New' },
       { name: 'Documents', href: '/seller/documents', icon: FileText, badge: 'New' },
     ]
   },
   {
     title: 'Account',
     items: [
-      { name: 'Profile', href: '/seller/profile', icon: User },
+      // { name: 'Profile', href: '/seller/profile', icon: User },
       { name: 'Bank Details', href: '/seller/bank-details', icon: CreditCard },
-      { name: 'Subscription', href: '/seller/subscription', icon: Award, badge: 'New' },
+      // { name: 'Subscription', href: '/seller/subscription', icon: Award, badge: 'New' },
       { name: 'Settings', href: '/seller/settings', icon: Settings },
     ]
   },

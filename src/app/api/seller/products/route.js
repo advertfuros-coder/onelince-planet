@@ -34,8 +34,8 @@ export async function GET(request) {
     const category = searchParams.get("category");
     const status = searchParams.get("status");
 
-    // Use sellerId (User ID) for querying products
-    let query = { sellerId: decoded.userId };
+    // Use sellerId (Seller Profile ID) for querying products
+    let query = { sellerId: seller._id };
 
     if (search) {
       query.$or = [
@@ -73,7 +73,7 @@ export async function GET(request) {
       // For low-health, we need to calculate health for all and filter
       // Note: This is acceptable for seller-specific catalogs (~few thousand max)
       const allSellerProducts = await Product.find({
-        sellerId: decoded.userId,
+        sellerId: seller._id,
         isDraft: { $ne: true },
       }).lean();
 
@@ -103,7 +103,7 @@ export async function GET(request) {
 
     // Get stats efficiently
     const allProductsForStats = await Product.find({
-      sellerId: decoded.userId,
+      sellerId: seller._id,
       isDraft: { $ne: true },
     })
       .select(
@@ -128,28 +128,28 @@ export async function GET(request) {
     ).length;
 
     const stats = {
-      total: await Product.countDocuments({ sellerId: decoded.userId }),
+      total: await Product.countDocuments({ sellerId: seller._id }),
       active: await Product.countDocuments({
-        sellerId: decoded.userId,
+        sellerId: seller._id,
         isActive: true,
         isDraft: { $ne: true },
       }),
       inactive: await Product.countDocuments({
-        sellerId: decoded.userId,
+        sellerId: seller._id,
         isActive: false,
         isDraft: { $ne: true },
       }),
       pending: await Product.countDocuments({
-        sellerId: decoded.userId,
+        sellerId: seller._id,
         isApproved: false,
         isDraft: { $ne: true },
       }),
       drafts: await Product.countDocuments({
-        sellerId: decoded.userId,
+        sellerId: seller._id,
         isDraft: true,
       }),
       lowStock: await Product.countDocuments({
-        sellerId: decoded.userId,
+        sellerId: seller._id,
         isDraft: { $ne: true },
         $expr: { $lte: ["$inventory.stock", "$inventory.lowStockThreshold"] },
       }),
@@ -210,7 +210,7 @@ export async function POST(request) {
 
     const product = await Product.create({
       ...body,
-      sellerId: decoded.userId,
+      sellerId: seller._id,
       isApproved: false, // Moved to manual/quality-check review queue
     });
 

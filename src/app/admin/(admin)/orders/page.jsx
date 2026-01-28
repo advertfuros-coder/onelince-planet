@@ -331,127 +331,154 @@ export default function AdminOrdersPage() {
             </p>
           </div>
         ) : (
-          <div className="space-y-4">
-            {orders.map((order) => (
-              <div key={order._id} className="bg-white rounded-xl shadow-lg hover:shadow-xl transition overflow-hidden">
-                <div className="p-6">
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
-                    <div>
-                      <h3 className="text-xl font-semibold text-gray-900 mb-1">
-                        Order #{order.orderNumber}
-                      </h3>
-                      <p className="text-sm text-gray-600">
-                        {new Date(order.createdAt).toLocaleDateString()} at {new Date(order.createdAt).toLocaleTimeString()}
-                      </p>
-                    </div>
-                    <span className={`px-4 py-2 rounded-full font-semibold text-sm ${getStatusBadge(order.status)}`}>
-                      {order.status.replace(/_/g, ' ').toUpperCase()}
-                    </span>
-                  </div>
+          <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gradient-to-r from-gray-50 to-gray-100 border-b-2 border-gray-200">
+                  <tr>
+                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                      Order Details
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                      Customer
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                      Seller
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                      Delivery Address
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                      Items/Payment
+                    </th>
+                    <th className="px-6 py-4 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">
+                      Total Amount
+                    </th>
+                    <th className="px-6 py-4 text-center text-xs font-bold text-gray-700 uppercase tracking-wider">
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {orders.map((order) => (
+                    <tr key={order._id} className="hover:bg-gray-50 transition-colors">
+                      <td className="px-6 py-4">
+                        <div className="space-y-2">
+                          <p className="font-bold text-gray-900 text-base">#{order.orderNumber}</p>
+                          <p className="text-sm text-gray-600">
+                            {new Date(order.createdAt).toLocaleDateString('en-IN', {
+                              day: '2-digit',
+                              month: 'short',
+                              year: 'numeric'
+                            })}
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            {new Date(order.createdAt).toLocaleTimeString('en-IN', {
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            })}
+                          </p>
+                          <span className={`inline-block px-3 py-1 rounded-full font-semibold text-xs ${getStatusBadge(order.status)}`}>
+                            {order.status.replace(/_/g, ' ').toUpperCase()}
+                          </span>
+                          {order.shiprocket?.awbCode && (
+                            <div className="mt-2 p-2 bg-green-50 rounded border border-green-200">
+                              <p className="text-xs font-semibold text-green-800">AWB: {order.shiprocket.awbCode}</p>
+                              <p className="text-xs text-green-600">{order.shiprocket.courierName}</p>
+                            </div>
+                          )}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div>
+                          <p className="font-semibold text-gray-900">{order.shippingAddress?.name || 'N/A'}</p>
+                          <p className="text-sm text-gray-600 mt-1">{order.shippingAddress?.phone || 'N/A'}</p>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <p className="font-semibold text-gray-900 max-w-[200px]">
+                          {order.items[0]?.seller?.businessInfo?.businessName ||
+                            order.items[0]?.seller?.storeInfo?.storeName ||
+                            order.items[0]?.seller?.personalDetails?.fullName ||
+                            'N/A'}
+                        </p>
+                      </td>
+                      <td className="px-6 py-4">
+                        <p className="text-sm text-gray-900 max-w-[180px]">
+                          {order.shippingAddress?.city}, {order.shippingAddress?.state}
+                        </p>
+                        <p className="text-xs text-gray-600 mt-1">PIN: {order.shippingAddress?.pincode}</p>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div>
+                          <p className="text-sm font-semibold text-gray-900">{order.items.length} items</p>
+                          <p className="text-xs text-gray-600 uppercase mt-1">{order.payment.method}</p>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <p className="text-lg font-bold text-blue-600">₹{order.pricing.total.toLocaleString()}</p>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex flex-col gap-2 min-w-[160px]">
+                          {order.status === 'ready_for_pickup' && !order.shiprocket?.awbCode && (
+                            <button
+                              onClick={() => handleAssignShiprocket(order)}
+                              disabled={processingAction === order._id}
+                              className="flex items-center justify-center gap-2 px-3 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition text-xs font-medium disabled:opacity-50"
+                            >
+                              <FiSend size={14} />
+                              {processingAction === order._id ? 'Assigning...' : 'Assign Shiprocket'}
+                            </button>
+                          )}
 
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4 p-4 bg-gray-50 rounded-lg">
-                    <div>
-                      <p className="text-xs text-gray-600 mb-1">Customer</p>
-                      <p className="font-semibold text-gray-900">{order.shippingAddress?.name || 'N/A'}</p>
-                      <p className="text-sm text-gray-600">{order.shippingAddress?.phone || 'N/A'}</p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-600 mb-1">Seller</p>
-                      <p className="font-semibold text-gray-900">
-                        {order.items[0]?.seller?.businessInfo?.businessName ||
-                          order.items[0]?.seller?.storeInfo?.storeName ||
-                          order.items[0]?.seller?.personalDetails?.fullName ||
-                          'N/A'}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-600 mb-1">Delivery Address</p>
-                      <p className="text-sm text-gray-900">
-                        {order.shippingAddress?.city}, {order.shippingAddress?.state} - {order.shippingAddress?.pincode}
-                      </p>
-                    </div>
-                  </div>
+                          {order.status === 'pickup' && (
+                            <button
+                              onClick={() => handleUpdateStatus(order._id, 'shipped')}
+                              disabled={processingAction === order._id}
+                              className="flex items-center justify-center gap-2 px-3 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition text-xs font-medium disabled:opacity-50"
+                            >
+                              <FiTruck size={14} />
+                              Mark Shipped
+                            </button>
+                          )}
 
-                  <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg mb-4">
-                    <div>
-                      <p className="text-xs text-gray-600">Items</p>
-                      <p className="font-semibold text-gray-900">{order.items.length} items</p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-600">Payment</p>
-                      <p className="font-semibold text-gray-900 uppercase">{order.payment.method}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-xs text-gray-600">Total Amount</p>
-                      <p className="text-2xl font-semibold text-blue-600">₹{order.pricing.total.toLocaleString()}</p>
-                    </div>
-                  </div>
+                          {order.status === 'shipped' && (
+                            <button
+                              onClick={() => handleUpdateStatus(order._id, 'delivered')}
+                              disabled={processingAction === order._id}
+                              className="flex items-center justify-center gap-2 px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-xs font-medium disabled:opacity-50"
+                            >
+                              <FiCheckCircle size={14} />
+                              Mark Delivered
+                            </button>
+                          )}
 
-                  {order.shiprocket?.awbCode && (
-                    <div className="p-4 bg-green-50 border border-green-200 rounded-lg mb-4">
-                      <p className="text-sm font-semibold text-green-900 mb-1">Shiprocket Assigned</p>
-                      <p className="text-xs text-green-700">Courier: {order.shiprocket.courierName}</p>
-                      <p className="text-xs text-green-700">AWB: {order.shiprocket.awbCode}</p>
-                    </div>
-                  )}
+                          <Link
+                            href={`/admin/orders/${order._id}`}
+                            className="flex items-center justify-center gap-2 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-xs font-medium"
+                          >
+                            <FiEye size={14} />
+                            View Details
+                          </Link>
 
-                  <div className="flex flex-wrap gap-2">
-                    {order.status === 'ready_for_pickup' && !order.shiprocket?.awbCode && (
-                      <button
-                        onClick={() => handleAssignShiprocket(order)}
-                        disabled={processingAction === order._id}
-                        className="flex items-center gap-2 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition font-medium disabled:opacity-50"
-                      >
-                        <FiSend />
-                        {processingAction === order._id ? 'Assigning...' : 'Assign Shiprocket'}
-                      </button>
-                    )}
-
-                    {order.status === 'pickup' && (
-                      <button
-                        onClick={() => handleUpdateStatus(order._id, 'shipped')}
-                        disabled={processingAction === order._id}
-                        className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-medium disabled:opacity-50"
-                      >
-                        <FiTruck />
-                        Mark Shipped
-                      </button>
-                    )}
-
-                    {order.status === 'shipped' && (
-                      <button
-                        onClick={() => handleUpdateStatus(order._id, 'delivered')}
-                        disabled={processingAction === order._id}
-                        className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-medium disabled:opacity-50"
-                      >
-                        <FiCheckCircle />
-                        Mark Delivered
-                      </button>
-                    )}
-
-                    <Link
-                      href={`/admin/orders/${order._id}`}
-                      className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium"
-                    >
-                      <FiEye />
-                      View Details
-                    </Link>
-
-                    {order.shiprocket?.awbCode && (
-                      <a
-                        href={`https://shiprocket.co/tracking/${order.shiprocket.awbCode}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition font-medium"
-                      >
-                        <FiTruck />
-                        Track Shipment
-                      </a>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))}
+                          {order.shiprocket?.awbCode && (
+                            <a
+                              href={`https://shiprocket.co/tracking/${order.shiprocket.awbCode}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center justify-center gap-2 px-3 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition text-xs font-medium"
+                            >
+                              <FiTruck size={14} />
+                              Track
+                            </a>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
       </div>

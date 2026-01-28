@@ -14,7 +14,7 @@ export async function GET(request) {
     if (!token) {
       return NextResponse.json(
         { success: false, message: "Unauthorized" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -22,11 +22,22 @@ export async function GET(request) {
     if (!decoded || decoded.role !== "seller") {
       return NextResponse.json(
         { success: false, message: "Seller access required" },
-        { status: 403 }
+        { status: 403 },
       );
     }
 
-    const warehouses = await Warehouse.find({ sellerId: decoded.userId })
+    // Find seller profile first
+    const Seller = require("@/lib/db/models/Seller").default;
+    const sellerProfile = await Seller.findOne({ userId: decoded.userId });
+
+    if (!sellerProfile) {
+      return NextResponse.json(
+        { success: false, message: "Seller profile not found" },
+        { status: 404 },
+      );
+    }
+
+    const warehouses = await Warehouse.find({ sellerId: sellerProfile._id })
       .populate("inventory.productId", "name images sku")
       .sort({ "settings.priority": -1, createdAt: -1 });
 
@@ -38,7 +49,7 @@ export async function GET(request) {
       totalUsed: warehouses.reduce((sum, w) => sum + w.capacity.used, 0),
       totalProducts: warehouses.reduce(
         (sum, w) => sum + w.metrics.totalProducts,
-        0
+        0,
       ),
       totalStock: warehouses.reduce((sum, w) => sum + w.metrics.totalStock, 0),
     };
@@ -56,7 +67,7 @@ export async function GET(request) {
         message: "Server error",
         error: error.message,
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -70,7 +81,7 @@ export async function POST(request) {
     if (!token) {
       return NextResponse.json(
         { success: false, message: "Unauthorized" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -78,13 +89,24 @@ export async function POST(request) {
     if (!decoded || decoded.role !== "seller") {
       return NextResponse.json(
         { success: false, message: "Seller access required" },
-        { status: 403 }
+        { status: 403 },
+      );
+    }
+
+    // Find seller profile first
+    const Seller = require("@/lib/db/models/Seller").default;
+    const sellerProfile = await Seller.findOne({ userId: decoded.userId });
+
+    if (!sellerProfile) {
+      return NextResponse.json(
+        { success: false, message: "Seller profile not found" },
+        { status: 404 },
       );
     }
 
     // Check subscription limits
     const subscription = await SellerSubscription.findOne({
-      sellerId: decoded.userId,
+      sellerId: sellerProfile._id,
     });
     if (subscription && !subscription.canAddWarehouse()) {
       return NextResponse.json(
@@ -93,7 +115,7 @@ export async function POST(request) {
           message: `Warehouse limit reached. Upgrade to add more warehouses.`,
           limit: subscription.features.maxWarehouses,
         },
-        { status: 403 }
+        { status: 403 },
       );
     }
 
@@ -102,7 +124,7 @@ export async function POST(request) {
     // Create warehouse
     const warehouse = await Warehouse.create({
       ...warehouseData,
-      sellerId: decoded.userId,
+      sellerId: sellerProfile._id,
     });
 
     // Update subscription usage
@@ -127,7 +149,7 @@ export async function POST(request) {
             : "Server error",
         error: error.message,
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -15,7 +15,7 @@ export async function GET(request) {
     if (!decoded || decoded.role !== "seller") {
       return NextResponse.json(
         { success: false, message: "Unauthorized" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -23,8 +23,19 @@ export async function GET(request) {
     const warehouseId = searchParams.get("warehouseId");
     const search = searchParams.get("search") || "";
 
+    // Find seller profile first
+    const Seller = require("@/lib/db/models/Seller").default;
+    const sellerProfile = await Seller.findOne({ userId: decoded.userId });
+
+    if (!sellerProfile) {
+      return NextResponse.json(
+        { success: false, message: "Seller profile not found" },
+        { status: 404 },
+      );
+    }
+
     // Query products
-    let query = { sellerId: decoded.userId, isDraft: { $ne: true } };
+    let query = { sellerId: sellerProfile._id, isDraft: { $ne: true } };
     if (search) {
       query.$or = [
         { name: { $regex: search, $options: "i" } },
@@ -38,14 +49,14 @@ export async function GET(request) {
 
     // Fetch warehouses for this seller
     const warehouses = await Warehouse.find({
-      sellerId: decoded.userId,
+      sellerId: sellerProfile._id,
     }).lean();
 
     // Construct inventory data
     const inventoryData = products.map((p) => {
       const warehouseStock = warehouses.map((w) => {
         const item = w.inventory?.find(
-          (inv) => inv.productId.toString() === p._id.toString()
+          (inv) => inv.productId.toString() === p._id.toString(),
         );
         return {
           warehouseId: w._id,
@@ -75,7 +86,7 @@ export async function GET(request) {
     console.error("Inventory GET Error:", error);
     return NextResponse.json(
       { success: false, message: "Server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -89,12 +100,23 @@ export async function POST(request) {
     if (!decoded || decoded.role !== "seller") {
       return NextResponse.json(
         { success: false, message: "Unauthorized" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
     const { productId, warehouseId, type, quantity, reason } =
       await request.json();
+
+    // Find seller profile first
+    const Seller = require("@/lib/db/models/Seller").default;
+    const sellerProfile = await Seller.findOne({ userId: decoded.userId });
+
+    if (!sellerProfile) {
+      return NextResponse.json(
+        { success: false, message: "Seller profile not found" },
+        { status: 404 },
+      );
+    }
 
     // Validate required fields
     if (!productId || !warehouseId || !type || !quantity) {
@@ -104,7 +126,7 @@ export async function POST(request) {
           message:
             "Missing required fields: productId, warehouseId, type, and quantity are required",
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -119,7 +141,7 @@ export async function POST(request) {
           success: false,
           message: "Invalid product ID or warehouse ID format",
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -129,7 +151,7 @@ export async function POST(request) {
     if (!product || !warehouse) {
       return NextResponse.json(
         { success: false, message: "Product or Warehouse not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -139,15 +161,15 @@ export async function POST(request) {
     await warehouse.updateInventory(
       productId,
       quantity,
-      type === "addition" ? "add" : "subtract"
+      type === "addition" ? "add" : "subtract",
     );
 
     // Sync Product total stock
-    const allWarehouses = await Warehouse.find({ sellerId: decoded.userId });
+    const allWarehouses = await Warehouse.find({ sellerId: sellerProfile._id });
     let newTotalStock = 0;
     allWarehouses.forEach((wh) => {
       const item = wh.inventory.find(
-        (inv) => inv.productId.toString() === productId
+        (inv) => inv.productId.toString() === productId,
       );
       if (item) newTotalStock += item.quantity;
     });
@@ -157,7 +179,7 @@ export async function POST(request) {
 
     // Log the change
     await InventoryLog.create({
-      sellerId: decoded.userId,
+      sellerId: sellerProfile._id,
       productId,
       warehouseId,
       type,
@@ -177,7 +199,7 @@ export async function POST(request) {
     console.error("Inventory POST Error:", error);
     return NextResponse.json(
       { success: false, message: "Server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

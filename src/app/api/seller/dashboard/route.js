@@ -17,7 +17,7 @@ export async function GET(request) {
     if (!decoded || decoded.role !== "seller") {
       return NextResponse.json(
         { success: false, message: "Unauthorized" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -27,7 +27,7 @@ export async function GET(request) {
     if (!seller) {
       return NextResponse.json(
         { success: false, message: "Seller profile not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -37,10 +37,15 @@ export async function GET(request) {
     const products = await Product.find({ sellerId: decoded.userId });
     const productIds = products.map((p) => p._id);
 
+    console.log(`📊 [Dashboard] Seller ID: ${decoded.userId}`);
+    console.log(`📦 [Dashboard] Total Products: ${products.length}`);
+
     // 2. Get all orders containing seller's products (using User ID)
     const allOrders = await Order.find({
       "items.seller": decoded.userId,
     }).populate("customer", "name email phone");
+
+    console.log(`🛒 [Dashboard] Total Orders: ${allOrders.length}`);
 
     // 3. Filter items belonging to this seller from all orders
     const sellerOrderItems = [];
@@ -48,7 +53,7 @@ export async function GET(request) {
 
     allOrders.forEach((order) => {
       const sellerItems = order.items.filter(
-        (item) => item.seller.toString() === decoded.userId.toString()
+        (item) => item.seller.toString() === decoded.userId.toString(),
       );
 
       if (sellerItems.length > 0) {
@@ -61,7 +66,7 @@ export async function GET(request) {
             paymentStatus: order.payment.status,
             createdAt: order.createdAt,
             shippingAddress: order.shippingAddress,
-          }))
+          })),
         );
 
         // Add to recent orders
@@ -81,7 +86,7 @@ export async function GET(request) {
       pending: sellerOrderItems.filter((item) => item.status === "pending")
         .length,
       processing: sellerOrderItems.filter(
-        (item) => item.status === "processing"
+        (item) => item.status === "processing",
       ).length,
       shipped: sellerOrderItems.filter((item) => item.status === "shipped")
         .length,
@@ -95,7 +100,7 @@ export async function GET(request) {
 
     // 5. Calculate REVENUE (only delivered items)
     const deliveredItems = sellerOrderItems.filter(
-      (item) => item.status === "delivered"
+      (item) => item.status === "delivered",
     );
 
     const grossRevenue = deliveredItems.reduce((sum, item) => {
@@ -109,7 +114,7 @@ export async function GET(request) {
     // 6. Calculate PENDING PAYOUT (delivered but payment pending)
     const pendingPayoutItems = deliveredItems.filter(
       (item) =>
-        item.paymentStatus === "pending" || item.paymentStatus === "paid"
+        item.paymentStatus === "pending" || item.paymentStatus === "paid",
     );
 
     const pendingPayoutAmount = pendingPayoutItems.reduce((sum, item) => {
@@ -122,13 +127,13 @@ export async function GET(request) {
     const uniqueCustomers = new Set(
       sellerOrderItems
         .map((item) => item.customer?._id?.toString())
-        .filter(Boolean)
+        .filter(Boolean),
     );
 
     // 8. Calculate AVERAGE ORDER VALUE
     const totalOrderValue = sellerOrderItems.reduce(
       (sum, item) => sum + item.price * item.quantity,
-      0
+      0,
     );
     const avgOrderValue =
       sellerOrderItems.length > 0
@@ -141,7 +146,7 @@ export async function GET(request) {
         (p) =>
           p.inventory.trackInventory &&
           p.inventory.stock <= p.inventory.lowStockThreshold &&
-          p.isActive
+          p.isActive,
       )
       .map((p) => ({
         _id: p._id,
@@ -162,7 +167,7 @@ export async function GET(request) {
         items: order.items.length,
         amount: order.items.reduce(
           (sum, item) => sum + item.price * item.quantity,
-          0
+          0,
         ),
         status: order.items[0]?.status || "pending",
         paymentStatus: order.paymentStatus,
@@ -310,7 +315,7 @@ export async function GET(request) {
     seller.save().catch((err) => {
       if (err.name === "ValidationError") {
         process.stdout.write(
-          "ℹ️ [Seller] Stats update skipped: Incomplete profile data.\n"
+          "ℹ️ [Seller] Stats update skipped: Incomplete profile data.\n",
         );
       } else {
         console.error("❌ Failed to update seller stats:", err.message);
@@ -382,7 +387,7 @@ export async function GET(request) {
     console.error("❌ Dashboard API error:", error);
     return NextResponse.json(
       { success: false, message: "Server error", error: error.message },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

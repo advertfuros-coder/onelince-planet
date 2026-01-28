@@ -29,11 +29,11 @@ export default function SellerSettings() {
    const [activeTab, setActiveTab] = useState('profile')
 
    const tabs = [
-      { id: 'profile', name: 'Identity', icon: User, description: 'Personal credentials and alias' },
-      { id: 'store', name: 'Storefront', icon: Store, description: 'Brand identity and logistics' },
-      { id: 'notifications', name: 'Alerts', icon: Bell, description: 'Communication and sync' },
-      { id: 'security', name: 'Vault', icon: Lock, description: 'Privacy and authentication' },
-      { id: 'banking', name: 'Treasury', icon: CreditCard, description: 'Settlement and routing' }
+      { id: 'profile', name: 'My Profile', icon: User, description: 'Your personal information' },
+      { id: 'store', name: 'Store Details', icon: Store, description: 'Your shop information' },
+      { id: 'notifications', name: 'Notifications', icon: Bell, description: 'Get updates and alerts' },
+      { id: 'security', name: 'Security', icon: Lock, description: 'Password and account safety' },
+      { id: 'banking', name: 'Bank Details', icon: CreditCard, description: 'Payment account information' }
    ]
 
    const [settings, setSettings] = useState({
@@ -106,13 +106,13 @@ export default function SellerSettings() {
 
          const data = await res.json()
          if (data.success) {
-            toast.success(`${activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} parameters synchronized.`)
+            toast.success(`${activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} settings saved successfully!`)
             setSettings(data.settings)
          } else {
             throw new Error(data.message)
          }
       } catch (error) {
-         toast.error('Synchronization failed.')
+         toast.error('Failed to save settings. Please try again.')
          console.error('Error saving settings:', error)
       } finally {
          setLoading(false)
@@ -133,7 +133,7 @@ export default function SellerSettings() {
       return (
          <div className="flex flex-col items-center justify-center min-h-screen space-y-4">
             <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
-            <p className="text-gray-400 font-semibold uppercase tracking-widest text-[10px]">Accessing Vault Configuration...</p>
+            <p className="text-gray-400 font-semibold uppercase tracking-widest text-[10px]">Loading Settings...</p>
          </div>
       )
    }
@@ -149,10 +149,10 @@ export default function SellerSettings() {
                      <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/20">
                         <ShieldCheck size={18} />
                      </div>
-                     <span className="text-[10px] font-semibold text-blue-600 uppercase tracking-widest bg-blue-50 px-3 py-1 rounded-full">System Admin</span>
+                     <span className="text-[10px] font-semibold text-blue-600 uppercase tracking-widest bg-blue-50 px-3 py-1 rounded-full">Settings</span>
                   </div>
-                  <h1 className="text-4xl font-semibold text-gray-900 tracking-tighter">Terminal Settings</h1>
-                  <p className="text-gray-500 font-medium mt-1">Configure account parameters and store operational logic</p>
+                  <h1 className="text-4xl font-semibold text-gray-900 tracking-tighter">Settings</h1>
+                  <p className="text-gray-500 font-medium mt-1">Manage your account and store information</p>
                </div>
             </div>
 
@@ -198,8 +198,8 @@ export default function SellerSettings() {
                            {/* Tab Content Header */}
                            <div className="flex items-center justify-between">
                               <div>
-                                 <h2 className="text-2xl font-semibold text-gray-900 tracking-tight">{tabs.find(t => t.id === activeTab).name} Protocol</h2>
-                                 <p className="text-sm font-medium text-gray-400 mt-1">Modify and update your {activeTab} information.</p>
+                                 <h2 className="text-2xl font-semibold text-gray-900 tracking-tight">{tabs.find(t => t.id === activeTab).name}</h2>
+                                 <p className="text-sm font-medium text-gray-400 mt-1">Update your {activeTab} information</p>
                               </div>
                               <div className="hidden sm:block">
                                  <div className="w-12 h-12 rounded-2xl bg-gray-50 flex items-center justify-center text-gray-300">
@@ -221,28 +221,28 @@ export default function SellerSettings() {
                                        </button>
                                     </div>
                                     <div className="space-y-1">
-                                       <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-[0.2em]">Profile Master Image</p>
-                                       <h4 className="text-lg font-semibold text-gray-900">{settings.profile.name || 'Anonymous Entity'}</h4>
-                                       <p className="text-xs font-semibold text-gray-400">Resolution limited to 512x512 PNG/JPG</p>
+                                       <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-[0.2em]">Profile Picture</p>
+                                       <h4 className="text-lg font-semibold text-gray-900">{settings.profile.name || 'Your Name'}</h4>
+                                       <p className="text-xs font-semibold text-gray-400">Image size: 512x512 PNG/JPG</p>
                                     </div>
                                  </div>
 
                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                     <SettingInput
-                                       label="Display Name"
+                                       label="Your Name"
                                        value={settings.profile.name}
                                        onChange={(v) => updateSettings('profile', 'name', v)}
-                                       placeholder="Full Identity"
+                                       placeholder="Enter your full name"
                                     />
                                     <SettingInput
-                                       label="Primary Email"
+                                       label="Email Address"
                                        value={settings.profile.email}
                                        onChange={(v) => updateSettings('profile', 'email', v)}
                                        type="email"
-                                       placeholder="admin@store.io"
+                                       placeholder="your@email.com"
                                     />
                                     <SettingInput
-                                       label="Direct Line"
+                                       label="Phone Number"
                                        value={settings.profile.phone}
                                        onChange={(v) => updateSettings('profile', 'phone', v)}
                                        placeholder="+91-0000000000"
@@ -256,37 +256,37 @@ export default function SellerSettings() {
                               <div className="space-y-8">
                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                     <SettingInput
-                                       label="Brand Identity Name"
+                                       label="Store Name"
                                        value={settings.store.storeName}
                                        onChange={(v) => updateSettings('store', 'storeName', v)}
                                     />
                                     <div className="md:col-span-2 space-y-2">
-                                       <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest px-1">Brand Narrative</label>
+                                       <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest px-1">Store Description</label>
                                        <textarea
                                           value={settings.store.storeDescription}
                                           onChange={(e) => updateSettings('store', 'storeDescription', e.target.value)}
                                           rows={4}
                                           className="w-full px-5 py-4 bg-gray-50/50 border border-transparent rounded-[1.5rem] text-[13px] font-semibold focus:bg-white focus:border-blue-100 focus:ring-4 focus:ring-blue-500/5 transition-all outline-none resize-none"
-                                          placeholder="Elevator pitch for your store..."
+                                          placeholder="Tell customers about your store..."
                                        />
                                     </div>
                                     <div className="md:col-span-2 space-y-2">
-                                       <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest px-1">Physical Dispatch Base</label>
+                                       <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest px-1">Store Address</label>
                                        <textarea
                                           value={settings.store.storeAddress}
                                           onChange={(e) => updateSettings('store', 'storeAddress', e.target.value)}
                                           rows={2}
                                           className="w-full px-5 py-4 bg-gray-50/50 border border-transparent rounded-[1.5rem] text-[13px] font-semibold focus:bg-white focus:border-blue-100 focus:ring-4 focus:ring-blue-500/5 transition-all outline-none resize-none"
-                                          placeholder="Address line 1, 2..."
+                                          placeholder="Enter your complete address..."
                                        />
                                     </div>
                                     <SettingInput
-                                       label="Tax ID (GSTIN)"
+                                       label="GST Number"
                                        value={settings.store.gstin}
                                        onChange={(v) => updateSettings('store', 'gstin', v)}
                                     />
                                     <SettingInput
-                                       label="Corporate PAN"
+                                       label="PAN Number"
                                        value={settings.store.pan}
                                        onChange={(v) => updateSettings('store', 'pan', v)}
                                     />
@@ -305,9 +305,9 @@ export default function SellerSettings() {
                                           </div>
                                           <div>
                                              <h4 className="text-[11px] font-semibold text-gray-900 uppercase tracking-widest leading-none mb-1.5">
-                                                {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())} Channel
+                                                {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
                                              </h4>
-                                             <p className="text-[10px] font-semibold text-gray-400 italic">Critical system updates dispatched via {key.includes('sms') ? 'encrypted cellular' : 'SMTP relay'}.</p>
+                                             <p className="text-[10px] font-semibold text-gray-400 italic">Get important updates via {key.includes('sms') ? 'SMS' : 'email'}</p>
                                           </div>
                                        </div>
                                        <label className="relative inline-flex items-center cursor-pointer group">
@@ -333,12 +333,12 @@ export default function SellerSettings() {
                                     <div className="space-y-2">
                                        <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-widest flex items-center gap-2">
                                           <ShieldCheck size={18} className="text-emerald-500" />
-                                          Multi-Factor Auth (MFA)
+                                          Two-Step Verification
                                        </h3>
-                                       <p className="text-xs font-semibold text-gray-400 leading-relaxed max-w-sm">Requires TOTP or biometric challenge for high-quantum transactions and system resets.</p>
+                                       <p className="text-xs font-semibold text-gray-400 leading-relaxed max-w-sm">Add extra security to your account with a verification code</p>
                                     </div>
                                     <button type="button" className="px-8 py-4 bg-emerald-50 text-emerald-600 rounded-2xl text-[10px] font-semibold uppercase tracking-widest hover:bg-emerald-100 transition-all active:scale-95">
-                                       Initialize MFA
+                                       Enable Verification
                                     </button>
                                  </div>
                               </div>
@@ -349,32 +349,32 @@ export default function SellerSettings() {
                               <div className="space-y-10">
                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                     <SettingInput
-                                       label="Account Beneficiary"
+                                       label="Account Holder Name"
                                        value={settings.banking.accountHolderName}
                                        onChange={(v) => updateSettings('banking', 'accountHolderName', v)}
                                     />
                                     <SettingInput
-                                       label="Settlement Account ID"
+                                       label="Bank Account Number"
                                        value={settings.banking.accountNumber}
                                        onChange={(v) => updateSettings('banking', 'accountNumber', v)}
                                     />
                                     <SettingInput
-                                       label="Routing Code (IFSC)"
+                                       label="IFSC Code"
                                        value={settings.banking.ifscCode}
                                        onChange={(v) => updateSettings('banking', 'ifscCode', v)}
                                     />
                                     <SettingInput
-                                       label="Lead Bank Domain"
+                                       label="Bank Name"
                                        value={settings.banking.bankName}
                                        onChange={(v) => updateSettings("banking", "bankName", v)}
                                     />
                                     <SettingInput
-                                       label="Corporate PAN (Tax ID)"
+                                       label="PAN Number"
                                        value={settings.store.pan}
                                        onChange={(v) => updateSettings("store", "pan", v)}
                                     />
                                     <SettingInput
-                                       label="GST Registration Number"
+                                       label="GST Number"
                                        value={settings.store.gstin}
                                        onChange={(v) => updateSettings("store", "gstin", v)}
                                     />
@@ -386,9 +386,9 @@ export default function SellerSettings() {
                                        <Info size={24} />
                                     </div>
                                     <div className="space-y-1">
-                                       <p className="text-[10px] font-semibold text-amber-900 uppercase tracking-widest">Compliance Protocol</p>
+                                       <p className="text-[10px] font-semibold text-amber-900 uppercase tracking-widest">Important Note</p>
                                        <p className="text-xs font-semibold text-amber-700/80 leading-relaxed">
-                                          Funds liquidation is gated behind zero-downtime routing validation. Ensure credentials match your registered corporate entity.
+                                          Please make sure your bank details are correct. Your payment will be sent to this account.
                                        </p>
                                     </div>
                                  </div>
@@ -403,7 +403,7 @@ export default function SellerSettings() {
                                  className="px-12 py-5 bg-blue-600 text-white rounded-[1.5rem] font-semibold uppercase text-[11px] tracking-widest shadow-2xl shadow-blue-500/20 hover:bg-blue-700 active:scale-95 disabled:opacity-50 transition-all flex items-center justify-center gap-3"
                               >
                                  {loading ? <RefreshCw size={18} className="animate-spin" /> : <Save size={18} />}
-                                 Sync {activeTab} Data
+                                 Save Changes
                               </button>
                            </div>
                         </motion.div>

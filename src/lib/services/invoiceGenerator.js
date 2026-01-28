@@ -55,12 +55,12 @@ export function generateInvoiceHTML(order, seller) {
     </div>
 
     <div class="company-info">
-      <h2>${seller?.businessName || seller?.storeInfo?.name || "Seller"}</h2>
-      <p>${seller?.storeInfo?.address || ""}</p>
-      <p>${seller?.storeInfo?.city || ""}, ${seller?.storeInfo?.state || ""} ${
-    seller?.storeInfo?.pincode || ""
-  }</p>
-      <p>GSTIN: ${seller?.gstin || "N/A"}</p>
+      <h2>${seller?.businessInfo?.businessName || seller?.storeInfo?.storeName || "Seller"}</h2>
+      <p>${seller?.pickupAddress?.addressLine1 || seller?.storeInfo?.address || ""}</p>
+      <p>${seller?.pickupAddress?.city || seller?.storeInfo?.city || ""}, ${seller?.pickupAddress?.state || seller?.storeInfo?.state || ""} ${
+        seller?.pickupAddress?.pincode || seller?.storeInfo?.pincode || ""
+      }</p>
+      <p>GSTIN: ${seller?.businessInfo?.gstin || "N/A"}</p>
     </div>
 
     <div class="info-grid">
@@ -81,8 +81,8 @@ export function generateInvoiceHTML(order, seller) {
             : ""
         }
         <p>${order.shippingAddress?.city || ""}, ${
-    order.shippingAddress?.state || ""
-  } ${order.shippingAddress?.pincode || ""}</p>
+          order.shippingAddress?.state || ""
+        } ${order.shippingAddress?.pincode || ""}</p>
         <p>${order.shippingAddress?.phone || ""}</p>
       </div>
     </div>
@@ -119,10 +119,10 @@ export function generateInvoiceHTML(order, seller) {
             <td class="text-center">${item.quantity}</td>
             <td class="text-right">${formatPrice(item.price)}</td>
             <td class="text-right">${formatPrice(
-              item.price * item.quantity
+              item.price * item.quantity,
             )}</td>
           </tr>
-        `
+        `,
           )
           .join("")}
       </tbody>
@@ -133,13 +133,13 @@ export function generateInvoiceHTML(order, seller) {
         <tr>
           <td>Subtotal:</td>
           <td class="text-right">${formatPrice(
-            order.pricing?.subtotal || 0
+            order.pricing?.subtotal || 0,
           )}</td>
         </tr>
         <tr>
           <td>Shipping:</td>
           <td class="text-right">${formatPrice(
-            order.pricing?.shipping || 0
+            order.pricing?.shipping || 0,
           )}</td>
         </tr>
         <tr>
@@ -152,7 +152,7 @@ export function generateInvoiceHTML(order, seller) {
         <tr>
           <td>Discount:</td>
           <td class="text-right" style="color: #059669;">-${formatPrice(
-            order.pricing.discount
+            order.pricing.discount,
           )}</td>
         </tr>
         `

@@ -45,7 +45,7 @@ export async function GET(request) {
     // Query orders where items.seller matches the User ID
     // Note: In our schema, items.seller usually references the User model
     const orders = await Order.find({
-      "items.seller": decoded.id,
+      "items.seller": sellerProfile._id,
     })
       .populate("customer", "name email phone")
       .populate("items.product", "name images sku")
@@ -59,7 +59,7 @@ export async function GET(request) {
     const filteredOrders = orders.map((order) => ({
       ...order,
       items: order.items.filter(
-        (item) => item.seller?.toString() === decoded.id,
+        (item) => item.seller?.toString() === sellerProfile._id.toString(),
       ),
     }));
 
