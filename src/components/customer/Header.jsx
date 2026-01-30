@@ -357,7 +357,7 @@ export default function Header() {
   const isProductsPage = pathname === '/products'
   const isProfilePage = pathname?.startsWith('/profile')
   const isOrderDetailsPage = pathname?.startsWith('/orders/')
-  const hideHeaderExtras = isProductDetailPage || isProductsPage || isProfilePage || isOrderDetailsPage
+  const hideHeaderExtras = isProfilePage || isOrderDetailsPage
 
   // Mega Menu Hover Handlers with delay
   const handleCategoryHover = (categoryName) => {
@@ -615,7 +615,7 @@ export default function Header() {
       {/* Desktop Main Header */}
       <div
         className="hidden lg:block border-b border-gray-100 relative z-30"
-      
+
       >
         {/* Overlay for better text readability */}
         {/* <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-black/0 to-black/"></div> */}
@@ -749,7 +749,7 @@ export default function Header() {
       {/* NEW Mobile Main Header */}
       <div
         className="lg:hidden border-b border-gray-100 relative z-30"
-        
+
       >
         {/* Overlay for better text readability */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-white/70 to-white"></div>

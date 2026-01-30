@@ -38,14 +38,25 @@ import Lightbox from 'yet-another-react-lightbox'
 import Zoom from 'yet-another-react-lightbox/plugins/zoom'
 import 'yet-another-react-lightbox/styles.css'
 import { useRecentlyViewed } from '@/lib/hooks/useRecentlyViewed'
+import { useSocialProof, useRecentPurchases } from '@/lib/hooks/useSocialProof'
+import { SocialProofSection, RecentPurchaseNotification, VerifiedPurchaseBadge } from '@/components/customer/SocialProof'
+import { FrequentlyBoughtTogether } from '@/components/customer/FrequentlyBoughtTogether'
+import { ProductMatcher } from '@/components/customer/ProductMatcher'
 
 export default function ProductDetailPage() {
   const params = useParams()
   const router = useRouter()
   const { addToCart } = useCart()
   const { addToRecentlyViewed } = useRecentlyViewed()
-
   const [product, setProduct] = useState(null)
+
+  // Social Proof Data - Hooks must be called at top level
+  // We'll pass the product ID once it's loaded, initially null
+  // The hooks handle null IDs gracefully
+  // We use params.id for the initial seed if available, or just wait for product
+  const productId = params?.id
+  const socialProof = useSocialProof(product?._id || productId, product?.inventory?.stock)
+  const recentPurchases = useRecentPurchases(product?._id || productId)
   const [reviews, setReviews] = useState([])
   const [reviewStats, setReviewStats] = useState(null)
   const [relatedProducts, setRelatedProducts] = useState([])
@@ -133,9 +144,23 @@ export default function ProductDetailPage() {
           // Set Related/Similar products from the main API response
           if (apiProduct.relatedProducts && apiProduct.relatedProducts.length > 0) {
             setRelatedProducts(apiProduct.relatedProducts)
-            // Use same data for similar products to avoid extra call, filtering out current product
             const filteredSimilar = apiProduct.relatedProducts.filter(p => p._id !== productId)
             setSimilarProducts(filteredSimilar)
+          } else {
+            // Fallback: Fetch general products for "You May Also Like" if no specific relations
+            try {
+              // Fetch popular/top-rated products
+              const res = await fetch('/api/products?limit=8&sort=rating')
+              const data = await res.json()
+              if (data.success && data.products) {
+                // Filter out current product
+                const fallbackProducts = data.products.filter(p => p._id !== productId).slice(0, 4)
+                setRelatedProducts(fallbackProducts) // This populates "You May Also Like"
+                setSimilarProducts(fallbackProducts) // This populates "Similar Products"
+              }
+            } catch (err) {
+              console.error('Failed to fetch fallback products', err)
+            }
           }
 
           // Set Reviews from the main API response
@@ -590,7 +615,7 @@ export default function ProductDetailPage() {
                           ? activeVariant.images[selectedImage] || activeVariant.images[0]
                           : product.images[selectedImage]}
                         alt={product.name}
-                        className="w-full h-full object-contain p-8"
+                        className="w-full h-full object-contain p -8"
                       />
                       {/* Zoom hint */}
                       <div className="absolute bottom-4 right-4 bg-black/60 text-white px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -687,6 +712,14 @@ export default function ProductDetailPage() {
                   </>
                 )}
               </div>
+
+              {/* Social Proof Badges - Viewing Now, Recent Sales, Low Stock */}
+              <SocialProofSection
+                viewingNow={socialProof.viewingNow}
+                soldLast24Hours={socialProof.soldLast24Hours}
+                stockUrgency={socialProof.stockUrgency}
+                isLowStock={socialProof.isLowStock}
+              />
 
               {/* Price Section */}
               <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-5 mb-6 border border-blue-100">
@@ -1030,6 +1063,12 @@ export default function ProductDetailPage() {
 
 
 
+            {/* AI Product Matcher */}
+            <ProductMatcher
+              category={product.category?.toLowerCase() || (product.name.toLowerCase().includes('hair') ? 'hair' : 'skin')}
+              productName={product.name}
+            />
+
             {/* Product Information - Accordion Style */}
             <div className="space-y-3">
               {/* Description */}
@@ -1122,92 +1161,14 @@ export default function ProductDetailPage() {
                 </div>
               )}
 
-              {/* Warranty & Returns */}
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                <button
-                  onClick={() => toggleSection('warranty')}
-                  className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
-                >
-                  <h3 className="font-semibold text-sm text-gray-900 flex items-center gap-2">
-                    <FiShield className="w-5 h-5 text-orange-600" />
-                    Warranty & Returns
-                  </h3>
-                  {expandedSections.warranty ? (
-                    <FiChevronUp className="w-5 h-5 text-gray-600" />
-                  ) : (
-                    <FiChevronDown className="w-5 h-5 text-gray-600" />
-                  )}
-                </button>
-                {expandedSections.warranty && (
-                  <div className="px-6 pb-6 space-y-6">
-                    <div>
-                      <h4 className="font-semibold text-sm text-gray-900 mb-3 flex items-center gap-2">
-                        <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                          <FiTruck className="w-4 h-4  text-blue-600" />
-                        </div>
-                        Shipping Information
-                      </h4>
-                      <ul className="space-y-2 text-sm text-gray-700 ml-10">
-                        <li className="flex items-start gap-2">
-                          <FiCheck className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                          Free standard shipping on orders above ₹500
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <FiCheck className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                          Express shipping available at ₹99
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <FiCheck className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                          Standard delivery: 5-7 business days
-                        </li>
-                      </ul>
-                    </div>
-
-                    <div>
-                      <h4 className="font-semibold text-sm text-gray-900 mb-3 flex items-center gap-2">
-                        <div className="w-8 h-8 text-sm bg-orange-100 rounded-lg flex items-center justify-center">
-                          <FiRefreshCw className="w-4 h-4 text-orange-600" />
-                        </div>
-                        Return Policy
-                      </h4>
-                      <ul className="space-y-2 text-sm text-gray-700 ml-10">
-                        <li className="flex items-start text-sm gap-2">
-                          <FiCheck className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                          7-day easy return policy
-                        </li>
-                        <li className="flex items-start text-sm gap-2">
-                          <FiCheck className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                          Product must be unused and in original packaging
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <FiCheck className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                          Free return pickup available
-                        </li>
-                      </ul>
-                    </div>
-
-                    <div>
-                      <h4 className="font-semibold text-sm text-gray-900 mb-3 flex items-center gap-2">
-                        <div className="w-8 h-8 text-sm bg-green-100 rounded-lg flex items-center justify-center">
-                          <FiAward className="w-4 h-4 text-green-600" />
-                        </div>
-                        Warranty Coverage
-                      </h4>
-                      <ul className="space-y-2 text-sm text-gray-700 ml-10">
-                        <li className="flex items-start text-sm gap-2">
-                          <FiCheck className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                          1-year manufacturer warranty
-                        </li>
-                        <li className="flex items-start text-sm gap-2">
-                          <FiCheck className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                          Covers manufacturing defects
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                )}
-              </div>
+            
             </div>
+
+            {/* Frequently Bought Together */}
+            <FrequentlyBoughtTogether
+              mainProduct={product}
+              relatedProducts={relatedProducts}
+            />
 
             {/* Ratings & Reviews */}
             {reviews && reviews.length > 0 && (
@@ -1497,6 +1458,7 @@ export default function ProductDetailPage() {
           buttonNext: product?.images?.length <= 1 ? () => null : undefined
         }}
       />
+
     </div>
   )
 }
