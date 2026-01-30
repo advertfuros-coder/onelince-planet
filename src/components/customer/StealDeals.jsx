@@ -58,7 +58,7 @@ export default function StealDeals() {
                                 className="text-3xl md:text-5xl font-[1000] text-[#7C3AED] uppercase tracking-tighter leading-none"
                                 style={{ WebkitTextStroke: '1px #FFFFFF' }}
                             >
-                                STEAL DEA LS
+                                STEAL DEALS
                             </h2>
                             <div className="bg-[#7C3AED] p-2 rounded-xl rotate-12 shadow-lg">
                                 <span className="text-white text-2xl font-semibold">%</span>

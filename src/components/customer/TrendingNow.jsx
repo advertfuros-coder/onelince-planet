@@ -114,7 +114,7 @@ export default function TrendingNow() {
 
     return (
         <section className="py-8 bg-white overflow-hidden">
-            <div className="max-w-7xl mx-auto px-4">
+            <div className="max-w-8xl mx-auto px-4">
                 {/* Image-Style Purple Container */}
                 <div className="bg-[#F5F1FF] rounded-[48px] p-6 md:p-10 relative">
                     {/* Sparkle Icon */}

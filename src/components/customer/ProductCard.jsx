@@ -133,7 +133,7 @@ export default function ProductCard({
       </div>
 
       {/* Product Info Section */}
-      <div className="p-5 flex flex-col flex-1 bg-white">
+      <div className="py-4 px-4 flex flex-col flex-1 bg-white">
         {/* Rating Section */}
         <div className="flex items-center gap-1.5 mb-2.5">
           <div className="flex text-[#FF9E2C]">

@@ -20,6 +20,7 @@ function ProductsContent() {
     const [products, setProducts] = useState([])
     const [loading, setLoading] = useState(true)
     const [totalPages, setTotalPages] = useState(0)
+    const [totalCount, setTotalCount] = useState(0)
     const [currentPage, setCurrentPage] = useState(1)
     const [wishlist, setWishlist] = useState([])
     const [showMobileFilters, setShowMobileFilters] = useState(false)
@@ -36,6 +37,19 @@ function ProductsContent() {
         sortBy: searchParams.get('sortBy') || 'relevance',
         order: searchParams.get('order') || 'desc'
     })
+
+    useEffect(() => {
+        const newSearch = searchParams.get('search') || ''
+        const newCategory = searchParams.get('category') || ''
+
+        if (filters.search !== newSearch || filters.category !== newCategory) {
+            setFilters(prev => ({
+                ...prev,
+                search: newSearch,
+                category: newCategory
+            }))
+        }
+    }, [searchParams])
 
     useEffect(() => {
         fetchProducts()
@@ -59,14 +73,19 @@ function ProductsContent() {
             if (response.data.success) {
                 setProducts(response.data.products || [])
                 setTotalPages(response.data.pagination?.pages || 1)
+                setTotalCount(response.data.pagination?.total || 0)
             }
         } catch (error) {
             console.error('Failed to fetch products:', error)
             setProducts([])
+            setTotalCount(0)
         } finally {
             setLoading(false)
         }
     }
+
+
+
 
     const handlePageChange = (page) => {
         setCurrentPage(page)
@@ -154,9 +173,8 @@ function ProductsContent() {
                                             filters.category ? `${filters.category.charAt(0).toUpperCase() + filters.category.slice(1)} Products` :
                                                 'All Products'}
                                     </h1>
-                                    {!loading && (
+                                    {!loading && products.length > 0 && (
                                         <p className="text-[14px] font-semibold text-gray-400">
-                                            Showing {products.length} of {totalPages * 20} results
                                         </p>
                                     )}
                                 </div>
