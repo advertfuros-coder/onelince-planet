@@ -90,7 +90,7 @@ export default function SellerProductsPage() {
         ...(selectedStatus && { status: selectedStatus }),
       })
 
-      const res = await axios.get(`/api/seller/products?${params}`, {
+      const res = await axios.get(`/api/seller/products-list?${params}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
 
@@ -191,7 +191,7 @@ export default function SellerProductsPage() {
             </div>
             <h1 className="text-5xl font-semibold text-slate-900 tracking-tighter flex items-center gap-4">
               Products<span className="text-blue-600">.</span>
-              
+
             </h1>
             <p className="text-slate-400 font-semibold text-base max-w-xl leading-relaxed">Manage all your products, track inventory levels, and monitor product performance in one place.</p>
           </div>

@@ -1,6 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react'
 import {
   FiHeart,
   FiEye,
@@ -8,7 +9,8 @@ import {
   FiStar,
   FiPlus,
   FiLock,
-  FiTruck
+  FiTruck,
+  FiAlertCircle
 } from 'react-icons/fi'
 import { FaHeart, FaStar } from 'react-icons/fa'
 import { createProductUrl } from '../../lib/utils/productUrl'
@@ -26,6 +28,8 @@ export default function ProductCard({
   const router = useRouter()
   const { addToCart } = useCart()
   const { country } = useCurrency()
+  const [deliveryAvailable, setDeliveryAvailable] = useState(null)
+  const [deliveryDate, setDeliveryDate] = useState(null)
 
   const discount = product.pricing?.basePrice && product.pricing?.salePrice ?
     Math.round(((product.pricing.basePrice - product.pricing.salePrice) / product.pricing.basePrice) * 100) : 0
@@ -35,11 +39,52 @@ export default function ProductCard({
   const sellerCountry = product.sellerId?.businessInfo?.country || product.sellerId?.country || 'AE'
   const deliveryEstimate = calculateDeliveryEstimate(product, country, sellerCountry)
 
+  // Check delivery availability if pincode is saved
+  useEffect(() => {
+    const checkDelivery = async () => {
+      const savedPincode = localStorage.getItem('userPincode')
+      if (!savedPincode || !product._id) return
+
+      try {
+        const response = await fetch('/api/shipping/estimate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            productId: product._id,
+            deliveryPincode: savedPincode
+          })
+        })
+        const data = await response.json()
+
+        if (data.success && data.estimate) {
+          if (data.estimate.available === false) {
+            setDeliveryAvailable(false)
+          } else {
+            setDeliveryAvailable(true)
+            if (data.estimate.etd) {
+              const date = new Date(data.estimate.etd)
+              setDeliveryDate(date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }))
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Failed to check delivery:', error)
+      }
+    }
+
+    checkDelivery()
+  }, [product._id])
+
+  // Create product URL with variant info
+  const productUrl = product.variantInfo?.isVariant
+    ? `${createProductUrl(product)}?variant=${product.variantInfo.variantIndex}`
+    : createProductUrl(product);
+
   return (
     <div className="bg-white rounded-[32px] shadow-sm border border-gray-100 overflow-hidden group hover:shadow-xl hover:border-blue-100 transition-all duration-500 flex flex-col h-full ring-1 ring-black/5">
       {/* Product Image Section */}
       <div className={`relative ${variant === 'steal' ? 'aspect-[4/5]' : 'aspect-square'} overflow-hidden bg-[#F8F9FA] ${variant === 'steal' ? 'rounded-[24px] border border-gray-50 shadow-inner' : ''}`}>
-        <Link href={createProductUrl(product)}>
+        <Link href={productUrl}>
           {product.images?.[0]?.url || product.image ? (
             <img
               src={product.images?.[0]?.url || product.image}
@@ -105,7 +150,7 @@ export default function ProductCard({
           </span>
         </div>
 
-        <Link href={createProductUrl(product)}>
+        <Link href={productUrl}>
           <h3 className="font-semibold text-gray-900 text-[15px] leading-snug mb-2 line-clamp-2 h-10 hover:text-blue-600 transition-colors">
             {product.name}
           </h3>
@@ -125,11 +170,22 @@ export default function ProductCard({
         </div>
 
         {/* Delivery Estimate */}
-        <div className="flex items-center gap-2 text-[#00A650] text-[13px] font-medium mt-2">
-          <FiTruck className="w-4 h-4 stroke-[2.5px]" />
-          <span>
-            Delivery <span className="font-semibold text-[#00A650]">{deliveryEstimate.label}</span>
-          </span>
+        <div className="flex items-center gap-2 text-[13px] font-medium mt-2">
+          {deliveryAvailable === false ? (
+            <>
+              <FiAlertCircle className="w-4 h-4 text-red-600 stroke-[2.5px]" />
+              <span className="text-red-600">
+                Not available at your location
+              </span>
+            </>
+          ) : (
+            <>
+              <FiTruck className="w-4 h-4 text-[#00A650] stroke-[2.5px]" />
+              <span className="text-[#00A650]">
+                Delivery <span className="font-semibold">{deliveryDate || deliveryEstimate.label}</span>
+              </span>
+            </>
+          )}
         </div>
       </div>
     </div>

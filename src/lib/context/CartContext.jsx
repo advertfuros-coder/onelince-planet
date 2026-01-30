@@ -94,7 +94,8 @@ export function CartProvider({ children }) {
       const originalPrice = product.pricing?.basePrice || product.originalPrice || itemPrice * 1.25;
 
       // Handle different seller name variants
-      const sellerName = product.seller?.name ||
+      const sellerName = product.sellerName ||
+        product.seller?.name ||
         product.sellerId?.storeInfo?.storeName ||
         product.sellerId?.businessInfo?.businessName ||
         product.sellerId?.personalDetails?.fullName ||

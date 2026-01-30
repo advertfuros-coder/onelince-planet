@@ -56,12 +56,17 @@ export default function InventoryMasterPage() {
             fetchData()
             fetchLogs()
         }
-    }, [token])
+    }, [token, search, selectedWarehouse])
 
     async function fetchData() {
         try {
             setLoading(true)
-            const res = await axios.get('/api/seller/inventory', {
+            const params = new URLSearchParams({
+                ...(search && { search }),
+                ...(selectedWarehouse !== 'all' && { warehouse: selectedWarehouse }),
+            })
+
+            const res = await axios.get(`/api/seller/inventory-list?${params}`, {
                 headers: { Authorization: `Bearer ${token}` }
             })
             if (res.data.success) {
@@ -408,7 +413,7 @@ function TransferModal({ item, warehouses, onClose, onSuccess }) {
     const maxAvailable = sourceWarehouse?.quantity || 0
 
     return (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-100 p-4">
             <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -522,12 +527,12 @@ function AdjustmentModal({ item, warehouses, onClose, onSuccess }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        
+
         // Validate warehouse selection
         if (!formData.warehouseId) {
             return toast.error('Please select a warehouse')
         }
-        
+
         if (formData.quantity <= 0) {
             return toast.error('Quantity must be greater than zero')
         }
@@ -550,7 +555,7 @@ function AdjustmentModal({ item, warehouses, onClose, onSuccess }) {
     }
 
     return (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-100 p-4">
             <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}

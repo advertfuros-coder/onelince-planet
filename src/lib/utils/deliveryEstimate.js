@@ -15,10 +15,10 @@ export function calculateDeliveryEstimate(
   // Determine if international shipping
   const isInternational = userCountry !== sellerCountry;
 
-  // Get estimate from product or use defaults
+  // Get estimate from product or use defaults (matching /api/shipping/estimate)
   const estimate = product?.deliveryEstimate || {
-    domestic: { min: 2, max: 5 },
-    international: { min: 7, max: 14 },
+    domestic: { min: 5, max: 7 },
+    international: { min: 5, max: 7 },
   };
 
   const { min, max } = isInternational

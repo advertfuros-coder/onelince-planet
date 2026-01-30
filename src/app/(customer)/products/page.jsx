@@ -54,11 +54,11 @@ function ProductsContent() {
             params.append('page', currentPage)
             params.append('limit', 20)
 
-            const response = await axios.get(`/api/products?${params.toString()}`)
+            const response = await axios.get(`/api/products/search?${params.toString()}`)
 
             if (response.data.success) {
                 setProducts(response.data.products || [])
-                setTotalPages(response.data.totalPages || 1)
+                setTotalPages(response.data.pagination?.pages || 1)
             }
         } catch (error) {
             console.error('Failed to fetch products:', error)

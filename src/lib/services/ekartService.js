@@ -38,7 +38,7 @@ class EkartService {
         {
           username: this.username,
           password: this.password,
-        },
+        }
       );
 
       this.accessToken = response.data.access_token;
@@ -49,7 +49,7 @@ class EkartService {
     } catch (error) {
       console.error(
         "❌ Ekart authentication error:",
-        error.response?.data || error.message,
+        error.response?.data || error.message
       );
       throw new Error("Failed to authenticate with Ekart");
     }
@@ -75,7 +75,7 @@ class EkartService {
       const response = await axios.put(
         `${EKART_BASE_URL}/api/v1/package/create`,
         shipmentData,
-        { headers },
+        { headers }
       );
 
       console.log("✅ Ekart shipment created:", response.data);
@@ -83,7 +83,7 @@ class EkartService {
     } catch (error) {
       console.error(
         "❌ Ekart create shipment error:",
-        error.response?.data || error.message,
+        error.response?.data || error.message
       );
       throw error;
     }
@@ -93,98 +93,25 @@ class EkartService {
    * Create shipment from order
    * @param {Object} order - The order object
    * @param {Object} [seller] - Optional seller details for pickup location
-   * @param {Object} [dimensions] - Package dimensions {weight, length, width, height}
    */
-  async createShipmentFromOrder(order, seller = null, dimensions = null) {
+  async createShipmentFromOrder(order, seller = null) {
     // Determine pickup details (default to env vars, override if seller provided)
     // FIX: Prefer configured pickup location code/name over seller name, as the location must exist in Ekart.
-    const pickupName =
-      this.pickupLocationName || seller?.businessInfo?.businessName;
-    const pickupAddress = seller?.pickupAddress
-      ? `${seller.pickupAddress.addressLine1}, ${seller.pickupAddress.addressLine2 || ""}, ${seller.pickupAddress.city}, ${seller.pickupAddress.state} - ${seller.pickupAddress.pincode}`
+    const pickupName = this.pickupLocationName || seller?.businessInfo?.businessName;
+    const pickupAddress = seller?.pickupAddress 
+      ? `${seller.pickupAddress.addressLine1}, ${seller.pickupAddress.addressLine2 || ''}, ${seller.pickupAddress.city}, ${seller.pickupAddress.state} - ${seller.pickupAddress.pincode}`
       : this.sellerAddress;
     const sellerName = seller?.businessInfo?.businessName || this.sellerName;
     const sellerGst = seller?.businessInfo?.gstNumber || this.gstNumber;
-
-    // Use provided dimensions or defaults
-    const packageWeight =
-      dimensions?.weight || this.calculateWeight(order.items);
-    const packageLength = dimensions?.length || 30;
-    const packageWidth = dimensions?.width || 20;
-    const packageHeight = dimensions?.height || 15;
 
     const shipmentData = {
       client_id: this.clientId,
       client_name: this.clientName,
       seller_name: sellerName,
       seller_gst_number: sellerGst,
-
-      // Root level mandatory fields
-      order_number: order.orderNumber,
-      invoice_number: order.orderNumber,
-      invoice_date: new Date(order.createdAt).toISOString().split("T")[0],
-      tax_value: order.pricing.tax || 0,
-      taxable_amount: (order.pricing.total || 0) - (order.pricing.tax || 0),
-      consignee_gst_amount: order.pricing.tax || 0,
-      source_gst_amount: 0,
-
-      // Additional root fields often required
-      payment_mode: order.payment.method === "cod" ? "COD" : "Prepaid",
-      amount: order.pricing.total,
-      total_amount: order.pricing.total,
-      collectable_amount:
-        order.payment.method === "cod" ? order.pricing.total : 0,
-      declared_value: order.pricing.total,
-      commodity_value: String(order.pricing.total),
-
-      weight: packageWeight,
-      length: packageLength,
-      breadth: packageWidth, // Note: some APIs use width, some breadth
-      width: packageWidth, // Ekart requires both
-      height: packageHeight,
-
-      // Consignee details (root level)
-      consignee_name: order.shippingAddress.name,
-      consignee_phone: order.shippingAddress.phone,
-      consignee_address1: order.shippingAddress.addressLine1, // Note: some APIs use address1
-      consignee_address2: order.shippingAddress.addressLine2 || "",
-      consignee_city: order.shippingAddress.city,
-      consignee_state: order.shippingAddress.state,
-      consignee_pincode: order.shippingAddress.pincode,
-      consignee_email: order.shippingAddress.email || "",
-
-      // Product description
-      products_desc: order.items
-        .map((i) => i.name)
-        .join(", ")
-        .substring(0, 250), // Truncate if too long
-      quantity: order.items.reduce(
-        (sum, item) => sum + (item.quantity || 1),
-        0,
-      ), // Total quantity
-
       pickup_location: {
         name: pickupName,
         address: pickupAddress,
-      },
-      drop_location: {
-        name: order.shippingAddress.name,
-        phone: parseInt(order.shippingAddress.phone.replace(/\D/g, ""), 10), // Must be integer
-        address: (() => {
-          const addr1 = order.shippingAddress.addressLine1 || "";
-          const addr2 = order.shippingAddress.addressLine2 || "";
-          const combined = addr2 ? `${addr1}, ${addr2}` : addr1;
-          return combined.length >= 10 ? combined : combined.padEnd(10, " ");
-        })(),
-        address_2: order.shippingAddress.addressLine2 || "",
-        city: order.shippingAddress.city,
-        state: order.shippingAddress.state,
-        pin: parseInt(
-          order.shippingAddress.pincode || order.shippingAddress.pin,
-          10,
-        ), // Must be integer
-        country: "India",
-        email: order.shippingAddress.email || "",
       },
       return_location: {
         // Typically return location is same as pickup or central warehouse
@@ -194,7 +121,6 @@ class EkartService {
       },
       packages: [
         {
-          count: 1, // Number of packages
           order_number: order.orderNumber,
           order_date: new Date(order.createdAt).toISOString().split("T")[0],
           payment_mode: order.payment.method === "cod" ? "COD" : "PREPAID",
@@ -209,13 +135,13 @@ class EkartService {
           consignee_state: order.shippingAddress.state,
           consignee_pincode: order.shippingAddress.pincode,
           consignee_country: "India",
-          consignee_email: order.shippingAddress.email || "",
 
           // Package details
           weight: this.calculateWeight(order.items),
           length: 30,
           width: 20,
           height: 15,
+          count: 1,
 
           // Items
           items: order.items.map((item) => ({
@@ -229,6 +155,9 @@ class EkartService {
           invoice_number: order.orderNumber,
           invoice_date: new Date(order.createdAt).toISOString().split("T")[0],
           gstin: this.gstNumber,
+
+          // Customer email (optional)
+          consignee_email: order.shippingAddress.email || "",
         },
       ],
     };
@@ -257,7 +186,7 @@ class EkartService {
       const headers = await this.getHeaders();
       const response = await axios.delete(
         `${EKART_BASE_URL}/api/v1/package/cancel?tracking_id=${trackingId}`,
-        { headers },
+        { headers }
       );
 
       console.log("✅ Ekart shipment cancelled:", response.data);
@@ -265,29 +194,7 @@ class EkartService {
     } catch (error) {
       console.error(
         "❌ Ekart cancel shipment error:",
-        error.response?.data || error.message,
-      );
-      throw error;
-    }
-  }
-
-  /**
-   * Download shipping label
-   */
-  async downloadLabel(trackingId) {
-    try {
-      const headers = await this.getHeaders();
-      const response = await axios.get(
-        `${EKART_BASE_URL}/api/v1/package/label?tracking_id=${trackingId}`,
-        { headers },
-      );
-
-      console.log("✅ Ekart label retrieved:", response.data);
-      return response.data;
-    } catch (error) {
-      console.error(
-        "❌ Ekart download label error:",
-        error.response?.data || error.message,
+        error.response?.data || error.message
       );
       throw error;
     }
@@ -299,14 +206,14 @@ class EkartService {
   async trackShipment(trackingId) {
     try {
       const response = await axios.get(
-        `${EKART_BASE_URL}/api/v1/track/${trackingId}`,
+        `${EKART_BASE_URL}/api/v1/track/${trackingId}`
       );
 
       return response.data;
     } catch (error) {
       console.error(
         "❌ Ekart track shipment error:",
-        error.response?.data || error.message,
+        error.response?.data || error.message
       );
       throw error;
     }
@@ -324,14 +231,14 @@ class EkartService {
         {
           headers,
           responseType: jsonOnly ? "json" : "arraybuffer",
-        },
+        }
       );
 
       return response.data;
     } catch (error) {
       console.error(
         "❌ Ekart download label error:",
-        error.response?.data || error.message,
+        error.response?.data || error.message
       );
       throw error;
     }
@@ -346,14 +253,14 @@ class EkartService {
       const response = await axios.post(
         `${EKART_BASE_URL}/data/v2/generate/manifest`,
         { ids: Array.isArray(trackingIds) ? trackingIds : [trackingIds] },
-        { headers },
+        { headers }
       );
 
       return response.data;
     } catch (error) {
       console.error(
         "❌ Ekart download manifest error:",
-        error.response?.data || error.message,
+        error.response?.data || error.message
       );
       throw error;
     }
@@ -367,14 +274,14 @@ class EkartService {
       const headers = await this.getHeaders();
       const response = await axios.get(
         `${EKART_BASE_URL}/api/v2/serviceability/${pincode}`,
-        { headers },
+        { headers }
       );
 
       return response.data;
     } catch (error) {
       console.error(
         "❌ Ekart serviceability check error:",
-        error.response?.data || error.message,
+        error.response?.data || error.message
       );
       throw error;
     }
@@ -389,14 +296,14 @@ class EkartService {
       const response = await axios.post(
         `${EKART_BASE_URL}/data/pricing/estimate`,
         estimateData,
-        { headers },
+        { headers }
       );
 
       return response.data;
     } catch (error) {
       console.error(
         "❌ Ekart estimate error:",
-        error.response?.data || error.message,
+        error.response?.data || error.message
       );
       throw error;
     }
@@ -411,14 +318,14 @@ class EkartService {
       const response = await axios.post(
         `${EKART_BASE_URL}/api/v2/address`,
         addressData,
-        { headers },
+        { headers }
       );
 
       return response.data;
     } catch (error) {
       console.error(
         "❌ Ekart add address error:",
-        error.response?.data || error.message,
+        error.response?.data || error.message
       );
       throw error;
     }
@@ -438,7 +345,7 @@ class EkartService {
     } catch (error) {
       console.error(
         "❌ Ekart get addresses error:",
-        error.response?.data || error.message,
+        error.response?.data || error.message
       );
       throw error;
     }
@@ -453,14 +360,14 @@ class EkartService {
       const response = await axios.post(
         `${EKART_BASE_URL}/api/v2/webhook`,
         webhookData,
-        { headers },
+        { headers }
       );
 
       return response.data;
     } catch (error) {
       console.error(
         "❌ Ekart add webhook error:",
-        error.response?.data || error.message,
+        error.response?.data || error.message
       );
       throw error;
     }
@@ -480,100 +387,7 @@ class EkartService {
     } catch (error) {
       console.error(
         "❌ Ekart get webhooks error:",
-        error.response?.data || error.message,
-      );
-      throw error;
-    }
-  }
-
-  /**
-   * Create RTO (Return to Origin) shipment for product returns
-   * Customer returns product → Ekart picks up from customer → Delivers to seller
-   */
-  async createReturnShipment(order, returnRequest) {
-    try {
-      const headers = await this.getHeaders();
-
-      // Return shipment data - reverse of original shipment
-      const returnData = {
-        client_id: process.env.EKART_CLIENT_ID,
-        client_name: process.env.EKART_CLIENT_NAME,
-
-        // Order details
-        order_number: `RTO-${order.orderNumber}`,
-        invoice_number: `RTO-INV-${order.orderNumber}`,
-        invoice_date: new Date().toISOString().split("T")[0],
-
-        // Pickup from CUSTOMER (who is returning)
-        pickup_location_name: order.shippingAddress.name,
-        consignee_name: order.shippingAddress.name,
-        consignee_phone: parseInt(
-          order.shippingAddress.phone.replace(/\D/g, ""),
-        ),
-        consignee_address:
-          `${order.shippingAddress.addressLine1} ${order.shippingAddress.addressLine2 || ""}`.trim(),
-        consignee_city: order.shippingAddress.city,
-        consignee_state: order.shippingAddress.state,
-        consignee_pincode: parseInt(order.shippingAddress.pincode),
-        consignee_country: order.shippingAddress.country || "India",
-
-        // Delivery to SELLER (return address)
-        drop_location: {
-          name: process.env.EKART_SELLER_NAME,
-          phone: parseInt(process.env.EKART_PICKUP_PHONE || "9876543210"),
-          address: process.env.EKART_RETURN_LOCATION_NAME,
-          city: "Lucknow",
-          state: "Uttar Pradesh",
-          pin: 226022,
-          country: "India",
-        },
-
-        // Return details
-        return_location_name: process.env.EKART_RETURN_LOCATION_NAME,
-        payment_mode: "Prepaid", // Returns are always prepaid (no COD)
-
-        // Package details (same as original)
-        weight: order.shipping?.weight || 0.5,
-        length: order.shipping?.length || 10,
-        breadth: order.shipping?.breadth || 10,
-        height: order.shipping?.height || 10,
-
-        // Financial (no collection on return)
-        total_amount: "0",
-        collectable_amount: "0",
-        taxable_amount: "0",
-        commodity_value: "0",
-
-        // Items
-        quantity: order.items.reduce((sum, item) => sum + item.quantity, 0),
-        packages: order.items.map((item) => ({
-          name: item.name,
-          qty: item.quantity,
-          price: item.price.toString(),
-          sku: item.sku || "N/A",
-          count: item.quantity,
-        })),
-
-        // Return metadata
-        is_return: true,
-        original_tracking_id: order.shipping?.trackingId,
-        return_reason: returnRequest.reason,
-      };
-
-      console.log("📦 Creating Ekart RTO shipment:", returnData);
-
-      const response = await axios.post(
-        `${EKART_BASE_URL}/api/v1/package/create`,
-        returnData,
-        { headers },
-      );
-
-      console.log("✅ Ekart RTO shipment created:", response.data);
-      return response.data;
-    } catch (error) {
-      console.error(
-        "❌ Ekart create RTO shipment error:",
-        error.response?.data || error.message,
+        error.response?.data || error.message
       );
       throw error;
     }

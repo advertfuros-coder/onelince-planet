@@ -653,7 +653,7 @@ export default function Header() {
                   <FiMapPin className="w-4 h-4 drop-shadow-md" />
                   <div className="text-left">
                     <div className=" text-black line-clamp-1 max-w-[150px] drop-shadow-md">
-                      Delivering to {location} {pincode && <span className="font-semibold">{pincode}</span>}
+                      {location} {pincode && <span className="font-semibold">{pincode}</span>}
                     </div>
                     <div className="font-semibold text-black drop-shadow-md">Update Location</div>
                   </div>

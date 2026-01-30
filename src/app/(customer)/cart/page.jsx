@@ -22,21 +22,27 @@ import {
   FiMapPin,
   FiInfo,
   FiChevronRight,
-  FiCheck
+  FiCheck,
+  FiAlertCircle
 } from 'react-icons/fi'
 import { BiTagAlt } from 'react-icons/bi'
 import Button from '@/components/ui/Button'
 import Price, { StrikePrice } from '@/components/ui/Price'
 import { useCurrency } from '@/lib/context/CurrencyContext'
 import CouponBanner from '@/components/customer/CouponBanner'
+import { useRecentlyViewed } from '@/lib/hooks/useRecentlyViewed'
+import ProductCard from '@/components/customer/ProductCard'
 
 export default function CartPage() {
   const router = useRouter()
   const { formatPrice, currencyConfig } = useCurrency()
+  const { getRecentlyViewedIds } = useRecentlyViewed()
   const [deliveryEstimates, setDeliveryEstimates] = useState({})
   const [loadingEstimates, setLoadingEstimates] = useState(false)
   const [recommendedProducts, setRecommendedProducts] = useState([])
   const [loadingRecommended, setLoadingRecommended] = useState(false)
+  const [recentlyViewedProducts, setRecentlyViewedProducts] = useState([])
+  const [loadingRecentlyViewed, setLoadingRecentlyViewed] = useState(false)
 
   // Selection state
   const [selectedItems, setSelectedItems] = useState([])
@@ -44,13 +50,13 @@ export default function CartPage() {
   // Coupon input state
   const [couponCode, setCouponCode] = useState('')
 
-  const { 
-    items, 
-    removeFromCart, 
-    updateQuantity, 
-    getCartTotal, 
-    getCartCount, 
-    isLoaded, 
+  const {
+    items,
+    removeFromCart,
+    updateQuantity,
+    getCartTotal,
+    getCartCount,
+    isLoaded,
     addToCart,
     appliedCoupon,
     discount,
@@ -150,6 +156,47 @@ export default function CartPage() {
     }
   }, [items, isLoaded])
 
+  // Fetch recently viewed products
+  useEffect(() => {
+    const fetchRecentlyViewed = async () => {
+      const recentlyViewedIds = getRecentlyViewedIds()
+
+      if (recentlyViewedIds.length === 0) {
+        setRecentlyViewedProducts([])
+        return
+      }
+
+      // Filter out products already in cart
+      const cartProductIds = items.map(item => item.productId)
+      const filteredIds = recentlyViewedIds.filter(id => !cartProductIds.includes(id))
+
+      if (filteredIds.length === 0) {
+        setRecentlyViewedProducts([])
+        return
+      }
+
+      setLoadingRecentlyViewed(true)
+      try {
+        // Fetch products by IDs (limit to 6)
+        const idsToFetch = filteredIds.slice(0, 6)
+        const response = await fetch(`/api/products?ids=${idsToFetch.join(',')}`)
+        const data = await response.json()
+
+        if (data.success && data.products) {
+          setRecentlyViewedProducts(data.products)
+        }
+      } catch (error) {
+        console.error('Failed to fetch recently viewed products:', error)
+      } finally {
+        setLoadingRecentlyViewed(false)
+      }
+    }
+
+    if (isLoaded) {
+      fetchRecentlyViewed()
+    }
+  }, [items, isLoaded, getRecentlyViewedIds])
+
   if (!isLoaded) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-blue-50/30">
@@ -169,6 +216,12 @@ export default function CartPage() {
   const platformFee = selectedCount > 0 ? 20 : 0
   const shippingFee = (cartTotal > 500 || selectedCount === 0) ? 0 : 50
   const finalTotal = cartTotal + platformFee + shippingFee - discount
+
+  // Check if any items have unavailable delivery
+  const hasUndeliverableItems = items.some(item =>
+    deliveryEstimates[item.productId]?.available === false
+  )
+
 
   // Handle coupon apply
   const handleApplyCoupon = () => {
@@ -205,7 +258,7 @@ export default function CartPage() {
   return (
     <div className="min-h-screen bg-blue-50/30 pb-32">
       {/* Header */}
-      
+
 
       {/* Stepper */}
       <div className="bg-white md:block hidden px-4 py-6 border-b border-gray-100">
@@ -328,18 +381,26 @@ export default function CartPage() {
 
                 {/* Meta Labels */}
                 <div className="">
-                  
-                  <div className="flex items-center gap-2 text-[10px] text-emerald-600 font-semibold  wider">
+
+                  <div className="flex items-center gap-2 text-[10px] font-semibold wider">
                     <FiTruck className="w-3 h-3" />
-                    <span>Delivery: <span className="text-gray-900">
-                      {deliveryEstimates[item.productId] ? (
-                        `Est. ${new Date(deliveryEstimates[item.productId].etd).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`
-                      ) : loadingEstimates ? (
-                        'Calculating...'
-                      ) : (
-                        'Est. 2-5 days'
-                      )}
-                    </span></span>
+                    {deliveryEstimates[item.productId]?.available === false ? (
+                      <span className="text-red-600">
+                        ⚠️ Delivery not available to your location
+                      </span>
+                    ) : (
+                      <span className="text-emerald-600">
+                        Delivery: <span className="text-gray-900">
+                          {deliveryEstimates[item.productId]?.etd ? (
+                            `Est. ${new Date(deliveryEstimates[item.productId].etd).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`
+                          ) : loadingEstimates ? (
+                            'Calculating...'
+                          ) : (
+                            'Est. 2-5 days'
+                          )}
+                        </span>
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
@@ -405,7 +466,7 @@ export default function CartPage() {
             </button>
           </div>
         )}
- 
+
       </div>
 
 
@@ -457,11 +518,20 @@ export default function CartPage() {
               <p className="text-xl font-semibold text-blue-600 leading-none tighter">{currencyConfig.symbol}{Math.round(finalTotal).toLocaleString()}</p>
               <button className="text-[9px] font-semibold text-gray-400  [2px] mt-1.5 flex items-center gap-1">View Breakdown <FiChevronDown /></button>
             </div>
-            <Link href="/checkout" className="flex-[1.8]">
-              <button className="w-full py-3 bg-blue-600 text-white font-semibold text-[14px] rounded-[24px] shadow-2xl shadow-blue-600/20  [4px] active:scale-[0.98] transition-all">
+            {hasUndeliverableItems ? (
+              <button
+                disabled
+                className="flex-[1.8] w-full py-3 bg-gray-300 text-gray-500 font-semibold text-[14px] rounded-[24px] cursor-not-allowed [4px]"
+              >
                 Place Order
               </button>
-            </Link>
+            ) : (
+              <Link href="/checkout" className="flex-[1.8]">
+                <button className="w-full py-3 bg-blue-600 text-white font-semibold text-[14px] rounded-[24px] shadow-2xl shadow-blue-600/20  [4px] active:scale-[0.98] transition-all">
+                  Place Order
+                </button>
+              </Link>
+            )}
           </div>
         </div>
       )}
@@ -530,6 +600,33 @@ export default function CartPage() {
       )}
 
 
+
+      {/* Recently Viewed Products Section */}
+      {recentlyViewedProducts.length > 0 && (
+        <div className="mt-10 px-4">
+          <div className="flex items-center gap-2 mb-6">
+            <FiClock className="w-5 h-5 text-gray-700" />
+            <h2 className="text-xl font-bold text-gray-900">Recently Viewed</h2>
+          </div>
+
+          {loadingRecentlyViewed ? (
+            <div className="flex items-center justify-center py-12">
+              <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+              {recentlyViewedProducts.map((product) => (
+                <ProductCard
+                  key={product._id}
+                  product={product}
+                  isWishlisted={false}
+                  onToggleWishlist={() => {}}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Ecosystem Trust Signifiers */}
       <div className="mt-8 px-6 flex items-center justify-around pb-24">
