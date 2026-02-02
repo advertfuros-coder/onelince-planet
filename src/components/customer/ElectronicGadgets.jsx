@@ -21,12 +21,7 @@ const GadgetCategories = [
         image: '/images/gadget-home.png',
         bgColor: 'bg-[#E3F2FD]',
     },
-    {
-        id: 4,
-        title: 'Winter store',
-        image: '/images/gadget-winter.png',
-        bgColor: 'bg-[#E3F2FD]',
-    },
+   
     {
         id: 5,
         title: 'Accessories',
@@ -38,8 +33,8 @@ const GadgetCategories = [
 export default function ElectronicGadgets() {
     return (
         <section className="py-8 bg-white overflow-hidden">
-            <div className="max-w-8xl mx-auto px-4">
-                <div className="bg-[#EEF7FF] rounded-[48px] p-6 md:p-10 border border-blue-50">
+            <div className="max-w-8xl px-4 ">
+                <div className="bg-[#EE F7FF] ">
 
                     {/* Header Section */}
                     <div className="flex items-center gap-3 mb-8">
@@ -64,15 +59,15 @@ export default function ElectronicGadgets() {
                                 href={`/category/electronics?type=${cat.title.toLowerCase()}`}
                                 className="group"
                             >
-                                <div className={`aspect-square ${cat.bgColor} rounded-[32px] p-5 flex flex-col items-center justify-between transition-all duration-500 hover:scale-105 hover:shadow-xl border border-white/40 relative overflow-hidden h-full`}>
+                                <div className={`aspect-square ${cat.bgColor} rounded-[32px]  flex flex-col items-center justify-between transition-all duration-500 hover:scale-105 hover:shadow-xl border border-white/40 relative overflow-hidden h-full`}>
 
                                     {/* Category Title */}
-                                    <h3 className="text-center font-black text-gray-800 text-sm md:text-xl leading-tight">
+                                    <h3 className="text-center capitalize px-2 pt-2 font-semibold text-gray-800 text-sm md:text-xl leading-tight">
                                         {cat.title}
                                     </h3>
 
                                     {/* Category Image */}
-                                    <div className="relative w-full h-[70%] mt-2">
+                                    <div className="relative w-full">
                                         <img
                                             src={cat.image}
                                             alt={cat.title}

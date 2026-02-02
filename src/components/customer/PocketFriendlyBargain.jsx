@@ -18,7 +18,7 @@ export default function PocketFriendlyBargain() {
             id: 1,
             category: 'Kurtas',
             price: '549',
-            image: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=400&h=600&fit=crop',
+            image: 'https://assets.myntassets.com/h_720,q_90,w_540/v1/assets/images/2025/APRIL/12/njr5Dm1p_5c213231bae44a9db7cf85d42f2554ca.jpg',
             link: '/products?category=kurtas&maxPrice=549'
         },
         {
@@ -49,13 +49,7 @@ export default function PocketFriendlyBargain() {
             image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400&h=600&fit=crop',
             link: '/products?category=jackets&maxPrice=1299'
         },
-        {
-            id: 6,
-            category: 'Day Cream',
-            price: '249',
-            image: 'https://images.unsplash.com/photo-1556228578-8c7c2f1e1493?w=400&h=600&fit=crop',
-            link: '/products?category=skincare&maxPrice=249'
-        },
+       
         {
             id: 7,
             category: 'T-Shirts',

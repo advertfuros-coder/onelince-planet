@@ -2,7 +2,7 @@
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/db/mongodb";
 import User from "@/lib/db/models/User";
-import { verifyToken } from "@/lib/auth";
+import { verifyToken } from "@/lib/utils/auth";
 
 // GET - Fetch all saved addresses for logged-in user
 export async function GET(request) {

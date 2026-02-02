@@ -56,7 +56,7 @@ export default function Home() {
 
 
         {/* Deals of the Day - Price drop alerts with extra discounts */}
-        <DealsOfTheDay />
+        {/* <DealsOfTheDay /> */}
 
         {/* Promotional Cards - Visual marketing banners */}
         <PromotionalCards />

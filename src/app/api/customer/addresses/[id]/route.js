@@ -2,7 +2,7 @@
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/db/mongodb";
 import User from "@/lib/db/models/User";
-import { verifyToken } from "@/lib/auth";
+import { verifyToken } from "@/lib/utils/auth";
 
 // PUT - Update address
 export async function PUT(request, { params }) {
