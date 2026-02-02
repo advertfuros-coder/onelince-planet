@@ -9,7 +9,9 @@ import { FiChevronRight, FiChevronLeft } from 'react-icons/fi'
 import { toast } from 'react-hot-toast'
 import { useCart } from '@/lib/context/CartContext'
 
-export default function SearchPage() {
+import { Suspense } from 'react'
+
+function SearchContent() {
   const searchParams = useSearchParams()
   const { addToCart } = useCart()
 
@@ -35,6 +37,15 @@ export default function SearchPage() {
     sortBy: searchParams.get('sortBy') || 'relevance',
     order: searchParams.get('order') || 'desc'
   })
+
+  // Update filters when search params change
+  useEffect(() => {
+    setFilters(prev => ({
+      ...prev,
+      search: searchParams.get('q') || searchParams.get('search') || prev.search,
+      category: searchParams.get('category') || prev.category
+    }))
+  }, [searchParams])
 
   const [currentPage, setCurrentPage] = useState(1)
 
@@ -267,10 +278,10 @@ export default function SearchPage() {
                         onClick={() => typeof pageNum === 'number' && handlePageChange(pageNum)}
                         disabled={pageNum === '...' || pageNum === pagination.currentPage}
                         className={`w-10 h-10 flex items-center justify-center rounded-full font-semibold text-[14px] transition-all ${pageNum === pagination.currentPage
-                            ? 'bg-blue-600 text-white shadow-lg shadow-blue-200'
-                            : pageNum === '...'
-                              ? 'bg-transparent text-gray-400 cursor-default'
-                              : 'bg-transparent text-gray-500 hover:bg-[#F8F9FA]'
+                          ? 'bg-blue-600 text-white shadow-lg shadow-blue-200'
+                          : pageNum === '...'
+                            ? 'bg-transparent text-gray-400 cursor-default'
+                            : 'bg-transparent text-gray-500 hover:bg-[#F8F9FA]'
                           }`}
                       >
                         {pageNum}
@@ -292,5 +303,13 @@ export default function SearchPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-white" />}>
+      <SearchContent />
+    </Suspense>
   )
 }

@@ -42,7 +42,7 @@ export async function getDeliveryEstimate(params) {
           "X-API-Secret": EKART_API_SECRET,
         },
         timeout: 10000, // 10 second timeout
-      }
+      },
     );
 
     if (response.data && response.data.success) {
@@ -103,7 +103,7 @@ export async function getBatchDeliveryEstimates(routes) {
           ...route,
           success: false,
           error: error.message,
-        }))
+        })),
     );
 
     const batchResults = await Promise.allSettled(batchPromises);
@@ -133,7 +133,7 @@ export async function checkServiceability(pincode) {
           "X-API-Secret": EKART_API_SECRET,
         },
         timeout: 5000,
-      }
+      },
     );
 
     return response.data?.serviceable || false;
@@ -196,9 +196,11 @@ export function validateConfig() {
   return true;
 }
 
-export default {
+const ekartService = {
   getDeliveryEstimate,
   getBatchDeliveryEstimates,
   checkServiceability,
   validateConfig,
 };
+
+export default ekartService;

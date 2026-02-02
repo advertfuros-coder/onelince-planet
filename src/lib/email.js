@@ -108,7 +108,7 @@ class EmailService {
               <h3>Order Details</h3>
               <p><strong>Order Number:</strong> #${order.orderNumber}</p>
               <p><strong>Order Date:</strong> ${new Date(
-                order.createdAt
+                order.createdAt,
               ).toLocaleDateString()}</p>
               <p><strong>Total Amount:</strong> ₹${order.pricing.total.toLocaleString()}</p>
               
@@ -130,7 +130,7 @@ class EmailService {
                       <td>${item.quantity}</td>
                       <td>₹${(item.price * item.quantity).toLocaleString()}</td>
                     </tr>
-                  `
+                  `,
                     )
                     .join("")}
                 </tbody>
@@ -146,16 +146,16 @@ class EmailService {
                     : ""
                 }
                 ${order.shippingAddress.city}, ${
-      order.shippingAddress.state
-    } - ${order.shippingAddress.pincode}<br>
+                  order.shippingAddress.state
+                } - ${order.shippingAddress.pincode}<br>
                 ${order.shippingAddress.phone}
               </p>
             </div>
             
             <center>
               <a href="${process.env.NEXT_PUBLIC_URL}/orders/${
-      order.orderNumber
-    }" class="button">Track Your Order</a>
+                order.orderNumber
+              }" class="button">Track Your Order</a>
             </center>
           </div>
           
@@ -204,7 +204,7 @@ class EmailService {
               <h3>Order Summary</h3>
               <p><strong>Order Number:</strong> #${order.orderNumber}</p>
               <p><strong>Delivered On:</strong> ${new Date(
-                order.shipping.deliveredAt
+                order.shipping.deliveredAt,
               ).toLocaleDateString()}</p>
               <p><strong>Total Amount:</strong> ₹${order.pricing.total.toLocaleString()}</p>
               
@@ -213,8 +213,8 @@ class EmailService {
             
             <center>
               <a href="${process.env.NEXT_PUBLIC_URL}/orders/${
-      order.orderNumber
-    }" class="button">View Order Details</a>
+                order.orderNumber
+              }" class="button">View Order Details</a>
             </center>
             
             <p style="text-align: center; margin-top: 20px;">
@@ -233,4 +233,5 @@ class EmailService {
   }
 }
 
-export default new EmailService();
+const emailService = new EmailService();
+export default emailService;

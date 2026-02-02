@@ -492,4 +492,5 @@ class ShiprocketService {
   }
 }
 
-export default new ShiprocketService();
+const shiprocketService = new ShiprocketService();
+export default shiprocketService;

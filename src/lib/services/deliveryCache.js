@@ -270,9 +270,11 @@ export async function bulkUpdateCache(routes) {
   };
 }
 
-export default {
+const deliveryCache = {
   getDeliveryEstimate,
   getCacheStats,
   clearExpiredCache,
   bulkUpdateCache,
 };
+
+export default deliveryCache;

@@ -48,7 +48,7 @@ Product Details:
 - Current Price: ₹${currentPrice}
 - Cost Price: ₹${costPrice}
 - Current Margin: ${(((currentPrice - costPrice) / currentPrice) * 100).toFixed(
-        1
+        1,
       )}%
 
 Market Analysis:
@@ -92,7 +92,7 @@ Provide pricing recommendation with reasoning. Return JSON:
 
       const aiRecommendation = await aiService.generateStructuredData(
         prompt,
-        schema
+        schema,
       );
 
       // Validate recommendation
@@ -100,7 +100,7 @@ Provide pricing recommendation with reasoning. Return JSON:
         aiRecommendation.recommendedPrice,
         costPrice,
         currentPrice,
-        suggestedMargin
+        suggestedMargin,
       );
 
       return {
@@ -108,7 +108,7 @@ Provide pricing recommendation with reasoning. Return JSON:
         current: {
           price: currentPrice,
           margin: (((currentPrice - costPrice) / currentPrice) * 100).toFixed(
-            1
+            1,
           ),
           position: this.getMarketPosition(currentPrice, competitorPrices),
         },
@@ -132,7 +132,7 @@ Provide pricing recommendation with reasoning. Return JSON:
             priceRange: { min: minCompetitorPrice, max: maxCompetitorPrice },
             yourPosition: this.getMarketPosition(
               currentPrice,
-              competitorPrices
+              competitorPrices,
             ),
           },
           performance: {
@@ -267,4 +267,5 @@ Return JSON with 4 weekly prices and reasoning:
   }
 }
 
-export default new AIPricingEngine();
+const aiPricingEngine = new AIPricingEngine();
+export default aiPricingEngine;

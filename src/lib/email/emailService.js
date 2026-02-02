@@ -46,20 +46,20 @@ class EmailService {
           "  Port (raw):",
           process.env.SMTP_PORT,
           "Type:",
-          typeof process.env.SMTP_PORT
+          typeof process.env.SMTP_PORT,
         );
         console.log("  Port (parsed):", smtpPort, "Type:", typeof smtpPort);
         console.log(
           "  Secure (raw):",
           process.env.SMTP_SECURE,
           "Type:",
-          typeof process.env.SMTP_SECURE
+          typeof process.env.SMTP_SECURE,
         );
         console.log("  Secure (parsed):", isSecure, "Type:", typeof isSecure);
         console.log("  User:", smtpUser);
         console.log(
           "  Pass:",
-          smtpPass ? `***${smtpPass.slice(-4)}` : "NOT SET"
+          smtpPass ? `***${smtpPass.slice(-4)}` : "NOT SET",
         );
 
         this.transporter = nodemailer.createTransport({
@@ -83,7 +83,7 @@ class EmailService {
         });
 
         console.log(
-          `📧 SMTP configured: ${process.env.SMTP_HOST}:${smtpPort} (secure: ${isSecure})`
+          `📧 SMTP configured: ${process.env.SMTP_HOST}:${smtpPort} (secure: ${isSecure})`,
         );
       } else {
         // Development mode - use Ethereal (fake SMTP)
@@ -147,12 +147,15 @@ class EmailService {
         } catch (error) {
           lastError = error;
           console.error(`❌ Email attempt ${attempt} failed:`, error.message);
-          
+
           // If this is a timeout error and we have retries left, wait and try again
-          if (attempt < retries && (error.code === 'ETIMEDOUT' || error.code === 'ECONNECTION')) {
+          if (
+            attempt < retries &&
+            (error.code === "ETIMEDOUT" || error.code === "ECONNECTION")
+          ) {
             const delay = Math.min(1000 * Math.pow(2, attempt), 10000); // Exponential backoff, max 10s
             console.log(`⏳ Retrying in ${delay}ms...`);
-            await new Promise(resolve => setTimeout(resolve, delay));
+            await new Promise((resolve) => setTimeout(resolve, delay));
             // Reinitialize transporter for next attempt
             this.transporter = null;
             await this.initialize();
@@ -178,4 +181,5 @@ class EmailService {
   }
 }
 
-export default new EmailService();
+const emailService = new EmailService();
+export default emailService;
