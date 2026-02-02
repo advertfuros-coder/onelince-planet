@@ -786,7 +786,7 @@ export default function Header() {
                   return (
                     <Link
                       key={category.name}
-                      href={category.href}
+                      href={`/products?search=${encodeURIComponent(category.name)}&category=${category.name.toLowerCase()}`}
                       className="flex flex-col items-center justify-center min-w-[70px] group"
                     >
                       <div className="w-14 h-14 rounded-2xl bg-white/90 backdrop-blur-sm border border-gray-200 flex items-center justify-center mb-1.5 group-active:scale-95 transition-transform shaow-lg">
@@ -828,7 +828,7 @@ export default function Header() {
                       onMouseLeave={handleMegaMenuLeave}
                     >
                       <Link
-                        href={category.href}
+                        href={`/products?search=${encodeURIComponent(category.name)}&category=${category.name.toLowerCase()}`}
                         className={`flex items-center gap-2 px-3 py-2 text-sm font-medium transition-all duration-200 rounded-lg group whitespace-nowrap ${isActive
                           ? 'text-blue-600 bg-white shadow-sm'
                           : 'text-gray-700 hover:text-blue-600 hover:bg-white/70'
@@ -875,7 +875,7 @@ export default function Header() {
                           </div>
                         </div>
                         <Link
-                          href={category.href}
+                          href={`/products?search=${encodeURIComponent(category.name)}&category=${category.name.toLowerCase()}`}
                           className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors group"
                         >
                           View All {category.name}
@@ -890,7 +890,7 @@ export default function Header() {
                           {category.subcategories.map((subcat) => (
                             <Link
                               key={subcat.name}
-                              href={subcat.href}
+                              href={`/products?search=${encodeURIComponent(subcat.name)}&category=${category.name.toLowerCase()}`}
                               className="flex items-center gap-2 text-sm text-gray-700 hover:text-blue-600 transition-colors group py-1.5 px-2 rounded-md hover:bg-blue-50"
                             >
                               <div className="w-1.5 h-1.5 rounded-full bg-gray-300 group-hover:bg-blue-600 transition-colors"></div>
@@ -952,7 +952,7 @@ export default function Header() {
               {categories.map((category) => (
                 <Link
                   key={category.name}
-                  href={category.href}
+                  href={`/products?search=${encodeURIComponent(category.name)}&category=${category.name.toLowerCase()}`}
                   className="block py-2 text-sm text-gray-700 hover:text-blue-600 transition-colors"
                   onClick={() => setIsMenuOpen(false)}
                 >
