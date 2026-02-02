@@ -54,7 +54,8 @@ const ValentinceCategories = [
     },
 ];
 
-export default function ValentinesSpecial() {
+export default function
+    ValentinesSpecial() {
     return (
         <section className="pb- bg-white">
             <div className="max-w-8xl mx-auto px-4">
@@ -98,7 +99,7 @@ export default function ValentinesSpecial() {
                             {ValentinceCategories.map((cat) => (
                                 <Link
                                     key={cat.id}
-                                    href={`/category/valentine-special?type=${cat.title.toLowerCase()}`}
+                                    href={`/products?search=${encodeURIComponent(cat.title)}&category=valentine-special`}
                                     className="group"
                                 >
                                     <div className={`aspect-square ${cat.bgColor} rounded-[32px] p-1 flex flex-col items-center justify-between transition-all duration-500 group-hover:scale-105 group-hover:shadow-xl border-4 border-white/20 relative overflow-hidden`}>

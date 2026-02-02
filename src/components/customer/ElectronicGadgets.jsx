@@ -56,7 +56,7 @@ export default function ElectronicGadgets() {
                         {GadgetCategories.map((cat) => (
                             <Link
                                 key={cat.id}
-                                href={`/category/electronics?type=${cat.title.toLowerCase()}`}
+                                href={`/products?search=${encodeURIComponent(cat.title)}&category=electronics`}
                                 className="group"
                             >
                                 <div className={`aspect-square ${cat.bgColor} rounded-[32px]  flex flex-col items-center justify-between transition-all duration-500 hover:scale-105 hover:shadow-xl border border-white/40 relative overflow-hidden h-full`}>
