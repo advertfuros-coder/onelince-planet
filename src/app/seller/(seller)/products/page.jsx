@@ -1,7 +1,7 @@
 // app/(seller)/products/page.jsx
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { useAuth } from '@/lib/context/AuthContext'
 import axios from 'axios'
@@ -39,7 +39,7 @@ import BulkUploadModal from '@/components/seller/BulkUploadModal'
 import BulkRecategorizeModal from '@/components/seller/BulkRecategorizeModal'
 import { SellerBadges } from '@/components/seller/SellerBadge'
 
-export default function SellerProductsPage() {
+function SellerProductsContent() {
   const { token, user } = useAuth()
   const [products, setProducts] = useState([])
   const [stats, setStats] = useState({})
@@ -586,6 +586,21 @@ export default function SellerProductsPage() {
         )}
       </AnimatePresence>
     </div>
+  )
+}
+
+export default function SellerProductsPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-[#F8FAFC] flex flex-col items-center justify-center p-6 lg:p-8">
+        <div className="flex flex-col items-center justify-center space-y-4">
+          <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+          <p className="text-gray-400 font-semibold uppercase tracking-widest text-[10px]">Loading Seller Products...</p>
+        </div>
+      </div>
+    }>
+      <SellerProductsContent />
+    </Suspense>
   )
 }
 

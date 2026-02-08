@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useParams, useSearchParams, useRouter } from 'next/navigation'
 import {
     FiPackage, FiTruck, FiCheckCircle, FiClock, FiMapPin,
@@ -9,7 +9,7 @@ import Price from '@/components/ui/Price'
 import { toast } from 'react-hot-toast'
 import axios from 'axios'
 
-export default function TrackOrderDetailsPage() {
+function TrackOrderDetailsContent() {
     const params = useParams()
     const searchParams = useSearchParams()
     const router = useRouter()
@@ -267,5 +267,20 @@ export default function TrackOrderDetailsPage() {
                 </div>
             </div>
         </div>
+    )
+}
+
+export default function TrackOrderDetailsPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                <div className="text-center">
+                    <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <p className="text-gray-600 font-semibold">Loading track details...</p>
+                </div>
+            </div>
+        }>
+            <TrackOrderDetailsContent />
+        </Suspense>
     )
 }

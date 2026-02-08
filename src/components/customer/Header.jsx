@@ -61,7 +61,8 @@ const megaMenuCategories = [
       description: 'Latest tech at unbeatable prices',
       image: '/featured/electronics.jpg',
       link: '/category/electronics/new'
-    }
+    },
+    image: '/category-icons/electronics.png'
   },
   {
     name: 'Fashion',
@@ -83,7 +84,8 @@ const megaMenuCategories = [
       description: 'Up to 60% off on fashion',
       image: '/featured/fashion.jpg',
       link: '/category/fashion/trending'
-    }
+    },
+    image: '/category-icons/menfashion.png'
   },
   {
     name: 'Home & Decor',
@@ -104,7 +106,8 @@ const megaMenuCategories = [
       description: 'Transform your space',
       image: '/featured/home.jpg',
       link: '/category/home/featured'
-    }
+    },
+    image: '/category-icons/home.png'
   },
   {
     name: 'Beauty & Skin',
@@ -125,7 +128,8 @@ const megaMenuCategories = [
       description: 'Premium beauty essentials',
       image: '/featured/beauty.jpg',
       link: '/category/beauty/premium'
-    }
+    },
+    image: '/category-icons/beauty.png'
   },
   {
     name: 'Books',
@@ -145,7 +149,8 @@ const megaMenuCategories = [
       description: 'Top reads this month',
       image: '/featured/books.jpg',
       link: '/category/books/bestsellers'
-    }
+    },
+    image: '/category-icons/books.png'
   },
   {
     name: 'Health & Fitness',
@@ -164,7 +169,8 @@ const megaMenuCategories = [
       description: 'Start your journey today',
       image: '/featured/health.jpg',
       link: '/category/health/featured'
-    }
+    },
+    image: '/category-icons/gym.png'
   },
   {
     name: 'Groceries',
@@ -184,7 +190,8 @@ const megaMenuCategories = [
       description: 'Farm to your doorstep',
       image: '/featured/groceries.jpg',
       link: '/category/groceries/fresh'
-    }
+    },
+    image: '/category-icons/snacks.png'
   },
   {
     name: 'Automotive',
@@ -201,7 +208,8 @@ const megaMenuCategories = [
       description: 'Keep your ride in top shape',
       image: '/featured/automotive.jpg',
       link: '/category/automotive/featured'
-    }
+    },
+    image: '/category-icons/mobileaccess.png'
   },
   {
     name: 'Baby & Toys',
@@ -218,7 +226,8 @@ const megaMenuCategories = [
       description: 'The best for your little ones',
       image: '/featured/kids.jpg',
       link: '/category/baby-toys/featured'
-    }
+    },
+    image: '/category-icons/baby.png'
   },
   {
     name: 'Pet Supplies',
@@ -235,7 +244,8 @@ const megaMenuCategories = [
       description: 'Everything for your furry friends',
       image: '/featured/pets.jpg',
       link: '/category/pets/featured'
-    }
+    },
+    image: '/category-icons/toys.png'
   },
   {
     name: 'Office Supplies',
@@ -251,7 +261,8 @@ const megaMenuCategories = [
       description: 'Productivity at your fingertips',
       image: '/featured/office.jpg',
       link: '/category/office/featured'
-    }
+    },
+    image: '/category-icons/books.png'
   }
 ]
 
@@ -780,17 +791,20 @@ export default function Header() {
           {/* Row 3: Category Icons Horizontal Scroll - Only show on homepage */}
           {pathname === '/' && (
             <div className={`overflow-hidden transition-all duration-300 ease-in-out  ${showSecondaryHeader ? 'max-h-24 opacity-100  m' : 'max-h-0 opacity-0 py-0 mb-0'}`}>
-              <div className="flex items-center gap-4 overflow-x-auto no-scrollbar whitespace-nowrap px-4">
+              <div className="flex items-center gap-4 overflow-x-auto no-scrollbar whitespace-nowrap px-4 bg-white/50 py-2">
                 {megaMenuCategories.map((category) => {
-                  const IconComponent = getIconComponent(category.icon)
                   return (
                     <Link
                       key={category.name}
                       href={`/products?search=${encodeURIComponent(category.name)}&category=${category.name.toLowerCase()}`}
                       className="flex flex-col items-center justify-center min-w-[70px] group"
                     >
-                      <div className="w-14 h-14 rounded-2xl bg-white/90 backdrop-blur-sm border border-gray-200 flex items-center justify-center mb-1.5 group-active:scale-95 transition-transform shaow-lg">
-                        <IconComponent className="w-7 h-7 text-gray-800" />
+                      <div className="w-14 h-14 rounded-2xl bg-white border border-gray-100 flex items-center justify-center mb-1.5 group-active:scale-95 transition-transform shadow-sm overflow-hidden p2">
+                        <img
+                          src={category.image}
+                          alt={category.name}
+                          className="w-full h-full object-contain"
+                        />
                       </div>
                       <span className="text-[10px] font-semibold text-gray-800 text-center leading-tight">
                         {category.name}
