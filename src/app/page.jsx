@@ -29,7 +29,7 @@ import StealDeals from '@/components/customer/StealDeals'
 import ElectronicGadgets from '@/components/customer/ElectronicGadgets'
 import CouponBanner from '@/components/customer/CouponBanner'
 import CategoryGrid from '@/components/customer/CategoryGrid'
-import ValentinesSpecial from '@/components/customer/ValentinesSpecial'
+import RakshaBandhanSpecial from '@/components/customer/RakshaBandhanSpecial'
 import DealsOfTheDay from '@/components/customer/DealsOfTheDay'
 import TodaysBestDeals from '@/components/customer/TodaysBestDeals'
 import TrendingNow from '@/components/customer/TrendingNow'
@@ -42,7 +42,7 @@ export default function Home() {
         <HeroBanner />
         <CouponBanner />
         <CategoryGrid />
-        <ValentinesSpecial />
+        <RakshaBandhanSpecial />
 
         <PocketFriendlyBargain />
         <TodaysBestDeals />
