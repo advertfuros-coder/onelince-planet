@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Online Planet | Bulk Operations Engine</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+      :root {
+        --primary: #020617;
+        --secondary: #3b82f6;
+        --bg-light: #f8fafc;
+        --card-bg: #ffffff;
+        --text-main: #0f172a;
+        --text-dim: #475569;
+        --accent: #2563eb;
+        --success: #10b981;
+        --danger: #ef4444;
+        --warning: #f59e0b;
+        --border: #e2e8f0;
+      }
+
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color: var(--bg-light);
+        color: var(--text-main);
+        margin: 0;
+        padding: 40px 20px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      header {
+        text-align: center;
+        margin-bottom: 60px;
+        max-width: 900px;
+      }
+
+      h1 {
+        font-size: 3rem;
+        font-weight: 800;
+        margin: 0;
+        color: var(--text-main);
+        letter-spacing: -0.02em;
+      }
+
+      p.subtitle {
+        font-size: 1.1rem;
+        color: var(--text-dim);
+        margin-top: 10px;
+        font-weight: 400;
+      }
+
+      .badge {
+        background: #e2e8f0;
+        border: 1px solid #cbd5e1;
+        color: #475569;
+        padding: 6px 16px;
+        border-radius: 100px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        display: inline-block;
+        margin-bottom: 15px;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 1100px;
+        display: grid;
+        gap: 40px;
+      }
+
+      .card {
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow:
+          0 10px 25px -5px rgba(0, 0, 0, 0.05),
+          0 8px 10px -6px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        position: relative;
+      }
+
+      .card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        border-color: var(--accent);
+      }
+
+      .download-btn {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: var(--primary);
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        z-index: 10;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 30px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: var(--text-main);
+      }
+
+      h2 .icon {
+        color: var(--accent);
+      }
+
+      .mermaid {
+        background: #fdfdfd !important;
+        margin: 20px 0;
+        display: flex;
+        justify-content: center;
+        padding: 20px;
+        border-radius: 12px;
+        border: 1px solid #f1f5f9;
+      }
+
+      .description {
+        margin-top: 30px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 25px;
+        border-top: 1px solid var(--border);
+        padding-top: 30px;
+      }
+
+      .step {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .step-num {
+        font-weight: 800;
+        color: var(--accent);
+        font-size: 0.8rem;
+      }
+
+      .step-title {
+        font-weight: 700;
+        font-size: 1rem;
+        color: var(--text-main);
+      }
+
+      .step-text {
+        font-size: 0.85rem;
+        color: var(--text-dim);
+        line-height: 1.6;
+      }
+
+      .json-block {
+        background: #0f172a;
+        color: #e2e8f0;
+        padding: 20px;
+        border-radius: 12px;
+        font-family: monospace;
+        font-size: 0.9rem;
+        overflow-x: auto;
+        border-left: 4px solid var(--accent);
+      }
+
+      .json-key {
+        color: #38bdf8;
+      }
+      .json-string {
+        color: #a7f3d0;
+      }
+      .json-num {
+        color: #fdt08a;
+      }
+
+      footer {
+        margin-top: 80px;
+        text-align: center;
+        color: var(--text-dim);
+        font-size: 0.85rem;
+        font-weight: 500;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <span class="badge">Seller Ops | Day 14</span>
+      <h1>Bulk Operations Engine</h1>
+      <p class="subtitle">
+        Architecting high-volume product ingestion with partial success logic
+      </p>
+    </header>
+
+    <div class="container" id="diagram-container">
+      <!-- Architecture Flowchart -->
+      <div class="card" id="card-architecture">
+        <button
+          class="download-btn"
+          onclick="
+            downloadCard('card-architecture', 'bulk-upload-architecture')
+          "
+        >
+          📥 Download
+        </button>
+        <h2><span class="icon">🚀</span> The Ingestion Pipeline</h2>
+        <div class="mermaid">
+          flowchart TD UI --> API API --> VAL VAL --> PARSE VAL --> ERR PARSE
+          --> DB DB --> Q Q --> RES ERR --> RES RES --> UI
+        </div>
+        <div class="description">
+          <div class="step">
+            <span class="step-num">COERCION</span>
+            <span class="step-title">Intelligent Parsing</span>
+            <span class="step-text"
+              >Automatically splits comma-separated strings into tags/images and
+              converts string text into numeric floats for pricing.</span
+            >
+          </div>
+          <div class="step">
+            <span class="step-num">SECURE</span>
+            <span class="step-title">The Quarantine Gate</span>
+            <span class="step-text"
+              >Bulk products are forced into `isApproved: false` state,
+              requiring Admin/Automated checks before hitting the live
+              catalog.</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Partial Success Logic Sequence -->
+      <div class="card" id="card-logic">
+        <button
+          class="download-btn"
+          onclick="downloadCard('card-logic', 'partial-success-logic')"
+        >
+          📥 Download
+        </button>
+        <h2><span class="icon">⚖️</span> Partial Success Paradigm</h2>
+        <div class="mermaid">
+sequenceDiagram
+    Seller->>API Engine: Uploads CSV
+    API Engine->>API Engine: Validate Row
+    API Engine->>Database: Batch Insert
+    Database-->>API Engine: Insert Success
+    API Engine-->>Seller: Return Report
+        </div>
+      </div>
+
+      <!-- JSON Telemetry Output -->
+      <div class="card" id="card-json">
+        <button
+          class="download-btn"
+          onclick="downloadCard('card-json', 'json-telemetry')"
+        >
+          📥 Download
+        </button>
+        <h2><span class="icon">💻</span> The Error Telemetry Payload</h2>
+        <p style="font-size: 0.9rem; color: #475569; margin-bottom: 20px">
+          Instead of vague 500 errors, sellers receive an exact breakdown of
+          what failed and why.
+        </p>
+        <div class="json-block">
+          {
+          <span class="json-key">"success"</span>:
+          <span class="json-num">true</span>,
+          <span class="json-key">"message"</span>:
+          <span class="json-string">"Uploaded 9999 of 10000 products"</span>,
+          <span class="json-key">"results"</span>: {
+          <span class="json-key">"total"</span>:
+          <span class="json-num">10000</span>,
+          <span class="json-key">"success"</span>: [ {
+          <span class="json-key">"row"</span>: <span class="json-num">1</span>,
+          <span class="json-key">"name"</span>:
+          <span class="json-string">"Modern Smartwatch"</span> },
+          <span class="json-dim">// ... 9998 more objects</span>
+          ],
+          <span class="json-key">"failed"</span>: [ {
+          <span class="json-key">"row"</span>: <span class="json-num">2</span>,
+          <span class="json-key">"error"</span>:
+          <span class="json-string">"Missing required fields: category"</span>,
+          <span class="json-key">"data"</span>: {
+          <span class="json-key">"name"</span>:
+          <span class="json-string">"Cotton Shirt"</span>,
+          <span class="json-key">"category"</span>:
+          <span class="json-string">""</span> } } ] } }
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <p>
+        Built for Online Planet Project • Day 14/45 Build In Public •
+        Asynchronous CSV Ingestion Engine
+      </p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: "default",
+        securityLevel: "loose",
+        fontFamily: "Poppins",
+        themeVariables: {
+          primaryColor: "#eff6ff",
+          primaryTextColor: "#1e3a8a",
+          primaryBorderColor: "#3b82f6",
+          lineColor: "#64748b",
+          secondaryColor: "#f1f5f9",
+          tertiaryColor: "#ffffff",
+        },
+      });
+
+      async function downloadCard(cardId, filename) {
+        const card = document.getElementById(cardId);
+        const btn = card.querySelector(".download-btn");
+
+        btn.style.display = "none";
+
+        try {
+          const canvas = await html2canvas(card, {
+            backgroundColor: "#ffffff",
+            scale: 2,
+            logging: false,
+            useCORS: true,
+          });
+
+          const link = document.createElement("a");
+          link.download = `${filename}.png`;
+          link.href = canvas.toDataURL("image/png");
+          link.click();
+        } catch (err) {
+          console.error("Download failed:", err);
+        } finally {
+          btn.style.display = "flex";
+        }
+      }
+    </script>
+  </body>
+</html>

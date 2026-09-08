@@ -28,15 +28,24 @@ export async function GET(request) {
     }
 
     const categories = await Category.find(query)
-      .populate('parentCategory', 'name slug')
-      .populate('subCategories', 'name slug')
+      .populate({ path: 'parentCategory', select: 'name slug', strictPopulate: false })
+      .populate({ path: 'subCategories', select: 'name slug', strictPopulate: false })
+      .populate({ path: 'parentId', select: 'name slug', strictPopulate: false })
       .sort({ sortOrder: 1, createdAt: -1 })
       .lean()
 
     // Get product counts for each category
     const categoriesWithCounts = await Promise.all(
       categories.map(async (cat) => {
-        const productCount = await Product.countDocuments({ category: cat.name })
+        const productCount = await Product.countDocuments({
+          $or: [
+            { category: cat.name },
+            { category: cat._id },
+            { category: cat._id.toString() },
+            { categoryId: cat._id },
+            ...(cat.path ? [{ categoryPath: new RegExp(`(^|/)${cat.path}(/|$)`, 'i') }] : []),
+          ],
+        })
         return { ...cat, productCount }
       })
     )

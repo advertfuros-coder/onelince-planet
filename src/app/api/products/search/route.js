@@ -2,6 +2,7 @@
 import { NextResponse } from "next/server";
 import connectDB from "@/lib/db/mongodb";
 import Product from "@/lib/db/models/Product";
+import { buildCategoryFilter } from "@/lib/db/utils/categoryMatcher";
 
 /**
  * Enhanced Product Search & Filter API
@@ -17,6 +18,7 @@ export async function GET(request) {
     // Parse all parameters
     const search = searchParams.get("search") || "";
     const category = searchParams.get("category") || "";
+    const subcategory = searchParams.get("subcategory") || searchParams.get("sub") || "";
     const minPrice = parseFloat(searchParams.get("minPrice")) || 0;
     const maxPrice = parseFloat(searchParams.get("maxPrice")) || Infinity;
     const brand = searchParams.get("brand") || "";
@@ -67,8 +69,13 @@ export async function GET(request) {
     }
 
     // Category filter
-    if (category) {
-      query.category = { $regex: category, $options: "i" };
+    let categoryFilter = null;
+    if (category || subcategory) {
+      categoryFilter = await buildCategoryFilter(category, subcategory);
+      if (categoryFilter) {
+        query.$and = query.$and || [];
+        query.$and.push(categoryFilter);
+      }
     }
 
     // Price range filter
@@ -159,47 +166,8 @@ export async function GET(request) {
         freeShipping: product.shipping?.freeShipping || false,
       };
 
-      // Check if product has variants
-      if (
-        product.variants &&
-        Array.isArray(product.variants) &&
-        product.variants.length > 0
-      ) {
-        // Create a separate entry for each variant
-        product.variants.forEach((variant, index) => {
-          enrichedProducts.push({
-            ...baseProductData,
-            // Override product name to include variant name
-            name: `${variant.name} ${product.name}`,
-            // Use variant-specific data if available
-            pricing: {
-              ...product.pricing,
-              salePrice: variant.price || product.pricing?.salePrice,
-              basePrice: variant.originalPrice || product.pricing?.basePrice,
-            },
-            images:
-              variant.images && variant.images.length > 0
-                ? variant.images.map((img) => ({ url: img, alt: variant.name }))
-                : product.images,
-            inventory: {
-              ...product.inventory,
-              stock:
-                variant.stock !== undefined
-                  ? variant.stock
-                  : product.inventory?.stock,
-            },
-            // Add variant info for reference
-            variantInfo: {
-              variantIndex: index,
-              variantName: variant.name,
-              isVariant: true,
-            },
-          });
-        });
-      } else {
-        // No variants, add product as-is
-        enrichedProducts.push(baseProductData);
-      }
+      // Add product as a single entry (variants will be selected on the product detail page)
+      enrichedProducts.push(baseProductData);
     });
 
     // Get price range

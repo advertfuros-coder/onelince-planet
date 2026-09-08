@@ -237,11 +237,15 @@ export default function AdminProductsPage() {
             className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
           >
             <option value="">All Categories</option>
-            {categories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
+            {categories.map((cat) => {
+              const val = typeof cat === 'object' ? cat?.name || cat?.value || cat?._id : cat
+              const lbl = typeof cat === 'object' ? cat?.name || cat?.label : cat
+              return (
+                <option key={val} value={val}>
+                  {lbl}
+                </option>
+              )
+            })}
           </select>
 
           {/* Status Filter */}
@@ -383,9 +387,13 @@ export default function AdminProductsPage() {
                       <td className="px-6 py-4">
                         <div className="flex items-center space-x-3">
                           <img
-                            src={product.images?.[0]?.url || '/images/placeholder-product.jpg'}
+                            src={(typeof product.images?.[0] === 'string' ? product.images[0] : product.images?.[0]?.url) || '/images/placeholder-product.jpg'}
                             alt={product.name}
                             className="w-12 h-12 object-cover rounded-lg"
+                            onError={(e) => {
+                              e.target.onerror = null
+                              e.target.src = '/placeholder.png'
+                            }}
                           />
 
 
@@ -396,7 +404,11 @@ export default function AdminProductsPage() {
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-900">{product.category}</td>
+                      <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                        {typeof product.category === 'object'
+                          ? product.category?.name || product.categoryName || 'Uncategorized'
+                          : product.categoryName || product.category || 'Uncategorized'}
+                      </td>
                       <td className="px-6 py-4">
                         <div>
                           <p className="font-semibold text-gray-900">

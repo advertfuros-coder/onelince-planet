@@ -126,7 +126,28 @@ export default function EditProductPage({ params }) {
     setSaving(true)
 
     try {
-      const res = await axios.put(`/api/admin/products/${productId}`, formData, {
+      const normalizedImages = (formData.images || []).map((img, idx) => {
+        if (typeof img === 'string') {
+          return {
+            url: img.trim(),
+            alt: `${formData.name || 'Product'} - View ${idx + 1}`,
+            isPrimary: idx === 0,
+          }
+        }
+        return {
+          ...img,
+          url: img.url || '',
+          alt: img.alt || `${formData.name || 'Product'} - View ${idx + 1}`,
+          isPrimary: idx === 0,
+        }
+      })
+
+      const payload = {
+        ...formData,
+        images: normalizedImages,
+      }
+
+      const res = await axios.put(`/api/admin/products/${productId}`, payload, {
         headers: { Authorization: `Bearer ${token}` },
       })
 
@@ -619,22 +640,41 @@ export default function EditProductPage({ params }) {
 
           {/* Images */}
           <Section title="Product Images">
-            <div className="space-y-3">
-              {Array.isArray(formData.images) && formData.images.map((img, index) => (
-                <div key={index} className="relative group">
-                  <img src={img} alt={`Product ${index + 1}`} className="w-full h-32 object-cover rounded-lg" />
-                  <button
-                    type="button"
-                    onClick={() => removeImage(index)}
-                    className="absolute top-2 right-2 p-1 bg-red-600 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                  >
-                    <FiTrash2 size={14} />
-                  </button>
-                </div>
-              ))}
+            <div className="grid grid-cols-2 gap-3 mb-3">
+              {Array.isArray(formData.images) && formData.images.map((img, index) => {
+                const imgUrl = typeof img === 'string' ? img : (img?.url || '')
+                return (
+                  <div key={index} className="relative group aspect-square rounded-xl overflow-hidden border border-gray-200 bg-gray-50 flex items-center justify-center shadow-sm">
+                    <img
+                      src={imgUrl}
+                      alt={typeof img === 'object' && img?.alt ? img.alt : `Product ${index + 1}`}
+                      className="w-full h-full object-contain p-2"
+                      onError={(e) => {
+                        e.target.onerror = null
+                        e.target.src = '/placeholder.png'
+                      }}
+                    />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => removeImage(index)}
+                        className="p-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition shadow"
+                        title="Delete image"
+                      >
+                        <FiTrash2 size={16} />
+                      </button>
+                    </div>
+                    {index === 0 && (
+                      <span className="absolute top-2 left-2 px-2 py-0.5 bg-blue-600 text-white text-[10px] font-bold rounded shadow uppercase tracking-wider">
+                        Primary
+                      </span>
+                    )}
+                  </div>
+                )
+              })}
             </div>
             <Input
-              placeholder="Image URL"
+              placeholder="Paste image URL and press Enter"
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
                   e.preventDefault()
@@ -643,7 +683,7 @@ export default function EditProductPage({ params }) {
                 }
               }}
             />
-            <p className="text-xs text-gray-500">Press Enter to add image URL</p>
+            <p className="text-xs text-gray-500 mt-1">Press Enter to add image URL</p>
           </Section>
 
           {/* Tags */}

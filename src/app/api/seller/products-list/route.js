@@ -1,8 +1,10 @@
 // app/api/seller/products-list/route.js
 import { NextResponse } from "next/server";
+import mongoose from "mongoose";
 import connectDB from "@/lib/db/mongodb";
 import Product from "@/lib/db/models/Product";
 import Seller from "@/lib/db/models/Seller";
+import Category from "@/lib/db/models/Category";
 import { verifyToken } from "@/lib/utils/auth";
 
 /**
@@ -41,8 +43,10 @@ export async function GET(request) {
     const category = searchParams.get("category");
     const status = searchParams.get("status");
 
+    const sellerFilter = { $in: [seller._id, decoded.userId] };
+
     // Build query
-    let query = { sellerId: decoded.userId };
+    let query = { sellerId: sellerFilter };
 
     // Search filter
     if (search) {
@@ -56,7 +60,39 @@ export async function GET(request) {
 
     // Category filter
     if (category) {
-      query.category = category;
+      if (mongoose.Types.ObjectId.isValid(category)) {
+        const catDoc = await Category.findById(category).select("name path").lean();
+        const orConditions = [
+          { category: category },
+          { category: new mongoose.Types.ObjectId(category) },
+          { categoryId: new mongoose.Types.ObjectId(category) },
+        ];
+        if (catDoc) {
+          orConditions.push({ category: catDoc.name });
+          if (catDoc.path) orConditions.push({ categoryPath: new RegExp(`(^|/)${catDoc.path}(/|$)`, "i") });
+        }
+        query.$and = query.$and || [];
+        query.$and.push({ $or: orConditions });
+      } else {
+        const catDoc = await Category.findOne({
+          $or: [
+            { name: new RegExp(`^${category}$`, "i") },
+            { slug: new RegExp(`^${category}$`, "i") },
+          ],
+        }).select("_id name path").lean();
+        const orConditions = [{ category: new RegExp(`^${category}$`, "i") }];
+        if (catDoc) {
+          orConditions.push(
+            { category: catDoc._id },
+            { category: catDoc._id.toString() },
+            { category: catDoc.name },
+            { categoryId: catDoc._id }
+          );
+          if (catDoc.path) orConditions.push({ categoryPath: new RegExp(`(^|/)${catDoc.path}(/|$)`, "i") });
+        }
+        query.$and = query.$and || [];
+        query.$and.push({ $or: orConditions });
+      }
     }
 
     // Status filters
@@ -98,7 +134,7 @@ export async function GET(request) {
     // Handle low-health filter separately (requires calculation)
     if (status === "low-health") {
       const allProducts = await Product.find({
-        sellerId: decoded.userId,
+        sellerId: sellerFilter,
         isDraft: { $ne: true },
       }).lean();
 
@@ -130,28 +166,28 @@ export async function GET(request) {
       draftCount,
       lowStockCount,
     ] = await Promise.all([
-      Product.countDocuments({ sellerId: decoded.userId }),
+      Product.countDocuments({ sellerId: sellerFilter }),
       Product.countDocuments({
-        sellerId: decoded.userId,
+        sellerId: sellerFilter,
         isActive: true,
         isDraft: { $ne: true },
       }),
       Product.countDocuments({
-        sellerId: decoded.userId,
+        sellerId: sellerFilter,
         isActive: false,
         isDraft: { $ne: true },
       }),
       Product.countDocuments({
-        sellerId: decoded.userId,
+        sellerId: sellerFilter,
         isApproved: false,
         isDraft: { $ne: true },
       }),
       Product.countDocuments({
-        sellerId: decoded.userId,
+        sellerId: sellerFilter,
         isDraft: true,
       }),
       Product.countDocuments({
-        sellerId: decoded.userId,
+        sellerId: sellerFilter,
         isDraft: { $ne: true },
         $expr: { $lte: ["$inventory.stock", "$inventory.lowStockThreshold"] },
       }),
@@ -159,7 +195,7 @@ export async function GET(request) {
 
     // Calculate low health count (only if needed for stats)
     const allProductsForHealth = await Product.find({
-      sellerId: decoded.userId,
+      sellerId: sellerFilter,
       isDraft: { $ne: true },
     })
       .select(
@@ -171,9 +207,40 @@ export async function GET(request) {
       (p) => calculateHealth(p) < 70,
     ).length;
 
+    // Fetch all categories for reference mapping
+    const allDbCategories = await Category.find({}).select("_id name slug").lean();
+    const categoryMap = new Map();
+    allDbCategories.forEach((c) => {
+      categoryMap.set(c._id.toString(), c.name);
+    });
+
     // Get unique categories
-    const categories = await Product.distinct("category", {
-      sellerId: decoded.userId,
+    const rawCategories = await Product.distinct("category", {
+      sellerId: sellerFilter,
+    });
+
+    const resolvedCategoriesSet = new Set();
+    rawCategories.forEach((cat) => {
+      if (!cat) return;
+      const catStr = cat.toString();
+      if (categoryMap.has(catStr)) {
+        resolvedCategoriesSet.add(categoryMap.get(catStr));
+      } else if (!mongoose.Types.ObjectId.isValid(catStr)) {
+        resolvedCategoriesSet.add(catStr);
+      }
+    });
+
+    const categories = Array.from(resolvedCategoriesSet).sort((a, b) =>
+      a.localeCompare(b)
+    );
+
+    const formattedProducts = products.map((product) => {
+      const catStr = product.category?.toString();
+      const resolvedCategoryName = categoryMap.get(catStr) || product.category;
+      return {
+        ...product,
+        category: resolvedCategoryName,
+      };
     });
 
     const stats = {
@@ -188,7 +255,7 @@ export async function GET(request) {
 
     return NextResponse.json({
       success: true,
-      products,
+      products: formattedProducts,
       stats,
       categories,
       pagination: {

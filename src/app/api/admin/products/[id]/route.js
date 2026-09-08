@@ -1,7 +1,9 @@
 // app/api/admin/products/[id]/route.js
 import { NextResponse } from "next/server";
+import mongoose from "mongoose";
 import connectDB from "@/lib/db/mongodb";
 import Product from "@/lib/db/models/Product";
+import Category from "@/lib/db/models/Category";
 import { verifyToken, isAdmin } from "@/lib/utils/adminAuth";
 
 // GET single product
@@ -28,6 +30,15 @@ export async function GET(request, { params }) {
         { success: false, message: "Product not found" },
         { status: 404 }
       );
+    }
+
+    const catStr = product.category?.toString();
+    if (mongoose.Types.ObjectId.isValid(catStr)) {
+      const catDoc = await Category.findById(catStr).select("name path").lean();
+      if (catDoc) {
+        product.category = catDoc.name;
+        product.categoryPath = product.categoryPath || catDoc.path;
+      }
     }
 
     return NextResponse.json({ success: true, product });

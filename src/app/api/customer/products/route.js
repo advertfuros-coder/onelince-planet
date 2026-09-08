@@ -2,6 +2,7 @@
 import { Product } from '@/lib/db/models';
 import dbConnect from '@/lib/dbConnect';
 import { NextResponse } from 'next/server';
+import { buildCategoryFilter } from '@/lib/db/utils/categoryMatcher';
  
 export async function GET(request) {
   try {
@@ -11,6 +12,7 @@ export async function GET(request) {
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '20');
     const category = searchParams.get('category');
+    const subcategory = searchParams.get('subcategory') || searchParams.get('sub') || '';
     const search = searchParams.get('search');
     const minPrice = searchParams.get('minPrice');
     const maxPrice = searchParams.get('maxPrice');
@@ -20,7 +22,13 @@ export async function GET(request) {
     const query = { isActive: true };
 
     // Add filters
-    if (category) query.category = category;
+    if (category || subcategory) {
+      const categoryFilter = await buildCategoryFilter(category, subcategory);
+      if (categoryFilter) {
+        query.$and = query.$and || [];
+        query.$and.push(categoryFilter);
+      }
+    }
     if (search) {
       query.$text = { $search: search };
     }

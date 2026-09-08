@@ -1,8 +1,10 @@
 // app/api/admin/products/route.js
 import { NextResponse } from "next/server";
+import mongoose from "mongoose";
 import connectDB from "@/lib/db/mongodb";
 import Product from "@/lib/db/models/Product";
 import Seller from "@/lib/db/models/Seller";
+import Category from "@/lib/db/models/Category";
 import { verifyToken, isAdmin } from "@/lib/utils/adminAuth";
 
 export async function GET(request) {
@@ -39,7 +41,51 @@ export async function GET(request) {
         { description: { $regex: search, $options: "i" } },
       ];
     }
-    if (category) query.category = category;
+    // Fetch all categories for reference
+    const allDbCategories = await Category.find({}).select("_id name slug path").lean();
+    const categoryMap = new Map();
+    allDbCategories.forEach((c) => {
+      categoryMap.set(c._id.toString(), c.name);
+    });
+
+    if (category) {
+      if (mongoose.Types.ObjectId.isValid(category)) {
+        const catDoc = allDbCategories.find((c) => c._id.toString() === category);
+        const orConditions = [
+          { category: category },
+          { category: new mongoose.Types.ObjectId(category) },
+          { categoryId: new mongoose.Types.ObjectId(category) },
+        ];
+        if (catDoc) {
+          orConditions.push({ category: catDoc.name });
+          if (catDoc.path) {
+            orConditions.push({ categoryPath: new RegExp(`(^|/)${catDoc.path}(/|$)`, "i") });
+          }
+        }
+        query.$and = query.$and || [];
+        query.$and.push({ $or: orConditions });
+      } else {
+        const catDoc = allDbCategories.find(
+          (c) =>
+            c.name.toLowerCase() === category.toLowerCase() ||
+            c.slug.toLowerCase() === category.toLowerCase()
+        );
+        const orConditions = [{ category: new RegExp(`^${category}$`, "i") }];
+        if (catDoc) {
+          orConditions.push(
+            { category: catDoc._id },
+            { category: catDoc._id.toString() },
+            { category: catDoc.name },
+            { categoryId: catDoc._id }
+          );
+          if (catDoc.path) {
+            orConditions.push({ categoryPath: new RegExp(`(^|/)${catDoc.path}(/|$)`, "i") });
+          }
+        }
+        query.$and = query.$and || [];
+        query.$and.push({ $or: orConditions });
+      }
+    }
     if (status === "active") query.isActive = true;
     if (status === "inactive") query.isActive = false;
     if (status === "pending") query.isApproved = false;
@@ -99,19 +145,39 @@ export async function GET(request) {
 
     console.log("Seller map keys:", Object.keys(sellerMap)); // Debug log
 
-    // Attach seller info to products
+    // Attach seller info and resolve category names to products
     const productsWithSeller = products.map((product) => {
       const sellerId = product.sellerId?.toString();
+      const catStr = product.category?.toString();
+      const resolvedCategoryName = categoryMap.get(catStr) || product.category;
+
       return {
         ...product,
+        category: resolvedCategoryName,
         seller: sellerMap[sellerId] || null,
       };
     });
 
-    const [total, categories] = await Promise.all([
+    const [total, rawCategories] = await Promise.all([
       Product.countDocuments(query),
       Product.distinct("category"),
     ]);
+
+    // Resolve any category that might be an ObjectId or string
+    const resolvedCategoriesSet = new Set();
+    rawCategories.forEach((cat) => {
+      if (!cat) return;
+      const catStr = cat.toString();
+      if (categoryMap.has(catStr)) {
+        resolvedCategoriesSet.add(categoryMap.get(catStr));
+      } else if (!mongoose.Types.ObjectId.isValid(catStr)) {
+        resolvedCategoriesSet.add(catStr);
+      }
+    });
+
+    const categories = Array.from(resolvedCategoriesSet).sort((a, b) =>
+      a.localeCompare(b)
+    );
 
     // Calculate stats
     const stats = {

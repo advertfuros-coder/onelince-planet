@@ -197,27 +197,51 @@ export default function AdminProductDetailPage({ params }) {
         <div className="lg:col-span-1 space-y-4">
           {/* Main Image */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-            <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden mb-4">
+            <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden mb-4 flex items-center justify-center">
               <img
-                src={product.images?.[0]?.url || '/images/placeholder-product.jpg'}
+                src={
+                  (typeof product.images?.[activeImage] === 'string'
+                    ? product.images[activeImage]
+                    : product.images?.[activeImage]?.url) ||
+                  (typeof product.images?.[0] === 'string'
+                    ? product.images[0]
+                    : product.images?.[0]?.url) ||
+                  '/images/placeholder-product.jpg'
+                }
                 alt={product.name}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain p-2"
+                onError={(e) => {
+                  e.target.onerror = null
+                  e.target.src = '/placeholder.png'
+                }}
               />
             </div>
 
             {/* Image Thumbnails */}
             {product.images?.length > 1 && (
               <div className="grid grid-cols-4 gap-2">
-                {product.images.map((img, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => setActiveImage(idx)}
-                    className={`aspect-square rounded-lg overflow-hidden border-2 transition-colors ${activeImage === idx ? 'border-blue-600' : 'border-gray-200 hover:border-gray-300'
+                {product.images.map((img, idx) => {
+                  const thumbUrl = typeof img === 'string' ? img : (img?.url || '')
+                  return (
+                    <button
+                      key={idx}
+                      onClick={() => setActiveImage(idx)}
+                      className={`aspect-square rounded-lg overflow-hidden border-2 transition-colors ${
+                        activeImage === idx ? 'border-blue-600' : 'border-gray-200 hover:border-gray-300'
                       }`}
-                  >
-                    <img src={img} alt={`${product.name} ${idx + 1}`} className="w-full h-full object-cover" />
-                  </button>
-                ))}
+                    >
+                      <img
+                        src={thumbUrl}
+                        alt={`${product.name} ${idx + 1}`}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.target.onerror = null
+                          e.target.src = '/placeholder.png'
+                        }}
+                      />
+                    </button>
+                  )
+                })}
               </div>
             )}
           </div>

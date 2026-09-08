@@ -43,6 +43,68 @@ import { SocialProofSection, RecentPurchaseNotification, VerifiedPurchaseBadge }
 import { FrequentlyBoughtTogether } from '@/components/customer/FrequentlyBoughtTogether'
 import { ProductMatcher } from '@/components/customer/ProductMatcher'
 
+function renderInlineMarkdown(str) {
+  if (!str) return ''
+  const parts = str.split(/(\*\*[^\*]+\*\*)/g)
+  return parts.map((part, idx) => {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      return (
+        <strong key={idx} className="font-semibold text-gray-900">
+          {part.slice(2, -2)}
+        </strong>
+      )
+    }
+    return part
+  })
+}
+
+function FormattedDescription({ text }) {
+  if (!text) return null
+
+  // Clean out any technical specification or highlights blocks if they leak into description
+  const cleanText = text
+    .split(/###\s*(?:Technical Specifications|Specifications|Key Highlights|Warranty)/i)[0]
+    .trim()
+
+  const paragraphs = cleanText.split(/\n\s*\n/)
+
+  return (
+    <div className="space-y-4">
+      {paragraphs.map((para, pIdx) => {
+        const lines = para.split('\n').map(l => l.trim()).filter(Boolean)
+        const isBulletList = lines.length > 0 && lines.every(l => /^[\*\+\-•]/.test(l))
+
+        if (isBulletList) {
+          return (
+            <ul key={pIdx} className="space-y-2 my-3 pl-1">
+              {lines.map((line, lIdx) => {
+                const bulletContent = line.replace(/^[\*\+\-•]\s*/, '')
+                return (
+                  <li key={lIdx} className="flex items-start gap-2.5 text-gray-700 text-sm leading-relaxed">
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-600 mt-2 flex-shrink-0" />
+                    <span>{renderInlineMarkdown(bulletContent)}</span>
+                  </li>
+                )
+              })}
+            </ul>
+          )
+        }
+
+        return (
+          <p key={pIdx} className="text-gray-700 text-sm leading-relaxed">
+            {lines.map((line, lIdx) => (
+              <span key={lIdx}>
+                {lIdx > 0 && <br />}
+                {renderInlineMarkdown(line)}
+              </span>
+            ))}
+          </p>
+        )
+      })}
+    </div>
+  )
+}
+
 export default function ProductDetailPage() {
   const params = useParams()
   const router = useRouter()
@@ -130,10 +192,46 @@ export default function ProductDetailPage() {
               products: apiProduct.sellerProductCount || 0
             },
             sellerName: apiProduct.sellerName || 'Official Store', // For cart compatibility
-            specifications: apiProduct.specifications || [],
-            description: apiProduct.description || '',
+            specifications: (() => {
+              let baseSpecs = apiProduct.specifications || []
+              if (!baseSpecs || baseSpecs.length === 0) {
+                const specMatch = (apiProduct.description || '').match(/###\s*Technical Specifications:?\s*([\s\S]*?)(?=###|$)/i)
+                if (specMatch) {
+                  baseSpecs = specMatch[1].split('\n')
+                    .filter(l => l.trim().startsWith('*') || l.trim().startsWith('+'))
+                    .map(l => {
+                      const m = l.match(/[\*\+]\s*\*\*([^\*:]+)\*\*:\s*(.*)/)
+                      return m ? { key: m[1].trim(), value: m[2].trim() } : null
+                    }).filter(Boolean)
+                }
+              }
+              return (Array.isArray(baseSpecs) ? baseSpecs : []).map(s => ({
+                ...s,
+                key: s.key ? String(s.key).replace(/\u200e/g, '').trim() : '',
+                value: s.value ? String(s.value).replace(/\u200e/g, '').replace(/Lenovo,\s*Lenovo/g, 'Lenovo').trim() : ''
+              }))
+            })(),
+            description: (apiProduct.description || '')
+              .split(/###\s*(?:Technical Specifications|Key Highlights|Warranty|Specifications)/i)[0]
+              .trim(),
             features: apiProduct.features || [],
-            highlights: apiProduct.highlights || []
+            highlights: (() => {
+              let rawHl = apiProduct.highlights || []
+              if (!rawHl || rawHl.length === 0) {
+                const hlMatch = (apiProduct.description || '').match(/###\s*Key Highlights(?: & Features)?:?\s*([\s\S]*?)(?=###|$)/i)
+                if (hlMatch) {
+                  rawHl = hlMatch[1].split('\n')
+                    .filter(l => l.trim().startsWith('*') || l.trim().startsWith('+'))
+                    .map(l => l.replace(/^[\*\+]\s*(\*\*)?/, '').replace(/(\*\*)?$/, '').trim())
+                }
+              }
+              if (!rawHl || rawHl.length === 0) {
+                rawHl = apiProduct.features || []
+              }
+              return (Array.isArray(rawHl) ? rawHl : [])
+                .filter(h => typeof h === 'string' && !/Image Unavailable/i.test(h) && !/Computers &amp;/i.test(h) && !/Accessories/i.test(h) && h.length > 3)
+                .map(h => typeof h === 'string' ? h.replace(/&amp;/g, '&').replace(/^\[(.*?)\]\s*:\s*/, '$1: ').trim() : h)
+            })()
           }
 
           setProduct(product)
@@ -1064,10 +1162,7 @@ export default function ProductDetailPage() {
 
 
             {/* AI Product Matcher */}
-            <ProductMatcher
-              category={product.category?.toLowerCase() || (product.name.toLowerCase().includes('hair') ? 'hair' : 'skin')}
-              productName={product.name}
-            />
+           
 
             {/* Product Information - Accordion Style */}
             <div className="space-y-3">
@@ -1091,18 +1186,18 @@ export default function ProductDetailPage() {
                   {expandedSections.description && (
                     <div className="px-6 pb-6">
                       <div className="prose max-w-none">
-                        <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line mb-6">
-                          {product.description}
-                        </p>
+                        <FormattedDescription text={product.description} />
 
-                        {product.features && product.features.length > 0 && (
-                          <div>
-                            <h4 className="text-sm font-semibold text-gray-900 mb-4">Key Features</h4>
+                        {((product.features && product.features.length > 0) || (product.highlights && product.highlights.length > 0)) && (
+                          <div className="mt-6 pt-4 border-t border-gray-100">
+                            <h4 className="text-sm font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                              <FiZap className="text-orange-500 w-4 h-4" /> Key Features & Highlights
+                            </h4>
                             <ul className="space-y-3">
-                              {product.features.map((feature, index) => (
+                              {(product.features && product.features.length > 0 ? product.features : product.highlights).map((feature, index) => (
                                 <li key={index} className="flex items-start gap-3">
-                                  <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                                    <FiCheck className="w-4 h-4 text-green-600" />
+                                  <div className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                                    <FiCheck className="w-3.5 h-3.5 text-green-600" />
                                   </div>
                                   <span className="text-gray-700 text-sm flex-1">{feature}</span>
                                 </li>

@@ -82,7 +82,7 @@ export default function AdminCategoriesPage() {
       name: category.name,
       description: category.description || '',
       image: category.image || '',
-      parentCategory: category.parentCategory?._id || '',
+      parentCategory: category.parentCategory?._id || category.parentId?._id || category.parentId || '',
       commissionRate: category.commissionRate || 5,
       isActive: category.isActive,
       sortOrder: category.sortOrder || 0,
@@ -262,9 +262,9 @@ export default function AdminCategoriesPage() {
                       <div>
                         <h3 className="font-semibold text-gray-900">{category.name}</h3>
                         <p className="text-sm text-gray-600">{category.slug}</p>
-                        {category.parentCategory && (
+                        {(category.parentCategory?.name || category.parentId?.name) && (
                           <p className="text-xs text-blue-600 mt-1">
-                            ↳ {category.parentCategory.name}
+                            ↳ {category.parentCategory?.name || category.parentId?.name}
                           </p>
                         )}
                       </div>

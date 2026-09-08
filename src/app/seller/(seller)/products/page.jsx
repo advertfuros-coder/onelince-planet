@@ -277,9 +277,11 @@ function SellerProductsContent() {
                 className="flex-1 lg:w-48 px-4 py-3 bg-gray-50 border-none rounded-2xl text-xs font-semibold uppercase tracking-tight focus:ring-2 focus:ring-blue-100"
               >
                 <option value="">All Categories</option>
-                {categories.map((cat) => (
-                  <option key={cat} value={cat}>{cat}</option>
-                ))}
+                {categories.map((cat) => {
+                  const val = typeof cat === 'object' ? cat?.name || cat?.value || cat?._id : cat
+                  const lbl = typeof cat === 'object' ? cat?.name || cat?.label : cat
+                  return <option key={val} value={val}>{lbl}</option>
+                })}
               </select>
 
               <select
@@ -407,7 +409,11 @@ function SellerProductsContent() {
                         <td className="px-6 py-6">
                           <div className="space-y-1">
                             <code className="text-[10px] font-semibold text-blue-600 bg-blue-50 px-2 py-0.5 rounded uppercase tracking-tighter">SKU: {product.sku}</code>
-                            <p className="text-xs font-semibold text-gray-500">{product.category}</p>
+                            <p className="text-xs font-semibold text-gray-500">
+                              {typeof product.category === 'object'
+                                ? product.category?.name || product.categoryName || 'Uncategorized'
+                                : product.categoryName || product.category || 'Uncategorized'}
+                            </p>
                           </div>
                         </td>
                         <td className="px-6 py-6 text-right">

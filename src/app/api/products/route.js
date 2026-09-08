@@ -2,6 +2,7 @@
 import { NextResponse } from "next/server";
 import connectDB from "@/lib/db/mongodb";
 import Product from "@/lib/db/models/Product";
+import { buildCategoryFilter } from "@/lib/db/utils/categoryMatcher";
 
 export async function GET(request) {
   try {
@@ -11,6 +12,7 @@ export async function GET(request) {
     const page = parseInt(searchParams.get("page")) || 1;
     const limit = parseInt(searchParams.get("limit")) || 20;
     const category = searchParams.get("category");
+    const subcategory = searchParams.get("subcategory") || searchParams.get("sub") || "";
     const search = searchParams.get("search");
     const minPrice = searchParams.get("minPrice");
     const maxPrice = searchParams.get("maxPrice");
@@ -32,8 +34,12 @@ export async function GET(request) {
       query._id = { $in: idArray };
     }
 
-    if (category) {
-      query.category = category;
+    if (category || subcategory) {
+      const categoryFilter = await buildCategoryFilter(category, subcategory);
+      if (categoryFilter) {
+        query.$and = query.$and || [];
+        query.$and.push(categoryFilter);
+      }
     }
 
     if (search) {
@@ -107,50 +113,7 @@ export async function GET(request) {
     // Execute query
     let products = await Product.aggregate(pipeline);
 
-    // --- VARIANT FLATTENING LOGIC ---
-    // If searching, we want to show all variants as separate products
-    if (search || category || ids) {
-      let flattenedProducts = [];
-      const searchRegex = search ? new RegExp(search, "i") : null;
-
-      for (const p of products) {
-        if (p.variants && p.variants.length > 0) {
-          for (const v of p.variants) {
-            // Check if this variant should be shown:
-            // 1. If it's a direct search, check if variant name matches OR parent name matches
-            // 2. If it's a category/ID list, show all variants
-            const variantName = `${v.name} ${p.name}`;
-            const matchesSearch = !searchRegex || 
-                                 searchRegex.test(variantName) || 
-                                 searchRegex.test(p.brand) || 
-                                 searchRegex.test(p.description);
-
-            if (matchesSearch) {
-              flattenedProducts.push({
-                ...p,
-                _id: `${p._id}_${v.sku}`,
-                parentId: p._id,
-                variantSku: v.sku,
-                name: variantName,
-                pricing: {
-                  ...p.pricing,
-                  basePrice: v.price || p.pricing.basePrice,
-                  salePrice: v.price || p.pricing.salePrice,
-                },
-                images: v.images && v.images.length > 0 ? v.images.map(url => ({ url })) : p.images,
-                inventory: {
-                  ...p.inventory,
-                  stock: v.stock || 0
-                }
-              });
-            }
-          }
-        } else {
-          flattenedProducts.push(p);
-        }
-      }
-      products = flattenedProducts;
-    }
+    // Each product is returned as a single item; variants are selected on the product detail page
 
     // Populate sellerId field from the lookup results or fetch them manually for the results
     // Since aggregate doesn't use Mongoose populate, we'll manually fetch seller info for the current page

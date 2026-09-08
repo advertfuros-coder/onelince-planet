@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Planet | RBAC & Identity Engine</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --secondary: #7e22ce;
+            --bg-light: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-dim: #475569;
+            --accent: #6366f1;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-main);
+            margin: 0;
+            padding: 40px 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            max-width: 900px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin: 0;
+            color: var(--text-main);
+            letter-spacing: -0.02em;
+        }
+
+        p.subtitle {
+            font-size: 1.1rem;
+            color: var(--text-dim);
+            margin-top: 10px;
+            font-weight: 400;
+        }
+
+        .badge {
+            background: #e0e7ff;
+            border: 1px solid #c7d2fe;
+            color: #4338ca;
+            padding: 6px 16px;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1100px;
+            display: grid;
+            gap: 40px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary);
+        }
+
+        .download-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-main);
+        }
+
+        h2 .icon {
+            color: var(--primary);
+        }
+
+        .mermaid {
+            background: #fdfdfd !important;
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #f1f5f9;
+        }
+
+        .description {
+            margin-top: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            border-top: 1px solid var(--border);
+            padding-top: 30px;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .step-num {
+            font-weight: 800;
+            color: var(--primary);
+            font-size: 0.8rem;
+        }
+
+        .step-title {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text-main);
+        }
+
+        .step-text {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            line-height: 1.6;
+        }
+
+        .platform-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .platform-box {
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid var(--primary);
+            background: #f1f5f9;
+        }
+
+        .platform-box.featured {
+            background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+            border-left-color: var(--secondary);
+        }
+
+        .platform-box h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.1rem;
+            color: var(--text-main);
+        }
+
+        .platform-box p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            line-height: 1.5;
+        }
+
+        footer {
+            margin-top: 80px;
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <span class="badge">Security & Access | Day 11</span>
+        <h1>Multi-Role RBAC System</h1>
+        <p class="subtitle">Ensuring zero-trust architecture across Admin, Seller, and Customer sessions</p>
+    </header>
+
+    <div class="container" id="diagram-container">
+        <!-- Auth Workflow -->
+        <div class="card" id="card-workflow">
+            <button class="download-btn" onclick="downloadCard('card-workflow', 'rbac-auth-workflow')">📥 Download</button>
+            <h2><span class="icon">🔒</span> Request Authorization Flow</h2>
+            <div class="mermaid">
+flowchart TD
+    REQ["Incoming API Request"] --> JWT{"JWT Present?"}
+    JWT -->|No| REJ1["Reject: 401 Unauthorized"]
+    JWT -->|Yes| VAL{"Valid Signature?"}
+    
+    VAL -->|No| REJ2["Reject: 401 Invalid Token"]
+    VAL -->|Yes| ROLE{"Check 'role' in Payload"}
+    
+    ROLE -->|Admin| G1{"Path starts with /api/admin?"}
+    ROLE -->|Seller| G2{"Path starts with /api/seller?"}
+    ROLE -->|Customer| G3{"Path starts with /api/customer?"}
+    
+    G1 -->|Yes| PASS["Allow & Inject Context"]
+    G2 -->|Yes| PASS
+    G3 -->|Yes| PASS
+    
+    G1 -->|No| REJ3["Reject: 403 Forbidden"]
+    G2 -->|No| REJ3
+    G3 -->|No| REJ3
+
+    style REQ fill:#dbeafe,stroke:#3b82f6
+    style PASS fill:#d1fae5,stroke:#10b981
+    style REJ1 fill:#fee2e2,stroke:#ef4444
+    style REJ2 fill:#fee2e2,stroke:#ef4444
+    style REJ3 fill:#fee2e2,stroke:#ef4444
+            </div>
+            <div class="description">
+                <div class="step">
+                    <span class="step-num">GATEKEEPER</span>
+                    <span class="step-title">Middleware Guard</span>
+                    <span class="step-text">Every request is intercepted at the edge to verify token integrity and role-level path matching.</span>
+                </div>
+                <div class="step">
+                    <span class="step-num">CONTEXT</span>
+                    <span class="step-title">Header Injection</span>
+                    <span class="step-text">Verified user details (ID, Role, Email) are injected into request headers for downstream logic.</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Capability Matrix -->
+        <div class="card" id="card-matrix">
+            <button class="download-btn" onclick="downloadCard('card-matrix', 'rbac-capability-matrix')">📥 Download</button>
+            <h2><span class="icon">📊</span> Role Capability Matrix</h2>
+            <div class="mermaid">
+mindmap
+  root((RBAC Roles))
+    Admin
+      Global Analytics
+      User Management
+      Dispute Resolution
+      Platform Config
+    Seller
+      Product Catalog
+      Order Processing
+      Payout Tracking
+      Shopify Sync
+    Customer
+      Personal Profile
+      Order History
+      Wishlist
+      Address Book
+            </div>
+            <div class="description">
+                <div class="step">
+                    <span class="step-num">ISOLATION</span>
+                    <span class="step-title">Workspace Sandboxing</span>
+                    <span class="step-text">Roles are strictly decoupled. A seller cannot access admin tools even with a valid session.</span>
+                </div>
+                <div class="step">
+                    <span class="step-num">SCALABLE</span>
+                    <span class="step-title">Dynamic Scopes</span>
+                    <span class="step-text">Permissions are centrally defined in middleware, making it easy to add new "Staff" or "SuperAdmin" roles.</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Security Architecture -->
+        <div class="card" id="card-security">
+            <button class="download-btn" onclick="downloadCard('card-security', 'user-security-architecture')">📥 Download</button>
+            <h2><span class="icon">🛡️</span> Security & Data Shield</h2>
+            <div class="mermaid">
+erDiagram
+    USER ||--o{ SESSION : "stateless"
+    USER {
+        string role "admin|seller|customer"
+        string password "Hashed via Bcrypt"
+        boolean isVerified
+        json shopifyIntegration "Restricted Access"
+    }
+    
+    MIDDLEWARE {
+        verify jwtSignature
+        check rolePermissions
+        block unauthorizedPaths
+    }
+    
+    JWT_PAYLOAD {
+        string userId
+        string role
+        number exp "Expires in 7d"
+    }
+            </div>
+            <div class="description">
+                <div class="step">
+                    <span class="step-num">ENCRYPTION</span>
+                    <span class="step-title">Identity Guard</span>
+                    <span class="step-text">Passwords are hashed using high-entropy Bcrypt salts, ensuring they are never stored in plain text.</span>
+                </div>
+                <div class="step">
+                    <span class="step-num">PRIVACY</span>
+                    <span class="step-title">Internal Fields</span>
+                    <span class="step-text">Sensitive fields like 'password' are hidden from API responses by default using Mongoose selectors.</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Platform Comparison -->
+        <div class="card" id="card-comparison">
+            <button class="download-btn" onclick="downloadCard('card-comparison', 'auth-system-comparison')">📥 Download</button>
+            <h2><span class="icon">⚖️</span> Security Architecture Comparison</h2>
+            <div class="platform-grid">
+                <div class="platform-box">
+                    <h3>🛒 Basic WooCommerce</h3>
+                    <p><b>Auth:</b> Session-based (Cookies). Harder to scale horizontally.</p>
+                    <p><b>RBAC:</b> Often relies on plugins that can conflict or cause leaks.</p>
+                    <p><b>API:</b> Default REST endpoints often expose too much meta-data.</p>
+                </div>
+                <div class="platform-box featured">
+                    <h3>🌍 Online Planet</h3>
+                    <p><b>Auth:</b> Stateless JWT. Perfect for high-traffic marketplace scaling.</p>
+                    <p><b>RBAC:</b> Native Middleware 'Access Gates' built into the core engine.</p>
+                    <p><b>API:</b> Strict Field Protection (select: false) to prevent data leak.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Built for Online Planet Project • Day 11/45 Build In Public • Secure Identity Engine</p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'default',
+            securityLevel: 'loose',
+            fontFamily: 'Poppins',
+            themeVariables: {
+                primaryColor: '#e0e7ff',
+                primaryTextColor: '#1e1b4b',
+                primaryBorderColor: '#4f46e5',
+                lineColor: '#64748b',
+                secondaryColor: '#f3f4f6',
+                tertiaryColor: '#ffffff'
+            }
+        });
+
+        async function downloadCard(cardId, filename) {
+            const card = document.getElementById(cardId);
+            const btn = card.querySelector('.download-btn');
+            
+            btn.style.display = 'none';
+            
+            try {
+                const canvas = await html2canvas(card, {
+                    backgroundColor: '#ffffff',
+                    scale: 2,
+                    logging: false,
+                    useCORS: true
+                });
+                
+                const link = document.createElement('a');
+                link.download = `${filename}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            } catch (err) {
+                console.error('Download failed:', err);
+            } finally {
+                btn.style.display = 'flex';
+            }
+        }
+    </script>
+</body>
+</html>

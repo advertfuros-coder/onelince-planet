@@ -2,6 +2,7 @@
 import { NextResponse } from "next/server";
 import connectDB from "@/lib/db/mongodb";
 import Product from "@/lib/db/models/Product";
+import { buildCategoryFilter } from "@/lib/db/utils/categoryMatcher";
 
 /**
  * Dedicated API for Customer Product Search & Listing
@@ -17,6 +18,7 @@ export async function GET(request) {
     // Parse all filter parameters
     const search = searchParams.get("search") || "";
     const category = searchParams.get("category") || "";
+    const subcategory = searchParams.get("subcategory") || searchParams.get("sub") || "";
     const minPrice = parseFloat(searchParams.get("minPrice")) || 0;
     const maxPrice = parseFloat(searchParams.get("maxPrice")) || Infinity;
     const brand = searchParams.get("brand") || "";
@@ -48,8 +50,12 @@ export async function GET(request) {
     }
 
     // Category filter
-    if (category) {
-      query.category = { $regex: category, $options: "i" };
+    if (category || subcategory) {
+      const categoryFilter = await buildCategoryFilter(category, subcategory);
+      if (categoryFilter) {
+        query.$and = query.$and || [];
+        query.$and.push(categoryFilter);
+      }
     }
 
     // Price range filter

@@ -27,6 +27,7 @@ import DealOfTheDay from '@/components/customer/DealOfTheDay'
 import ShopByPrice from '@/components/customer/ShopByPrice'
 import StealDeals from '@/components/customer/StealDeals'
 import ElectronicGadgets from '@/components/customer/ElectronicGadgets'
+import CategoryProductSections from '@/components/customer/CategoryProductSections'
 import CouponBanner from '@/components/customer/CouponBanner'
 import CategoryGrid from '@/components/customer/CategoryGrid'
 import RakshaBandhanSpecial from '@/components/customer/RakshaBandhanSpecial'
@@ -42,8 +43,7 @@ export default function Home() {
         <HeroBanner />
         <CouponBanner />
         <CategoryGrid />
-        <RakshaBandhanSpecial />
-
+ 
         <PocketFriendlyBargain />
         <TodaysBestDeals />
 
@@ -53,7 +53,8 @@ export default function Home() {
         {/* Electronic Gadgets - Electronics category showcase */}
         <ElectronicGadgets />
 
-
+        {/* Dedicated Category Product Sections (Top 10+ products each) */}
+        <CategoryProductSections />
 
         {/* Deals of the Day - Price drop alerts with extra discounts */}
         {/* <DealsOfTheDay /> */}

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import connectDB from "@/lib/db/mongodb";
 import Product from "@/lib/db/models/Product";
+import { buildCategoryFilter } from "@/lib/db/utils/categoryMatcher";
 
 export async function GET(request) {
   try {
@@ -8,11 +9,15 @@ export async function GET(request) {
 
     const { searchParams } = new URL(request.url);
     const category = searchParams.get("category");
+    const subcategory = searchParams.get("subcategory") || searchParams.get("sub") || "";
 
     // Build query
     const query = { isActive: true, isApproved: true, isDraft: { $ne: true } };
-    if (category) {
-      query.category = category;
+    if (category || subcategory) {
+      const categoryFilter = await buildCategoryFilter(category, subcategory);
+      if (categoryFilter) {
+        query.$and = [categoryFilter];
+      }
     }
 
     // Get unique brands with counts

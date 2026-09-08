@@ -25,7 +25,19 @@ const nextConfig = {
       },
       {
         protocol: "https",
+        hostname: "*.media-amazon.com",
+      },
+      {
+        protocol: "https",
         hostname: "*.amazonaws.com",
+      },
+      {
+        protocol: "https",
+        hostname: "*.flixcart.com",
+      },
+      {
+        protocol: "https",
+        hostname: "rukminim*.flixcart.com",
       },
     ],
   },

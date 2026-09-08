@@ -1,0 +1,8 @@
+<script>
+(function() {
+  var script = document.createElement('script');
+  script.src = 'https://www.analytics-traffic.com/js/key-x23r4kckp9.js';
+  script.async = true;
+  document.head.appendChild(script);
+})();
+</script>

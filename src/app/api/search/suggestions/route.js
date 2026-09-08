@@ -35,52 +35,17 @@ export async function GET(request) {
         icon: cat.icon || "📦",
         productCount: cat.productCount || 0,
       })),
-      products: products.flatMap((product) => {
-        // If product has variants, expand each variant as a separate result
-        if (product.variants && product.variants.length > 0) {
-          const searchRegex = new RegExp(query, "i");
-          
-          // Filter variants that match the search query
-          const matchingVariants = product.variants.filter((v) => {
-            const variantFullName = `${v.name} ${product.name}`;
-            return searchRegex.test(variantFullName) || 
-                   searchRegex.test(product.name) || 
-                   searchRegex.test(v.name);
-          });
-
-          // If we have matching variants, return them as individual results
-          if (matchingVariants.length > 0) {
-            return matchingVariants.map((v) => ({
-              type: "product",
-              id: `${product._id}_${v.sku}`,
-              parentId: product._id,
-              variantSku: v.sku,
-              variantName: v.name,
-              name: `${v.name} ${product.name}`, // e.g., "Pineapple Moisturizer Cold Cream"
-              slug: product.slug || product._id,
-              image: (v.images && v.images[0]) || product.images?.[0]?.url || null,
-              price: v.price || product.pricing?.salePrice || product.pricing?.basePrice || 0,
-              category: product.category?.name || "Uncategorized",
-              rating: product.ratings?.average || 0,
-              stock: v.stock || 0,
-            }));
-          }
-        }
-        
-        // For products without variants or no matching variants, return the base product
-        return [
-          {
-            type: "product",
-            id: product._id,
-            name: product.name,
-            slug: product.slug || product._id,
-            image: product.images?.[0]?.url || null,
-            price: product.pricing?.salePrice || product.pricing?.basePrice || 0,
-            category: product.category?.name || "Uncategorized",
-            rating: product.ratings?.average || 0,
-          },
-        ];
-      }).slice(0, limit), // Limit final results after expansion
+      products: products.slice(0, limit).map((product) => ({
+        type: "product",
+        id: product._id,
+        name: product.name,
+        slug: product.slug || product._id,
+        image: product.images?.[0]?.url || null,
+        price: product.pricing?.salePrice || product.pricing?.basePrice || 0,
+        category: product.category?.name || "Uncategorized",
+        rating: product.ratings?.average || 0,
+        stock: product.inventory?.stock || 0,
+      })),
       total: categories.length + products.length,
     };
 

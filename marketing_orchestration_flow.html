@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Planet | Marketing Campaign Manager</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --secondary: #7e22ce;
+            --bg-light: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-dim: #475569;
+            --accent: #f43f5e;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-main);
+            margin: 0;
+            padding: 40px 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            max-width: 900px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin: 0;
+            color: var(--text-main);
+            letter-spacing: -0.02em;
+        }
+
+        p.subtitle {
+            font-size: 1.1rem;
+            color: var(--text-dim);
+            margin-top: 10px;
+            font-weight: 400;
+        }
+
+        .badge {
+            background: #ffe4e6;
+            border: 1px solid #fecdd3;
+            color: #be123c;
+            padding: 6px 16px;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1100px;
+            display: grid;
+            gap: 40px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary);
+        }
+
+        .download-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-main);
+        }
+
+        h2 .icon {
+            color: var(--accent);
+        }
+
+        .mermaid {
+            background: #fdfdfd !important;
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #f1f5f9;
+        }
+
+        .description {
+            margin-top: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            border-top: 1px solid var(--border);
+            padding-top: 30px;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .step-num {
+            font-weight: 800;
+            color: var(--accent);
+            font-size: 0.8rem;
+        }
+
+        .step-title {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text-main);
+        }
+
+        .step-text {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            line-height: 1.6;
+        }
+
+        .platform-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .platform-box {
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid var(--primary);
+            background: #f1f5f9;
+        }
+
+        .platform-box.featured {
+            background: linear-gradient(135deg, #ffe4e6 0%, #fecdd3 100%);
+            border-left-color: var(--accent);
+        }
+
+        .platform-box h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.1rem;
+            color: var(--text-main);
+        }
+
+        .platform-box p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            line-height: 1.5;
+        }
+
+        footer {
+            margin-top: 80px;
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <span class="badge">Marketplace Merchandising | Day 8</span>
+        <h1>Marketing Campaign Manager</h1>
+        <p class="subtitle">Orchestrating attention and optimizing conversions across the platform</p>
+    </header>
+
+    <div class="container" id="diagram-container">
+        <!-- Content Orchestration -->
+        <div class="card" id="card-orchestration">
+            <button class="download-btn" onclick="downloadCard('card-orchestration', 'market-content-orchestration')">📥 Download</button>
+            <h2><span class="icon">🖼️</span> Home Content Orchestration</h2>
+            <div class="mermaid">
+flowchart TD
+    A["Admin Panel"] -->|"Configuration JSON"| B["Homepage Orchestrator"]
+    B --> C["Banner Engine"]
+    B --> D["Featured Section Loader"]
+    B --> E["Campaign Link Generator"]
+
+    C --> C1["Main Banners (Brand Stories)"]
+    C --> C2["Sale Banners (Urgency)"]
+    
+    D --> D1["Today's Best Deals"]
+    D --> D2["Trending Now"]
+    D --> D3["New Arrivals"]
+    
+    E --> E1["UTM & Referral Tracking"]
+
+    style A fill:#dbeafe,stroke:#3b82f6
+    style B fill:#fef3c7,stroke:#f59e0b
+    style C fill:#d1fae5,stroke:#10b981
+    style D fill:#d1fae5,stroke:#10b981
+            </div>
+            <div class="description">
+                <div class="step">
+                    <span class="step-num">DYNAMIC</span>
+                    <span class="step-title">Banner Engine</span>
+                    <span class="step-text">Admin controls colors, text alignment, and buttons via metadata—no code changes required for new campaigns.</span>
+                </div>
+                <div class="step">
+                    <span class="step-num">CURATED</span>
+                    <span class="step-title">Featured Sections</span>
+                    <span class="step-text">Specific logic for different categories of visibility (Trending, Best Deals) with automated expiry.</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Campaign Attribution Sequence -->
+        <div class="card" id="card-campaign">
+            <button class="download-btn" onclick="downloadCard('card-campaign', 'campaign-tracking-sequence')">📥 Download</button>
+            <h2><span class="icon">🕵️</span> Campaign Attribution Sequence</h2>
+            <div class="mermaid">
+sequenceDiagram
+    participant User as 👤 User
+    participant App as 📱 Marketplace App
+    participant Camp as 📊 Campaign Service
+    participant DB as 🗄️ Marketing DB
+    
+    User->>App: Clicks Campaign Link (UTM)
+    App->>Camp: Log Click Context
+    Camp->>DB: Increment Clicks (Campaign ID)
+    
+    Note over User, App: Item added to cart
+    
+    App->>Camp: Checkout Successful
+    Camp->>DB: Increment Conversion & Revenue
+    
+    Camp-->>App: Return Performance Metrics
+            </div>
+            <div class="description">
+                <div class="step">
+                    <span class="step-num">ATTRIBUTION</span>
+                    <span class="step-title">Click Tracking</span>
+                    <span class="step-text">Logs every interaction with marketing links to calculate precise ROI for each channel.</span>
+                </div>
+                <div class="step">
+                    <span class="step-num">CONVERSION</span>
+                    <span class="step-title">Success Logging</span>
+                    <span class="step-text">Links successful orders back to the originating campaign for deep analytics.</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Relationships -->
+        <div class="card" id="card-db">
+            <button class="download-btn" onclick="downloadCard('card-db', 'marketing-data-schema')">📥 Download</button>
+            <h2><span class="icon">🗄️</span> Marketing Data Architecture</h2>
+            <div class="mermaid">
+erDiagram
+    CAMPAIGN ||--o{ PERFORMANCE_METRICS : "tracks"
+    HOMEPAGE_BANNER ||--|| CAMPAIGN : "optionally links to"
+    FEATURED_PRODUCT ||--|| PRODUCT : "references"
+    
+    HOMEPAGE_BANNER {
+        string type "main|sale"
+        string title
+        string bgColor "Styling metadata"
+        boolean active
+        number order "Priority"
+    }
+    
+    FEATURED_PRODUCT {
+        string section "trending|new_arrivals|deals"
+        ObjectId productId FK
+        datetime startDate
+        datetime endDate "Auto-expiry"
+        boolean active
+    }
+    
+    CAMPAIGN {
+        string name
+        string type "social|search|referral"
+        object stats "views|clicks|sales"
+        float budget
+    }
+            </div>
+            <div class="description">
+                <div class="step">
+                    <span class="step-num">DECOUPLED</span>
+                    <span class="step-title">Asset Control</span>
+                    <span class="step-text">Banners are independent of products, allowing for lifestyle-focused brand storytelling.</span>
+                </div>
+                <div class="step">
+                    <span class="step-num">TEMPORAL</span>
+                    <span class="step-title">Auto-Scheduling</span>
+                    <span class="step-text">The <code>startDate</code> and <code>endDate</code> logic ensures campaigns end precisely at midnight without manual intervention.</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Platform Comparison -->
+        <div class="card" id="card-comparison">
+            <button class="download-btn" onclick="downloadCard('card-comparison', 'merchandising-comparison')">📥 Download</button>
+            <h2><span class="icon">⚖️</span> Merchandising Capability Comparison</h2>
+            <div class="platform-grid">
+                <div class="platform-box">
+                    <h3>🛒 Basic Shopify Theme</h3>
+                    <p><b>Banners:</b> Hard-coded or theme settings. Limited design control per-device.</p>
+                    <p><b>Featurings:</b> Global collections only. Manual removal of "Old News."</p>
+                    <p><b>Tracking:</b> Relies 100% on Google Analytics or Pixel apps.</p>
+                </div>
+                <div class="platform-box featured">
+                    <h3>🌍 Online Planet</h3>
+                    <p><b>Banners:</b> Dynamic JSON-driven canvas. Full style & alignment control per banner.</p>
+                    <p><b>Featurings:</b> Section-based targeting with temporal logic (Auto-expiry).</p>
+                    <p><b>Tracking:</b> Native internal attribution engine for real-time ROI monitoring.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Built for Online Planet Project • Day 8/45 Build In Public • Dynamic Marketplace CMS</p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'default',
+            securityLevel: 'loose',
+            fontFamily: 'Poppins',
+            themeVariables: {
+                primaryColor: '#e0e7ff',
+                primaryTextColor: '#1e1b4b',
+                primaryBorderColor: '#4f46e5',
+                lineColor: '#64748b',
+                secondaryColor: '#f1f5f9',
+                tertiaryColor: '#ffffff'
+            }
+        });
+
+        async function downloadCard(cardId, filename) {
+            const card = document.getElementById(cardId);
+            const btn = card.querySelector('.download-btn');
+            
+            btn.style.display = 'none';
+            
+            try {
+                const canvas = await html2canvas(card, {
+                    backgroundColor: '#ffffff',
+                    scale: 2,
+                    logging: false,
+                    useCORS: true
+                });
+                
+                const link = document.createElement('a');
+                link.download = `${filename}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            } catch (err) {
+                console.error('Download failed:', err);
+            } finally {
+                btn.style.display = 'flex';
+            }
+        }
+    </script>
+</body>
+</html>

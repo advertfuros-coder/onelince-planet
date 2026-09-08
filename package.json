@@ -16,7 +16,8 @@
     "memory:leak-check": "node scripts/check-memory-leaks.js",
     "seed": "node scripts/seedProducts.js",
     "seed:dev": "node -r dotenv/config scripts/seedProducts.js",
-    "seed:reviews": "node scripts/seedReviews.js"
+    "seed:reviews": "node scripts/seedReviews.js",
+    "seed:alpha-genz-tops": "node -r dotenv/config scripts/seedAlphaGenzWomenTops.js"
   },
   "dependencies": {
     "@google/genai": "^1.33.0",

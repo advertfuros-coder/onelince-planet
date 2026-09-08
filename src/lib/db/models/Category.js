@@ -88,11 +88,25 @@ categorySchema.index({ level: 1, isActive: 1 });
 categorySchema.index({ path: 1 });
 categorySchema.index({ slug: 1 }, { unique: true });
 
-// Virtual for children (if needed)
+// Virtual for children / subCategories
 categorySchema.virtual("children", {
   ref: "Category",
   localField: "_id",
   foreignField: "parentId",
+});
+
+categorySchema.virtual("subCategories", {
+  ref: "Category",
+  localField: "_id",
+  foreignField: "parentId",
+});
+
+// Virtual for parentCategory
+categorySchema.virtual("parentCategory", {
+  ref: "Category",
+  localField: "parentId",
+  foreignField: "_id",
+  justOne: true,
 });
 
 // Pre-save middleware to auto-generate path
