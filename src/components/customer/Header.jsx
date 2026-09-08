@@ -710,7 +710,7 @@ export default function Header() {
               )}
 
               {(!user || user.role === 'customer') && (
-                <Link href="/become-a-seller" className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 transition-all font-semibold text-sm shadow-lg backdrop-blur-sm">
+                <Link href="/become-a-seller" className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#F79625] to-[#d67a14] hover:from-[#d67a14] hover:to-[#ad5f18] text-white rounded-lg transition-all font-semibold text-sm shadow-lg shadow-orange-500/20 backdrop-blur-sm">
                   <FiShoppingBag className="w-4 h-4" />
                   <span>Want to Sell?</span>
                 </Link>
@@ -880,7 +880,7 @@ export default function Header() {
                       {/* Left Column - Category Info */}
                       <div className="col-span-3 border-r border-gray-100 pr-6">
                         <div className="flex items-center gap-3 mb-4">
-                          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
+                          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#F79625] to-[#d67a14] flex items-center justify-center">
                             <IconComponent className="w-6 h-6 text-white" />
                           </div>
                           <div>
@@ -916,7 +916,7 @@ export default function Header() {
 
                       {/* Right Column - Featured Promo */}
                       <div className="col-span-3">
-                        <div className="relative h-full rounded-2xl bg-gradient-to-br from-blue-500 via-indigo-600 to-purple-600 p-6 overflow-hidden group cursor-pointer">
+                        <div className="relative h-full rounded-2xl bg-gradient-to-br from-[#F79625] via-amber-600 to-[#d67a14] p-6 overflow-hidden group cursor-pointer">
                           {/* Glassmorphic overlay */}
                           <div className="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
 

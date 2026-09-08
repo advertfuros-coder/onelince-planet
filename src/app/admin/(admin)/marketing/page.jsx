@@ -27,7 +27,7 @@ import {
 import { toast } from 'react-hot-toast'
 import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 
-const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899']
+const COLORS = ['#F79625', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899']
 
 const CAMPAIGN_TYPES = [
   { value: 'email', label: 'Email Marketing', icon: FiMail, color: 'blue' },
@@ -304,7 +304,7 @@ export default function AdminMarketingPage() {
                 <Tooltip formatter={(value) => formatCurrency(value)} />
                 <Legend />
                 <Bar dataKey="performance.revenue" fill="#10B981" name="Revenue" />
-                <Bar dataKey="budget" fill="#3B82F6" name="Budget" />
+                <Bar dataKey="budget" fill="#F79625" name="Budget" />
               </BarChart>
             </ResponsiveContainer>
           </div>

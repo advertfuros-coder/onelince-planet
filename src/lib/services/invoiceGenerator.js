@@ -19,8 +19,8 @@ export function generateInvoiceHTML(order, seller) {
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: Arial, sans-serif; padding: 40px; background: #f5f5f5; }
     .invoice { max-width: 800px; margin: 0 auto; background: white; padding: 40px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-    .header { border-bottom: 3px solid #2563eb; padding-bottom: 20px; margin-bottom: 30px; }
-    .header h1 { color: #2563eb; font-size: 32px; margin-bottom: 10px; }
+    .header { border-bottom: 3px solid #F79625; padding-bottom: 20px; margin-bottom: 30px; }
+    .header h1 { color: #F79625; font-size: 32px; margin-bottom: 10px; }
     .header .invoice-number { color: #666; font-size: 14px; }
     .company-info { margin-bottom: 30px; }
     .company-info h2 { color: #333; font-size: 18px; margin-bottom: 10px; }
@@ -42,7 +42,7 @@ export function generateInvoiceHTML(order, seller) {
     .status-badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
     .status-delivered { background: #d1fae5; color: #065f46; }
     .status-pending { background: #fef3c7; color: #92400e; }
-    .status-processing { background: #dbeafe; color: #1e40af; }
+    .status-processing { background: #feefdc; color: #8c4e18; }
     .status-shipped { background: #e0e7ff; color: #3730a3; }
   </style>
 </head>

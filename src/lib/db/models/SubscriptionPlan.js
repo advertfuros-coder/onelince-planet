@@ -29,7 +29,7 @@ const SubscriptionPlanSchema = new mongoose.Schema(
     },
     color: {
       type: String,
-      default: "#3B82F6",
+      default: "#F79625",
     },
 
     // Pricing

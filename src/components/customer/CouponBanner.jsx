@@ -57,8 +57,8 @@ export default function CouponBanner() {
     const currentBanner = banners[currentIndex]
 
     return (
-        <section className="py- bg-white overflow-hidden">
-            <div className="max-w-8xl mx-auto px-4">
+        <section className="py-3 bg-white overflow-hidden">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="relative">
                     {/* Main Banner */}
                     <div
@@ -81,11 +81,9 @@ export default function CouponBanner() {
                                 {/* Offer Text */}
                                 <div className="flex flex-col">
                                     <h2
-                                        className="text-3xl md:text-[80px] font-[1000] italic uppercase tracking-tighter leading-none select-none"
+                                        className="text-2xl md:text-4xl font-[900] italic uppercase tracking-tighter leading-none select-none"
                                         style={{
                                             color: currentBanner.textColor,
-                                            textShadow: '3px 3px 0px rgba(0,0,0,0.1), 0 0 10px rgba(255, 214, 107, 0.3)',
-                                            WebkitTextStroke: '1.5px rgba(0,0,0,0.05)'
                                         }}
                                     >
                                         {currentBanner.title || `${currentBanner.discountType === 'flat' ? 'FLAT ₹' : ''}${currentBanner.discount}${currentBanner.discountType === 'percentage' ? '% ' : ' '}OFF`}
@@ -93,8 +91,8 @@ export default function CouponBanner() {
                                 </div>
 
                                 {/* Central Lightning Bolt */}
-                                <div className="hidden lg:block transform hover:rotate-12 transition-transform duration-500">
-                                    <svg width="64" height="64" viewBox="0 0 24 24" className="filter drop-shadow-[0_4px_10px_rgba(255,214,107,0.4)]">
+                                <div className="hidden lg:block">
+                                    <svg width="36" height="36" viewBox="0 0 24 24">
                                         <path
                                             d="M13 2L3 14h8V22l10-12h-8V2z"
                                             fill={currentBanner.textColor}
@@ -113,7 +111,7 @@ export default function CouponBanner() {
                                             className="px-6 md:px-10 py-2 md:py-3 rounded-2xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)] border border-black/10 flex items-center gap-3 active:scale-95 transition-all"
                                             style={{ backgroundColor: currentBanner.textColor }}
                                         >
-                                            <span className="text-lg md:text-3xl font-[1000] text-black tracking-tighter">
+                                            <span className="text-sm md:text-lg font-bold text-black tracking-tight">
                                                 {currentBanner.code}
                                             </span>
                                             <div className="w-8 h-8 rounded-full bg-black/10 flex items-center justify-center">

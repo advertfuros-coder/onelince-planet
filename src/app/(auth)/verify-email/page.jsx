@@ -73,7 +73,7 @@ function VerifyEmailContent() {
 
     if (verified) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center p-4">
+            <div className="min-h-screen bg-gradient-to-br from-orange-50/70 via-white to-amber-50/50 flex items-center justify-center p-4">
                 <div className="max-w-md w-full bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white p-8 text-center">
                     <div className="w-20 h-20 bg-green-100 rounded-3xl flex items-center justify-center mx-auto mb-6">
                         <FiCheckCircle className="w-10 h-10 text-green-600" />
@@ -83,7 +83,7 @@ function VerifyEmailContent() {
                         Your account has been successfully verified. You can now sign in to your account.
                     </p>
                     <Link href="/login">
-                        <Button className="w-full py-4 text-base font-semibold rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 hover:shadow-xl transition-all">
+                        <Button className="w-full py-4 text-base font-semibold rounded-2xl bg-gradient-to-r from-[#F79625] to-[#d67a14] hover:shadow-xl transition-all">
                             Continue to Login
                         </Button>
                     </Link>
@@ -93,15 +93,15 @@ function VerifyEmailContent() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center p-4">
+        <div className="min-h-screen bg-gradient-to-br from-orange-50/70 via-white to-amber-50/50 flex items-center justify-center p-4">
             <div className="max-w-md w-full">
                 {/* Logo */}
                 <div className="text-center mb-8">
                     <Link href="/" className="inline-flex items-center space-x-2 group">
-                        <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                        <div className="w-12 h-12 bg-gradient-to-r from-[#F79625] to-[#d67a14] rounded-2xl flex items-center justify-center shadow-lg shadow-orange-500/20 group-hover:scale-110 transition-transform">
                             <FiShoppingBag className="w-6 h-6 text-white" />
                         </div>
-                        <span className="text-2xl font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                        <span className="text-2xl font-semibold bg-gradient-to-r from-[#F79625] to-[#d67a14] bg-clip-text text-transparent">
                             OnlinePlanet
                         </span>
                     </Link>
@@ -147,7 +147,7 @@ function VerifyEmailContent() {
                         <Button
                             type="submit"
                             loading={loading}
-                            className="w-full py-4 text-base font-semibold rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 hover:shadow-xl hover:shadow-blue-500/20 transition-all"
+                            className="w-full py-4 text-base font-semibold rounded-2xl bg-gradient-to-r from-[#F79625] to-[#d67a14] hover:shadow-xl hover:shadow-orange-500/20 transition-all"
                         >
                             Verify Account
                         </Button>
@@ -182,7 +182,7 @@ function VerifyEmailContent() {
 export default function VerifyEmailPage() {
     return (
         <Suspense fallback={
-            <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center">
+            <div className="min-h-screen bg-gradient-to-br from-orange-50/70 via-white to-amber-50/50 flex items-center justify-center">
                 <div className="text-center">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
                     <p className="mt-4 text-gray-600">Loading...</p>

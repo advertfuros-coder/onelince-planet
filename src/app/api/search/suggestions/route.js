@@ -1,8 +1,8 @@
-// app/api/search/suggestions/route.js
 import { NextResponse } from "next/server";
 import connectDB from "@/lib/db/mongodb";
 import Product from "@/lib/db/models/Product";
 import Category from "@/lib/db/models/Category";
+import { buildProductSearchFilter, buildRelevanceAddFields } from "@/lib/db/utils/searchHelper";
 
 export async function GET(request) {
   try {
@@ -42,7 +42,7 @@ export async function GET(request) {
         slug: product.slug || product._id,
         image: product.images?.[0]?.url || null,
         price: product.pricing?.salePrice || product.pricing?.basePrice || 0,
-        category: product.category?.name || "Uncategorized",
+        category: product.category?.name || (typeof product.category === "string" ? product.category : "Uncategorized"),
         rating: product.ratings?.average || 0,
         stock: product.inventory?.stock || 0,
       })),
@@ -68,27 +68,51 @@ export async function GET(request) {
 }
 
 /**
- * Search products by name, keywords, tags, AND variant names
+ * Search products with clean token filtering and relevance scoring
  */
 async function searchProducts(query, limit) {
-  const searchRegex = new RegExp(query, "i");
+  const searchFilter = buildProductSearchFilter(query);
+  if (!searchFilter) return [];
 
-  return Product.find({
+  const baseQuery = {
     isActive: true,
-    isDraft: false,
-    $or: [
-      { name: searchRegex },
-      { keywords: searchRegex },
-      { tags: searchRegex },
-      { brand: searchRegex },
-      { "variants.name": searchRegex }, // Search within variant names
-    ],
-  })
-    .select("name images pricing slug category ratings variants")
-    .populate("category", "name")
-    .limit(limit * 2) // Fetch more to account for variant expansion
-    .sort({ "ratings.average": -1, "inventory.soldCount": -1 })
-    .lean();
+    isDraft: { $ne: true },
+    ...searchFilter,
+  };
+
+  return Product.aggregate([
+    { $match: baseQuery },
+    buildRelevanceAddFields(query),
+    { $sort: { relevanceScore: -1, "ratings.average": -1 } },
+    { $limit: limit },
+    {
+      $lookup: {
+        from: "categories",
+        localField: "category",
+        foreignField: "_id",
+        as: "categoryDoc",
+      },
+    },
+    {
+      $project: {
+        name: 1,
+        brand: 1,
+        images: 1,
+        pricing: 1,
+        inventory: 1,
+        slug: 1,
+        ratings: 1,
+        variants: 1,
+        category: {
+          $cond: [
+            { $gt: [{ $size: "$categoryDoc" }, 0] },
+            { $arrayElemAt: ["$categoryDoc", 0] },
+            { name: "$category" },
+          ],
+        },
+      },
+    },
+  ]);
 }
 
 /**

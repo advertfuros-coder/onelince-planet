@@ -3,6 +3,11 @@ import { NextResponse } from "next/server";
 import connectDB from "@/lib/db/mongodb";
 import Product from "@/lib/db/models/Product";
 import { buildCategoryFilter } from "@/lib/db/utils/categoryMatcher";
+import {
+  buildProductSearchFilter,
+  buildRelevanceAddFields,
+  getKnownBrands,
+} from "@/lib/db/utils/searchHelper";
 
 /**
  * Dedicated API for Customer Product Search & Listing
@@ -38,15 +43,23 @@ export async function GET(request) {
       isDraft: { $ne: true },
     };
 
-    // Search filter (name, description, keywords, brand)
-    if (search) {
-      query.$or = [
-        { name: { $regex: search, $options: "i" } },
-        { description: { $regex: search, $options: "i" } },
-        { keywords: { $regex: search, $options: "i" } },
-        { brand: { $regex: search, $options: "i" } },
-        { category: { $regex: search, $options: "i" } },
-      ];
+    const knownBrands = await getKnownBrands(Product);
+
+    // Clean, tokenized search filter
+    if (search || brand) {
+      const { brandFilter, textFilter } = buildProductSearchFilter(
+        search,
+        brand,
+        knownBrands
+      );
+
+      if (brandFilter) {
+        Object.assign(query, brandFilter);
+      }
+      if (textFilter) {
+        query.$and = query.$and || [];
+        query.$and.push(textFilter);
+      }
     }
 
     // Category filter
@@ -90,12 +103,7 @@ export async function GET(request) {
     // Build sort object
     let sort = {};
     if (sortBy === "relevance") {
-      // Relevance sorting (prioritize exact matches, then ratings)
-      if (search) {
-        sort = { "ratings.average": -1, "ratings.count": -1 };
-      } else {
-        sort = { createdAt: -1 };
-      }
+      sort = { "ratings.average": -1, "ratings.count": -1, createdAt: -1 };
     } else if (sortBy === "createdAt") {
       sort = { createdAt: order === "desc" ? -1 : 1 };
     } else if (sortBy === "pricing.salePrice") {
@@ -111,17 +119,66 @@ export async function GET(request) {
       sort = { createdAt: -1 };
     }
 
+    const isRelevanceSearch = sortBy === "relevance" && Boolean(search && search.trim());
+
+    const productsPromise = isRelevanceSearch
+      ? Product.aggregate([
+          { $match: query },
+          buildRelevanceAddFields(search),
+          { $sort: { relevanceScore: -1, "ratings.average": -1, createdAt: -1 } },
+          { $skip: (page - 1) * limit },
+          { $limit: limit },
+          {
+            $lookup: {
+              from: "sellers",
+              localField: "sellerId",
+              foreignField: "_id",
+              as: "seller",
+            },
+          },
+          {
+            $unwind: {
+              path: "$seller",
+              preserveNullAndEmptyArrays: true,
+            },
+          },
+          {
+            $project: {
+              name: 1,
+              brand: 1,
+              images: 1,
+              pricing: 1,
+              inventory: 1,
+              category: 1,
+              ratings: 1,
+              highlights: 1,
+              seller: {
+                businessInfo: 1,
+                storeInfo: 1,
+                ratings: 1,
+                verificationStatus: 1,
+              },
+              isVerified: 1,
+              shipping: 1,
+              createdAt: 1,
+              variants: 1,
+              relevanceScore: 1,
+            },
+          },
+        ])
+      : Product.find(query)
+          .select(
+            "name brand images pricing inventory category ratings highlights seller isVerified shipping createdAt variants",
+          )
+          .populate("seller", "businessInfo storeInfo ratings verificationStatus")
+          .sort(sort)
+          .skip((page - 1) * limit)
+          .limit(limit)
+          .lean();
+
     // Execute query with pagination
     const [products, totalCount] = await Promise.all([
-      Product.find(query)
-        .select(
-          "name brand images pricing inventory category ratings highlights seller isVerified shipping createdAt variants",
-        )
-        .populate("seller", "businessInfo storeInfo ratings verificationStatus")
-        .sort(sort)
-        .skip((page - 1) * limit)
-        .limit(limit)
-        .lean(),
+      productsPromise,
       Product.countDocuments(query),
     ]);
 

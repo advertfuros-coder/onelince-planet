@@ -127,14 +127,14 @@ export default function SearchAutocomplete({ onClose }) {
                     onKeyDown={handleKeyDown}
                     onFocus={() => query.length >= 2 && setShowSuggestions(true)}
                     placeholder="Search for products, categories..."
-                    className="w-full px-4 py-3 pl-12 pr-4 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 pl-12 pr-4 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F79625]/30 focus:border-[#F79625] transition-all"
                     autoComplete="off"
                 />
                 <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
 
                 {loading && (
                     <div className="absolute right-4 top-1/2 -translate-y-1/2">
-                        <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+                        <div className="w-4 h-4 border-2 border-[#F79625] border-t-transparent rounded-full animate-spin" />
                     </div>
                 )}
             </form>
@@ -153,7 +153,7 @@ export default function SearchAutocomplete({ onClose }) {
                                 <button
                                     key={category.id}
                                     onClick={() => handleCategoryClick(category)}
-                                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-colors ${selectedIndex === index ? 'bg-blue-50' : 'hover:bg-gray-50'
+                                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-colors ${selectedIndex === index ? 'bg-[#F79625]/10' : 'hover:bg-gray-50'
                                         }`}
                                 >
                                     <span className="text-2xl">{category.icon}</span>
@@ -183,7 +183,7 @@ export default function SearchAutocomplete({ onClose }) {
                                     <button
                                         key={product.id}
                                         onClick={() => handleProductClick(product)}
-                                        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-colors ${selectedIndex === itemIndex ? 'bg-blue-50' : 'hover:bg-gray-50'
+                                        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-colors ${selectedIndex === itemIndex ? 'bg-[#F79625]/10' : 'hover:bg-gray-50'
                                             }`}
                                     >
                                         {/* Product Image */}
@@ -213,7 +213,7 @@ export default function SearchAutocomplete({ onClose }) {
                                                 )}
                                             </div>
                                             <div className="flex items-center gap-2 mt-0.5">
-                                                <p className="text-xs font-semibold text-blue-600">
+                                                <p className="text-xs font-semibold text-[#F79625]">
                                                     {formatPrice(product.price)}
                                                 </p>
                                                 {product.rating > 0 && (
@@ -239,7 +239,7 @@ export default function SearchAutocomplete({ onClose }) {
                     <div className="border-t border-gray-100 p-2">
                         <button
                             onClick={handleSearch}
-                            className="w-full px-3 py-2.5 text-sm font-medium text-blue-600 hover:bg-blue-50 rounded-lg transition-colors flex items-center justify-center gap-2"
+                            className="w-full px-3 py-2.5 text-sm font-medium text-[#F79625] hover:bg-[#F79625]/10 rounded-lg transition-colors flex items-center justify-center gap-2"
                         >
                             <FiSearch className="w-4 h-4" />
                             View all results for "{query}"

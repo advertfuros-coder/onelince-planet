@@ -57,7 +57,7 @@ export default function CategoryGrid() {
 
     return (
         <section className="py-6 md:py-8 bg-white">
-            <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="relative category-grid-swiper">
                     <Swiper
                         modules={[Navigation, Autoplay, Grid]}

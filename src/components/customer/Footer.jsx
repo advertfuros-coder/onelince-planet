@@ -119,12 +119,18 @@ export default function Footer() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-16 border-b border-gray-800 pb-12">
           <div className="lg:col-span-5 space-y-6">
             <Link href="/" className="flex items-center space-x-3 group">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-blue-900/20 transition-all">
-                <span className="text-white font-bold text-xl">OP</span>
-              </div>
+              <img
+                src="/logo.png"
+                alt="Online Planet Logo"
+                className="h-11 w-auto object-contain drop-shadow-lg transition-transform duration-200 group-hover:scale-105"
+              />
               <div>
-                <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">Online Planet</span>
-                <p className="text-xs text-gray-400 font-medium tracking-wide uppercase">Dubai's Premier Marketplace</p>
+                <span className="text-xl font-bold text-white transition-colors group-hover:text-blue-400">
+                  Online Planet
+                </span>
+                <p className="text-[11px] text-gray-400 font-medium tracking-wide uppercase">
+                  India's multi-vendor marketplace
+                </p>
               </div>
             </Link>
             <p className="text-gray-400 text-sm leading-relaxed max-w-md">
@@ -148,8 +154,8 @@ export default function Footer() {
 
           <div className="lg:col-span-7">
             <div className="bg-gray-800/50 rounded-2xl p-8 border border-gray-700/50 backdrop-blur-sm">
-              <h3 className="text-xl font-bold text-white mb-2">Subscribe to our Newsletter</h3>
-              <p className="text-gray-400 text-sm mb-6">Get the latest updates on new products and upcoming sales.</p>
+              <h3 className="text-base font-semibold text-white mb-1.5">Subscribe to our newsletter</h3>
+              <p className="text-gray-400 text-sm mb-5">Get the latest updates on new products and upcoming sales.</p>
 
               <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-3">
                 <div className="flex-1 relative">

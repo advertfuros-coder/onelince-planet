@@ -58,7 +58,7 @@ export default function PayoutsPage() {
   }
 
   const waterfallData = [
-    { name: 'Gross Sales', value: data?.waterfall?.grossSales, color: '#2563eb' },
+    { name: 'Gross Sales', value: data?.waterfall?.grossSales, color: '#F79625' },
     { name: 'Commission', value: -data?.waterfall?.commission, color: '#ef4444' },
     { name: 'Logistics', value: -data?.waterfall?.shipping, color: '#f59e0b' },
     { name: 'Net Payout', value: data?.waterfall?.netPayout, color: '#10b981' },

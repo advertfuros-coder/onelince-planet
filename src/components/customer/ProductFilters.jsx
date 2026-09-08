@@ -15,9 +15,11 @@ export default function ProductFilters({ filters, onFiltersChange }) {
   useEffect(() => {
     const fetchBrands = async () => {
       try {
-        const url = filters.category
-          ? `/api/brands?category=${filters.category}`
-          : '/api/brands'
+        const params = new URLSearchParams()
+        if (filters.category) params.append('category', filters.category)
+        if (filters.search) params.append('search', filters.search)
+
+        const url = `/api/brands${params.toString() ? '?' + params.toString() : ''}`
 
         const response = await fetch(url)
         const data = await response.json()
@@ -27,21 +29,14 @@ export default function ProductFilters({ filters, onFiltersChange }) {
         }
       } catch (error) {
         console.error('Failed to fetch brands:', error)
-        // Fallback to some default brands
-        setBrands([
-          { name: 'Sony', count: 0 },
-          { name: 'JBL', count: 0 },
-          { name: 'Bose', count: 0 },
-          { name: 'Boat', count: 0 },
-          { name: 'Samsung', count: 0 }
-        ])
+        setBrands([])
       } finally {
         setLoadingBrands(false)
       }
     }
 
     fetchBrands()
-  }, [filters.category])
+  }, [filters.category, filters.search])
 
   const toggleSection = (section) => {
     setOpenSections(prev => ({ ...prev, [section]: !prev[section] }))
@@ -75,7 +70,7 @@ export default function ProductFilters({ filters, onFiltersChange }) {
         {hasActiveFilters && (
           <button
             onClick={clearAllFilters}
-            className="text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors"
+            className="text-sm font-semibold text-[#F79625] hover:text-[#e0851d] transition-colors"
           >
             Clear All
           </button>
@@ -86,27 +81,27 @@ export default function ProductFilters({ filters, onFiltersChange }) {
       {hasActiveFilters && (
         <div className="flex flex-wrap gap-2 mb-4">
           {filters.minPrice && (
-            <span className="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-semibold rounded-full flex items-center gap-1">
+            <span className="px-3 py-1 bg-[#F79625]/10 text-[#F79625] text-xs font-semibold rounded-full flex items-center gap-1">
               Min: ₹{filters.minPrice}
-              <button onClick={() => updateFilter('minPrice', '')} className="hover:text-blue-900">×</button>
+              <button onClick={() => updateFilter('minPrice', '')} className="hover:text-[#e0851d]">×</button>
             </span>
           )}
           {filters.maxPrice && (
-            <span className="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-semibold rounded-full flex items-center gap-1">
+            <span className="px-3 py-1 bg-[#F79625]/10 text-[#F79625] text-xs font-semibold rounded-full flex items-center gap-1">
               Max: ₹{filters.maxPrice}
-              <button onClick={() => updateFilter('maxPrice', '')} className="hover:text-blue-900">×</button>
+              <button onClick={() => updateFilter('maxPrice', '')} className="hover:text-[#e0851d]">×</button>
             </span>
           )}
           {filters.brand && (
-            <span className="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-semibold rounded-full flex items-center gap-1 capitalize">
+            <span className="px-3 py-1 bg-[#F79625]/10 text-[#F79625] text-xs font-semibold rounded-full flex items-center gap-1 capitalize">
               {filters.brand}
-              <button onClick={() => updateFilter('brand', '')} className="hover:text-blue-900">×</button>
+              <button onClick={() => updateFilter('brand', '')} className="hover:text-[#e0851d]">×</button>
             </span>
           )}
           {filters.rating && (
-            <span className="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-semibold rounded-full flex items-center gap-1">
+            <span className="px-3 py-1 bg-[#F79625]/10 text-[#F79625] text-xs font-semibold rounded-full flex items-center gap-1">
               {filters.rating}★ & Up
-              <button onClick={() => updateFilter('rating', '')} className="hover:text-blue-900">×</button>
+              <button onClick={() => updateFilter('rating', '')} className="hover:text-[#e0851d]">×</button>
             </span>
           )}
         </div>
@@ -131,7 +126,7 @@ export default function ProductFilters({ filters, onFiltersChange }) {
                   placeholder="Min"
                   value={filters.minPrice}
                   onChange={(e) => updateFilter('minPrice', e.target.value)}
-                  className="w-full pl-7 pr-3 py-2.5 bg-white border border-gray-200 rounded-xl text-sm font-semibold focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none"
+                  className="w-full pl-7 pr-3 py-2.5 bg-white border border-gray-200 rounded-xl text-sm font-semibold focus:ring-2 focus:ring-[#F79625]/20 focus:border-[#F79625] transition-all outline-none"
                 />
               </div>
               <span className="text-gray-400 font-medium">-</span>
@@ -142,7 +137,7 @@ export default function ProductFilters({ filters, onFiltersChange }) {
                   placeholder="Max"
                   value={filters.maxPrice}
                   onChange={(e) => updateFilter('maxPrice', e.target.value)}
-                  className="w-full pl-7 pr-3 py-2.5 bg-white border border-gray-200 rounded-xl text-sm font-semibold focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none"
+                  className="w-full pl-7 pr-3 py-2.5 bg-white border border-gray-200 rounded-xl text-sm font-semibold focus:ring-2 focus:ring-[#F79625]/20 focus:border-[#F79625] transition-all outline-none"
                 />
               </div>
             </div>
@@ -177,7 +172,7 @@ export default function ProductFilters({ filters, onFiltersChange }) {
                         type="checkbox"
                         checked={filters.brand === brandName}
                         onChange={() => updateFilter('brand', filters.brand === brandName ? '' : brandName)}
-                        className="peer w-5 h-5 border-2 border-gray-300 rounded-[6px] checked:bg-blue-600 checked:border-blue-600 transition-all appearance-none cursor-pointer"
+                        className="peer w-5 h-5 border-2 border-gray-300 rounded-[6px] checked:bg-[#F79625] checked:border-[#F79625] transition-all appearance-none cursor-pointer"
                       />
                       <svg className="absolute w-3.5 h-3.5 text-white opacity-0 peer-checked:opacity-100 left-0.5 pointer-events-none transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="4">
                         <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
@@ -214,7 +209,7 @@ export default function ProductFilters({ filters, onFiltersChange }) {
                   type="checkbox"
                   checked={filters.rating == rating}
                   onChange={() => updateFilter('rating', filters.rating == rating ? '' : rating)}
-                  className="peer w-5 h-5 border-2 border-gray-300 rounded-full checked:bg-blue-600 checked:border-blue-600 transition-all appearance-none cursor-pointer"
+                  className="peer w-5 h-5 border-2 border-gray-300 rounded-full checked:bg-[#F79625] checked:border-[#F79625] transition-all appearance-none cursor-pointer"
                 />
                 <div className="ml-3 flex items-center gap-1">
                   {[...Array(5)].map((_, i) => (
@@ -235,7 +230,7 @@ export default function ProductFilters({ filters, onFiltersChange }) {
           <span className="text-[14px] font-semibold text-gray-700">Verified Seller</span>
           <button
             onClick={() => updateFilter('verified', !filters.verified)}
-            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors outline-none focus:ring-2 focus:ring-blue-500/20 ${filters.verified ? 'bg-blue-600' : 'bg-gray-200'}`}
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors outline-none focus:ring-2 focus:ring-[#F79625]/20 ${filters.verified ? 'bg-[#F79625]' : 'bg-gray-200'}`}
           >
             <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${filters.verified ? 'translate-x-6' : 'translate-x-1'}`} />
           </button>
@@ -246,7 +241,7 @@ export default function ProductFilters({ filters, onFiltersChange }) {
           <span className="text-[14px] font-semibold text-gray-700">Fast Delivery</span>
           <button
             onClick={() => updateFilter('fastDelivery', !filters.fastDelivery)}
-            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors outline-none focus:ring-2 focus:ring-blue-500/20 ${filters.fastDelivery ? 'bg-blue-600' : 'bg-gray-200'}`}
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors outline-none focus:ring-2 focus:ring-[#F79625]/20 ${filters.fastDelivery ? 'bg-[#F79625]' : 'bg-gray-200'}`}
           >
             <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${filters.fastDelivery ? 'translate-x-6' : 'translate-x-1'}`} />
           </button>

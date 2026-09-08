@@ -1,8 +1,8 @@
-// app/api/products/route.js
 import { NextResponse } from "next/server";
 import connectDB from "@/lib/db/mongodb";
 import Product from "@/lib/db/models/Product";
 import { buildCategoryFilter } from "@/lib/db/utils/categoryMatcher";
+import { buildProductSearchFilter } from "@/lib/db/utils/searchHelper";
 
 export async function GET(request) {
   try {
@@ -43,11 +43,11 @@ export async function GET(request) {
     }
 
     if (search) {
-      query.$or = [
-        { name: { $regex: search, $options: "i" } },
-        { description: { $regex: search, $options: "i" } },
-        { brand: { $regex: search, $options: "i" } },
-      ];
+      const searchFilter = buildProductSearchFilter(search, brand);
+      if (searchFilter) {
+        query.$and = query.$and || [];
+        query.$and.push(searchFilter);
+      }
     }
 
     // Price filter

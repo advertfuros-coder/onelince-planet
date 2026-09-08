@@ -85,15 +85,15 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50/70 via-white to-amber-50/50 flex items-center justify-center p-4">
       <div className="max-w-md w-full">
         {/* Logo */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center space-x-2 group">
-            <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+            <div className="w-12 h-12 bg-gradient-to-r from-[#F79625] to-[#d67a14] rounded-2xl flex items-center justify-center shadow-lg shadow-orange-500/20 group-hover:scale-110 transition-transform">
               <FiShoppingBag className="w-6 h-6 text-white" />
             </div>
-            <span className="text-2xl font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <span className="text-2xl font-semibold bg-gradient-to-r from-[#F79625] to-[#d67a14] bg-clip-text text-transparent">
               OnlinePlanet
             </span>
           </Link>
@@ -130,7 +130,7 @@ export default function ForgotPasswordPage() {
                 <Button
                   type="submit"
                   loading={loading}
-                  className="w-full py-4 text-base font-semibold rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 hover:shadow-xl hover:shadow-blue-500/20 transition-all"
+                  className="w-full py-4 text-base font-semibold rounded-2xl bg-gradient-to-r from-[#F79625] to-[#d67a14] hover:shadow-xl hover:shadow-orange-500/20 transition-all"
                 >
                   Send Verification Code
                 </Button>
@@ -209,7 +209,7 @@ export default function ForgotPasswordPage() {
                 <Button
                   type="submit"
                   loading={loading}
-                  className="w-full py-4 text-base font-semibold rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 hover:shadow-xl hover:shadow-blue-500/20 transition-all"
+                  className="w-full py-4 text-base font-semibold rounded-2xl bg-gradient-to-r from-[#F79625] to-[#d67a14] hover:shadow-xl hover:shadow-orange-500/20 transition-all"
                 >
                   Reset Password
                 </Button>
@@ -235,7 +235,7 @@ export default function ForgotPasswordPage() {
                 Your password has been reset successfully. You can now use your new password to sign in.
               </p>
               <Link href="/login">
-                <Button className="w-full py-4 text-base font-semibold rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600">
+                <Button className="w-full py-4 text-base font-semibold rounded-2xl bg-gradient-to-r from-[#F79625] to-[#d67a14]">
                   Continue to Sign In
                 </Button>
               </Link>

@@ -115,16 +115,16 @@ const topBrands = [
 
 export default function TopBrands() {
   return (
-    <section className="py-12 bg-gray-50">
-      <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-10 bg-gray-50/50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-6">
           <div>
-            <h2 className="text-2xl md:text-3xl font-semibold text-gray-900 mb-2">
-              Shop by Top Brands
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight">
+              Shop by top brands
             </h2>
-            <p className="text-gray-600 text-sm md:text-base">
-              Explore products from your favorite brands
+            <p className="text-sm text-gray-500 mt-0.5">
+              Explore products from your favourite brands
             </p>
           </div>
           <Link

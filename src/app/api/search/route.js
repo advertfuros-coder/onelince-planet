@@ -2,6 +2,7 @@
 import { NextResponse } from "next/server";
 import connectDB from "@/lib/db/mongodb";
 import Product from "@/lib/db/models/Product";
+import { buildProductSearchFilter, buildRelevanceAddFields } from "@/lib/db/utils/searchHelper";
 
 /**
  * Dedicated API for Global Search Results Page
@@ -36,16 +37,23 @@ export async function GET(request) {
       isDraft: { $ne: true },
     };
 
-    // Search query - comprehensive search across multiple fields
-    if (query) {
-      productQuery.$or = [
-        { name: { $regex: query, $options: "i" } },
-        { description: { $regex: query, $options: "i" } },
-        { keywords: { $regex: query, $options: "i" } },
-        { brand: { $regex: query, $options: "i" } },
-        { category: { $regex: query, $options: "i" } },
-        { highlights: { $regex: query, $options: "i" } },
-      ];
+    const knownBrands = await getKnownBrands(Product);
+
+    // Clean, tokenized search query across core product identity fields
+    if (query || brand) {
+      const { brandFilter, textFilter } = buildProductSearchFilter(
+        query,
+        brand,
+        knownBrands
+      );
+
+      if (brandFilter) {
+        Object.assign(productQuery, brandFilter);
+      }
+      if (textFilter) {
+        productQuery.$and = productQuery.$and || [];
+        productQuery.$and.push(textFilter);
+      }
     }
 
     // Category filter
@@ -84,7 +92,6 @@ export async function GET(request) {
     // Build sort object
     let sort = {};
     if (sortBy === "relevance") {
-      // Relevance: prioritize by ratings and review count
       sort = { "ratings.average": -1, "ratings.count": -1, createdAt: -1 };
     } else if (sortBy === "price") {
       sort = { "pricing.salePrice": order === "asc" ? 1 : -1 };
@@ -98,20 +105,73 @@ export async function GET(request) {
       sort = { createdAt: -1 };
     }
 
+    const isRelevanceSearch = sortBy === "relevance" && Boolean(query && query.trim());
+
+    const productsPromise = isRelevanceSearch
+      ? Product.aggregate([
+          { $match: productQuery },
+          buildRelevanceAddFields(query),
+          { $sort: { relevanceScore: -1, "ratings.average": -1, createdAt: -1 } },
+          { $skip: (page - 1) * limit },
+          { $limit: limit },
+          {
+            $lookup: {
+              from: "sellers",
+              localField: "sellerId",
+              foreignField: "_id",
+              as: "seller",
+            },
+          },
+          {
+            $unwind: {
+              path: "$seller",
+              preserveNullAndEmptyArrays: true,
+            },
+          },
+          {
+            $project: {
+              name: 1,
+              brand: 1,
+              images: 1,
+              pricing: 1,
+              inventory: 1,
+              category: 1,
+              ratings: 1,
+              highlights: 1,
+              seller: {
+                businessInfo: 1,
+                storeInfo: 1,
+                ratings: 1,
+                verificationStatus: 1,
+              },
+              shipping: 1,
+              createdAt: 1,
+              isBestSeller: 1,
+              isNewArrival: 1,
+              isPremium: 1,
+              relevanceScore: 1,
+            },
+          },
+        ])
+      : Product.find(productQuery)
+          .select(
+            "name brand images pricing inventory category ratings highlights seller shipping createdAt isBestSeller isNewArrival isPremium",
+          )
+          .populate("seller", "businessInfo storeInfo ratings verificationStatus")
+          .sort(sort)
+          .skip((page - 1) * limit)
+          .limit(limit)
+          .lean();
+
+    const brandFacetQuery = { ...productQuery };
+    delete brandFacetQuery.brand;
+
     // Execute queries in parallel for better performance
     const [products, totalCount, categories, brands] = await Promise.all([
-      Product.find(productQuery)
-        .select(
-          "name brand images pricing inventory category ratings highlights seller shipping createdAt isBestSeller isNewArrival isPremium",
-        )
-        .populate("seller", "businessInfo storeInfo ratings verificationStatus")
-        .sort(sort)
-        .skip((page - 1) * limit)
-        .limit(limit)
-        .lean(),
+      productsPromise,
       Product.countDocuments(productQuery),
       Product.distinct("category", { isActive: true, isApproved: true }),
-      Product.distinct("brand", { isActive: true, isApproved: true }),
+      Product.distinct("brand", brandFacetQuery),
     ]);
 
     // Enrich products with calculated fields

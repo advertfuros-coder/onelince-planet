@@ -160,10 +160,10 @@ export default function WarehousesPage() {
                             </div>
                         </div>
 
-                        <div className="bg-gradient-to-br from-[#0A1128] to-[#1E3A8A] rounded-[2.5rem] p-8 text-white relative overflow-hidden">
-                            <div className="absolute top-[-10%] right-[-10%] w-[200px] h-[200px] bg-blue-500/20 rounded-full blur-3xl pointer-events-none" />
+                        <div className="bg-gradient-to-br from-[#1A1006] to-[#d67a14] rounded-[2.5rem] p-8 text-white relative overflow-hidden">
+                            <div className="absolute top-[-10%] right-[-10%] w-[200px] h-[200px] bg-orange-500/20 rounded-full blur-3xl pointer-events-none" />
                             <div className="relative z-10 space-y-4">
-                                <Zap className="text-blue-400" />
+                                <Zap className="text-amber-300" />
                                 <h4 className="text-xl font-semibold font-semibold leading-tight">Optimization Report</h4>
                                 <p className="text-white/60 text-xs font-medium">Node "Mumbai Alpha" is operating at 88% capacity. Consider rerouting stock to Bangalore Hub.</p>
                                 <button className="w-full py-3 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-2xl text-[10px] font-semibold uppercase tracking-widest border border-white/10 transition-all">

@@ -79,7 +79,7 @@ export default function ModernDashboard({ dashboardData, loading, onRefresh }) {
                         </button>
                         <Link
                             href="/seller/products/new"
-                            className="flex items-center gap-2 px-6 py-2.5 bg-[#1E3A8A] text-white rounded-full font-semibold hover:bg-black transition-all shadow-lg shadow-blue-900/10"
+                            className="flex items-center gap-2 px-6 py-2.5 bg-[#F79625] text-white rounded-full font-semibold hover:bg-[#d67a14] transition-all shadow-lg shadow-orange-500/20"
                         >
                             <Plus size={18} />
                             <span>Add Product</span>
@@ -160,11 +160,11 @@ export default function ModernDashboard({ dashboardData, loading, onRefresh }) {
                                             <AreaChart data={safeData.salesData} margin={{ top: 40, right: 0, left: -20, bottom: 0 }}>
                                                 <defs>
                                                     <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
-                                                        <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.1} />
-                                                        <stop offset="95%" stopColor="#3B82F6" stopOpacity={0} />
+                                                        <stop offset="5%" stopColor="#F79625" stopOpacity={0.1} />
+                                                        <stop offset="95%" stopColor="#F79625" stopOpacity={0} />
                                                     </linearGradient>
                                                     <pattern id="dotPattern" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
-                                                        <circle cx="2" cy="2" r="1" fill="#3B82F6" fillOpacity="0.1" />
+                                                        <circle cx="2" cy="2" r="1" fill="#F79625" fillOpacity="0.1" />
                                                     </pattern>
                                                 </defs>
                                                 <XAxis
@@ -184,7 +184,7 @@ export default function ModernDashboard({ dashboardData, loading, onRefresh }) {
                                                             )
                                                         }
                                                         return null
-                                                    }}
+                                                     }}
                                                 />
                                                 {/* Red Comparison Line */}
                                                 <Area
@@ -196,15 +196,15 @@ export default function ModernDashboard({ dashboardData, loading, onRefresh }) {
                                                     dot={false}
                                                     activeDot={{ r: 6, stroke: '#FFFFFF', strokeWidth: 3, fill: '#EF4444' }}
                                                 />
-                                                {/* Blue Main Line */}
+                                                {/* Main Revenue Line */}
                                                 <Area
                                                     type="monotone"
                                                     dataKey="sales"
-                                                    stroke="#2563EB"
+                                                    stroke="#F79625"
                                                     strokeWidth={4}
                                                     fill="url(#colorSales)"
                                                     dot={false}
-                                                    activeDot={{ r: 8, stroke: '#FFFFFF', strokeWidth: 4, fill: '#2563EB' }}
+                                                    activeDot={{ r: 8, stroke: '#FFFFFF', strokeWidth: 4, fill: '#F79625' }}
                                                 />
                                             </AreaChart>
                                         </ResponsiveContainer>
@@ -241,14 +241,14 @@ export default function ModernDashboard({ dashboardData, loading, onRefresh }) {
                                 <div className="flex-1 space-y-2 py-4">
                                     {safeData.alerts.pendingOrders > 0 ? (
                                         <>
-                                            <h4 className="text-2xl font-semibold leading-tight text-[#1E3A8A]">
+                                            <h4 className="text-2xl font-semibold leading-tight text-[#F79625]">
                                                 {safeData.alerts.pendingOrders} Pending Orders
                                             </h4>
                                             <p className="text-gray-400 text-sm font-medium">Needs your immediate attention</p>
                                         </>
                                     ) : (
                                         <>
-                                            <h4 className="text-2xl font-semibold leading-tight text-[#1E3A8A]">
+                                            <h4 className="text-2xl font-semibold leading-tight text-[#F79625]">
                                                 All caught up!
                                             </h4>
                                             <p className="text-gray-400 text-sm font-medium">No urgent pending actions</p>
@@ -257,7 +257,7 @@ export default function ModernDashboard({ dashboardData, loading, onRefresh }) {
                                 </div>
                                 <Link
                                     href="/seller/orders"
-                                    className="w-full h-14 bg-[#1E3A8A] text-white rounded-2xl flex items-center justify-center gap-2 font-semibold hover:bg-black transition-all shadow-lg shadow-blue-900/20"
+                                    className="w-full h-14 bg-[#F79625] text-white rounded-2xl flex items-center justify-center gap-2 font-semibold hover:bg-[#d67a14] transition-all shadow-lg shadow-orange-500/20"
                                 >
                                     <ShoppingBag size={20} />
                                     <span>Handle Orders</span>
@@ -343,7 +343,7 @@ export default function ModernDashboard({ dashboardData, loading, onRefresh }) {
                                         <PieChart>
                                             <Pie
                                                 data={[
-                                                    { name: 'Completed', value: safeData.performance.orderFulfillmentRate, fill: '#1E3A8A' },
+                                                    { name: 'Completed', value: safeData.performance.orderFulfillmentRate, fill: '#F79625' },
                                                     { name: 'Remaining', value: 100 - safeData.performance.orderFulfillmentRate, fill: '#F1F5F9' },
                                                 ]}
                                                 cx="50%"
@@ -361,7 +361,7 @@ export default function ModernDashboard({ dashboardData, loading, onRefresh }) {
                                 </div>
                                 <div className="flex justify-center gap-8 mt-4">
                                     <div className="flex items-center gap-2">
-                                        <div className="w-3 h-3 rounded-full bg-[#1E3A8A]" />
+                                        <div className="w-3 h-3 rounded-full bg-[#F79625]" />
                                         <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Fulfilled</span>
                                     </div>
                                     <div className="flex items-center gap-2">
@@ -445,7 +445,7 @@ export default function ModernDashboard({ dashboardData, loading, onRefresh }) {
 
 function StatCard({ title, value, trend, icon: Icon, primary }) {
     return (
-        <div className={`p-6 rounded-[2.2rem] shadow-sm border transition-all hover:translate-y-[-4px] ${primary ? 'bg-[#1E3A8A] border-blue-800 text-white' : 'bg-white border-gray-100 text-gray-900'
+        <div className={`p-6 rounded-[2.2rem] shadow-sm border transition-all hover:translate-y-[-4px] ${primary ? 'bg-[#F79625] border-orange-600 text-white' : 'bg-white border-gray-100 text-gray-900'
             }`}>
             <div className="flex justify-between items-start mb-5">
                 <h4 className={`text-xs font-semibold uppercase tracking-wider ${primary ? 'text-white/60' : 'text-gray-400'}`}>{title}</h4>

@@ -378,15 +378,15 @@ export default function SellerInsightsPage() {
                                 <AreaChart data={WEEKLY_DATA}>
                                     <defs>
                                         <linearGradient id="colorRev" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.1} />
-                                            <stop offset="95%" stopColor="#3B82F6" stopOpacity={0} />
+                                            <stop offset="5%" stopColor="#F79625" stopOpacity={0.1} />
+                                            <stop offset="95%" stopColor="#F79625" stopOpacity={0} />
                                         </linearGradient>
                                     </defs>
                                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#FAFAFA" />
                                     <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fontSize: 11, fontWeight: 900, fill: '#CBD5E1' }} />
                                     <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fontWeight: 900, fill: '#CBD5E1' }} />
                                     <RechartsTooltip contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1)' }} />
-                                    <Area type="monotone" dataKey="revenue" stroke="#3B82F6" strokeWidth={4} fillOpacity={1} fill="url(#colorRev)" />
+                                    <Area type="monotone" dataKey="revenue" stroke="#F79625" strokeWidth={4} fillOpacity={1} fill="url(#colorRev)" />
                                     <Area type="monotone" dataKey="target" stroke="#E2E8F0" strokeWidth={2} strokeDasharray="5 5" fill="transparent" />
                                 </AreaChart>
                             </ResponsiveContainer>
@@ -401,7 +401,7 @@ export default function SellerInsightsPage() {
                                     <RadarChart cx="50%" cy="50%" outerRadius="80%" data={performance?.categoryPerformance?.map(c => ({ subject: c.category, A: c.revenue, fullMark: performance.summary.totalRevenue })) || performanceRadarMock}>
                                         <PolarGrid stroke="#F1F5F9" />
                                         <PolarAngleAxis dataKey="subject" tick={{ fill: '#94A3B8', fontSize: 10, fontWeight: 900 }} />
-                                        <Radar name="Performance" dataKey="A" stroke="#3B82F6" fill="#3B82F6" fillOpacity={0.2} />
+                                        <Radar name="Performance" dataKey="A" stroke="#F79625" fill="#F79625" fillOpacity={0.2} />
                                     </RadarChart>
                                 </ResponsiveContainer>
                             </div>

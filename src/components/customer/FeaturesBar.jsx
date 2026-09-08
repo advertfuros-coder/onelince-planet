@@ -26,7 +26,7 @@ export default function FeaturesBar() {
     ]
 
     return (
-        <section className="py-8 bg-white border-t border-b border-gray-200">
+        <section className="py-8 bg-white border-y border-gray-100">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
                     {features.map((feature, index) => {
@@ -34,20 +34,15 @@ export default function FeaturesBar() {
                         return (
                             <div
                                 key={index}
-                                className="flex flex-col items-center text-center group hover:scale-105 transition-transform duration-300"
+                                className="flex flex-col items-center text-center group"
                             >
-                                {/* Icon */}
-                                <div className="w-14 h-14 mb-3 flex items-center justify-center rounded-full bg-gray-50 group-hover:bg-blue-50 transition-colors">
-                                    <Icon className="w-7 h-7 text-gray-700 group-hover:text-blue-600 transition-colors" />
+                                <div className="w-11 h-11 mb-2.5 flex items-center justify-center rounded-full bg-gray-50 group-hover:bg-blue-50 transition-colors">
+                                    <Icon className="w-5 h-5 text-gray-600 group-hover:text-blue-600 transition-colors" />
                                 </div>
-
-                                {/* Title */}
-                                <h3 className="text-sm md:text-base font-semibold text-gray-900 mb-1">
+                                <h3 className="text-xs md:text-sm font-semibold text-gray-900 mb-0.5">
                                     {feature.title}
                                 </h3>
-
-                                {/* Description */}
-                                <p className="text-xs md:text-sm text-gray-600 leading-relaxed">
+                                <p className="text-[11px] md:text-xs text-gray-500 leading-relaxed">
                                     {feature.description}
                                 </p>
                             </div>

@@ -66,7 +66,7 @@ export default function CategoryProductSections() {
   if (loading) {
     return (
       <section className="py-12 bg-gray-50/50">
-        <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
           {/* Quick jump skeleton */}
           <div className="flex gap-2 overflow-hidden py-2">
             {[...Array(8)].map((_, i) => (
@@ -106,62 +106,9 @@ export default function CategoryProductSections() {
 
   return (
     <div className="py-10 bg-gradient-to-b from-white via-gray-50/40 to-white">
-      <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-14">
 
-        {/* Section Header Title & Quick Category Pill Bar */}
-        <div className="space-y-5">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-gray-100 pb-5">
-            <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200/60 text-blue-700 text-xs font-bold uppercase tracking-wider mb-2">
-                <span>Featured Catalog</span>
-                <span className="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse" />
-              </div>
-              <h2 className="text-3xl md:text-5xl font-[1000] text-gray-900 tracking-tight">
-                Shop By <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Category</span>
-              </h2>
-              <p className="text-gray-500 text-sm md:text-base mt-1">
-                Explore curated, high-demand collections with at least top 10 verified products in every category.
-              </p>
-            </div>
-
-            <div className="text-xs font-semibold text-gray-500 bg-gray-100/80 px-3.5 py-2 rounded-xl self-start md:self-auto border border-gray-200/50">
-              {sections.length} Categories • Verified 2025–2026 In-Stock
-            </div>
-          </div>
-
-          {/* Quick Jump Horizontal Navigation Bar */}
-          <div className="sticky top-16 z-20 py-2 bg-white/95 backdrop-blur-md border-y border-gray-100 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
-              <span className="text-xs font-bold text-gray-400 uppercase tracking-wider pr-1 whitespace-nowrap">
-                Jump To:
-              </span>
-              {sections.map((sec) => {
-                const isActive = activeCategory === sec.id;
-                return (
-                  <button
-                    key={sec.id}
-                    onClick={() => scrollToSection(sec.id)}
-                    className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs md:text-sm font-semibold whitespace-nowrap transition-all duration-200 flex-shrink-0 ${
-                      isActive
-                        ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20 scale-[1.02]'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-gray-900'
-                    }`}
-                  >
-                    <span>{sec.iconEmoji}</span>
-                    <span>{sec.name}</span>
-                    <span
-                      className={`text-[10px] px-1.5 py-0.2 rounded-full ${
-                        isActive ? 'bg-white/20 text-white' : 'bg-gray-200/70 text-gray-600'
-                      }`}
-                    >
-                      {sec.totalProducts}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </div>
+       
 
         {/* Render Each Category Section */}
         {sections.map((sec) => (
@@ -175,7 +122,7 @@ export default function CategoryProductSections() {
               <div className="space-y-1">
                 
 
-                <h3 className="text-2xl md:text-3xl font-extrabold text-gray-900 tracking-tight">
+                <h3 className="text-lg md:text-xl font-bold text-gray-900 tracking-tight">
                   {sec.title}
                 </h3>
                 <p className="text-sm text-gray-500 max-w-2xl">

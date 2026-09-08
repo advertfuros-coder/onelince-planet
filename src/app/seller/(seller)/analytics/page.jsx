@@ -285,8 +285,8 @@ export default function SellerAnalytics() {
                 <AreaChart data={analyticsData.salesTrend} margin={{ top: 30, right: 10, left: -20, bottom: 0 }}>
                   <defs>
                     <linearGradient id="colorRetention" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.1} />
-                      <stop offset="95%" stopColor="#3B82F6" stopOpacity={0} />
+                      <stop offset="5%" stopColor="#F79625" stopOpacity={0.1} />
+                      <stop offset="95%" stopColor="#F79625" stopOpacity={0} />
                     </linearGradient>
                   </defs>
                   <XAxis dataKey="_id" hide />
@@ -294,7 +294,7 @@ export default function SellerAnalytics() {
                   <Area
                     type="stepAfter"
                     dataKey="revenue"
-                    stroke="#3B82F6"
+                    stroke="#F79625"
                     strokeWidth={3}
                     fill="url(#colorRetention)"
                   />
@@ -325,13 +325,13 @@ export default function SellerAnalytics() {
               value={analyticsData.customerInsights.totalCustomers.toLocaleString()}
               change={`+${analyticsData.customerInsights.newCustomers} New`}
               data={analyticsData.salesTrend}
-              color="#2563EB"
+              color="#F79625"
               peak="Active"
             />
           </div>
 
           {/* Large Insights/Promo Card */}
-          <div className="lg:col-span-1 lg:row-span-2 bg-gradient-to-br from-[#0A1128] to-[#1E3A8A] rounded-[2.5rem] p-10 text-white relative overflow-hidden flex flex-col justify-end">
+          <div className="lg:col-span-1 lg:row-span-2 bg-gradient-to-br from-[#1A1006] to-[#d67a14] rounded-[2.5rem] p-10 text-white relative overflow-hidden flex flex-col justify-end">
             <div className="absolute top-[-10%] right-[-10%] w-[300px] h-[300px] bg-blue-600 opacity-20 rounded-full blur-3xl pointer-events-none" />
             <div className="absolute top-10 right-10">
               <div className="bg-white/10 backdrop-blur-md px-4 py-2 rounded-2xl flex items-center gap-2 border border-white/20">
@@ -384,7 +384,7 @@ function FunnelStep({ label, value, height, active, highlight }) {
         style={{ height }}
       >
         {active && !highlight && (
-          <div className="absolute inset-0 opacity-20 bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,#3B82F6_10px,#3B82F6_20px)] rounded-t-2xl" />
+          <div className="absolute inset-0 opacity-20 bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,#F79625_10px,#F79625_20px)] rounded-t-2xl" />
         )}
       </div>
     </div>

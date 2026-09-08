@@ -66,7 +66,7 @@ export default function LoginPage() {
     <div className="min-h-screen grid lg:grid-cols-2">
 
       {/* Left Side - Visual Showcase */}
-      <div className="hidden lg:flex relative bg-gradient-to-br from-blue-600 via-purple-600 to-pink-500 overflow-hidden">
+      <div className="hidden lg:flex relative bg-gradient-to-br from-[#F79625] via-[#ea580c] to-[#c2410c] overflow-hidden">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0" style={{
@@ -158,10 +158,10 @@ export default function LoginPage() {
           {/* Mobile Logo */}
           <div className="lg:hidden flex justify-center">
             <Link href="/" className="inline-flex items-center gap-2">
-              <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-gradient-to-r from-[#F79625] to-[#d67a14] rounded-lg flex items-center justify-center">
                 <FiShoppingBag className="w-4 h-4 text-white" />
               </div>
-              <span className="text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              <span className="text-lg font-semibold bg-gradient-to-r from-[#F79625] to-[#d67a14] bg-clip-text text-transparent">
                 OnlinePlanet
               </span>
             </Link>
@@ -272,7 +272,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="relative w-full py-3 md:py-4 text-sm md:text-base bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl hover:shadow-2xl hover:shadow-blue-500/50 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 overflow-hidden group"
+              className="relative w-full py-3 md:py-4 text-sm md:text-base bg-gradient-to-r from-[#F79625] to-[#d67a14] text-white font-semibold rounded-xl hover:shadow-2xl hover:shadow-orange-500/30 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 overflow-hidden group"
             >
               <span className="relative z-10 flex items-center justify-center gap-2">
                 {loading ? (
@@ -287,7 +287,7 @@ export default function LoginPage() {
                   </>
                 )}
               </span>
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-[#ea580c] to-[#c2410c] opacity-0 group-hover:opacity-100 transition-opacity"></div>
             </button>
           </form>
 

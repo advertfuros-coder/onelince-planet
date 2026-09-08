@@ -3,6 +3,11 @@ import { NextResponse } from "next/server";
 import connectDB from "@/lib/db/mongodb";
 import Product from "@/lib/db/models/Product";
 import { buildCategoryFilter } from "@/lib/db/utils/categoryMatcher";
+import {
+  buildProductSearchFilter,
+  buildRelevanceAddFields,
+  getKnownBrands,
+} from "@/lib/db/utils/searchHelper";
 
 /**
  * Enhanced Product Search & Filter API
@@ -38,33 +43,24 @@ export async function GET(request) {
       isDraft: { $ne: true },
     };
 
-    // IMPORTANT: Handle brand filter FIRST (before search)
-    // If brand is selected, it takes priority
-    if (brand) {
-      query.brand = { $regex: brand, $options: "i" };
-    }
+    const knownBrands = await getKnownBrands(Product);
 
-    // Search filter - but only if NO brand is selected
-    // OR apply search in addition to brand filter
-    if (search) {
-      // If brand is already filtered, search within those brand products
-      if (brand) {
-        // Search only in name, description, keywords for that brand
-        query.$or = [
-          { name: { $regex: search, $options: "i" } },
-          { description: { $regex: search, $options: "i" } },
-          { keywords: { $regex: search, $options: "i" } },
-          { category: { $regex: search, $options: "i" } },
-        ];
-      } else {
-        // No brand filter - search everywhere including brand
-        query.$or = [
-          { name: { $regex: search, $options: "i" } },
-          { description: { $regex: search, $options: "i" } },
-          { keywords: { $regex: search, $options: "i" } },
-          { brand: { $regex: search, $options: "i" } },
-          { category: { $regex: search, $options: "i" } },
-        ];
+    // Clean, tokenized search without description or cross-brand false positives
+    let activeBrand = brand;
+    if (search || brand) {
+      const { brandFilter, textFilter, detectedBrand } = buildProductSearchFilter(
+        search,
+        brand,
+        knownBrands
+      );
+
+      if (brandFilter) {
+        Object.assign(query, brandFilter);
+        activeBrand = detectedBrand;
+      }
+      if (textFilter) {
+        query.$and = query.$and || [];
+        query.$and.push(textFilter);
       }
     }
 
@@ -119,28 +115,66 @@ export async function GET(request) {
       sort = { createdAt: -1 };
     }
 
+    const isRelevanceSearch = sortBy === "relevance" && Boolean(search && search.trim());
+
+    const productsPromise = isRelevanceSearch
+      ? Product.aggregate([
+          { $match: query },
+          buildRelevanceAddFields(search),
+          { $sort: { relevanceScore: -1, "ratings.average": -1, createdAt: -1 } },
+          { $skip: (page - 1) * limit },
+          { $limit: limit },
+          {
+            $project: {
+              name: 1,
+              brand: 1,
+              images: 1,
+              pricing: 1,
+              inventory: 1,
+              category: 1,
+              ratings: 1,
+              highlights: 1,
+              shipping: 1,
+              createdAt: 1,
+              isBestSeller: 1,
+              isNewArrival: 1,
+              isPremium: 1,
+              variants: 1,
+              relevanceScore: 1,
+            },
+          },
+        ])
+      : Product.find(query)
+          .select(
+            "name brand images pricing inventory category ratings highlights shipping createdAt isBestSeller isNewArrival isPremium variants",
+          )
+          .sort(sort)
+          .skip((page - 1) * limit)
+          .limit(limit)
+          .lean();
+
+    // Query for faceted brands:
+    const brandFacetQuery = { ...query };
+    if (brand && !search) {
+      delete brandFacetQuery.brand;
+    }
+    const brandsPromise = Product.aggregate([
+      { $match: brandFacetQuery },
+      { $group: { _id: "$brand", count: { $sum: 1 } } },
+      { $match: { _id: { $ne: null, $ne: "" } } },
+      { $sort: { count: -1 } },
+    ]);
+
+    const categoriesPromise = search
+      ? Product.distinct("category", brandFacetQuery)
+      : Product.distinct("category", { isActive: true, isApproved: true });
+
     // Execute queries in parallel
     const [products, totalCount, allBrands, allCategories] = await Promise.all([
-      Product.find(query)
-        .select(
-          "name brand images pricing inventory category ratings highlights shipping createdAt isBestSeller isNewArrival isPremium variants",
-        )
-        .sort(sort)
-        .skip((page - 1) * limit)
-        .limit(limit)
-        .lean(),
+      productsPromise,
       Product.countDocuments(query),
-      // Get ALL brands with counts for filter sidebar
-      Product.aggregate([
-        {
-          $match: { isActive: true, isApproved: true, isDraft: { $ne: true } },
-        },
-        { $group: { _id: "$brand", count: { $sum: 1 } } },
-        { $match: { _id: { $ne: null, $ne: "" } } },
-        { $sort: { count: -1 } },
-      ]),
-      // Get ALL categories for filter
-      Product.distinct("category", { isActive: true, isApproved: true }),
+      brandsPromise,
+      categoriesPromise,
     ]);
 
     // Enrich products and expand variants

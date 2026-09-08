@@ -197,36 +197,9 @@ export default function HeroBanner({ banners: externalBanners = null, previewBan
                   </p>
                 )} */}
 
-                {currentBanner.showButton !== false && (
-                  <div className={`pt-2 md:pt-4 flex ${
-                    currentBanner.buttonStyle?.align === 'center' ? 'justify-center' : 
-                    currentBanner.buttonStyle?.align === 'right' ? 'justify-end' : 
-                    'justify-start'
-                  }`}>
-                    <Link
-                      href={currentBanner.buttonLink || '#'}
-                      className="inline-block px-4 md:px-6 py-2 md:py-3 rounded-full font-semibold text-xs md:text-sm hover:scale-105 transition-all duration-300 shadow-xl"
-                      style={{
-                        backgroundColor: currentBanner.buttonStyle?.bgColor || (currentBanner.textColor === 'text-white' ? '#FFFFFF' : '#111827'),
-                        color: currentBanner.buttonStyle?.textColor || (currentBanner.textColor === 'text-white' ? '#111827' : '#FFFFFF')
-                      }}
-                    >
-                      {currentBanner.buttonText}
-                    </Link>
-                  </div>
-                )}
               </div>
 
-              {mainBanners.length > 1 && (
-                <>
-                  <button onClick={prevSlide} className="hidden md:flex absolute left-4 w-10 h-10 items-center justify-center bg-white/20 hover:bg-white/40 rounded-full text-white transition-all backdrop-blur-sm">
-                    <FiChevronLeft size={24} />
-                  </button>
-                  <button onClick={nextSlide} className="hidden md:flex absolute right-4 w-10 h-10 items-center justify-center bg-white/20 hover:bg-white/40 rounded-full text-white transition-all backdrop-blur-sm">
-                    <FiChevronRight size={24} />
-                  </button>
-                </>
-              )}
+          
             </div>
           </div>
 

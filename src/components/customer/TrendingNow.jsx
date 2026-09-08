@@ -113,30 +113,19 @@ export default function TrendingNow() {
     }
 
     return (
-        <section className="py-8 bg-white overflow-hidden">
-            <div className="max-w-8xl mx-auto px-4">
-                {/* Image-Style Purple Container */}
-                <div className="bg-[#F5F1FF] rounded-[48px] p-6 md:p-10 relative">
-                    {/* Sparkle Icon */}
-                    <div className="absolute top-8 right-8 text-purple-400">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z" />
-                        </svg>
-                    </div>
-
+        <section className="  bg-white overflow-hidden">
+            <div className="max-w-7xl mx-auto  ">
+                <div className="  rounded-2xl p-5 md:p-8 relative">
                     {/* Header Section */}
-                    <div className="text-center mb-8">
-                        <div className="flex items-center justify-center gap-3 mb-2 translate-x-4">
-                            <h2 className="text-4xl md:text-5xl font-black text-[#7A40F2] tracking-tight">
-                                TRENDING NOW
+                    <div className="flex items-center justify-between mb-6">
+                        <div>
+                            <h2 className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight">
+                                Trending now
                             </h2>
-                            <div className="bg-[#7A40F2] text-white w-12 h-12 rounded-[18px] flex items-center justify-center -rotate-12 shadow-lg">
-                                <span className="text-2xl font-bold">%</span>
-                            </div>
+                            <p className="text-sm text-gray-500 mt-0.5">
+                                Popular picks with great prices
+                            </p>
                         </div>
-                        <p className="text-[#7A40F2] font-bold text-lg md:text-xl">
-                            Massive price drops you can't miss!
-                        </p>
                     </div>
 
                     {/* Carousel Container */}

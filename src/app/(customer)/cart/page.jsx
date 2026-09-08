@@ -65,7 +65,7 @@ export default function CartPage() {
   } = useCart()
 
   // BRAND COLORS
-  const BRAND_PRIMARY = '#2563eb' // Blue 600
+  const BRAND_PRIMARY = '#F79625' // Brand Orange
   const BRAND_SECONDARY = '#FFD23F' // Planet Yellow
 
   useEffect(() => {

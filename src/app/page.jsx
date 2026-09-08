@@ -30,6 +30,7 @@ import ElectronicGadgets from '@/components/customer/ElectronicGadgets'
 import CategoryProductSections from '@/components/customer/CategoryProductSections'
 import CouponBanner from '@/components/customer/CouponBanner'
 import CategoryGrid from '@/components/customer/CategoryGrid'
+import BackToSchoolSection from '@/components/customer/BackToSchoolSection'
 import RakshaBandhanSpecial from '@/components/customer/RakshaBandhanSpecial'
 import DealsOfTheDay from '@/components/customer/DealsOfTheDay'
 import TodaysBestDeals from '@/components/customer/TodaysBestDeals'
@@ -43,12 +44,15 @@ export default function Home() {
         <HeroBanner />
         <CouponBanner />
         <CategoryGrid />
+
+        {/* Back To School Curated Showcase Section */}
+        <BackToSchoolSection />
  
         <PocketFriendlyBargain />
         <TodaysBestDeals />
 
         {/* Steal Deals - Claimable low-price offers */}
-        <StealDeals />
+        {/* <StealDeals /> */}
 
         {/* Electronic Gadgets - Electronics category showcase */}
         <ElectronicGadgets />

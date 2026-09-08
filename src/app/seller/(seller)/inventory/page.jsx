@@ -302,11 +302,11 @@ export default function InventoryMasterPage() {
                             </div>
                         </div>
 
-                        <div className="bg-[#1E3A8A] rounded-[2.5rem] p-8 text-white relative overflow-hidden group">
-                            <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 blur-3xl -mr-16 -mt-16 group-hover:scale-125 transition-transform duration-700" />
-                            <Zap className="text-amber-400 mb-4" />
+                        <div className="bg-gradient-to-br from-[#c26d0e] to-[#F79625] rounded-[2.5rem] p-8 text-white relative overflow-hidden group">
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-orange-400/20 blur-3xl -mr-16 -mt-16 group-hover:scale-125 transition-transform duration-700" />
+                            <Zap className="text-amber-200 mb-4" />
                             <h4 className="text-lg font-semibold tracking-tight leading-tight">Smart Stock Alerts</h4>
-                            <p className="text-blue-100/60 text-xs font-medium mt-2 leading-relaxed">
+                            <p className="text-orange-50/90 text-xs font-medium mt-2 leading-relaxed">
                                 Demand for "Spectral Entity X1" is up 40%. Recommend increasing buffer stock at Bangalore Hub by 200 units.
                             </p>
                             <button className="w-full mt-6 py-4 bg-white/10 hover:bg-white text-white hover:text-indigo-900 rounded-2xl text-[10px] font-semibold uppercase tracking-widest border border-white/20 hover:border-white transition-all">

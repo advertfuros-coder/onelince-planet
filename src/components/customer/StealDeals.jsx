@@ -191,34 +191,23 @@ export default function StealDeals() {
     }
 
     return (
-        <section className="w-full bg-[#FAFAFA] border-y border-neutral-200/70 py-12 md:py-16 overflow-hidden relative">
+        <section className=" bg-yellow-200 border-y border-neutral-200/70 py-12 md:py-16 overflow-hidden relative">
             {/* Full Width Header Container */}
-            <div className="w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-20 mb-8 md:mb-10">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8    mb-8 md:mb-10">
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                     {/* Title & Metadata */}
                     <div>
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neutral-900 text-neutral-100 text-[11px] font-semibold tracking-wider uppercase mb-3.5 shadow-sm">
-                            <span className="relative flex h-2 w-2">
-                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                            </span>
-                            <span>Live Drop</span>
-                            <span className="text-neutral-500">•</span>
-                            <span className="text-neutral-300 font-normal">Limited Quantities</span>
-                        </div>
+                         
 
                         <div className="flex items-baseline gap-3">
-                            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-neutral-900 uppercase leading-none font-sans">
-                                Steal Deals
+                            <h2 className="text-xl md:text-2xl font-bold tracking-tight text-neutral-900 leading-none">
+                                Steal deals
                             </h2>
-                            <span className="hidden sm:inline-flex items-center gap-1 text-xs font-mono font-semibold px-2 py-0.5 rounded bg-neutral-200/80 text-neutral-700">
-                                <FiZap className="w-3.5 h-3.5 text-amber-600" />
-                                Up to 70% off
-                            </span>
+                            
                         </div>
 
-                        <p className="text-neutral-500 text-sm sm:text-base font-normal mt-2.5 max-w-xl leading-relaxed">
-                            Hand-picked flash markdowns on signature pieces. Once the vault allocations run dry, original prices resume.
+                        <p className="text-neutral-500 text-sm font-normal mt-1.5 max-w-xl leading-relaxed">
+                            Flash markdowns on top picks. Limited quantities available.
                         </p>
                     </div>
 
@@ -256,7 +245,7 @@ export default function StealDeals() {
             {/* Full Width Edge-to-Edge Carousel Row */}
             <div
                 ref={scrollContainerRef}
-                className="w-full flex gap-4 sm:gap-5 lg:gap-6 overflow-x-auto no-scrollbar scroll-smooth snap-x snap-mandatory px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-20 py-2"
+                className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8     flex gap-4 sm:gap-5 lg:gap-6 overflow-x-auto no-scrollbar scroll-smooth snap-x snap-mandatory   py-2"
             >
                 {products.map((product) => (
                     <div

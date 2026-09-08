@@ -47,7 +47,7 @@ import {
   Scatter,
 } from 'recharts'
 
-const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899', '#06B6D4', '#F97316']
+const COLORS = ['#F79625', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899', '#06B6D4', '#F97316']
 
 export default function AdminAnalyticsPage() {
   const { token, loading: authLoading } = useAuth()
@@ -353,8 +353,8 @@ export default function AdminAnalyticsPage() {
               <ComposedChart data={safeSlice(charts.revenueByDate, 0, 100)}>
                 <defs>
                   <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.8} />
-                    <stop offset="95%" stopColor="#3B82F6" stopOpacity={0.1} />
+                    <stop offset="5%" stopColor="#F79625" stopOpacity={0.8} />
+                    <stop offset="95%" stopColor="#F79625" stopOpacity={0.1} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
@@ -363,7 +363,7 @@ export default function AdminAnalyticsPage() {
                 <YAxis yAxisId="right" orientation="right" stroke="#6b7280" />
                 <Tooltip formatter={(value) => formatCurrency(value)} />
                 <Legend />
-                <Area yAxisId="left" type="monotone" dataKey="revenue" stroke="#3B82F6" fillOpacity={1} fill="url(#colorRevenue)" name="Revenue" />
+                <Area yAxisId="left" type="monotone" dataKey="revenue" stroke="#F79625" fillOpacity={1} fill="url(#colorRevenue)" name="Revenue" />
                 <Bar yAxisId="right" dataKey="orders" fill="#10B981" name="Orders" />
               </ComposedChart>
             </ResponsiveContainer>
@@ -428,7 +428,7 @@ export default function AdminAnalyticsPage() {
                   <XAxis dataKey="_id" angle={-45} textAnchor="end" height={100} />
                   <YAxis />
                   <Tooltip formatter={(value) => formatCurrency(value)} />
-                  <Bar dataKey="revenue" fill="#3B82F6" radius={[8, 8, 0, 0]}>
+                  <Bar dataKey="revenue" fill="#F79625" radius={[8, 8, 0, 0]}>
                     {safeSlice(regional.revenueByRegion, 0, 10).map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
@@ -524,7 +524,7 @@ export default function AdminAnalyticsPage() {
                     <YAxis />
                     <Tooltip />
                     <Legend />
-                    <Bar dataKey="count" fill="#3B82F6" name="Orders" radius={[8, 8, 0, 0]} />
+                    <Bar dataKey="count" fill="#F79625" name="Orders" radius={[8, 8, 0, 0]} />
                     <Bar dataKey="revenue" fill="#10B981" name="Revenue (₹)" radius={[8, 8, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
@@ -556,7 +556,7 @@ export default function AdminAnalyticsPage() {
                     <XAxis dataKey="totalSold" name="Units Sold" />
                     <YAxis dataKey="avgSellingPrice" name="Price" />
                     <Tooltip cursor={{ strokeDasharray: '3 3' }} />
-                    <Scatter name="Products" data={safeSlice(pricing.productPricingAnalysis, 0, 30)} fill="#3B82F6" />
+                    <Scatter name="Products" data={safeSlice(pricing.productPricingAnalysis, 0, 30)} fill="#F79625" />
                   </ScatterChart>
                 </ResponsiveContainer>
               </ChartCard>
@@ -837,15 +837,15 @@ export default function AdminAnalyticsPage() {
                   <AreaChart data={safeSlice(charts.ordersByHour, 0, 100)}>
                     <defs>
                       <linearGradient id="colorOrders" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.8} />
-                        <stop offset="95%" stopColor="#3B82F6" stopOpacity={0.2} />
+                        <stop offset="5%" stopColor="#F79625" stopOpacity={0.8} />
+                        <stop offset="95%" stopColor="#F79625" stopOpacity={0.2} />
                       </linearGradient>
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="_id" label={{ value: 'Hour', position: 'insideBottom', offset: -5 }} />
                     <YAxis />
                     <Tooltip />
-                    <Area type="monotone" dataKey="orders" stroke="#3B82F6" fillOpacity={1} fill="url(#colorOrders)" />
+                    <Area type="monotone" dataKey="orders" stroke="#F79625" fillOpacity={1} fill="url(#colorOrders)" />
                   </AreaChart>
                 </ResponsiveContainer>
               </ChartCard>
@@ -882,7 +882,7 @@ export default function AdminAnalyticsPage() {
                     <YAxis yAxisId="right" orientation="right" />
                     <Tooltip />
                     <Legend />
-                    <Bar yAxisId="left" dataKey="orders" fill="#3B82F6" name="Orders" />
+                    <Bar yAxisId="left" dataKey="orders" fill="#F79625" name="Orders" />
                     <Line yAxisId="right" type="monotone" dataKey="revenue" stroke="#10B981" strokeWidth={2} name="Revenue" />
                   </ComposedChart>
                 </ResponsiveContainer>

@@ -77,7 +77,7 @@ export default function SubscriptionPlansPage() {
             displayName: '',
             description: '',
             icon: '⭐',
-            color: '#3B82F6',
+            color: '#F79625',
             pricing: { monthly: 0, quarterly: 0, yearly: 0 },
             discounts: { quarterly: 10, yearly: 20 },
             features: {

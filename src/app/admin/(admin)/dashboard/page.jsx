@@ -45,7 +45,7 @@ import ResponsiveChart from '@/components/admin/ResponsiveChart'
 import ResponsiveTable from '@/components/admin/ResponsiveTable'
 import clsx from 'clsx'
 
-const COLORS = ['#3B82F6', '#F59E0B', '#10B981', '#EF4444', '#8B5CF6', '#06B6D4']
+const COLORS = ['#F79625', '#F59E0B', '#10B981', '#EF4444', '#8B5CF6', '#06B6D4']
 
 export default function AdminDashboard() {
   const { token, user } = useAuth()
@@ -209,8 +209,8 @@ export default function AdminDashboard() {
               <AreaChart data={weeklyNewOrders}>
                 <defs>
                   <linearGradient id="colorOrders" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.1} />
-                    <stop offset="95%" stopColor="#3B82F6" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#F79625" stopOpacity={0.1} />
+                    <stop offset="95%" stopColor="#F79625" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fontSize: 11, fontWeight: 900, fill: '#94A3B8' }} />
@@ -218,7 +218,7 @@ export default function AdminDashboard() {
                 <Tooltip
                   contentStyle={{ borderRadius: '20px', border: 'none', boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1)', fontWeight: 'bold' }}
                 />
-                <Area type="monotone" dataKey="orders" stroke="#3B82F6" strokeWidth={4} fillOpacity={1} fill="url(#colorOrders)" />
+                <Area type="monotone" dataKey="orders" stroke="#F79625" strokeWidth={4} fillOpacity={1} fill="url(#colorOrders)" />
               </AreaChart>
             </ResponsiveContainer>
           ) : (

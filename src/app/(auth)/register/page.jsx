@@ -138,12 +138,12 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50/70 via-white to-amber-50/50 flex items-center justify-center p-4">
       <div className="max-w-md w-full">
         {/* Logo */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center space-x-2">
-            <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+            <div className="w-12 h-12 bg-gradient-to-r from-[#F79625] to-[#d67a14] rounded-lg flex items-center justify-center shadow-lg shadow-orange-500/20">
               <FiShoppingBag className="w-6 h-6 text-white" />
             </div>
             <span className="text-2xl font-semibold text-gray-900">OnlinePlanet</span>

@@ -4,6 +4,19 @@
 @theme {
   --font-sans: 'Poppins', sans-serif;
   --font-poppins: 'Poppins', sans-serif;
+
+  /* Global Brand Color Migration: Blue remapped to #F79625 (Online Planet Orange) */
+  --color-blue-50: #fff9f2;
+  --color-blue-100: #feefdc;
+  --color-blue-200: #fdd8b4;
+  --color-blue-300: #fbbd83;
+  --color-blue-400: #f99c4f;
+  --color-blue-500: #F79625;
+  --color-blue-600: #F79625;
+  --color-blue-700: #d67a14;
+  --color-blue-800: #ad5f18;
+  --color-blue-900: #8c4e18;
+  --color-blue-950: #4b2609;
 }
 
 *, *::before, *::after {
@@ -14,7 +27,7 @@
   :root {
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
-    --primary: 221.2 83.2% 53.3%;
+    --primary: 32.3 92.9% 55.7%;
     --primary-foreground: 210 40% 98%;
     --secondary: 210 40% 96%;
     --secondary-foreground: 222.2 84% 4.9%;
@@ -24,12 +37,12 @@
     --destructive-foreground: 210 40% 98%;
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
+    --ring: 32.3 92.9% 55.7%;
     --radius: 0.5rem;
     --foreground-rgb: 0, 0, 0;
     --background-start-rgb: 255, 255, 255;
     --background-end-rgb: 255, 255, 255;
-    --primary-accent: #000000;
+    --primary-accent: #F79625;
     --secondary-accent: #e40000;
   }
 

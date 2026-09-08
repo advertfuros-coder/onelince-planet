@@ -81,9 +81,9 @@ export default function ProductCard({
     : createProductUrl(product);
 
   return (
-    <div className="bg-white rounded-[32px] shadow-sm border border-gray-100 overflow-hidden group hover:shadow-xl hover:border-blue-100 transition-all duration-500 flex flex-col h-full ring-1 ring-black/5">
+    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden group hover:shadow-lg hover:border-gray-200 transition-all duration-300 flex flex-col h-full">
       {/* Product Image Section */}
-      <div className={`relative ${variant === 'steal' ? 'aspect-[4/5]' : 'aspect-square'} overflow-hidden bg-[#F8F9FA] ${variant === 'steal' ? 'rounded-[24px] border border-gray-50 shadow-inner' : ''}`}>
+      <div className={`relative ${variant === 'steal' ? 'aspect-[4/5]' : 'aspect-square'} overflow-hidden bg-[#F8F9FA] ${variant === 'steal' ? 'rounded-xl border border-gray-50' : ''}`}>
         <Link href={productUrl}>
           {product.images?.[0]?.url || product.image ? (
             <img
@@ -115,12 +115,12 @@ export default function ProductCard({
             e.preventDefault();
             onToggleWishlist(product._id);
           }}
-          className="absolute top-4 right-4 z-10 w-11 h-11 bg-white rounded-full shadow-md flex items-center justify-center hover:bg-gray-50 transition-all duration-300 border border-gray-100"
+          className="absolute top-3 right-3 z-10 w-8 h-8 bg-white rounded-full shadow-sm flex items-center justify-center hover:bg-gray-50 transition-all duration-200 border border-gray-100"
         >
           {isWishlisted ? (
-            <FaHeart className="w-6 h-6 text-red-500" />
+            <FaHeart className="w-4 h-4 text-red-500" />
           ) : (
-            <FiHeart className="w-6 h-6 text-gray-400 group-hover:text-red-500 transition-colors" />
+            <FiHeart className="w-4 h-4 text-gray-400 group-hover:text-red-500 transition-colors" />
           )}
         </button>
 
@@ -133,25 +133,25 @@ export default function ProductCard({
       </div>
 
       {/* Product Info Section */}
-      <div className="py-4 px-4 flex flex-col flex-1 bg-white">
+      <div className="py-3 px-3 flex flex-col flex-1 bg-white">
         {/* Rating Section */}
-        <div className="flex items-center gap-1.5 mb-2.5">
-          <div className="flex text-[#FF9E2C]">
+        <div className="flex items-center gap-1 mb-2">
+          <div className="flex text-amber-400">
             {[...Array(5)].map((_, i) => (
               i < Math.floor(product.ratings?.average || 0) ? (
-                <FaStar key={i} className="w-4 h-4" />
+                <FaStar key={i} className="w-3 h-3" />
               ) : (
-                <FiStar key={i} className="w-4 h-4 text-gray-200" />
+                <FiStar key={i} className="w-3 h-3 text-gray-200" />
               )
             ))}
           </div>
-          <span className="text-sm font-medium text-gray-400">
+          <span className="text-xs text-gray-400">
             ({product.ratings?.totalReviews || product.ratings?.count || 0})
           </span>
         </div>
 
         <Link href={productUrl}>
-          <h3 className="font-semibold text-gray-900 text-[15px] leading-snug mb-2 line-clamp-2 h-10 hover:text-blue-600 transition-colors">
+          <h3 className="font-medium text-gray-900 text-[13px] leading-snug mb-2 line-clamp-2 h-9 hover:text-blue-600 transition-colors">
             {product.name}
           </h3>
         </Link>
@@ -159,7 +159,7 @@ export default function ProductCard({
         <div className="flex items-baseline gap-2 ">
           <Price
             amount={finalPrice}
-            className="text-xl font-semibold text-gray-900"
+            className="text-base font-semibold text-gray-900"
           />
           {product.pricing?.basePrice > finalPrice && (
             <StrikePrice
@@ -170,18 +170,18 @@ export default function ProductCard({
         </div>
 
         {/* Delivery Estimate */}
-        <div className="flex items-center gap-2 text-[13px] font-medium mt-2">
+        <div className="flex items-center gap-1.5 text-[11px] font-medium mt-1.5">
           {deliveryAvailable === false ? (
             <>
-              <FiAlertCircle className="w-4 h-4 text-red-600 stroke-[2.5px]" />
-              <span className="text-red-600">
+              <FiAlertCircle className="w-3.5 h-3.5 text-red-500 stroke-[2px]" />
+              <span className="text-red-500">
                 Not available at your location
               </span>
             </>
           ) : (
             <>
-              <FiTruck className="w-4 h-4 text-[#00A650] stroke-[2.5px]" />
-              <span className="text-[#00A650]">
+              <FiTruck className="w-3.5 h-3.5 text-emerald-600 stroke-[2px]" />
+              <span className="text-emerald-600">
                 Delivery <span className="font-semibold">{deliveryDate || deliveryEstimate.label}</span>
               </span>
             </>

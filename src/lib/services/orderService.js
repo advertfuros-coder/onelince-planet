@@ -596,12 +596,12 @@ class OrderService {
             display: flex;
             justify-content: space-between;
             align-items: start;
-            border-bottom: 3px solid #2563eb;
+            border-bottom: 3px solid #F79625;
             padding-bottom: 20px;
             margin-bottom: 30px;
         }
         .company-info h1 {
-            color: #2563eb;
+            color: #F79625;
             font-size: 28px;
             margin-bottom: 5px;
         }
@@ -629,7 +629,7 @@ class OrderService {
             border-radius: 8px;
         }
         .meta-box h3 {
-            color: #2563eb;
+            color: #F79625;
             font-size: 14px;
             text-transform: uppercase;
             margin-bottom: 10px;
@@ -649,7 +649,7 @@ class OrderService {
             margin: 30px 0;
         }
         thead {
-            background: #2563eb;
+            background: #F79625;
             color: white;
         }
         th {
@@ -685,7 +685,7 @@ class OrderService {
             padding: 12px 15px;
         }
         .totals-table .grand-total {
-            background: #2563eb;
+            background: #F79625;
             color: white;
             font-weight: bold;
             font-size: 18px;
@@ -718,7 +718,7 @@ class OrderService {
             top: 20px;
             right: 20px;
             padding: 12px 24px;
-            background: #2563eb;
+            background: #F79625;
             color: white;
             border: none;
             border-radius: 8px;
@@ -727,7 +727,7 @@ class OrderService {
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
         .print-button:hover {
-            background: #1d4ed8;
+            background: #d67a14;
         }
     </style>
 </head>

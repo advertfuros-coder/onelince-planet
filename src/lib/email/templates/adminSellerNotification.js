@@ -53,7 +53,7 @@ export function generateAdminSellerNotification({
     }
     .cta-button {
       display: inline-block;
-      background: #3b82f6;
+      background: #F79625;
       color: white !important;
       text-decoration: none;
       padding: 14px 28px;

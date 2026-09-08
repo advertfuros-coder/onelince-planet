@@ -50,23 +50,17 @@ export default function ProfileDashboard() {
       <div className="bg-white px-4 py-3 flex items-center justify-between sticky top-0 z-20 lg:hidden border-b border-gray-100 shadow-sm">
         <div className="flex items-center gap-3">
           <button onClick={() => router.push('/')} className="p-1">
-            <FiArrowLeft className="w-5 h-5 text-[#003399]" />
+            <FiArrowLeft className="w-5 h-5 text-[#F79625]" />
           </button>
           <h1 className="text-sm font-semibold text-gray-900 tracking-tight">Your Account</h1>
         </div>
-        {/* <div className="flex items-center bg-[#003399]/5 border border-[#003399]/10 rounded-full px-3 py-1.5 gap-2 shadow-sm">
-           <span className="text-sm font-semibold text-[#003399]">{currencyConfig.symbol}0</span>
-           <div className="w-5 h-5 bg-[#003399] rounded-full flex items-center justify-center">
-              <span className="text-[10px] text-white font-semibold">{currencyConfig.symbol.charAt(0)}</span>
-           </div>
-        </div> */}
       </div>
 
       <div className="max-w-xl mx-auto lg:max-w-5xl lg:py-10">
 
         {/* Planet Prime Banner */}
         <div className="px-4 mt-4 lg:px-0 lg:mt-0">
-          <div className="bg-gradient-to-br from-[#003399] to-[#002266] rounded-3xl p-6 relative overflow-hidden group shadow-xl shadow-blue-100">
+          <div className="bg-gradient-to-br from-[#F79625] to-[#d67a14] rounded-3xl p-6 relative overflow-hidden group shadow-xl shadow-orange-100">
             {/* Decorative Elements */}
             <div className="absolute top-[-20px] right-[-20px] w-48 h-48 bg-white/10 rounded-full blur-3xl group-hover:bg-white/20 transition-all duration-700"></div>
             <div className="absolute bottom-[-40px] left-[-20px] w-32 h-32 bg-yellow-400/10 rounded-full blur-2xl"></div>
@@ -80,10 +74,10 @@ export default function ProfileDashboard() {
                 <h2 className="text-2xl lg:text-3xl font-semibold text-white leading-tight">
                   Elevate Your <br /> Shopping Journey
                 </h2>
-                <p className="text-blue-100 text-xs mt-3 font-medium opacity-80 max-w-[220px]">
+                <p className="text-orange-100 text-xs mt-3 font-medium opacity-80 max-w-[220px]">
                   Enjoy <span className="text-white font-semibold">Free Shipping</span>, better rewards and exclusive planet perks.
                 </p>
-                <button className="mt-6 bg-[#FFD23F] text-[#003399] px-8 py-3 rounded-2xl text-sm font-semibold shadow-lg shadow-black/20 hover:scale-105 active:scale-95 transition-all">
+                <button className="mt-6 bg-[#FFD23F] text-[#9a4e05] px-8 py-3 rounded-2xl text-sm font-semibold shadow-lg shadow-black/20 hover:scale-105 active:scale-95 transition-all">
                   Join Prime Now
                 </button>
               </div>
@@ -109,7 +103,7 @@ export default function ProfileDashboard() {
         {/* Core Actions Grid */}
         <div className="px-4 lg:px-0 grid grid-cols-2 gap-2">
           {[
-            { label: 'My Orders', icon: FiPackage, href: '/profile/orders', color: 'bg-blue-50 text-[#003399]' },
+            { label: 'My Orders', icon: FiPackage, href: '/profile/orders', color: 'bg-orange-50 text-[#F79625]' },
             { label: 'Planet Rewards', icon: FiTag, href: '#', color: 'bg-yellow-50 text-yellow-600' },
             { label: 'Support Center', icon: FiHelpCircle, href: '#', color: 'bg-purple-50 text-purple-600' },
             { label: 'Prime Perks', icon: BiCrown, href: '#', color: 'bg-emerald-50 text-emerald-600' }
@@ -117,7 +111,7 @@ export default function ProfileDashboard() {
             <button
               key={idx}
               onClick={() => item.href !== '#' && router.push(item.href)}
-              className="bg-white border border-gray-100 rounded-3xl p-2 flex items-center justify-between shadow-sm active:bg-gray-50 transition-all hover:border-blue-100 hover:shadow-md"
+              className="bg-white border border-gray-100 rounded-3xl p-2 flex items-center justify-between shadow-sm active:bg-gray-50 transition-all hover:border-orange-200 hover:shadow-md"
             >
               <div className="flex items-center gap-2">
                 <div className={`w-10 h-10 ${item.color} rounded-2xl flex items-center justify-center font-semibold`}>
@@ -146,31 +140,27 @@ export default function ProfileDashboard() {
               className="w-full flex items-center justify-between px-6 py-4 border-b border-gray-50 hover:bg-gray-50 transition-colors last:border-b-0 group"
             >
               <div className="flex items-center gap-5 text-left">
-                <div className="w-12 h-12 bg-gray-50 rounded-2xl flex items-center justify-center text-gray-400 group-hover:bg-[#003399]/5 group-hover:text-[#003399] transition-all">
+                <div className="w-12 h-12 bg-gray-50 rounded-2xl flex items-center justify-center text-gray-400 group-hover:bg-[#F79625]/10 group-hover:text-[#F79625] transition-all">
                   <item.icon className="w-6 h-6" />
                 </div>
                 <div>
                   <div className="flex items-center gap-3">
                     <span className="text-[14px] font-semibold text-gray-800 tracking-tight">{item.label}</span>
-                    {item.new && <span className="text-[9px] bg-[#003399] text-white px-2.5 py-1 rounded-full font-semibold uppercase tracking-[1px] shadow-sm">Updated</span>}
+                    {item.new && <span className="text-[9px] bg-[#F79625] text-white px-2.5 py-1 rounded-full font-semibold uppercase tracking-[1px] shadow-sm">Updated</span>}
                   </div>
                   <p className="text-[11px] text-gray-400 font-semibold mt-1 leading-tight">{item.sub}</p>
                 </div>
               </div>
-              <FiChevronRight className="w-5 h-5 text-gray-300 group-hover:text-[#003399] transition-colors" />
+              <FiChevronRight className="w-5 h-5 text-gray-300 group-hover:text-[#F79625] transition-colors" />
             </button>
           ))}
         </div>
-
-
-
-
 
         {/* Impact Banner */}
         <div className="mt-8 px-4 lg:px-0">
           <div className="bg-[#FFD23F]/10 border-2 border-[#FFD23F]/30 rounded-3xl p-5 flex items-center gap-4 relative overflow-hidden hover:bg-[#FFD23F]/20 transition-colors cursor-pointer group">
             <div className="w-14 h-14 bg-[#FFD23F] rounded-[20px] flex items-center justify-center flex-shrink-0 shadow-lg shadow-yellow-200/50 group-hover:rotate-6 transition-transform">
-              <FiZap className="w-7 h-7 text-[#003399]" />
+              <FiZap className="w-7 h-7 text-[#9a4e05]" />
             </div>
             <div className="flex-1">
               <h4 className="text-[15px] font-semibold text-gray-900 tracking-tight">Green Planet Mission</h4>
@@ -181,11 +171,9 @@ export default function ProfileDashboard() {
           </div>
         </div>
 
-
-
         {/* Global Security Notification */}
         <div className="mt-8 px-4 lg:px-0">
-          <div className="bg-[#003399] rounded-[40px] p-8 text-white shadow-2xl relative overflow-hidden group">
+          <div className="bg-gradient-to-br from-[#F79625] to-[#d67a14] rounded-[40px] p-8 text-white shadow-2xl relative overflow-hidden group">
             <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-32 -mt-32 blur-3xl group-hover:bg-yellow-400/10 transition-all duration-1000"></div>
             <div className="flex items-center justify-between relative z-10">
               <div className="flex-1">

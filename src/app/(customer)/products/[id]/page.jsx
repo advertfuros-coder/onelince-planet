@@ -820,7 +820,7 @@ export default function ProductDetailPage() {
               />
 
               {/* Price Section */}
-              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-5 mb-6 border border-blue-100">
+              <div className="bg-gradient-to-br from-orange-50/60 to-amber-50/40 rounded-xl p-5 mb-6 border border-orange-100">
                 <div className="flex items-baseline gap-3 mb-2">
                   <span className="text-2xl lg:text-4xl font-semibold text-gray-900">
                     ₹{(activeVariant?.price || product.price).toLocaleString()}
@@ -1109,7 +1109,7 @@ export default function ProductDetailPage() {
                 {/* Header row */}
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2.5">
-                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center text-white font-semibold text-lg shadow-md flex-shrink-0 overflow-hidden">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#F79625] to-[#d67a14] flex items-center justify-center text-white font-semibold text-lg shadow-md flex-shrink-0 overflow-hidden">
                       {product.seller.logo ? (
                         <img
                           src={product.seller.logo}
@@ -1147,11 +1147,11 @@ export default function ProductDetailPage() {
 
                 {/* Action buttons row */}
                 <div className="flex flex-wrap gap-2">
-                  <button className="flex-1 min-w-[140px] py-2.5 bg-white border-2 border-indigo-600 text-indigo-600 font-semibold rounded-xl hover:bg-indigo-50 transition-all text-xs flex items-center justify-center gap-2 active:scale-95 shadow-sm">
+                  <button className="flex-1 min-w-[140px] py-2.5 bg-white border-2 border-[#F79625] text-[#F79625] font-semibold rounded-xl hover:bg-orange-50 transition-all text-xs flex items-center justify-center gap-2 active:scale-95 shadow-sm">
                     <FiBox className="w-4 h-4" />
                     Visit Store
                   </button>
-                  <button className="flex-1 min-w-[140px] py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all text-xs flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/30 active:scale-95">
+                  <button className="flex-1 min-w-[140px] py-2.5 bg-gradient-to-r from-[#F79625] to-[#d67a14] hover:from-[#d67a14] hover:to-[#ad5f18] text-white font-semibold rounded-xl transition-all text-xs flex items-center justify-center gap-2 shadow-lg shadow-orange-500/20 active:scale-95">
                     <FiMessageCircle className="w-4 h-4" />
                     Chat Now
                   </button>

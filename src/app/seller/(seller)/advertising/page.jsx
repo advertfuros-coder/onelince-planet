@@ -138,7 +138,7 @@ export default function AdvertisingHub() {
     // Waterfall Data: Spend -> Clicks -> Conv -> Revenue
     const funnelData = [
         { name: 'Ad Spend', value: data?.stats?.totalSpent || 0, color: '#ef4444' },
-        { name: 'Clicks', value: data?.stats?.totalClicks * 10 || 0, color: '#3b82f6' }, // Scaled for vis
+        { name: 'Clicks', value: data?.stats?.totalClicks * 10 || 0, color: '#F79625' }, // Scaled for vis
         { name: 'Conversions', value: data?.stats?.totalRevenue * 0.5 || 0, color: '#10b981' },
         { name: 'Net Revenue', value: data?.stats?.totalRevenue || 0, color: '#8b5cf6' },
     ]
